@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2017", "esnext.asynciterable"],
+    "types": ["node"],
+    "baseUrl": "."
+  },
+  "exclude": ["**/__tests__/*", "**/__mocks__/*", "./lib", "./src/testRunner"]
+}

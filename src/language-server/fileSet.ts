@@ -3,6 +3,7 @@ import glob from "glob";
 import { invariant } from "../tools";
 import URI from "vscode-uri";
 import { normalizeURI } from "./utilities";
+import { resolve } from "path";
 
 export class FileSet {
   private rootURI: URI;

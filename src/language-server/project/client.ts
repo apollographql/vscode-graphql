@@ -81,7 +81,6 @@ export interface GraphQLClientProjectConfig {
   loadingHandler: LoadingHandler;
 }
 export class GraphQLClientProject extends GraphQLProject {
-  public rootURI: URI;
   public serviceID?: string;
   public config!: ClientConfig;
 
@@ -112,7 +111,6 @@ export class GraphQLClientProject extends GraphQLProject {
     });
 
     super({ config, fileSet, loadingHandler, clientIdentity });
-    this.rootURI = rootURI;
     this.serviceID = config.graph;
 
     /**

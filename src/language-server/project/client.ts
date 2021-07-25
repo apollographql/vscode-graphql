@@ -101,16 +101,7 @@ export class GraphQLClientProject extends GraphQLProject {
     configFolderURI,
     clientIdentity,
   }: GraphQLClientProjectConfig) {
-    const fileSet = new FileSet({
-      // the URI of the folder _containing_ the apollo.config.js is the true project's root.
-      // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
-      rootURI: config.configDirURI || configFolderURI,
-      includes: [...config.client.includes, ".env", "apollo.config.js"],
-      excludes: config.client.excludes,
-      configURI: config.configURI,
-    });
-
-    super({ config, fileSet, loadingHandler, clientIdentity });
+    super({ config, configFolderURI, loadingHandler, clientIdentity });
     this.serviceID = config.graph;
 
     /**
@@ -126,7 +117,7 @@ export class GraphQLClientProject extends GraphQLProject {
         (config.configURI && path === config.configURI.fsPath)
       );
 
-    if (fileSet.allFiles().filter(filterConfigAndEnvFiles).length === 0) {
+    if (this.allIncludedFiles().filter(filterConfigAndEnvFiles).length === 0) {
       console.warn(
         "⚠️  It looks like there are 0 files associated with this Apollo Project. " +
           "This may be because you don't have any files yet, or your includes/excludes " +

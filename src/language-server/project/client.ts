@@ -77,7 +77,7 @@ export function isClientProject(
 export interface GraphQLClientProjectConfig {
   clientIdentity?: ClientIdentity;
   config: ClientConfig;
-  rootURI: URI;
+  configFolderURI: URI;
   loadingHandler: LoadingHandler;
 }
 export class GraphQLClientProject extends GraphQLProject {
@@ -98,13 +98,13 @@ export class GraphQLClientProject extends GraphQLProject {
   constructor({
     config,
     loadingHandler,
-    rootURI,
+    configFolderURI,
     clientIdentity,
   }: GraphQLClientProjectConfig) {
     const fileSet = new FileSet({
       // the URI of the folder _containing_ the apollo.config.js is the true project's root.
       // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
-      rootURI: config.configDirURI || rootURI,
+      rootURI: config.configDirURI || configFolderURI,
       includes: [...config.client.includes, ".env", "apollo.config.js"],
       excludes: config.client.excludes,
       configURI: config.configURI,

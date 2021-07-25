@@ -103,7 +103,8 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     const fileSet = new FileSet({
       rootURI: this.rootURI,
       includes: [...includes, ".env", "apollo.config.js"],
-      excludes: [...excludes],
+      // We do not want to include the local schema file in our list of documents
+      excludes: [...excludes, ...this.getRelativeLocalSchemaFilePaths()],
       configURI: config.configURI,
     });
 
@@ -284,6 +285,26 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     this.validate();
 
     this.needsValidation = false;
+  }
+
+  private getRelativeLocalSchemaFilePaths(): string[] {
+    const serviceConfig = isServiceConfig(this.config)
+      ? this.config.service
+      : isClientConfig(this.config) &&
+        typeof this.config.client.service === "object" &&
+        isLocalServiceConfig(this.config.client.service)
+      ? this.config.client.service
+      : undefined;
+    const localSchemaFile = serviceConfig?.localSchemaFile;
+    return (
+      localSchemaFile === undefined
+        ? []
+        : Array.isArray(localSchemaFile)
+        ? localSchemaFile
+        : [localSchemaFile]
+    ).map((filePath) =>
+      path.relative(this.rootURI.fsPath, path.join(process.cwd(), filePath))
+    );
   }
 
   abstract validate(): void;

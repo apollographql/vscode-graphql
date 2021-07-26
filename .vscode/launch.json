@@ -31,7 +31,6 @@
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/lib/testRunner"
       ],
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
       "preLaunchTask": "npm: watch"

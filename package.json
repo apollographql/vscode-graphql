@@ -15,7 +15,7 @@
   "main": "./lib/extension",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --build tsconfig.json",
+    "build": "tsc --build tsconfig.build.json",
     "build:clean": "npm run build -- --clean",
     "watch": "npm run build -- --watch",
     "preinstall": "npx rimraf node_modules && mkdir node_modules",
@@ -25,7 +25,7 @@
     "_internal:cleanup-extension": "git clean -dfqX -- ./node_modules ./yarn.lock",
     "package-extension": "npm run _internal:prepare-extension && npx vsce package --yarn --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
     "publish-extension": "npm run _internal:prepare-extension && npx vsce publish -p $VS_MARKETPLACE_TOKEN --yarn --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
-    "test": "node ./lib/testRunner/vscode-test-script.js"
+    "test": "jest"
   },
   "engines": {
     "vscode": "^1.30.0"

@@ -53,7 +53,7 @@ const writeFilesToDir = (dir: string, files: Record<string, string>) => {
 };
 
 describe("loadConfig", () => {
-  let dir, dirPath;
+  let dir: string, dirPath: string;
 
   // set up a temp dir
   beforeEach(() => {

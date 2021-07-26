@@ -1,10 +1,10 @@
-import { Source } from "graphql";
-import { loadSchema } from "apollo-codegen-core/lib/loading";
+import { Source, buildClientSchema } from "graphql";
 import { GraphQLDocument } from "../document";
 import { collectExecutableDefinitionDiagnositics } from "../diagnostics";
-const schema = loadSchema(
-  require.resolve("../../../../__fixtures__/starwars/schema.json")
-);
+import { starwarsSchema } from "./fixtures/starwarsSchema";
+
+const schema = buildClientSchema(starwarsSchema);
+
 const validDocument = new GraphQLDocument(
   new Source(`
     query HeroAndFriendsNames {
@@ -48,7 +48,7 @@ const documentWithTypes = new GraphQLDocument(
 const documentWithOffset = new GraphQLDocument(
   new Source(`query QueryWithOffset { hero { nam } }`, "testDocument", {
     line: 5,
-    column: 10
+    column: 10,
   })
 );
 describe("Language server diagnostics", () => {

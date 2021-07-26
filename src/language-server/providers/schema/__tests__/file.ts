@@ -2,7 +2,6 @@ import { FileSchemaProvider } from "../file";
 import * as path from "path";
 import * as fs from "fs";
 import { Debug } from "../../../utilities";
-import { isDone } from "nock";
 
 const makeNestedDir = dir => {
   if (fs.existsSync(dir)) return;

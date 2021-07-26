@@ -1,6 +1,5 @@
 import { NoMissingClientDirectives } from "../validation";
 import { GraphQLClientProject } from "../../project/client";
-import { readFileSync } from "fs";
 import { basename } from "path";
 
 import { vol } from "memfs";

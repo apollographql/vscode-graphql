@@ -72,7 +72,7 @@ export async function loadConfig({
   requireConfig = false,
   name,
   type
-}: LoadConfigSettings): Promise<ApolloConfig | undefined> {
+}: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
     searchPlaces: configFileName ? [configFileName] : defaultFileNames,
     loaders
@@ -89,14 +89,14 @@ export async function loadConfig({
       arguments[0]
     )}.
     The error was: ${error}`);
-    return undefined;
+    return null;
   }
 
   if (configPath && !loadedConfig) {
     Debug.error(
       `A config file failed to load at '${configPath}'. This is likely because this file is empty or malformed. For more information, please refer to: https://go.apollo.dev/t/config`
     );
-    return undefined;
+    return null;
   }
 
   if (loadedConfig && loadedConfig.filepath.endsWith("package.json")) {
@@ -109,7 +109,7 @@ export async function loadConfig({
     Debug.error(
       `No Apollo config found for project. For more information, please refer to: https://go.apollo.dev/t/config`
     );
-    return undefined;
+    return null;
   }
 
   // add API key from the env
@@ -165,7 +165,7 @@ export async function loadConfig({
     Debug.error(
       "Unable to resolve project type. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config"
     );
-    return undefined;
+    return null;
   }
 
   // DETERMINE SERVICE NAME

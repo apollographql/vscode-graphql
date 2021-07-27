@@ -6,14 +6,7 @@ const plugin: Plugin = {
     return value && typeof value.kind === "string";
   },
 
-  serialize(
-    value: ASTNode,
-    _config,
-    indentation,
-    _depth,
-    _refs,
-    _printer
-  ): string {
+  serialize(value: ASTNode, _config, indentation): string {
     return (
       indentation +
       print(value)

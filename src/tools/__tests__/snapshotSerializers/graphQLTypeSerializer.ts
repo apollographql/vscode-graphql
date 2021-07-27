@@ -6,14 +6,7 @@ const plugin: Plugin = {
     return value && isNamedType(value);
   },
 
-  serialize(
-    value: GraphQLNamedType,
-    _config,
-    _indentation,
-    _depth,
-    _refs,
-    _printer
-  ): string {
+  serialize(value: GraphQLNamedType): string {
     return printType(value);
   },
 };

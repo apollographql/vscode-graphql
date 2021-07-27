@@ -1,23 +1,29 @@
-import { ApolloConfig, ApolloConfigFormat } from "../";
+import { ApolloConfig, ApolloConfigFormat, DefaultConfigBase } from "../";
 import URI from "vscode-uri";
 
 describe("ApolloConfig", () => {
   describe("confifDirURI", () => {
     it("properly parses dir paths for configDirURI", () => {
       const uri = URI.parse("/test/dir/name");
-      const config = new ApolloConfig({ service: { name: "hai" } }, uri);
+      const config = new ApolloConfig(
+        { service: { name: "hai", ...DefaultConfigBase } },
+        uri
+      );
       // can be either /test/dir/name or \\test\\dir\\name depending on platform
       // this difference is fine :)
-      expect(config.configDirURI.fsPath).toMatch(
+      expect(config.configDirURI?.fsPath).toMatch(
         /\/test\/dir\/name|\\test\\dir\\name/
       );
     });
     it("properly parses filepaths for configDirURI", () => {
       const uri = URI.parse("/test/dir/name/apollo.config.js");
-      const config = new ApolloConfig({ service: { name: "hai" } }, uri);
+      const config = new ApolloConfig(
+        { service: { name: "hai", ...DefaultConfigBase } },
+        uri
+      );
       // can be either /test/dir/name or \\test\\dir\\name depending on platform
       // this difference is fine :)
-      expect(config.configDirURI.fsPath).toMatch(
+      expect(config.configDirURI?.fsPath).toMatch(
         /\/test\/dir\/name|\\test\\dir\\name/
       );
     });
@@ -26,7 +32,7 @@ describe("ApolloConfig", () => {
   describe("projects", () => {
     it("creates a ClientConfig when client is present", () => {
       const rawConfig: ApolloConfigFormat = {
-        client: { service: "my-service" }
+        client: { service: "my-service", ...DefaultConfigBase },
       };
       const config = new ApolloConfig(rawConfig);
       const projects = config.projects;
@@ -34,7 +40,9 @@ describe("ApolloConfig", () => {
       expect(projects[0].isClient).toBeTruthy();
     });
     it("creates a ServiceConfig when service is present", () => {
-      const rawConfig: ApolloConfigFormat = { service: "my-service" };
+      const rawConfig: ApolloConfigFormat = {
+        service: { name: "my-service", ...DefaultConfigBase },
+      };
       const config = new ApolloConfig(rawConfig);
       const projects = config.projects;
 
@@ -43,31 +51,37 @@ describe("ApolloConfig", () => {
     });
     it("creates multiple configs when both client and service are present", () => {
       const rawConfig: ApolloConfigFormat = {
-        client: { service: "my-service" },
-        service: "my-service"
+        client: { service: "my-service", ...DefaultConfigBase },
+        service: { name: "my-service", ...DefaultConfigBase },
       };
       const config = new ApolloConfig(rawConfig);
       const projects = config.projects;
 
       expect(projects).toHaveLength(2);
-      expect(projects.find(c => c.isClient)).toBeTruthy();
-      expect(projects.find(c => c.isService)).toBeTruthy();
+      expect(projects.find((c) => c.isClient)).toBeTruthy();
+      expect(projects.find((c) => c.isService)).toBeTruthy();
     });
   });
 
   describe("variant", () => {
     it("gets default variant when none is set", () => {
-      const config = new ApolloConfig({ client: { service: "hai" } });
+      const config = new ApolloConfig({
+        client: { service: "hai", ...DefaultConfigBase },
+      });
       expect(config.variant).toEqual("current");
     });
 
     it("gets variant from service specifier", () => {
-      const config = new ApolloConfig({ client: { service: "hai@master" } });
+      const config = new ApolloConfig({
+        client: { service: "hai@master", ...DefaultConfigBase },
+      });
       expect(config.variant).toEqual("master");
     });
 
     it("can set and override variants", () => {
-      const config = new ApolloConfig({ client: { service: "hai@master" } });
+      const config = new ApolloConfig({
+        client: { service: "hai@master", ...DefaultConfigBase },
+      });
       config.variant = "new";
       expect(config.variant).toEqual("new");
     });
@@ -75,35 +89,35 @@ describe("ApolloConfig", () => {
 
   describe("setDefaults", () => {
     it("can override engine defaults", () => {
-      const config = new ApolloConfig({});
+      const config = new ApolloConfig({ client: { ...DefaultConfigBase } });
       const overrides = {
         engine: {
-          endpoint: "https://test.apollographql.com/api/graphql"
-        }
+          endpoint: "https://test.apollographql.com/api/graphql",
+        },
       };
       config.setDefaults(overrides);
       expect(config.engine).toEqual(overrides.engine);
     });
 
     it("can override client defaults", () => {
-      const config = new ApolloConfig({});
+      const config = new ApolloConfig({ client: { ...DefaultConfigBase } });
       const overrides = {
         client: {
           name: "my-client",
-          service: "my-service@master"
-        }
+          service: "my-service@master",
+        },
       };
       config.setDefaults(overrides);
       expect(config.client).toEqual(overrides.client);
     });
 
     it("can override service defaults", () => {
-      const config = new ApolloConfig({});
+      const config = new ApolloConfig({ client: { ...DefaultConfigBase } });
       const overrides = {
         service: {
           name: "my-service",
-          url: "localhost:9090"
-        }
+          url: "localhost:9090",
+        },
       };
       config.setDefaults(overrides);
       expect(config.service).toEqual(config.service);

@@ -11,13 +11,13 @@ describe("extractGraphQLDocuments", () => {
       positionAt(): Position {
         return {
           character: 0,
-          line: 0
+          line: 0,
         };
       },
       languageId: "javascript",
       lineCount: 0,
       uri: "",
-      version: 1
+      version: 1,
     });
 
     it("works with placeholders that span multiple rows", () => {
@@ -35,9 +35,9 @@ describe("extractGraphQLDocuments", () => {
     `);
       const documents = extractGraphQLDocuments(textDocument);
 
-      expect(documents.length).toEqual(1);
-      expect(documents[0].syntaxErrors.length).toBe(0);
-      expect(documents[0].ast.definitions.length).toBe(1);
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(1);
     });
 
     it("works with multiple placeholders in a document", () => {
@@ -62,9 +62,9 @@ describe("extractGraphQLDocuments", () => {
     `);
       const documents = extractGraphQLDocuments(textDocument);
 
-      expect(documents.length).toEqual(1);
-      expect(documents[0].syntaxErrors.length).toBe(0);
-      expect(documents[0].ast.definitions.length).toBe(2);
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(2);
     });
 
     it("works with a custom tagname", () => {
@@ -89,9 +89,9 @@ describe("extractGraphQLDocuments", () => {
     `);
       const documents = extractGraphQLDocuments(textDocument, "gqltag");
 
-      expect(documents.length).toEqual(1);
-      expect(documents[0].syntaxErrors.length).toBe(0);
-      expect(documents[0].ast.definitions.length).toBe(2);
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(2);
     });
   });
 
@@ -104,13 +104,13 @@ describe("extractGraphQLDocuments", () => {
       positionAt(): Position {
         return {
           character: 0,
-          line: 0
+          line: 0,
         };
       },
       languageId: "reason",
       lineCount: 0,
       uri: "",
-      version: 1
+      version: 1,
     });
 
     it("works with ReasonRelay nodes", () => {
@@ -133,11 +133,11 @@ describe("extractGraphQLDocuments", () => {
     `);
       const documents = extractGraphQLDocuments(textDocument);
 
-      expect(documents.length).toEqual(2);
-      expect(documents[0].syntaxErrors.length).toBe(0);
-      expect(documents[1].syntaxErrors.length).toBe(0);
-      expect(documents[0].ast.definitions.length).toBe(1);
-      expect(documents[1].ast.definitions.length).toBe(1);
+      expect(documents?.length).toEqual(2);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[1].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(1);
+      expect(documents?.[1].ast?.definitions.length).toBe(1);
     });
 
     it("works with graphql_ppx style node", () => {
@@ -152,9 +152,9 @@ describe("extractGraphQLDocuments", () => {
     `);
       const documents = extractGraphQLDocuments(textDocument);
 
-      expect(documents.length).toEqual(1);
-      expect(documents[0].syntaxErrors.length).toBe(0);
-      expect(documents[0].ast.definitions.length).toBe(1);
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(1);
     });
   });
 });

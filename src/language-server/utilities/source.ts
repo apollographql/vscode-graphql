@@ -9,9 +9,6 @@ import {
   getVisitFn,
   Visitor,
   ASTKindToNode,
-  FieldNode,
-  InlineFragmentNode,
-  FragmentDefinitionNode
 } from "graphql";
 import { SourceLocation, getLocation } from "graphql/language/location";
 

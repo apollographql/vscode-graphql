@@ -72,7 +72,7 @@ export async function loadConfig({
   requireConfig = false,
   name,
   type
-}: LoadConfigSettings) {
+}: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
     searchPlaces: configFileName ? [configFileName] : defaultFileNames,
     loaders
@@ -85,16 +85,18 @@ export async function loadConfig({
       ApolloConfigFormat
     >;
   } catch (error) {
-    return Debug.error(`A config file failed to load with options: ${JSON.stringify(
+    Debug.error(`A config file failed to load with options: ${JSON.stringify(
       arguments[0]
     )}.
     The error was: ${error}`);
+    return null;
   }
 
   if (configPath && !loadedConfig) {
-    return Debug.error(
+    Debug.error(
       `A config file failed to load at '${configPath}'. This is likely because this file is empty or malformed. For more information, please refer to: https://go.apollo.dev/t/config`
     );
+    return null;
   }
 
   if (loadedConfig && loadedConfig.filepath.endsWith("package.json")) {
@@ -104,9 +106,10 @@ export async function loadConfig({
   }
 
   if (requireConfig && !loadedConfig) {
-    return Debug.error(
+    Debug.error(
       `No Apollo config found for project. For more information, please refer to: https://go.apollo.dev/t/config`
     );
+    return null;
   }
 
   // add API key from the env
@@ -152,13 +155,18 @@ export async function loadConfig({
   // does not. So we determine the type of the config here, and use it if
   // the type wasn't explicitly passed in.
   let projectType: "client" | "service";
-  if (type) projectType = type;
-  else if (loadedConfig && loadedConfig.config.client) projectType = "client";
-  else if (loadedConfig && loadedConfig.config.service) projectType = "service";
-  else
-    return Debug.error(
+  if (type) {
+    projectType = type;
+  } else if (loadedConfig && loadedConfig.config.client) {
+    projectType = "client";
+  } else if (loadedConfig && loadedConfig.config.service) {
+    projectType = "service";
+  } else {
+    Debug.error(
       "Unable to resolve project type. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config"
     );
+    return null;
+  }
 
   // DETERMINE SERVICE NAME
   // precedence: 1. (highest) config.js (client only) 2. name passed into loadConfig 3. name from api key

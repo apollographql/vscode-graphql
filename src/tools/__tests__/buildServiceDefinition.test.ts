@@ -1,21 +1,25 @@
 import gql from "graphql-tag";
 import { buildServiceDefinition } from "../buildServiceDefinition";
-import { GraphQLObjectType } from "graphql";
+import { GraphQLNamedType, GraphQLObjectType, printType } from "graphql";
 
 describe("buildServiceDefinition", () => {
   describe(`type definitions`, () => {
     it(`should include types from different modules`, () => {
       const service = buildServiceDefinition([
-        gql`
-          type User {
-            name: String
-          }
-        `,
-        gql`
-          type Post {
-            title: String
-          }
-        `
+        {
+          typeDefs: gql`
+            type User {
+              name: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
+            type Post {
+              title: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -23,31 +27,35 @@ describe("buildServiceDefinition", () => {
       expect(service.schema).toBeDefined();
       const schema = service.schema!;
 
-      expect(schema.getType("User")).toMatchInlineSnapshot(`
-type User {
+      expect(printType(schema.getType("User")!)).toMatchInlineSnapshot(`
+"type User {
   name: String
-}
+}"
 `);
 
-      expect(schema.getType("Post")).toMatchInlineSnapshot(`
-type Post {
+      expect(printType(schema.getType("Post")!)).toMatchInlineSnapshot(`
+"type Post {
   title: String
-}
+}"
 `);
     });
 
     it(`should not allow two types with the same name in the same module`, () => {
       const service = buildServiceDefinition([
-        gql`
-          type User {
-            name: String
-          }
-        `,
-        gql`
-          type User {
-            title: String
-          }
-        `
+        {
+          typeDefs: gql`
+            type User {
+              name: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
+            type User {
+              title: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toMatchInlineSnapshot(`
@@ -59,16 +67,20 @@ Array [
 
     it(`should not allow two types with the same name in different modules`, () => {
       const service = buildServiceDefinition([
-        gql`
-          type User {
-            name: String
-          }
-        `,
-        gql`
-          type User {
-            title: String
-          }
-        `
+        {
+          typeDefs: gql`
+            type User {
+              name: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
+            type User {
+              title: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toMatchInlineSnapshot(`
@@ -80,26 +92,34 @@ Array [
 
     it(`should report multiple type duplication errors`, () => {
       const service = buildServiceDefinition([
-        gql`
-          type User {
-            name: String
-          }
-        `,
-        gql`
-          type User {
-            title: String
-          }
-        `,
-        gql`
-          type Post {
-            title: String
-          }
-        `,
-        gql`
-          type Post {
-            name: String
-          }
-        `
+        {
+          typeDefs: gql`
+            type User {
+              name: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
+            type User {
+              title: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
+            type Post {
+              title: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
+            type Post {
+              name: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toMatchInlineSnapshot(`
@@ -114,9 +134,11 @@ Array [
   describe(`directive definitions`, () => {
     it(`should include directive`, () => {
       const service = buildServiceDefinition([
-        gql`
-          directive @something on FIELD_DEFINITION
-        `
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -129,12 +151,16 @@ Array [
 
     it(`should include directives from different modules`, () => {
       const service = buildServiceDefinition([
-        gql`
-          directive @something on FIELD_DEFINITION
-        `,
-        gql`
-          directive @another on FIELD_DEFINITION
-        `
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
+        {
+          typeDefs: gql`
+            directive @another on FIELD_DEFINITION
+          `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -153,12 +179,16 @@ Array [
 
     it(`should not allow two types with the same name in the same module`, () => {
       const service = buildServiceDefinition([
-        gql`
-          directive @something on FIELD_DEFINITION
-        `,
-        gql`
-          directive @something on FIELD_DEFINITION
-        `
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
       ]);
 
       expect(service.errors).toMatchInlineSnapshot(`
@@ -170,12 +200,16 @@ Array [
 
     it(`should not allow two types with the same name in different modules`, () => {
       const service = buildServiceDefinition([
-        gql`
-          directive @something on FIELD_DEFINITION
-        `,
-        gql`
-          directive @something on FIELD_DEFINITION
-        `
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
       ]);
 
       expect(service.errors).toMatchInlineSnapshot(`
@@ -187,18 +221,26 @@ Array [
 
     it(`should report multiple type duplication errors`, () => {
       const service = buildServiceDefinition([
-        gql`
-          directive @something on FIELD_DEFINITION
-        `,
-        gql`
-          directive @something on FIELD_DEFINITION
-        `,
-        gql`
-          directive @another on FIELD_DEFINITION
-        `,
-        gql`
-          directive @another on FIELD_DEFINITION
-        `
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
+        {
+          typeDefs: gql`
+            directive @something on FIELD_DEFINITION
+          `,
+        },
+        {
+          typeDefs: gql`
+            directive @another on FIELD_DEFINITION
+          `,
+        },
+        {
+          typeDefs: gql`
+            directive @another on FIELD_DEFINITION
+          `,
+        },
       ]);
 
       expect(service.errors).toMatchInlineSnapshot(`
@@ -213,15 +255,17 @@ Array [
   describe(`type extension`, () => {
     it(`should allow extending a type from the same module`, () => {
       const service = buildServiceDefinition([
-        gql`
-          type User {
-            name: String
-          }
+        {
+          typeDefs: gql`
+            type User {
+              name: String
+            }
 
-          extend type User {
-            email: String
-          }
-        `
+            extend type User {
+              email: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -229,26 +273,30 @@ Array [
       expect(service.schema).toBeDefined();
       const schema = service.schema!;
 
-      expect(schema.getType("User")).toMatchInlineSnapshot(`
-type User {
+      expect(printType(schema.getType("User")!)).toMatchInlineSnapshot(`
+"type User {
   name: String
   email: String
-}
+}"
 `);
     });
 
     it(`should allow extending a type from a different module`, () => {
       const service = buildServiceDefinition([
-        gql`
-          type User {
-            name: String
-          }
-        `,
-        gql`
-          extend type User {
-            email: String
-          }
-        `
+        {
+          typeDefs: gql`
+            type User {
+              name: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
+            extend type User {
+              email: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -256,21 +304,23 @@ type User {
       expect(service.schema).toBeDefined();
       const schema = service.schema!;
 
-      expect(schema.getType("User")).toMatchInlineSnapshot(`
-type User {
+      expect(printType(schema.getType("User")!)).toMatchInlineSnapshot(`
+"type User {
   name: String
   email: String
-}
+}"
 `);
     });
 
     it(`should report an error when extending a non-existent type`, () => {
       const service = buildServiceDefinition([
-        gql`
-          extend type User {
-            email: String
-          }
-        `
+        {
+          typeDefs: gql`
+            extend type User {
+              email: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toMatchInlineSnapshot(`
@@ -284,11 +334,13 @@ Array [
   describe(`extending root operation types that aren't defined elsewhere`, () => {
     it(`should be allowed`, () => {
       const service = buildServiceDefinition([
-        gql`
-          extend type Query {
-            rootField: String
-          }
-        `
+        {
+          typeDefs: gql`
+            extend type Query {
+              rootField: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -296,23 +348,25 @@ Array [
       expect(service.schema).toBeDefined();
       const schema = service.schema!;
 
-      expect(schema.getType("Query")).toMatchInlineSnapshot(`
-type Query {
+      expect(printType(schema.getType("Query")!)).toMatchInlineSnapshot(`
+"type Query {
   rootField: String
-}
+}"
 `);
     });
 
     it(`should be allowed with non default type names`, () => {
       const service = buildServiceDefinition([
-        gql`
-          schema {
-            query: QueryRoot
-          }
-          extend type QueryRoot {
-            rootField: String
-          }
-        `
+        {
+          typeDefs: gql`
+            schema {
+              query: QueryRoot
+            }
+            extend type QueryRoot {
+              rootField: String
+            }
+          `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -320,31 +374,35 @@ type Query {
       expect(service.schema).toBeDefined();
       const schema = service.schema!;
 
-      expect(schema.getType("QueryRoot")).toMatchInlineSnapshot(`
-type QueryRoot {
+      expect(printType(schema.getType("QueryRoot")!)).toMatchInlineSnapshot(`
+"type QueryRoot {
   rootField: String
-}
+}"
 `);
     });
 
     it(`should be allowed with non default nanmes specified in schema extensions`, () => {
       const service = buildServiceDefinition([
-        gql`
-          schema {
-            query: QueryRoot
-          }
-          type QueryRoot {
-            rootField: String
-          }
-        `,
-        gql`
+        {
+          typeDefs: gql`
+            schema {
+              query: QueryRoot
+            }
+            type QueryRoot {
+              rootField: String
+            }
+          `,
+        },
+        {
+          typeDefs: gql`
           extend schema {
             mutation: MutationRoot
           }
           extend type MutationRoot {
             rootField: String
           }
-        `
+        `,
+        },
       ]);
 
       expect(service.errors).toBeUndefined();
@@ -352,10 +410,10 @@ type QueryRoot {
       expect(service.schema).toBeDefined();
       const schema = service.schema!;
 
-      expect(schema.getType("MutationRoot")).toMatchInlineSnapshot(`
-type MutationRoot {
+      expect(printType(schema.getType("MutationRoot")!)).toMatchInlineSnapshot(`
+"type MutationRoot {
   rootField: String
-}
+}"
 `);
     });
   });
@@ -373,10 +431,10 @@ type MutationRoot {
           `,
           resolvers: {
             User: {
-              name
-            }
-          }
-        }
+              name,
+            },
+          },
+        },
       ]);
 
       expect(service.schema).toBeDefined();
@@ -393,7 +451,7 @@ type MutationRoot {
 
     it(`should handle subscriptions`, () => {
       const commentAddedSubscription = () =>
-        async function*() {
+        async function* () {
           yield "111";
           yield "222";
           yield "333";
@@ -409,11 +467,11 @@ type MutationRoot {
           resolvers: {
             Subscription: {
               commentAdded: {
-                subscribe: commentAddedSubscription
-              }
-            }
-          }
-        }
+                subscribe: commentAddedSubscription,
+              },
+            },
+          },
+        },
       ]);
 
       expect(service.schema).toBeDefined();

@@ -316,7 +316,7 @@ export function withTypenameFieldAddedWhereNeeded(ast: ASTNode) {
             selection =>
               !(
                 selection.kind === "Field" &&
-                (selection as FieldNode).name.value === "__typename"
+                selection.name.value === "__typename"
               )
           )
         };

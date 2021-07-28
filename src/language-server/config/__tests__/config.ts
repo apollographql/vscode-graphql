@@ -105,6 +105,7 @@ describe("ApolloConfig", () => {
         client: {
           name: "my-client",
           service: "my-service@master",
+          ...DefaultConfigBase,
         },
       };
       config.setDefaults(overrides);
@@ -117,6 +118,7 @@ describe("ApolloConfig", () => {
         service: {
           name: "my-service",
           url: "localhost:9090",
+          ...DefaultConfigBase,
         },
       };
       config.setDefaults(overrides);

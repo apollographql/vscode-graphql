@@ -3,21 +3,21 @@ import { GraphQLFieldResolver } from "graphql";
 export interface GraphQLResolverMap<TContext> {
   [typeName: string]: {
     [fieldName: string]:
-      | GraphQLFieldResolver<any, TContext>
+      | GraphQLFieldResolver<unknown, TContext>
       | {
           requires?: string;
-          resolve: GraphQLFieldResolver<any, TContext>;
+          resolve: GraphQLFieldResolver<unknown, TContext>;
           subscribe?: undefined;
         }
       | {
           requires?: string;
           resolve?: undefined;
-          subscribe: GraphQLFieldResolver<any, TContext>;
+          subscribe: GraphQLFieldResolver<unknown, TContext>;
         }
       | {
           requires?: string;
-          resolve: GraphQLFieldResolver<any, TContext>;
-          subscribe: GraphQLFieldResolver<any, TContext>;
+          resolve: GraphQLFieldResolver<unknown, TContext>;
+          subscribe: GraphQLFieldResolver<unknown, TContext>;
         };
   };
 }

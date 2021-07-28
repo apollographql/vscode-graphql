@@ -187,12 +187,22 @@ export class ApolloConfig {
   }
 
   // this type needs to be an "EveryKeyIsOptionalApolloConfig"
-  public setDefaults({ client, engine, service }: any): void {
+  public setDefaults({
+    engine,
+    client,
+    service,
+  }: {
+    engine?: EngineConfig;
+    client?: ClientConfigFormat;
+    service?: ServiceConfigFormat;
+  }): void {
     const config = merge(this.rawConfig, { client, engine, service });
     this.rawConfig = config;
     this.client = config.client;
     this.service = config.service;
-    if (engine) this.engine = config.engine;
+    if (config.engine) {
+      this.engine = config.engine;
+    }
   }
 }
 

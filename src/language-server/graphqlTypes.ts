@@ -72,7 +72,7 @@ export interface CheckPartialSchema_service_checkPartialSchema_checkSchemaResult
    * day would have a `from` value of -86400. In rare cases, this could be an ISO
    * timestamp if the user passed one in on diff creation
    */
-  from: any | null;
+  from: string | number | null;
   /**
    * delta in seconds from current time that determines the end of the
    * window for reported metrics included in a schema diff. A day window
@@ -80,7 +80,7 @@ export interface CheckPartialSchema_service_checkPartialSchema_checkSchemaResult
    * cases, this could be an ISO timestamp if the user passed one in on diff
    * creation
    */
-  to: any | null;
+  to: string | number | null;
   /**
    * Minimum number of requests within the window for a query to be considered.
    */
@@ -213,7 +213,7 @@ export interface CheckSchema_service_checkSchema_diffToPrevious_validationConfig
    * day would have a `from` value of -86400. In rare cases, this could be an ISO
    * timestamp if the user passed one in on diff creation
    */
-  from: any | null;
+  from: string | number | null;
   /**
    * delta in seconds from current time that determines the end of the
    * window for reported metrics included in a schema diff. A day window
@@ -221,7 +221,7 @@ export interface CheckSchema_service_checkSchema_diffToPrevious_validationConfig
    * cases, this could be an ISO timestamp if the user passed one in on diff
    * creation
    */
-  to: any | null;
+  to: string | number | null;
   /**
    * Minimum number of requests within the window for a query to be considered.
    */
@@ -341,7 +341,7 @@ export interface ListServices_service_implementingServices_FederatedImplementing
   /**
    * Timestamp for when this implementing service was updated
    */
-  updatedAt: any;
+  updatedAt: string | number;
 }
 
 export interface ListServices_service_implementingServices_FederatedImplementingServices {
@@ -1739,8 +1739,8 @@ export interface GitContextInput {
 }
 
 export interface HistoricQueryParameters {
-  from?: any | null;
-  to?: any | null;
+  from?: string | number | null;
+  to?: string | number | null;
   queryCountThreshold?: number | null;
   queryCountThresholdPercentage?: number | null;
   ignoredOperations?: string[] | null;

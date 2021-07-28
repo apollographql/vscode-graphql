@@ -38,7 +38,7 @@ export function visitWithTypeInfo(
       typeInfo.enter(node);
       const fn = getVisitFn(visitor, node.kind, /* isLeaving */ false);
       if (fn) {
-        const result = fn.apply(visitor, (arguments as unknown) as applyArg);
+        const result = fn.apply(visitor, arguments as unknown as applyArg);
         if (result !== undefined) {
           typeInfo.leave(node);
           if (isNode(result)) {
@@ -52,7 +52,7 @@ export function visitWithTypeInfo(
       const fn = getVisitFn(visitor, node.kind, /* isLeaving */ true);
       let result;
       if (fn) {
-        result = fn.apply(visitor, (arguments as unknown) as applyArg);
+        result = fn.apply(visitor, arguments as unknown as applyArg);
       }
       // XXX we can't replace this function until we handle this
       // case better. If we replace with the function in `graphql-js`,
@@ -61,7 +61,7 @@ export function visitWithTypeInfo(
         typeInfo.leave(node);
       }
       return result;
-    }
+    },
   };
 }
 
@@ -132,7 +132,7 @@ export function positionToOffset(source: Source, position: Position): number {
     position.character +
     linesUntilPosition
       .map(
-        line => line.length + lineEndingLength // count EOL
+        (line) => line.length + lineEndingLength // count EOL
       )
       .reduce((a, b) => a + b, 0)
   );
@@ -170,7 +170,7 @@ export function getASTNodeAndTypeInfoAtPosition(
           return BREAK;
         }
         return;
-      }
+      },
     })
   );
 

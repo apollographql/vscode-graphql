@@ -18,7 +18,7 @@ import {
   FieldNode,
   ObjectTypeDefinitionNode,
   GraphQLObjectType,
-  DefinitionNode
+  DefinitionNode,
 } from "graphql";
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import { NotificationHandler, DiagnosticSeverity } from "vscode-languageserver";
@@ -36,14 +36,14 @@ import {
   removeDirectiveAnnotatedFields,
   withTypenameFieldAddedWhereNeeded,
   ClientSchemaInfo,
-  isDirectiveDefinitionNode
+  isDirectiveDefinitionNode,
 } from "../utilities/graphql";
 import { defaultValidationRules } from "../errors/validation";
 
 import {
   collectExecutableDefinitionDiagnositics,
   DiagnosticSet,
-  diagnosticsFromError
+  diagnosticsFromError,
 } from "../diagnostics";
 import URI from "vscode-uri";
 
@@ -100,7 +100,7 @@ export class GraphQLClientProject extends GraphQLProject {
     config,
     loadingHandler,
     rootURI,
-    clientIdentity
+    clientIdentity,
   }: GraphQLClientProjectConfig) {
     const fileSet = new FileSet({
       // the URI of the folder _containing_ the apollo.config.js is the true project's root.
@@ -108,7 +108,7 @@ export class GraphQLClientProject extends GraphQLProject {
       rootURI: config.configDirURI || rootURI,
       includes: [...config.client.includes, ".env", "apollo.config.js"],
       excludes: config.client.excludes,
-      configURI: config.configURI
+      configURI: config.configURI,
     });
 
     super({ config, fileSet, loadingHandler, clientIdentity });
@@ -174,11 +174,11 @@ export class GraphQLClientProject extends GraphQLProject {
       types: {
         service: serviceTypes,
         client: totalTypes - serviceTypes,
-        total: totalTypes
+        total: totalTypes,
       },
       tag: this.config.variant,
       loaded: Boolean(this.schema || this.serviceSchema),
-      lastFetch: this.lastLoadDate
+      lastFetch: this.lastLoadDate,
     };
   }
 
@@ -202,7 +202,7 @@ export class GraphQLClientProject extends GraphQLProject {
         this.serviceSchema = augmentSchemaWithGeneratedSDLIfNeeded(
           await this.schemaProvider.resolveSchema({
             tag: tag || this.config.variant,
-            force: true
+            force: true,
           })
         );
 
@@ -221,8 +221,8 @@ export class GraphQLClientProject extends GraphQLProject {
       kind: Kind.DOCUMENT,
       definitions: [
         ...this.typeSystemDefinitionsAndExtensions,
-        ...this.missingApolloClientDirectives
-      ]
+        ...this.missingApolloClientDirectives,
+      ],
     };
   }
 
@@ -230,12 +230,12 @@ export class GraphQLClientProject extends GraphQLProject {
     const { serviceSchema } = this;
 
     const serviceDirectives = serviceSchema
-      ? serviceSchema.getDirectives().map(directive => directive.name)
+      ? serviceSchema.getDirectives().map((directive) => directive.name)
       : [];
 
     const clientDirectives = this.typeSystemDefinitionsAndExtensions
       .filter(isDirectiveDefinitionNode)
-      .map(def => def.name.value);
+      .map((def) => def.name.value);
 
     const existingDirectives = serviceDirectives.concat(clientDirectives);
 
@@ -244,7 +244,7 @@ export class GraphQLClientProject extends GraphQLProject {
 
     const apolloDirectives = apolloAst.definitions
       .filter(isDirectiveDefinitionNode)
-      .map(def => def.name.value);
+      .map((def) => def.name.value);
 
     // If there is overlap between existingDirectives and apolloDirectives,
     // don't add apolloDirectives. This is in case someone is directly including
@@ -264,9 +264,9 @@ export class GraphQLClientProject extends GraphQLProject {
 
     visit(this.clientSchema, {
       ObjectTypeExtension(node) {
-        const type = schema.getType(node.name.value) as Maybe<
-          GraphQLObjectType
-        >;
+        const type = schema.getType(
+          node.name.value
+        ) as Maybe<GraphQLObjectType>;
         const { fields } = node;
         if (!fields || !type) return;
 
@@ -274,11 +274,11 @@ export class GraphQLClientProject extends GraphQLProject {
 
         localInfo.localFields = [
           ...(localInfo.localFields || []),
-          ...fields.map(field => field.name.value)
+          ...fields.map((field) => field.name.value),
         ];
 
         type.clientSchema = localInfo;
-      }
+      },
     });
   }
 
@@ -341,10 +341,8 @@ export class GraphQLClientProject extends GraphQLProject {
       `Loading Apollo data for ${this.displayName}`,
       (async () => {
         try {
-          const {
-            schemaTags,
-            fieldStats
-          } = await engineClient.loadSchemaTagsAndFieldStats(serviceID);
+          const { schemaTags, fieldStats } =
+            await engineClient.loadSchemaTagsAndFieldStats(serviceID);
           this._onSchemaTags && this._onSchemaTags([serviceID, schemaTags]);
           this.fieldStats = fieldStats;
           this.lastLoadDate = +new Date();
@@ -371,7 +369,7 @@ export class GraphQLClientProject extends GraphQLProject {
           visit(
             queryDocument.ast,
             visitWithTypeInfo(typeInfo, {
-              enter: node => {
+              enter: (node) => {
                 if (node.kind == "Field" && typeInfo.getParentType()) {
                   const parentName = typeInfo.getParentType()!.name;
                   const parentEngineStat = fieldStats.get(parentName);
@@ -382,11 +380,11 @@ export class GraphQLClientProject extends GraphQLProject {
                     decorations.push({
                       document: uri,
                       message: `~${formatMS(engineStat, 0)}`,
-                      range: rangeForASTNode(node)
+                      range: rangeForASTNode(node),
                     });
                   }
                 }
-              }
+              },
             })
           );
         }
@@ -435,19 +433,16 @@ export class GraphQLClientProject extends GraphQLProject {
       kind: Kind.DOCUMENT,
       definitions: [
         ...Object.values(this.fragments),
-        ...Object.values(this.operations)
-      ]
+        ...Object.values(this.operations),
+      ],
     });
   }
 
   get mergedOperationsAndFragmentsForService(): {
     [operationName: string]: DocumentNode;
   } {
-    const {
-      clientOnlyDirectives,
-      clientSchemaDirectives,
-      addTypename
-    } = this.config.client;
+    const { clientOnlyDirectives, clientSchemaDirectives, addTypename } =
+      this.config.client;
     const current = this.mergedOperationsAndFragments;
     if (
       (!clientOnlyDirectives || !clientOnlyDirectives.length) &&
@@ -495,7 +490,7 @@ export class GraphQLClientProject extends GraphQLProject {
               fields.push(node);
             }
             return;
-          }
+          },
         })
       );
     }
@@ -511,7 +506,7 @@ export class GraphQLClientProject extends GraphQLProject {
           if (node.name.value === fragmentName) {
             fragmentSpreads.push(node);
           }
-        }
+        },
       });
     }
     return fragmentSpreads;

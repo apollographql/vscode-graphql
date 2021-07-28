@@ -13,7 +13,7 @@ import {
   isObjectType,
   SchemaDefinitionNode,
   OperationTypeNode,
-  SchemaExtensionNode
+  SchemaExtensionNode,
 } from "graphql";
 import { isNode, isDocumentNode } from "./utilities/graphql";
 import { GraphQLResolverMap } from "./schema/resolverMap";
@@ -120,7 +120,7 @@ export function buildServiceDefinition(
     const schemaDefinition = schemaDefinitions[schemaDefinitions.length - 1];
 
     const operationTypes = [schemaDefinition, ...schemaExtensions]
-      .map(node => node.operationTypes)
+      .map((node) => node.operationTypes)
       .filter(isNotNullOrUndefined)
       .flat();
 
@@ -146,7 +146,7 @@ export function buildServiceDefinition(
     operationTypeMap = {
       query: "Query",
       mutation: "Mutation",
-      subscription: "Subscription"
+      subscription: "Subscription",
     };
   }
 
@@ -158,9 +158,9 @@ export function buildServiceDefinition(
             kind: Kind.OBJECT_TYPE_DEFINITION,
             name: {
               kind: Kind.NAME,
-              value: typeName
-            }
-          }
+              value: typeName,
+            },
+          },
         ];
       } else {
         errors.push(
@@ -183,7 +183,7 @@ export function buildServiceDefinition(
 
     let schema = buildASTSchema({
       kind: Kind.DOCUMENT,
-      definitions: [...typeDefinitions, ...directives]
+      definitions: [...typeDefinitions, ...directives],
     });
 
     const typeExtensions = Object.values(typeExtensionsMap).flat();
@@ -191,7 +191,7 @@ export function buildServiceDefinition(
     if (typeExtensions.length > 0) {
       schema = extendSchema(schema, {
         kind: Kind.DOCUMENT,
-        definitions: typeExtensions
+        definitions: typeExtensions,
       });
     }
 

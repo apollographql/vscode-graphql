@@ -10,10 +10,7 @@ const createAndTrimStackTrace = () => {
   let stack: string | undefined = new Error().stack;
   // remove the lines in the stack from _this_ function and the caller (in this file) and shorten the trace
   return stack && stack.split("\n").length > 2
-    ? stack
-        .split("\n")
-        .slice(3, 7)
-        .join("\n")
+    ? stack.split("\n").slice(3, 7).join("\n")
     : stack;
 };
 

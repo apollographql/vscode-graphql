@@ -7,7 +7,7 @@ import {
   isLocalServiceConfig,
   isServiceConfig,
   parseServiceSpecifier,
-  DefaultConfigBase
+  DefaultConfigBase,
 } from "../";
 
 describe("getServiceFromKey", () => {
@@ -40,7 +40,7 @@ describe("getServiceName", () => {
       expect(getGraphIdFromConfig(rawConfig)).toEqual("my-service");
 
       const rawConfigWithTag: ApolloConfigFormat = {
-        client: { service: "my-service@master", ...DefaultConfigBase }
+        client: { service: "my-service@master", ...DefaultConfigBase },
       };
       expect(getGraphIdFromConfig(rawConfigWithTag)).toEqual("my-service");
     });
@@ -48,7 +48,7 @@ describe("getServiceName", () => {
     it("finds service name when client.service is an object", () => {
       const rawConfig: ApolloConfigFormat = {
         client: {
-          service: { name: 'my-service', localSchemaFile: './someFile' },
+          service: { name: "my-service", localSchemaFile: "./someFile" },
           ...DefaultConfigBase,
         },
       };
@@ -59,8 +59,8 @@ describe("getServiceName", () => {
     it("finds service name from raw service config", () => {
       const rawConfig: ApolloConfigFormat = {
         service: {
-          name: 'my-service',
-          localSchemaFile: './someFile',
+          name: "my-service",
+          localSchemaFile: "./someFile",
           ...DefaultConfigBase,
         },
       };
@@ -72,7 +72,7 @@ describe("getServiceName", () => {
 describe("isClientConfig", () => {
   it("identifies client config properly", () => {
     const config = new ApolloConfig({
-      client: { service: 'hello', ...DefaultConfigBase },
+      client: { service: "hello", ...DefaultConfigBase },
     });
     expect(isClientConfig(config)).toBeTruthy();
   });
@@ -80,14 +80,14 @@ describe("isClientConfig", () => {
 
 describe("isLocalServiceConfig", () => {
   it("properly identifies a client config that uses localSchemaFiles", () => {
-    const clientServiceConfig = { name: 'my-service', localSchemaFile: "okay" };
+    const clientServiceConfig = { name: "my-service", localSchemaFile: "okay" };
     expect(isLocalServiceConfig(clientServiceConfig)).toBeTruthy();
   });
 });
 
 describe("isServiceConfig", () => {
   it("identifies service config properly", () => {
-    const config = new ApolloConfig({ service: { ...DefaultConfigBase, } });
+    const config = new ApolloConfig({ service: { ...DefaultConfigBase } });
     expect(isServiceConfig(config)).toBeTruthy();
   });
 });
@@ -98,9 +98,8 @@ describe("parseServiceSpecifier", () => {
     expect(id).toEqual("my-service");
     expect(tag).toEqual("master");
 
-    const [idFromSimpleName, tagFromSimpleName] = parseServiceSpecifier(
-      "my-service"
-    );
+    const [idFromSimpleName, tagFromSimpleName] =
+      parseServiceSpecifier("my-service");
     expect(idFromSimpleName).toEqual("my-service");
     expect(tagFromSimpleName).toBeUndefined();
   });

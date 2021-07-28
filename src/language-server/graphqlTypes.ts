@@ -102,11 +102,15 @@ export interface CheckPartialSchema_service_checkPartialSchema_checkSchemaResult
   /**
    * Clients affected by all changes in diff
    */
-  affectedClients: CheckPartialSchema_service_checkPartialSchema_checkSchemaResult_diffToPrevious_affectedClients[] | null;
+  affectedClients:
+    | CheckPartialSchema_service_checkPartialSchema_checkSchemaResult_diffToPrevious_affectedClients[]
+    | null;
   /**
    * Operations affected by all changes in diff
    */
-  affectedQueries: CheckPartialSchema_service_checkPartialSchema_checkSchemaResult_diffToPrevious_affectedQueries[] | null;
+  affectedQueries:
+    | CheckPartialSchema_service_checkPartialSchema_checkSchemaResult_diffToPrevious_affectedQueries[]
+    | null;
   /**
    * Number of operations that were validated during schema diff
    */
@@ -239,11 +243,15 @@ export interface CheckSchema_service_checkSchema_diffToPrevious {
   /**
    * Clients affected by all changes in diff
    */
-  affectedClients: CheckSchema_service_checkSchema_diffToPrevious_affectedClients[] | null;
+  affectedClients:
+    | CheckSchema_service_checkSchema_diffToPrevious_affectedClients[]
+    | null;
   /**
    * Operations affected by all changes in diff
    */
-  affectedQueries: CheckSchema_service_checkSchema_diffToPrevious_affectedQueries[] | null;
+  affectedQueries:
+    | CheckSchema_service_checkSchema_diffToPrevious_affectedQueries[]
+    | null;
   /**
    * Number of operations that were validated during schema diff
    */
@@ -341,7 +349,9 @@ export interface ListServices_service_implementingServices_FederatedImplementing
   services: ListServices_service_implementingServices_FederatedImplementingServices_services[];
 }
 
-export type ListServices_service_implementingServices = ListServices_service_implementingServices_NonFederatedImplementingService | ListServices_service_implementingServices_FederatedImplementingServices;
+export type ListServices_service_implementingServices =
+  | ListServices_service_implementingServices_NonFederatedImplementingService
+  | ListServices_service_implementingServices_FederatedImplementingServices;
 
 export interface ListServices_service {
   __typename: "Service";
@@ -381,7 +391,9 @@ export interface RegisterOperations_service_registerOperationsWithResponse_inval
 
 export interface RegisterOperations_service_registerOperationsWithResponse_invalidOperations {
   __typename: "InvalidOperation";
-  errors: RegisterOperations_service_registerOperationsWithResponse_invalidOperations_errors[] | null;
+  errors:
+    | RegisterOperations_service_registerOperationsWithResponse_invalidOperations_errors[]
+    | null;
   signature: string;
 }
 
@@ -392,8 +404,12 @@ export interface RegisterOperations_service_registerOperationsWithResponse_newOp
 
 export interface RegisterOperations_service_registerOperationsWithResponse {
   __typename: "RegisterOperationsMutationResponse";
-  invalidOperations: RegisterOperations_service_registerOperationsWithResponse_invalidOperations[] | null;
-  newOperations: RegisterOperations_service_registerOperationsWithResponse_newOperations[] | null;
+  invalidOperations:
+    | RegisterOperations_service_registerOperationsWithResponse_invalidOperations[]
+    | null;
+  newOperations:
+    | RegisterOperations_service_registerOperationsWithResponse_newOperations[]
+    | null;
   registrationSuccess: boolean;
 }
 
@@ -1058,10 +1074,14 @@ export interface GetSchemaByTag_service_schema___schema_types {
   name: string | null;
   description: string | null;
   fields: GetSchemaByTag_service_schema___schema_types_fields[] | null;
-  inputFields: GetSchemaByTag_service_schema___schema_types_inputFields[] | null;
+  inputFields:
+    | GetSchemaByTag_service_schema___schema_types_inputFields[]
+    | null;
   interfaces: GetSchemaByTag_service_schema___schema_types_interfaces[] | null;
   enumValues: GetSchemaByTag_service_schema___schema_types_enumValues[] | null;
-  possibleTypes: GetSchemaByTag_service_schema___schema_types_possibleTypes[] | null;
+  possibleTypes:
+    | GetSchemaByTag_service_schema___schema_types_possibleTypes[]
+    | null;
 }
 
 export interface GetSchemaByTag_service_schema___schema_directives_args_type_ofType_ofType_ofType_ofType_ofType_ofType_ofType {
@@ -1814,10 +1834,10 @@ export interface OperationDocumentInput {
 /**
  * Input for registering a partial schema to an implementing service.
  * One of the fields must be specified (validated server-side).
- * 
+ *
  * If a new partialSchemaSDL is passed in, this operation will store it before
  * creating the association.
- * 
+ *
  * If both the sdl and hash are specified, an error will be thrown if the provided
  * hash doesn't match our hash of the sdl contents. If the sdl field is specified,
  * the hash does not need to be and will be computed server-side.

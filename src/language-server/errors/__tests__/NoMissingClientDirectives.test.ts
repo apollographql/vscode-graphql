@@ -133,13 +133,13 @@ const config = new ApolloConfig({
   client: {
     service: {
       name: "server",
-      localSchemaFile: "./schema.graphql"
+      localSchemaFile: "./schema.graphql",
     },
     includes: ["./src/**.graphql"],
     excludes: ["./__tests__"],
-    validationRules: [NoMissingClientDirectives]
+    validationRules: [NoMissingClientDirectives],
   },
-  engine: {}
+  engine: {},
 }) as ClientConfig;
 
 class MockLoadingHandler implements LoadingHandler {
@@ -170,7 +170,7 @@ describe("client state", () => {
       "src/b.graphql": b,
       "src/c.graphql": c,
       "src/d.graphql": d,
-      "src/e.graphql": e
+      "src/e.graphql": e,
       // "src/f.graphql": f,
     });
   });
@@ -180,7 +180,7 @@ describe("client state", () => {
     const project = new GraphQLClientProject({
       config,
       loadingHandler: new MockLoadingHandler(),
-      rootURI
+      rootURI,
     });
 
     const errors = Object.create(null);

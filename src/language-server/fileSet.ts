@@ -14,7 +14,7 @@ export class FileSet {
     rootURI,
     includes,
     excludes,
-    configURI
+    configURI,
   }: {
     rootURI: URI;
     includes: string[];
@@ -34,11 +34,17 @@ export class FileSet {
     const normalizedFilePath = normalizeURI(filePath);
 
     return (
-      this.includes.some(include => {
-        return minimatch(normalizedFilePath, resolve(this.rootURI.fsPath, include));
+      this.includes.some((include) => {
+        return minimatch(
+          normalizedFilePath,
+          resolve(this.rootURI.fsPath, include)
+        );
       }) &&
-      !this.excludes.some(exclude => {
-        return minimatch(normalizedFilePath, resolve(this.rootURI.fsPath, exclude));
+      !this.excludes.some((exclude) => {
+        return minimatch(
+          normalizedFilePath,
+          resolve(this.rootURI.fsPath, exclude)
+        );
       })
     );
   }
@@ -52,7 +58,7 @@ export class FileSet {
       .sync(joinedIncludes, {
         cwd: this.rootURI.fsPath,
         absolute: true,
-        ignore: this.excludes
+        ignore: this.excludes,
       })
       .map(normalizeURI);
   }

@@ -24,8 +24,8 @@ import {
   getTokenAtPosition,
   getTypeInfo,
 } from "@apollographql/graphql-language-service-interface/dist/getAutocompleteSuggestions";
-import { GraphQLWorkspace } from "./workspace";
-import { DocumentUri } from "./project/base";
+import type { GraphQLWorkspace } from "./workspace";
+import type { DocumentUri } from "./project/base";
 
 import {
   positionFromPositionInContainingDocument,
@@ -62,8 +62,9 @@ import { highlightNodeForNode } from "./utilities/graphql";
 
 import { GraphQLClientProject, isClientProject } from "./project/client";
 import { isNotNullOrUndefined } from "../tools";
-import { CodeActionInfo } from "./errors/validation";
+import type { CodeActionInfo } from "./errors/validation";
 import { GraphQLDiagnostic } from "./diagnostics";
+import type { ProjectStats } from "src/messages";
 
 const DirectiveLocations = Object.keys(DirectiveLocation);
 
@@ -103,7 +104,7 @@ function symbolForFieldDefinition(
 export class GraphQLLanguageProvider {
   constructor(public workspace: GraphQLWorkspace) {}
 
-  async provideStats(uri?: DocumentUri) {
+  async provideStats(uri?: DocumentUri): Promise<ProjectStats> {
     if (this.workspace.projects.length && uri) {
       const project = this.workspace.projectForFile(uri);
       return project ? project.getProjectStats() : { loaded: false };

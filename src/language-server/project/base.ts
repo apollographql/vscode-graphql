@@ -21,7 +21,7 @@ import {
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
 
-import { LoadingHandler } from "../loadingHandler";
+import type { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
 import { ApolloConfig, keyEnvVar } from "../config";
 import {
@@ -30,6 +30,7 @@ import {
   SchemaResolveConfig,
 } from "../providers/schema";
 import { ApolloEngineClient, ClientIdentity } from "../engine";
+import type { ProjectStats } from "src/messages";
 
 export type DocumentUri = string;
 
@@ -54,21 +55,6 @@ export interface GraphQLProjectConfig {
   config: ApolloConfig;
   fileSet: FileSet;
   loadingHandler: LoadingHandler;
-}
-
-export interface TypeStats {
-  service?: number;
-  client?: number;
-  total?: number;
-}
-
-export interface ProjectStats {
-  type: string;
-  loaded: boolean;
-  serviceId?: string;
-  types?: TypeStats;
-  tag?: string;
-  lastFetch?: number;
 }
 
 export abstract class GraphQLProject implements GraphQLSchemaProvider {

@@ -13,7 +13,8 @@ import {
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
-import { LanguageClient, NotificationType } from "vscode-languageclient";
+import { NotificationType } from "vscode-languageclient";
+import type { LanguageClient } from "./messages";
 import {
   printNoFileOpenMessage,
   printStatsToClientOutputChannel,

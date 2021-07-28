@@ -8,13 +8,14 @@ import {
   FileChangeType,
   ServerCapabilities,
 } from "vscode-languageserver";
-import { QuickPickItem } from "vscode";
+import type { QuickPickItem } from "vscode";
 import { GraphQLWorkspace } from "./workspace";
 import { GraphQLLanguageProvider } from "./languageProvider";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
+import type { Connection } from "src/messages";
 
-const connection = createConnection(ProposedFeatures.all);
+const connection: Connection = createConnection(ProposedFeatures.all);
 Debug.SetConnection(connection);
 
 let hasWorkspaceFolderCapability = false;

@@ -1,4 +1,4 @@
-import { window, workspace, OutputChannel } from "vscode";
+import { OutputChannel } from "vscode";
 
 /**
  * for errors (and other logs in debug mode) we want to print

@@ -1,4 +1,4 @@
-import { IConnection } from "vscode-languageserver";
+import { Connection } from "src/messages";
 
 /**
  * for errors (and other logs in debug mode) we want to print
@@ -17,7 +17,7 @@ const createAndTrimStackTrace = () => {
 type Logger = (message?: any) => void;
 
 export class Debug {
-  private static connection?: IConnection;
+  private static connection?: Connection;
   private static infoLogger: Logger = (message) =>
     console.log("[INFO] " + message);
   private static warningLogger: Logger = (message) =>
@@ -29,7 +29,7 @@ export class Debug {
    * Setting a connection overrides the default info/warning/error
    * loggers to pass a notification to the connection
    */
-  public static SetConnection(conn: IConnection) {
+  public static SetConnection(conn: Connection) {
     Debug.connection = conn;
     Debug.infoLogger = (message) =>
       Debug.connection!.sendNotification("serverDebugMessage", {

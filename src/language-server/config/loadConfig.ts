@@ -10,7 +10,7 @@ import {
   DefaultConfigBase,
   DefaultClientConfig,
   DefaultServiceConfig,
-  DefaultEngineConfig
+  DefaultEngineConfig,
 } from "./config";
 import { getServiceFromKey } from "./utils";
 import URI from "vscode-uri";
@@ -21,7 +21,7 @@ const MODULE_NAME = "apollo";
 const defaultFileNames = [
   "package.json",
   `${MODULE_NAME}.config.js`,
-  `${MODULE_NAME}.config.ts`
+  `${MODULE_NAME}.config.ts`,
 ];
 const envFileNames = [".env", ".env.local"];
 
@@ -30,8 +30,8 @@ const loaders = {
   ".json": (cosmiconfig as any).loadJson as LoaderEntry,
   ".js": (cosmiconfig as any).loadJs as LoaderEntry,
   ".ts": {
-    async: TypeScriptLoader
-  }
+    async: TypeScriptLoader,
+  },
 };
 
 export const legacyKeyEnvVar = "ENGINE_API_KEY";
@@ -71,19 +71,19 @@ export async function loadConfig({
   configFileName,
   requireConfig = false,
   name,
-  type
+  type,
 }: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
     searchPlaces: configFileName ? [configFileName] : defaultFileNames,
-    loaders
+    loaders,
   });
 
   // search can fail if a file can't be parsed (ex: a nonsense js file) so we wrap in a try/catch
   let loadedConfig;
   try {
-    loadedConfig = (await explorer.search(configPath)) as ConfigResult<
-      ApolloConfigFormat
-    >;
+    loadedConfig = (await explorer.search(
+      configPath
+    )) as ConfigResult<ApolloConfigFormat>;
   } catch (error) {
     Debug.error(`A config file failed to load with options: ${JSON.stringify(
       arguments[0]
@@ -120,7 +120,7 @@ export async function loadConfig({
   // loop over the list of possible .env files and try to parse for key
   // and service name. Files are scanned and found values are preferred
   // in order of appearance in `envFileNames`.
-  envFileNames.forEach(envFile => {
+  envFileNames.forEach((envFile) => {
     const dotEnvPath = configPath
       ? resolve(configPath, envFile)
       : resolve(process.cwd(), envFile);
@@ -197,17 +197,17 @@ export async function loadConfig({
               client: {
                 ...DefaultConfigBase,
                 ...(loadedConfig && loadedConfig.config.client),
-                service: serviceName
-              }
+                service: serviceName,
+              },
             }
           : {
               service: {
                 ...DefaultConfigBase,
                 ...(loadedConfig && loadedConfig.config.service),
-                name: serviceName
-              }
-            })
-      }
+                name: serviceName,
+              },
+            }),
+      },
     };
   }
 

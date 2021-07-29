@@ -9,27 +9,28 @@ import {
   isTypeSystemExtensionNode,
   DefinitionNode,
   GraphQLSchema,
-  Kind
+  Kind,
 } from "graphql";
 
 import {
   TextDocument,
   NotificationHandler,
   PublishDiagnosticsParams,
-  Position
+  Position,
 } from "vscode-languageserver";
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
 
-import { LoadingHandler } from "../loadingHandler";
+import type { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
 import { ApolloConfig, keyEnvVar } from "../config";
 import {
   schemaProviderFromConfig,
   GraphQLSchemaProvider,
-  SchemaResolveConfig
+  SchemaResolveConfig,
 } from "../providers/schema";
 import { ApolloEngineClient, ClientIdentity } from "../engine";
+import type { ProjectStats } from "src/messages";
 
 export type DocumentUri = string;
 
@@ -46,7 +47,7 @@ const fileAssociations: { [extension: string]: string } = {
   ".dart": "dart",
   ".re": "reason",
   ".ex": "elixir",
-  ".exs": "elixir"
+  ".exs": "elixir",
 };
 
 export interface GraphQLProjectConfig {
@@ -54,21 +55,6 @@ export interface GraphQLProjectConfig {
   config: ApolloConfig;
   fileSet: FileSet;
   loadingHandler: LoadingHandler;
-}
-
-export interface TypeStats {
-  service?: number;
-  client?: number;
-  total?: number;
-}
-
-export interface ProjectStats {
-  type: string;
-  loaded: boolean;
-  serviceId?: string;
-  types?: TypeStats;
-  tag?: string;
-  lastFetch?: number;
 }
 
 export abstract class GraphQLProject implements GraphQLSchemaProvider {
@@ -94,7 +80,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     config,
     fileSet,
     loadingHandler,
-    clientIdentity
+    clientIdentity,
   }: GraphQLProjectConfig) {
     this.config = config;
     this.fileSet = fileSet;
@@ -116,7 +102,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
       .then(() => {
         this._isReady = true;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
         this.loadingHandler.showError(
           `Error initializing Apollo GraphQL project "${this.displayName}": ${error}`
@@ -294,7 +280,9 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     const queryDocuments = this.documentsByFile.get(uri);
     if (!queryDocuments) return undefined;
 
-    return queryDocuments.find(document => document.containsPosition(position));
+    return queryDocuments.find((document) =>
+      document.containsPosition(position)
+    );
   }
 
   get documents(): GraphQLDocument[] {
@@ -334,7 +322,8 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
 
   get typeSystemDefinitionsAndExtensions(): (
     | TypeSystemDefinitionNode
-    | TypeSystemExtensionNode)[] {
+    | TypeSystemExtensionNode
+  )[] {
     const definitionsAndExtensions = [];
     for (const document of this.documents) {
       if (!document.ast) continue;

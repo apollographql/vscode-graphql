@@ -25,6 +25,8 @@
     "_internal:cleanup-extension": "git clean -dfqX -- ./node_modules ./yarn.lock",
     "package-extension": "npm run _internal:prepare-extension && npx vsce package --yarn --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
     "publish-extension": "npm run _internal:prepare-extension && npx vsce publish -p $VS_MARKETPLACE_TOKEN --yarn --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
+    "typecheck": "tsc --noEmit",
+    "lint": "prettier --check --config ./.prettierrc src",
     "test": "jest"
   },
   "engines": {

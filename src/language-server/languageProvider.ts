@@ -15,23 +15,23 @@ import {
   CodeAction,
   CodeActionKind,
   MarkupKind,
-  CompletionItemKind
+  CompletionItemKind,
 } from "vscode-languageserver";
 
 // should eventually be moved into this package, since we're overriding a lot of the existing behavior here
 import { getAutocompleteSuggestions } from "@apollographql/graphql-language-service-interface";
 import {
   getTokenAtPosition,
-  getTypeInfo
+  getTypeInfo,
 } from "@apollographql/graphql-language-service-interface/dist/getAutocompleteSuggestions";
-import { GraphQLWorkspace } from "./workspace";
-import { DocumentUri } from "./project/base";
+import type { GraphQLWorkspace } from "./workspace";
+import type { DocumentUri } from "./project/base";
 
 import {
   positionFromPositionInContainingDocument,
   rangeForASTNode,
   getASTNodeAndTypeInfoAtPosition,
-  positionToOffset
+  positionToOffset,
 } from "./utilities/source";
 
 import {
@@ -56,14 +56,15 @@ import {
   isTypeSystemDefinitionNode,
   isTypeSystemExtensionNode,
   GraphQLError,
-  DirectiveLocation
+  DirectiveLocation,
 } from "graphql";
 import { highlightNodeForNode } from "./utilities/graphql";
 
 import { GraphQLClientProject, isClientProject } from "./project/client";
 import { isNotNullOrUndefined } from "../tools";
-import { CodeActionInfo } from "./errors/validation";
+import type { CodeActionInfo } from "./errors/validation";
 import { GraphQLDiagnostic } from "./diagnostics";
+import type { ProjectStats } from "src/messages";
 
 const DirectiveLocations = Object.keys(DirectiveLocation);
 
@@ -96,14 +97,14 @@ function symbolForFieldDefinition(
     name: definition.name.value,
     kind: SymbolKind.Field,
     range: rangeForASTNode(definition),
-    selectionRange: rangeForASTNode(definition)
+    selectionRange: rangeForASTNode(definition),
   };
 }
 
 export class GraphQLLanguageProvider {
   constructor(public workspace: GraphQLWorkspace) {}
 
-  async provideStats(uri?: DocumentUri) {
+  async provideStats(uri?: DocumentUri): Promise<ProjectStats> {
     if (this.workspace.projects.length && uri) {
       const project = this.workspace.projectForFile(uri);
       return project ? project.getProjectStats() : { loaded: false };
@@ -135,9 +136,9 @@ export class GraphQLLanguageProvider {
     const typeInfo = getTypeInfo(project.schema, token.state);
 
     if (state.kind === "DirectiveLocation") {
-      return DirectiveLocations.map(location => ({
+      return DirectiveLocations.map((location) => ({
         label: location,
-        kind: CompletionItemKind.Constant
+        kind: CompletionItemKind.Constant,
       }));
     }
 
@@ -156,7 +157,7 @@ export class GraphQLLanguageProvider {
       const parentFields = {
         ...(parentType.getFields() as {
           [label: string]: GraphQLField<any, any>;
-        })
+        }),
       };
 
       if (isAbstractType(parentType)) {
@@ -168,7 +169,7 @@ export class GraphQLLanguageProvider {
         parentFields[TypeMetaFieldDef.name] = TypeMetaFieldDef;
       }
 
-      return suggestions.map(suggest => {
+      return suggestions.map((suggest) => {
         // when code completing fields, expand out required variables and open braces
         const suggestedField = parentFields[suggest.label] as GraphQLField<
           void,
@@ -177,7 +178,7 @@ export class GraphQLLanguageProvider {
         if (!suggestedField) {
           return suggest;
         } else {
-          const requiredArgs = suggestedField.args.filter(a =>
+          const requiredArgs = suggestedField.args.filter((a) =>
             isNonNullType(a.type)
           );
           const paramsSection =
@@ -200,14 +201,14 @@ export class GraphQLLanguageProvider {
           return {
             ...suggest,
             insertText: snippet,
-            insertTextFormat: InsertTextFormat.Snippet
+            insertTextFormat: InsertTextFormat.Snippet,
           };
         }
       });
     }
 
     if (state.kind === "Directive") {
-      return suggestions.map(suggest => {
+      return suggestions.map((suggest) => {
         const directive = project.schema!.getDirective(suggest.label);
         if (!directive) {
           return suggest;
@@ -225,13 +226,15 @@ export class GraphQLLanguageProvider {
 
         const argsString =
           directive.args.length > 0
-            ? `(${directive.args.map(a => `${a.name}: ${a.type}`).join(", ")})`
+            ? `(${directive.args
+                .map((a) => `${a.name}: ${a.type}`)
+                .join(", ")})`
             : "";
 
         const content = [
           [`\`\`\`graphql`, `@${suggest.label}${argsString}`, `\`\`\``].join(
             "\n"
-          )
+          ),
         ];
 
         if (suggest.documentation) {
@@ -244,14 +247,14 @@ export class GraphQLLanguageProvider {
 
         const doc = {
           kind: MarkupKind.Markdown,
-          value: content.join("\n\n")
+          value: content.join("\n\n"),
         };
 
         return {
           ...suggest,
           documentation: doc,
           insertText: snippet,
-          insertTextFormat: InsertTextFormat.Snippet
+          insertTextFormat: InsertTextFormat.Snippet,
         };
       });
     }
@@ -295,8 +298,8 @@ export class GraphQLLanguageProvider {
             return {
               contents: {
                 language: "graphql",
-                value: `fragment ${fragmentName} on ${fragment.typeCondition.name.value}`
-              }
+                value: `fragment ${fragmentName} on ${fragment.typeCondition.name.value}`,
+              },
             };
           }
           break;
@@ -310,7 +313,7 @@ export class GraphQLLanguageProvider {
             const argsString =
               fieldDef.args.length > 0
                 ? `(${fieldDef.args
-                    .map(a => `${a.name}: ${a.type}`)
+                    .map((a) => `${a.name}: ${a.type}`)
                     .join(", ")})`
                 : "";
             const isClientType =
@@ -321,15 +324,15 @@ export class GraphQLLanguageProvider {
             const isResolvedLocally =
               node.directives &&
               node.directives.some(
-                directive => directive.name.value === "client"
+                (directive) => directive.name.value === "client"
               );
 
             const content = [
               [
                 `\`\`\`graphql`,
                 `${parentType}.${fieldDef.name}${argsString}: ${fieldDef.type}`,
-                `\`\`\``
-              ].join("\n")
+                `\`\`\``,
+              ].join("\n"),
             ];
 
             const info: string[] = [];
@@ -350,7 +353,7 @@ export class GraphQLLanguageProvider {
 
             return {
               contents: content.join("\n\n---\n\n"),
-              range: rangeForASTNode(highlightNodeForNode(node))
+              range: rangeForASTNode(highlightNodeForNode(node)),
             };
           }
 
@@ -371,7 +374,7 @@ export class GraphQLLanguageProvider {
 
           return {
             contents: content.join("\n\n---\n\n"),
-            range: rangeForASTNode(highlightNodeForNode(node))
+            range: rangeForASTNode(highlightNodeForNode(node)),
           };
         }
 
@@ -381,15 +384,15 @@ export class GraphQLLanguageProvider {
             [
               `\`\`\`graphql`,
               `${argumentNode.name}: ${argumentNode.type}`,
-              `\`\`\``
-            ].join("\n")
+              `\`\`\``,
+            ].join("\n"),
           ];
           if (argumentNode.description) {
             content.push(argumentNode.description);
           }
           return {
             contents: content.join("\n\n---\n\n"),
-            range: rangeForASTNode(highlightNodeForNode(node))
+            range: rangeForASTNode(highlightNodeForNode(node)),
           };
         }
 
@@ -399,22 +402,22 @@ export class GraphQLLanguageProvider {
           const argsString =
             directiveNode.args.length > 0
               ? `(${directiveNode.args
-                  .map(a => `${a.name}: ${a.type}`)
+                  .map((a) => `${a.name}: ${a.type}`)
                   .join(", ")})`
               : "";
           const content = [
             [
               `\`\`\`graphql`,
               `@${directiveNode.name}${argsString}`,
-              `\`\`\``
-            ].join("\n")
+              `\`\`\``,
+            ].join("\n"),
           ];
           if (directiveNode.description) {
             content.push(directiveNode.description);
           }
           return {
             contents: content.join("\n\n---\n\n"),
-            range: rangeForASTNode(highlightNodeForNode(node))
+            range: rangeForASTNode(highlightNodeForNode(node)),
           };
         }
       }
@@ -519,7 +522,7 @@ export class GraphQLLanguageProvider {
           const fragmentName = node.name.value;
           return project
             .fragmentSpreadsForFragment(fragmentName)
-            .map(fragmentSpread => locationForASTNode(fragmentSpread))
+            .map((fragmentSpread) => locationForASTNode(fragmentSpread))
             .filter(isNotNullOrUndefined);
         }
         // TODO(jbaxleyiii): manage no parent type references (unions + scalars)
@@ -553,11 +556,11 @@ export class GraphQLLanguageProvider {
                 parent = node;
               }
               return;
-            }
+            },
           });
           return project
             .getOperationFieldsFromFieldDefinition(node.name.value, parent)
-            .map(fieldNode => locationForASTNode(fieldNode))
+            .map((fieldNode) => locationForASTNode(fieldNode))
             .filter(isNotNullOrUndefined);
         }
       }
@@ -586,7 +589,7 @@ export class GraphQLLanguageProvider {
           name: definition.name.value,
           kind: SymbolKind.Function,
           range: rangeForASTNode(definition),
-          selectionRange: rangeForASTNode(highlightNodeForNode(definition))
+          selectionRange: rangeForASTNode(highlightNodeForNode(definition)),
         });
       } else if (
         isTypeSystemDefinitionNode(definition) ||
@@ -607,7 +610,7 @@ export class GraphQLLanguageProvider {
             definition.kind === Kind.OBJECT_TYPE_DEFINITION ||
             definition.kind === Kind.OBJECT_TYPE_EXTENSION
               ? (definition.fields || []).map(symbolForFieldDefinition)
-              : undefined
+              : undefined,
         });
       }
     }
@@ -629,7 +632,7 @@ export class GraphQLLanguageProvider {
           symbols.push({
             name: definition.name.value,
             kind: SymbolKind.Function,
-            location
+            location,
           });
         }
       }
@@ -750,7 +753,7 @@ export class GraphQLLanguageProvider {
 
     for (const [
       diagnosticUri,
-      diagnostics
+      diagnostics,
     ] of project.diagnosticSet.entries()) {
       if (diagnosticUri !== uri) continue;
 

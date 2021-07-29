@@ -1,4 +1,4 @@
-import { LanguageClient } from "vscode-languageclient";
+import type { LanguageClient, ProjectStats } from "./messages";
 
 export const timeSince = (date: number) => {
   const seconds = Math.floor((+new Date() - date) / 1000);
@@ -23,21 +23,6 @@ export const printNoFileOpenMessage = (
   client.outputChannel.appendLine(`🚀 Apollo GraphQL v${extVersion}`);
   client.outputChannel.appendLine("------------------------------");
 };
-
-export interface TypeStats {
-  service?: number;
-  client?: number;
-  total?: number;
-}
-
-export interface ProjectStats {
-  type: string;
-  loaded: boolean;
-  serviceId?: string;
-  types?: TypeStats;
-  tag?: string;
-  lastFetch?: number;
-}
 
 export const printStatsToClientOutputChannel = (
   client: LanguageClient,

@@ -24,7 +24,7 @@ export default class ApolloStatusBar {
   protected changeState({
     hasActiveTextEditor,
     text,
-    tooltip
+    tooltip,
   }: StateChangeInput) {
     if (!hasActiveTextEditor) {
       this.statusBarItem.hide();
@@ -39,25 +39,25 @@ export default class ApolloStatusBar {
   public showLoadingState({ hasActiveTextEditor }: LoadingInput) {
     this.changeState({
       hasActiveTextEditor,
-      text: ApolloStatusBar.loadingStateText
+      text: ApolloStatusBar.loadingStateText,
     });
   }
 
   public showLoadedState({ hasActiveTextEditor }: LoadingInput) {
     this.changeState({
       hasActiveTextEditor,
-      text: ApolloStatusBar.loadedStateText
+      text: ApolloStatusBar.loadedStateText,
     });
   }
 
   public showWarningState({
     hasActiveTextEditor,
-    tooltip
+    tooltip,
   }: LoadingInput & { tooltip: string }) {
     this.changeState({
       hasActiveTextEditor,
       text: ApolloStatusBar.warningText,
-      tooltip
+      tooltip,
     });
   }
 

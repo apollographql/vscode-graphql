@@ -2,7 +2,7 @@ import {
   ServerOptions,
   TransportKind,
   LanguageClientOptions,
-  LanguageClient
+  LanguageClient,
 } from "vscode-languageclient";
 import { workspace, OutputChannel } from "vscode";
 
@@ -16,12 +16,12 @@ export function getLanguageServerClient(
     APOLLO_CLIENT_NAME: "Apollo VS Code",
     APOLLO_CLIENT_VERSION: version,
     APOLLO_CLIENT_REFERENCE_ID: referenceID,
-    NODE_TLS_REJECT_UNAUTHORIZED: 0
+    NODE_TLS_REJECT_UNAUTHORIZED: 0,
   };
 
   const debugOptions = {
     execArgv: ["--nolazy", "--inspect=6009"],
-    env
+    env,
   };
 
   const serverOptions: ServerOptions = {
@@ -29,14 +29,14 @@ export function getLanguageServerClient(
       module: serverModule,
       transport: TransportKind.ipc,
       options: {
-        env
-      }
+        env,
+      },
     },
     debug: {
       module: serverModule,
       transport: TransportKind.ipc,
-      options: debugOptions
-    }
+      options: debugOptions,
+    },
   };
 
   const clientOptions: LanguageClientOptions = {
@@ -51,17 +51,17 @@ export function getLanguageServerClient(
       "ruby",
       "dart",
       "reason",
-      "elixir"
+      "elixir",
     ],
     synchronize: {
       fileEvents: [
         workspace.createFileSystemWatcher("**/.env?(.local)"),
         workspace.createFileSystemWatcher(
           "**/*.{graphql,js,ts,jsx,tsx,vue,py,rb,dart,re,ex,exs}"
-        )
-      ]
+        ),
+      ],
     },
-    outputChannel
+    outputChannel,
   };
 
   return new LanguageClient(

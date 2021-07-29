@@ -13,7 +13,7 @@ export function formatMS(
     moment.duration(1, "second").asMilliseconds(),
     1,
     0.001,
-    0.000001
+    0.000001,
   ];
   const units = ["hr", "min", "s", "ms", "μs", "ns"];
 
@@ -24,7 +24,7 @@ export function formatMS(
     return f.toFixed(2);
   };
 
-  const bound = bounds.find(b => b <= ms) || bounds[bounds.length - 1];
+  const bound = bounds.find((b) => b <= ms) || bounds[bounds.length - 1];
   const boundIndex = bounds.indexOf(bound);
   const unit = boundIndex >= 0 ? units[boundIndex] : "";
 

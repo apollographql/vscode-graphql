@@ -66,13 +66,13 @@ export class GraphQLWorkspace {
       ? new GraphQLClientProject({
           config,
           loadingHandler: this.LanguageServerLoadingHandler,
-          rootURI: URI.parse(folder.uri),
+          configFolderURI: URI.parse(folder.uri),
           clientIdentity,
         })
       : new GraphQLServiceProject({
           config: config as ServiceConfig,
           loadingHandler: this.LanguageServerLoadingHandler,
-          rootURI: URI.parse(folder.uri),
+          configFolderURI: URI.parse(folder.uri),
           clientIdentity,
         });
 

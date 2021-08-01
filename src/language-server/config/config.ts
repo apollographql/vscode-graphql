@@ -208,8 +208,12 @@ export class ApolloConfig {
 
 export class ClientConfig extends ApolloConfig {
   public client!: ClientConfigFormat;
+  public isClient!: true;
+  public isService!: false;
 }
 
 export class ServiceConfig extends ApolloConfig {
   public service!: ServiceConfigFormat;
+  public isClient!: false;
+  public isService!: true;
 }

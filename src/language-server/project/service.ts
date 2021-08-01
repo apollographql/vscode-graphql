@@ -14,24 +14,17 @@ export function isServiceProject(
 export interface GraphQLServiceProjectConfig {
   clientIdentity?: ClientIdentity;
   config: ServiceConfig;
-  rootURI: URI;
+  configFolderURI: URI;
   loadingHandler: LoadingHandler;
 }
 export class GraphQLServiceProject extends GraphQLProject {
   constructor({
     clientIdentity,
     config,
-    rootURI,
+    configFolderURI,
     loadingHandler,
   }: GraphQLServiceProjectConfig) {
-    const fileSet = new FileSet({
-      rootURI: config.configDirURI || rootURI,
-      includes: [...config.service.includes, ".env", "apollo.config.js"],
-      excludes: config.service.excludes,
-      configURI: config.configURI,
-    });
-
-    super({ config, fileSet, loadingHandler, clientIdentity });
+    super({ config, configFolderURI, loadingHandler, clientIdentity });
     this.config = config;
   }
 

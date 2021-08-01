@@ -180,7 +180,7 @@ describe("client state", () => {
     const project = new GraphQLClientProject({
       config,
       loadingHandler: new MockLoadingHandler(),
-      rootURI,
+      configFolderURI: rootURI,
     });
 
     const errors = Object.create(null);

@@ -1,4 +1,4 @@
-import { extname } from "path";
+import path, { extname } from "path";
 import { lstatSync, readFileSync } from "fs";
 import URI from "vscode-uri";
 
@@ -23,7 +23,15 @@ import { GraphQLDocument, extractGraphQLDocuments } from "../document";
 
 import type { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
-import { ApolloConfig, keyEnvVar } from "../config";
+import {
+  ApolloConfig,
+  ClientConfig,
+  isClientConfig,
+  isLocalServiceConfig,
+  isServiceConfig,
+  keyEnvVar,
+  ServiceConfig,
+} from "../config";
 import {
   schemaProviderFromConfig,
   GraphQLSchemaProvider,
@@ -50,10 +58,10 @@ const fileAssociations: { [extension: string]: string } = {
   ".exs": "elixir",
 };
 
-export interface GraphQLProjectConfig {
+interface GraphQLProjectConfig {
   clientIdentity?: ClientIdentity;
-  config: ApolloConfig;
-  fileSet: FileSet;
+  config: ClientConfig | ServiceConfig;
+  configFolderURI: URI;
   loadingHandler: LoadingHandler;
 }
 
@@ -72,19 +80,35 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
   public config: ApolloConfig;
   public schema?: GraphQLSchema;
   private fileSet: FileSet;
+  private rootURI: URI;
   protected loadingHandler: LoadingHandler;
 
   protected lastLoadDate?: number;
 
   constructor({
     config,
-    fileSet,
+    configFolderURI,
     loadingHandler,
     clientIdentity,
   }: GraphQLProjectConfig) {
     this.config = config;
-    this.fileSet = fileSet;
     this.loadingHandler = loadingHandler;
+    // the URI of the folder _containing_ the apollo.config.js is the true project's root.
+    // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
+    this.rootURI = config.configDirURI || configFolderURI;
+
+    const { includes, excludes } = config.isClient
+      ? config.client
+      : config.service;
+    const fileSet = new FileSet({
+      rootURI: this.rootURI,
+      includes: [...includes, ".env", "apollo.config.js"],
+      // We do not want to include the local schema file in our list of documents
+      excludes: [...excludes, ...this.getRelativeLocalSchemaFilePaths()],
+      configURI: config.configURI,
+    });
+
+    this.fileSet = fileSet;
     this.schemaProvider = schemaProviderFromConfig(config, clientIdentity);
     const { engine } = config;
     if (engine.apiKey) {
@@ -160,11 +184,15 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     return this.fileSet.includesFile(uri);
   }
 
+  allIncludedFiles() {
+    return this.fileSet.allFiles();
+  }
+
   async scanAllIncludedFiles() {
     await this.loadingHandler.handle(
       `Loading queries for ${this.displayName}`,
       (async () => {
-        for (const filePath of this.fileSet.allFiles()) {
+        for (const filePath of this.allIncludedFiles()) {
           const uri = URI.file(filePath).toString();
 
           // If we already have query documents for this file, that means it was either
@@ -257,6 +285,26 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     this.validate();
 
     this.needsValidation = false;
+  }
+
+  private getRelativeLocalSchemaFilePaths(): string[] {
+    const serviceConfig = isServiceConfig(this.config)
+      ? this.config.service
+      : isClientConfig(this.config) &&
+        typeof this.config.client.service === "object" &&
+        isLocalServiceConfig(this.config.client.service)
+      ? this.config.client.service
+      : undefined;
+    const localSchemaFile = serviceConfig?.localSchemaFile;
+    return (
+      localSchemaFile === undefined
+        ? []
+        : Array.isArray(localSchemaFile)
+        ? localSchemaFile
+        : [localSchemaFile]
+    ).map((filePath) =>
+      path.relative(this.rootURI.fsPath, path.join(process.cwd(), filePath))
+    );
   }
 
   abstract validate(): void;

@@ -24,7 +24,7 @@
     "package-extension": "npm run _internal:prepare-extension && npx vsce package --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
     "publish-extension": "npm run _internal:prepare-extension && npx vsce publish -p $VS_MARKETPLACE_TOKEN --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
     "typecheck": "tsc --noEmit",
-    "lint": "prettier --check --config ./.prettierrc src",
+    "lint": "eslint src --ext .ts",
     "test-unit": "jest"
   },
   "engines": {
@@ -67,6 +67,11 @@
     "@types/lodash.merge": "4.6.6",
     "@types/node": "^14.14.41",
     "@types/node-fetch": "2.5.10",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.6",
     "jest-environment-node": "^26.6.2",
     "memfs": "^3.2.2",

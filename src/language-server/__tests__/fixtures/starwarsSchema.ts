@@ -330,7 +330,6 @@ export const starwarsSchema: IntrospectionQuery = {
             name: "Droid",
           },
         ],
-        interfaces: [],
       },
       {
         kind: "SCALAR",

@@ -25,7 +25,7 @@
     "publish-extension": "npm run _internal:prepare-extension && npx vsce publish -p $VS_MARKETPLACE_TOKEN --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
     "typecheck": "tsc --noEmit",
     "lint": "prettier --check --config ./.prettierrc src",
-    "test": "jest"
+    "test-unit": "jest"
   },
   "engines": {
     "vscode": "^1.30.0"

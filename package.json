@@ -19,7 +19,7 @@
     "build:clean": "npm run build -- --clean",
     "watch": "npm run build -- --watch",
     "postinstall": "npx vscode-install",
-    "_internal:prepare-extension": "npm ci --production --ignore-scripts",
+    "_internal:prepare-extension": "npm ci --production --ignore-scripts && npm run build",
     "package-extension": "npm run _internal:prepare-extension && npx vsce package --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql",
     "publish-extension": "npm run _internal:prepare-extension && npx vsce publish -p $VS_MARKETPLACE_TOKEN --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql",
     "typecheck": "tsc --noEmit",

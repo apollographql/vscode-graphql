@@ -18,5 +18,3 @@ vscode-graphql-*.vsix
 # files generated from tests
 __tmp__*
 .vscode-test
-
-yarn.lock

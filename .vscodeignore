@@ -1,0 +1,9 @@
+.vscode
+.vscode-test
+src
+.env
+.gitignore
+.prettierrc
+jest.config.ts
+tsconfig.build.json
+tsconfig.json

@@ -18,13 +18,11 @@
     "build": "tsc --build tsconfig.build.json",
     "build:clean": "npm run build -- --clean",
     "watch": "npm run build -- --watch",
-    "preinstall": "npx rimraf node_modules && mkdir node_modules",
-    "postinstall": "npm run update-vscode",
-    "update-vscode": "node ./node_modules/vscode/bin/install",
-    "_internal:prepare-extension": "npx rimraf node_modules && yarn install --force --production --ignore-scripts",
-    "_internal:cleanup-extension": "git clean -dfqX -- ./node_modules ./yarn.lock",
-    "package-extension": "npm run _internal:prepare-extension && npx vsce package --yarn --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
-    "publish-extension": "npm run _internal:prepare-extension && npx vsce publish -p $VS_MARKETPLACE_TOKEN --yarn --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
+    "postinstall": "npx vscode-install",
+    "_internal:prepare-extension": "npm ci --production --ignore-scripts && npm run build",
+    "_internal:cleanup-extension": "npm ci",
+    "package-extension": "npm run _internal:prepare-extension && npx vsce package --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
+    "publish-extension": "npm run _internal:prepare-extension && npx vsce publish -p $VS_MARKETPLACE_TOKEN --baseContentUrl https://raw.githubusercontent.com/apollographql/vscode-graphql && npm run _internal:cleanup-extension",
     "typecheck": "tsc --noEmit",
     "lint": "prettier --check --config ./.prettierrc src",
     "test": "jest"
@@ -77,8 +75,7 @@
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5",
     "vsce": "^1.87.1",
-    "vscode": "^1.1.37",
-    "yarn": "^1.22.10"
+    "vscode": "^1.1.37"
   },
   "publisher": "apollographql",
   "categories": [

@@ -1,4 +1,4 @@
-import { extname } from "path";
+import path, { extname } from "path";
 import { lstatSync, readFileSync } from "fs";
 import URI from "vscode-uri";
 
@@ -9,27 +9,36 @@ import {
   isTypeSystemExtensionNode,
   DefinitionNode,
   GraphQLSchema,
-  Kind
+  Kind,
 } from "graphql";
 
 import {
   TextDocument,
   NotificationHandler,
   PublishDiagnosticsParams,
-  Position
+  Position,
 } from "vscode-languageserver";
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
 
-import { LoadingHandler } from "../loadingHandler";
+import type { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
-import { ApolloConfig, keyEnvVar } from "../config";
+import {
+  ApolloConfig,
+  ClientConfig,
+  isClientConfig,
+  isLocalServiceConfig,
+  isServiceConfig,
+  keyEnvVar,
+  ServiceConfig,
+} from "../config";
 import {
   schemaProviderFromConfig,
   GraphQLSchemaProvider,
-  SchemaResolveConfig
+  SchemaResolveConfig,
 } from "../providers/schema";
 import { ApolloEngineClient, ClientIdentity } from "../engine";
+import type { ProjectStats } from "src/messages";
 
 export type DocumentUri = string;
 
@@ -46,29 +55,14 @@ const fileAssociations: { [extension: string]: string } = {
   ".dart": "dart",
   ".re": "reason",
   ".ex": "elixir",
-  ".exs": "elixir"
+  ".exs": "elixir",
 };
 
-export interface GraphQLProjectConfig {
+interface GraphQLProjectConfig {
   clientIdentity?: ClientIdentity;
-  config: ApolloConfig;
-  fileSet: FileSet;
+  config: ClientConfig | ServiceConfig;
+  configFolderURI: URI;
   loadingHandler: LoadingHandler;
-}
-
-export interface TypeStats {
-  service?: number;
-  client?: number;
-  total?: number;
-}
-
-export interface ProjectStats {
-  type: string;
-  loaded: boolean;
-  serviceId?: string;
-  types?: TypeStats;
-  tag?: string;
-  lastFetch?: number;
 }
 
 export abstract class GraphQLProject implements GraphQLSchemaProvider {
@@ -86,19 +80,35 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
   public config: ApolloConfig;
   public schema?: GraphQLSchema;
   private fileSet: FileSet;
+  private rootURI: URI;
   protected loadingHandler: LoadingHandler;
 
   protected lastLoadDate?: number;
 
   constructor({
     config,
-    fileSet,
+    configFolderURI,
     loadingHandler,
-    clientIdentity
+    clientIdentity,
   }: GraphQLProjectConfig) {
     this.config = config;
-    this.fileSet = fileSet;
     this.loadingHandler = loadingHandler;
+    // the URI of the folder _containing_ the apollo.config.js is the true project's root.
+    // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
+    this.rootURI = config.configDirURI || configFolderURI;
+
+    const { includes, excludes } = config.isClient
+      ? config.client
+      : config.service;
+    const fileSet = new FileSet({
+      rootURI: this.rootURI,
+      includes: [...includes, ".env", "apollo.config.js"],
+      // We do not want to include the local schema file in our list of documents
+      excludes: [...excludes, ...this.getRelativeLocalSchemaFilePaths()],
+      configURI: config.configURI,
+    });
+
+    this.fileSet = fileSet;
     this.schemaProvider = schemaProviderFromConfig(config, clientIdentity);
     const { engine } = config;
     if (engine.apiKey) {
@@ -116,7 +126,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
       .then(() => {
         this._isReady = true;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
         this.loadingHandler.showError(
           `Error initializing Apollo GraphQL project "${this.displayName}": ${error}`
@@ -174,11 +184,15 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     return this.fileSet.includesFile(uri);
   }
 
+  allIncludedFiles() {
+    return this.fileSet.allFiles();
+  }
+
   async scanAllIncludedFiles() {
     await this.loadingHandler.handle(
       `Loading queries for ${this.displayName}`,
       (async () => {
-        for (const filePath of this.fileSet.allFiles()) {
+        for (const filePath of this.allIncludedFiles()) {
           const uri = URI.file(filePath).toString();
 
           // If we already have query documents for this file, that means it was either
@@ -273,6 +287,26 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     this.needsValidation = false;
   }
 
+  private getRelativeLocalSchemaFilePaths(): string[] {
+    const serviceConfig = isServiceConfig(this.config)
+      ? this.config.service
+      : isClientConfig(this.config) &&
+        typeof this.config.client.service === "object" &&
+        isLocalServiceConfig(this.config.client.service)
+      ? this.config.client.service
+      : undefined;
+    const localSchemaFile = serviceConfig?.localSchemaFile;
+    return (
+      localSchemaFile === undefined
+        ? []
+        : Array.isArray(localSchemaFile)
+        ? localSchemaFile
+        : [localSchemaFile]
+    ).map((filePath) =>
+      path.relative(this.rootURI.fsPath, path.join(process.cwd(), filePath))
+    );
+  }
+
   abstract validate(): void;
 
   clearAllDiagnostics() {
@@ -294,7 +328,9 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     const queryDocuments = this.documentsByFile.get(uri);
     if (!queryDocuments) return undefined;
 
-    return queryDocuments.find(document => document.containsPosition(position));
+    return queryDocuments.find((document) =>
+      document.containsPosition(position)
+    );
   }
 
   get documents(): GraphQLDocument[] {
@@ -334,7 +370,8 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
 
   get typeSystemDefinitionsAndExtensions(): (
     | TypeSystemDefinitionNode
-    | TypeSystemExtensionNode)[] {
+    | TypeSystemExtensionNode
+  )[] {
     const definitionsAndExtensions = [];
     for (const document of this.documents) {
       if (!document.ast) continue;

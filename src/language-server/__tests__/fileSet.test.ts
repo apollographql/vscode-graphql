@@ -7,7 +7,7 @@ describe("fileSet", () => {
       const fileSet = new FileSet({
         excludes: [],
         includes: ["./src/**/*.tsx"],
-        rootURI: URI.parse("/project")
+        rootURI: URI.parse("/project"),
       });
       const file = "file:///project/src/Component.tsx";
       expect(fileSet.includesFile(file)).toBe(true);
@@ -17,7 +17,7 @@ describe("fileSet", () => {
       const fileSet = new FileSet({
         excludes: [],
         includes: ["src/**/*.tsx"],
-        rootURI: URI.parse("/project")
+        rootURI: URI.parse("/project"),
       });
       const file = "file:///project/src/Component.tsx";
       expect(fileSet.includesFile(file)).toBe(true);
@@ -27,7 +27,7 @@ describe("fileSet", () => {
       const fileSet = new FileSet({
         excludes: ["./src/Component.tsx"],
         includes: ["./src/**/*.tsx"],
-        rootURI: URI.parse("/project")
+        rootURI: URI.parse("/project"),
       });
       const file = "file:///project/src/Component.tsx";
       expect(fileSet.includesFile(file)).toBe(false);
@@ -37,7 +37,7 @@ describe("fileSet", () => {
       const fileSet = new FileSet({
         excludes: ["src/Component.tsx"],
         includes: ["src/**/*.tsx"],
-        rootURI: URI.parse("/project")
+        rootURI: URI.parse("/project"),
       });
       const file = "file:///project/src/Component.tsx";
       expect(fileSet.includesFile(file)).toBe(false);

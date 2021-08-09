@@ -18,8 +18,8 @@
     "noUnusedLocals": false,
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2017", "esnext.asynciterable"],
-    "types": ["node"],
+    "types": ["node", "jest"],
     "baseUrl": "."
   },
-  "exclude": ["**/__tests__/*", "**/__mocks__/*", "./lib", "./src/testRunner"]
+  "exclude": ["./lib", "jest.config.ts"]
 }

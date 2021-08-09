@@ -10,7 +10,7 @@ import {
   DefaultConfigBase,
   DefaultClientConfig,
   DefaultServiceConfig,
-  DefaultEngineConfig
+  DefaultEngineConfig,
 } from "./config";
 import { getServiceFromKey } from "./utils";
 import URI from "vscode-uri";
@@ -32,8 +32,8 @@ const loaders = {
   ".js": (cosmiconfig as any).loadJs as LoaderEntry,
   ".cjs": (cosmiconfig as any).loadJs as LoaderEntry,
   ".ts": {
-    async: TypeScriptLoader
-  }
+    async: TypeScriptLoader,
+  },
 };
 
 export const legacyKeyEnvVar = "ENGINE_API_KEY";
@@ -73,30 +73,32 @@ export async function loadConfig({
   configFileName,
   requireConfig = false,
   name,
-  type
-}: LoadConfigSettings) {
+  type,
+}: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
     searchPlaces: configFileName ? [configFileName] : defaultFileNames,
-    loaders
+    loaders,
   });
 
   // search can fail if a file can't be parsed (ex: a nonsense js file) so we wrap in a try/catch
   let loadedConfig;
   try {
-    loadedConfig = (await explorer.search(configPath)) as ConfigResult<
-      ApolloConfigFormat
-    >;
+    loadedConfig = (await explorer.search(
+      configPath
+    )) as ConfigResult<ApolloConfigFormat>;
   } catch (error) {
-    return Debug.error(`A config file failed to load with options: ${JSON.stringify(
+    Debug.error(`A config file failed to load with options: ${JSON.stringify(
       arguments[0]
     )}.
     The error was: ${error}`);
+    return null;
   }
 
   if (configPath && !loadedConfig) {
-    return Debug.error(
+    Debug.error(
       `A config file failed to load at '${configPath}'. This is likely because this file is empty or malformed. For more information, please refer to: https://go.apollo.dev/t/config`
     );
+    return null;
   }
 
   if (loadedConfig && loadedConfig.filepath.endsWith("package.json")) {
@@ -106,9 +108,10 @@ export async function loadConfig({
   }
 
   if (requireConfig && !loadedConfig) {
-    return Debug.error(
+    Debug.error(
       `No Apollo config found for project. For more information, please refer to: https://go.apollo.dev/t/config`
     );
+    return null;
   }
 
   // add API key from the env
@@ -119,7 +122,7 @@ export async function loadConfig({
   // loop over the list of possible .env files and try to parse for key
   // and service name. Files are scanned and found values are preferred
   // in order of appearance in `envFileNames`.
-  envFileNames.forEach(envFile => {
+  envFileNames.forEach((envFile) => {
     const dotEnvPath = configPath
       ? resolve(configPath, envFile)
       : resolve(process.cwd(), envFile);
@@ -154,13 +157,18 @@ export async function loadConfig({
   // does not. So we determine the type of the config here, and use it if
   // the type wasn't explicitly passed in.
   let projectType: "client" | "service";
-  if (type) projectType = type;
-  else if (loadedConfig && loadedConfig.config.client) projectType = "client";
-  else if (loadedConfig && loadedConfig.config.service) projectType = "service";
-  else
-    return Debug.error(
+  if (type) {
+    projectType = type;
+  } else if (loadedConfig && loadedConfig.config.client) {
+    projectType = "client";
+  } else if (loadedConfig && loadedConfig.config.service) {
+    projectType = "service";
+  } else {
+    Debug.error(
       "Unable to resolve project type. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config"
     );
+    return null;
+  }
 
   // DETERMINE SERVICE NAME
   // precedence: 1. (highest) config.js (client only) 2. name passed into loadConfig 3. name from api key
@@ -191,17 +199,17 @@ export async function loadConfig({
               client: {
                 ...DefaultConfigBase,
                 ...(loadedConfig && loadedConfig.config.client),
-                service: serviceName
-              }
+                service: serviceName,
+              },
             }
           : {
               service: {
                 ...DefaultConfigBase,
                 ...(loadedConfig && loadedConfig.config.service),
-                name: serviceName
-              }
-            })
-      }
+                name: serviceName,
+              },
+            }),
+      },
     };
   }
 

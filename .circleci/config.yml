@@ -1,0 +1,70 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: circleci/node:12.16.1-browsers
+    working_directory: ~/vscode-graphql
+
+commands:
+  npm-install:
+    steps:
+      - restore_cache:
+          name: Restore npm cache
+          keys:
+            - npm-packages-{{ checksum "package-lock.json" }}--{{ checksum ".circleci/config.yml" }}
+      - run:
+          name: Install dependencies
+          command: npm ci --prefer-offline
+      - save_cache:
+          name: Save npm cache
+          key: npm-packages-{{ checksum "package-lock.json" }}--{{ checksum ".circleci/config.yml" }}
+          paths:
+            - ~/.npm
+
+jobs:
+  lint:
+    executor: node
+    steps:
+      - checkout
+      - npm-install
+      - run:
+          name: Ensure test reports output dir exists
+          command: mkdir -p /tmp/test-reports/lint
+      - run:
+          name: Run lint (currenty prettier)
+          command: npm run lint -- --format junit --output-file /tmp/test-reports/lint/results.xml
+      - store_test_results:
+          path: /tmp/test-reports
+
+  typescript:
+    executor: node
+    steps:
+      - checkout
+      - npm-install
+      - run:
+          name: TypeScript Check
+          command: npm run typecheck
+
+  test-unit:
+    executor: node
+    steps:
+      - checkout
+      - npm-install
+      - run:
+          name: Ensure test reports output dir exists
+          command: mkdir -p /tmp/test-reports/test-unit
+      - run:
+          name: Test Unit
+          command: npm run test-unit -- --ci --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "/tmp/test-reports/test-unit"
+      - store_test_results:
+          path: /tmp/test-reports
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - lint
+      - typescript
+      - test-unit

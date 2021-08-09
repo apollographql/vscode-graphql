@@ -1,7 +1,7 @@
 import {
   WorkspaceFolder,
   NotificationHandler,
-  PublishDiagnosticsParams
+  PublishDiagnosticsParams,
 } from "vscode-languageserver";
 import { QuickPickItem } from "vscode";
 import { GraphQLProject, DocumentUri } from "./project/base";
@@ -11,7 +11,7 @@ import {
   loadConfig,
   ApolloConfig,
   isClientConfig,
-  ServiceConfig
+  ServiceConfig,
 } from "./config";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { ServiceID, SchemaTag, ClientIdentity } from "./engine";
@@ -56,7 +56,7 @@ export class GraphQLWorkspace {
 
   private createProject({
     config,
-    folder
+    folder,
   }: {
     config: ApolloConfig;
     folder: WorkspaceFolder;
@@ -66,26 +66,26 @@ export class GraphQLWorkspace {
       ? new GraphQLClientProject({
           config,
           loadingHandler: this.LanguageServerLoadingHandler,
-          rootURI: URI.parse(folder.uri),
-          clientIdentity
+          configFolderURI: URI.parse(folder.uri),
+          clientIdentity,
         })
       : new GraphQLServiceProject({
           config: config as ServiceConfig,
           loadingHandler: this.LanguageServerLoadingHandler,
-          rootURI: URI.parse(folder.uri),
-          clientIdentity
+          configFolderURI: URI.parse(folder.uri),
+          clientIdentity,
         });
 
-    project.onDiagnostics(params => {
+    project.onDiagnostics((params) => {
       this._onDiagnostics && this._onDiagnostics(params);
     });
 
     if (isClientProject(project)) {
-      project.onDecorations(params => {
+      project.onDecorations((params) => {
         this._onDecorations && this._onDecorations(params);
       });
 
-      project.onSchemaTags(tags => {
+      project.onSchemaTags((tags) => {
         this._onSchemaTags && this._onSchemaTags(tags);
       });
     }
@@ -117,7 +117,7 @@ export class GraphQLWorkspace {
     const apolloConfigFiles: string[] = fg.sync("**/apollo.config.@(js|ts|cjs)", {
       cwd: URI.parse(folder.uri).fsPath,
       absolute: true,
-      ignore: "**/node_modules/**"
+      ignore: "**/node_modules/**",
     });
 
     // only have unique possible folders
@@ -126,12 +126,12 @@ export class GraphQLWorkspace {
     // go from possible folders to known array of configs
     let foundConfigs: ApolloConfig[] = [];
 
-    const projectConfigs = Array.from(apolloConfigFolders).map(configFolder =>
+    const projectConfigs = Array.from(apolloConfigFolders).map((configFolder) =>
       loadConfig({ configPath: configFolder, requireConfig: true })
-        .then(config => {
+        .then((config) => {
           if (config) {
             foundConfigs.push(config);
-            const projectsForConfig = config.projects.map(projectConfig =>
+            const projectsForConfig = config.projects.map((projectConfig) =>
               this.createProject({ config, folder })
             );
 
@@ -140,7 +140,7 @@ export class GraphQLWorkspace {
 
             this.projectsByFolderUri.set(folder.uri, [
               ...existingProjects,
-              ...projectsForConfig
+              ...projectsForConfig,
             ]);
           } else {
             Debug.error(
@@ -148,7 +148,7 @@ export class GraphQLWorkspace {
             );
           }
         })
-        .catch(error => Debug.error(error))
+        .catch((error) => Debug.error(error))
     );
 
     await Promise.all(projectConfigs);
@@ -163,11 +163,11 @@ export class GraphQLWorkspace {
     this.projectsByFolderUri.forEach((projects, uri) => {
       this.projectsByFolderUri.set(
         uri,
-        projects.map(project => {
+        projects.map((project) => {
           project.clearAllDiagnostics();
           return this.createProject({
             config: project.config,
-            folder: { uri } as WorkspaceFolder
+            folder: { uri } as WorkspaceFolder,
           });
         })
       );
@@ -177,10 +177,12 @@ export class GraphQLWorkspace {
   async reloadProjectForConfig(configUri: DocumentUri) {
     const configPath = dirname(URI.parse(configUri).fsPath);
 
-    let config, error;
+    let config: ApolloConfig | null;
+    let error;
     try {
       config = await loadConfig({ configPath, requireConfig: true });
     } catch (e) {
+      config = null;
       error = e;
     }
 
@@ -201,13 +203,13 @@ export class GraphQLWorkspace {
 
       const newProject = this.createProject({
         config,
-        folder: { uri: folderUri } as WorkspaceFolder
+        folder: { uri: folderUri } as WorkspaceFolder,
       });
 
       const existingProjects = this.projectsByFolderUri.get(folderUri) || [];
       this.projectsByFolderUri.set(folderUri, [
         ...existingProjects,
-        newProject
+        newProject,
       ]);
       this.reloadService();
     }
@@ -217,8 +219,8 @@ export class GraphQLWorkspace {
     const serviceID = selection.detail;
     if (!serviceID) return;
 
-    this.projectsByFolderUri.forEach(projects => {
-      projects.forEach(project => {
+    this.projectsByFolderUri.forEach((projects) => {
+      projects.forEach((project) => {
         if (isClientProject(project) && project.serviceID === serviceID) {
           project.updateSchemaTag(selection.label);
         }
@@ -229,7 +231,7 @@ export class GraphQLWorkspace {
   removeProjectsInFolder(folder: WorkspaceFolder) {
     const projects = this.projectsByFolderUri.get(folder.uri);
     if (projects) {
-      projects.forEach(project => project.clearAllDiagnostics());
+      projects.forEach((project) => project.clearAllDiagnostics());
       this.projectsByFolderUri.delete(folder.uri);
     }
   }
@@ -245,7 +247,7 @@ export class GraphQLWorkspace {
     }
 
     for (const projects of this.projectsByFolderUri.values()) {
-      const project = projects.find(project => project.includesFile(uri));
+      const project = projects.find((project) => project.includesFile(uri));
       if (project) {
         this._projectForFileCache.set(uri, project);
         return project;

@@ -1,24 +1,19 @@
 import { ASTNode, print } from "graphql";
-import { Plugin, Config, Refs, Printer } from "pretty-format";
+import { Plugin } from "pretty-format";
 
-export = {
-  test(value: any) {
+const plugin: Plugin = {
+  test(value) {
     return value && typeof value.kind === "string";
   },
 
-  serialize(
-    value: ASTNode,
-    config: Config,
-    indentation: string,
-    depth: number,
-    refs: Refs,
-    printer: Printer
-  ): string {
+  serialize(value: ASTNode, _config, indentation): string {
     return (
       indentation +
       print(value)
         .trim()
         .replace(/\n/g, "\n" + indentation)
     );
-  }
-} as Plugin;
+  },
+};
+
+export default plugin;

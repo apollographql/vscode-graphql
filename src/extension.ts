@@ -9,14 +9,15 @@ import {
   commands,
   QuickPickItem,
   Disposable,
-  OutputChannel
+  OutputChannel,
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
-import { LanguageClient, NotificationType } from "vscode-languageclient";
+import { NotificationType } from "vscode-languageclient";
+import type { LanguageClient } from "./messages";
 import {
   printNoFileOpenMessage,
-  printStatsToClientOutputChannel
+  printStatsToClientOutputChannel,
 } from "./utils";
 import { Debug } from "./debug";
 
@@ -52,7 +53,7 @@ export function activate(context: ExtensionContext) {
 
   // Initialize disposables
   statusBar = new StatusBar({
-    hasActiveTextEditor: Boolean(window.activeTextEditor)
+    hasActiveTextEditor: Boolean(window.activeTextEditor),
   });
   outputChannel = window.createOutputChannel("Apollo GraphQL");
   Debug.SetOutputConsole(outputChannel);
@@ -68,7 +69,7 @@ export function activate(context: ExtensionContext) {
 
   // Once client is ready, we can send messages and add listeners for various notifications
   client.onReady().then(() => {
-    client.onNotification(serverDebugMessage, message => {
+    client.onNotification(serverDebugMessage, (message) => {
       switch (message.type) {
         case "info":
           Debug.info(message.message, message.stack);
@@ -103,7 +104,7 @@ export function activate(context: ExtensionContext) {
       client.outputChannel.show();
     });
 
-    client.onNotification("apollographql/statsLoaded", params => {
+    client.onNotification("apollographql/statsLoaded", (params) => {
       printStatsToClientOutputChannel(client, params, version);
       client.outputChannel.show();
     });
@@ -118,14 +119,14 @@ export function activate(context: ExtensionContext) {
         if (isError(response)) {
           statusBar.showWarningState({
             hasActiveTextEditor,
-            tooltip: "Configuration Error"
+            tooltip: "Configuration Error",
           });
           outputChannel.append(response.stack);
 
           const infoButtonText = "More Info";
           window
             .showInformationMessage(response.message, infoButtonText)
-            .then(clicked => {
+            .then((clicked) => {
               if (clicked === infoButtonText) {
                 outputChannel.show();
               }
@@ -134,7 +135,7 @@ export function activate(context: ExtensionContext) {
           if (response.length === 0) {
             statusBar.showWarningState({
               hasActiveTextEditor,
-              tooltip: "No apollo.config.js file found"
+              tooltip: "No apollo.config.js file found",
             });
           } else {
             statusBar.showLoadedState({ hasActiveTextEditor });
@@ -158,12 +159,12 @@ export function activate(context: ExtensionContext) {
 
     // For some reason, non-strings can only be sent in one direction. For now, messages
     // coming from the language server just need to be stringified and parsed.
-    client.onNotification("apollographql/tagsLoaded", params => {
+    client.onNotification("apollographql/tagsLoaded", (params) => {
       const [serviceID, tags]: [string, string[]] = JSON.parse(params);
-      const items = tags.map(tag => ({
+      const items = tags.map((tag) => ({
         label: tag,
         description: "",
-        detail: serviceID
+        detail: serviceID,
       }));
 
       schemaTagItems = [...items, ...schemaTagItems];
@@ -178,9 +179,9 @@ export function activate(context: ExtensionContext) {
 
     let currentLoadingResolve: Map<number, () => void> = new Map();
 
-    client.onNotification("apollographql/loadingComplete", token => {
+    client.onNotification("apollographql/loadingComplete", (token) => {
       statusBar.showLoadedState({
-        hasActiveTextEditor: Boolean(window.activeTextEditor)
+        hasActiveTextEditor: Boolean(window.activeTextEditor),
       });
       const inMap = currentLoadingResolve.get(token);
       if (inMap) {
@@ -194,10 +195,10 @@ export function activate(context: ExtensionContext) {
         {
           location: ProgressLocation.Notification,
           title: message,
-          cancellable: false
+          cancellable: false,
         },
         () => {
-          return new Promise<void>(resolve => {
+          return new Promise<void>((resolve) => {
             currentLoadingResolve.set(token, resolve);
           });
         }
@@ -212,17 +213,18 @@ export function activate(context: ExtensionContext) {
         const editor = window.activeTextEditor!;
         const decorations: DecorationOptions[] = latestDecs
           .filter(
-            d => d.document === window.activeTextEditor!.document.uri.toString()
+            (d) =>
+              d.document === window.activeTextEditor!.document.uri.toString()
           )
-          .map(dec => {
+          .map((dec) => {
             return {
               range: editor.document.lineAt(dec.range.start.line).range,
               renderOptions: {
                 after: {
                   contentText: `${dec.message}`,
-                  textDecoration: "none; padding-left: 15px; opacity: .5"
-                }
-              }
+                  textDecoration: "none; padding-left: 15px; opacity: .5",
+                },
+              },
             };
           });
 
@@ -243,7 +245,7 @@ export function activate(context: ExtensionContext) {
       provideTextDocumentContent(uri: Uri) {
         // the schema source is provided inside the URI, just return that here
         return uri.query;
-      }
+      },
     });
   });
 }

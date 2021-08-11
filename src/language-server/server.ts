@@ -132,7 +132,11 @@ documents.onDidChangeContent(
 
 connection.onDidChangeWatchedFiles((params) => {
   for (const { uri, type } of params.changes) {
-    if (uri.endsWith("apollo.config.js") || uri.endsWith("apollo.config.cjs") || uri.endsWith(".env")) {
+    if (
+      uri.endsWith("apollo.config.js") ||
+      uri.endsWith("apollo.config.cjs") ||
+      uri.endsWith(".env")
+    ) {
       workspace.reloadProjectForConfig(uri);
     }
 

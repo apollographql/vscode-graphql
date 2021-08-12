@@ -22,7 +22,7 @@ const defaultFileNames = [
   "package.json",
   `${MODULE_NAME}.config.js`,
   `${MODULE_NAME}.config.ts`,
-  `${MODULE_NAME}.config.cjs`
+  `${MODULE_NAME}.config.cjs`,
 ];
 const envFileNames = [".env", ".env.local"];
 

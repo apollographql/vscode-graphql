@@ -50,6 +50,7 @@ const fileAssociations: { [extension: string]: string } = {
   ".jsx": "javascriptreact",
   ".tsx": "typescriptreact",
   ".vue": "vue",
+  ".svelte": "svelte",
   ".py": "python",
   ".rb": "ruby",
   ".dart": "dart",

@@ -66,6 +66,8 @@ export function extractGraphQLDocuments(
     case "typescriptreact":
     case "vue":
       return extractGraphQLDocumentsFromJSTemplateLiterals(document, tagName);
+    case "svelte":
+      return extractGraphQLDocumentsFromJSTemplateLiterals(document, tagName);
     case "python":
       return extractGraphQLDocumentsFromPythonStrings(document, tagName);
     case "ruby":

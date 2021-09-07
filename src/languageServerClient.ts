@@ -47,6 +47,7 @@ export function getLanguageServerClient(
       "javascriptreact",
       "typescriptreact",
       "vue",
+      "svelte",
       "python",
       "ruby",
       "dart",
@@ -57,7 +58,7 @@ export function getLanguageServerClient(
       fileEvents: [
         workspace.createFileSystemWatcher("**/.env?(.local)"),
         workspace.createFileSystemWatcher(
-          "**/*.{graphql,js,ts,jsx,tsx,vue,py,rb,dart,re,ex,exs}"
+          "**/*.{graphql,js,ts,jsx,tsx,vue,svelte,py,rb,dart,re,ex,exs}"
         ),
       ],
     },

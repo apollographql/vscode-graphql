@@ -206,22 +206,23 @@ export function activate(context: ExtensionContext) {
     });
 
     const engineDecoration = window.createTextEditorDecorationType({});
-    let latestDecs: any[] | undefined = undefined;
+    let latestDecorations: any[] | undefined = undefined;
 
     const updateDecorations = () => {
-      if (window.activeTextEditor && latestDecs) {
+      if (window.activeTextEditor && latestDecorations) {
         const editor = window.activeTextEditor!;
-        const decorations: DecorationOptions[] = latestDecs
+        const decorations: DecorationOptions[] = latestDecorations
           .filter(
-            (d) =>
-              d.document === window.activeTextEditor!.document.uri.toString()
+            (decoration) =>
+              decoration.document ===
+              window.activeTextEditor!.document.uri.toString()
           )
-          .map((dec) => {
+          .map((decoration) => {
             return {
-              range: editor.document.lineAt(dec.range.start.line).range,
+              range: editor.document.lineAt(decoration.range.start.line).range,
               renderOptions: {
                 after: {
-                  contentText: `${dec.message}`,
+                  contentText: `${decoration.message}`,
                   textDecoration: "none; padding-left: 15px; opacity: .5",
                 },
               },
@@ -232,10 +233,13 @@ export function activate(context: ExtensionContext) {
       }
     };
 
-    client.onNotification("apollographql/engineDecorations", (...decs) => {
-      latestDecs = decs;
-      updateDecorations();
-    });
+    client.onNotification(
+      "apollographql/engineDecorations",
+      (...decorations) => {
+        latestDecorations = decorations;
+        updateDecorations();
+      }
+    );
 
     window.onDidChangeActiveTextEditor(() => {
       updateDecorations();

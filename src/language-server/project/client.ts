@@ -51,6 +51,7 @@ import {
   diagnosticsFromError,
 } from "../diagnostics";
 import URI from "vscode-uri";
+import type { EngineDecoration } from "src/messages";
 
 type Maybe<T> = null | undefined | T;
 
@@ -353,7 +354,7 @@ export class GraphQLClientProject extends GraphQLProject {
     if (!this._onDecorations) return;
     if (!this.schema) return;
 
-    const decorations: any[] = [];
+    const decorations: EngineDecoration[] = [];
 
     for (const [uri, queryDocumentsForFile] of this.documentsByFile) {
       for (const queryDocument of queryDocumentsForFile) {

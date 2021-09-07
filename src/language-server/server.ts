@@ -42,7 +42,9 @@ workspace.onDiagnostics((params) => {
 });
 
 workspace.onDecorations((params) => {
-  connection.sendNotification("apollographql/engineDecorations", params);
+  connection.sendNotification("apollographql/engineDecorations", {
+    decorations: params,
+  });
 });
 
 workspace.onSchemaTags((params) => {

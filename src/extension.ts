@@ -14,7 +14,7 @@ import {
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
 import { NotificationType } from "vscode-languageclient";
-import type { LanguageClient } from "./messages";
+import type { EngineDecoration, LanguageClient } from "./messages";
 import {
   printNoFileOpenMessage,
   printStatsToClientOutputChannel,
@@ -206,7 +206,7 @@ export function activate(context: ExtensionContext) {
     });
 
     const engineDecoration = window.createTextEditorDecorationType({});
-    let latestDecorations: any[] | undefined = undefined;
+    let latestDecorations: EngineDecoration[] | undefined = undefined;
 
     const updateDecorations = () => {
       if (window.activeTextEditor && latestDecorations) {
@@ -235,7 +235,7 @@ export function activate(context: ExtensionContext) {
 
     client.onNotification(
       "apollographql/engineDecorations",
-      (...decorations) => {
+      ({ decorations }) => {
         latestDecorations = decorations;
         updateDecorations();
       }

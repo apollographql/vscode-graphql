@@ -19,6 +19,8 @@ import {
   ObjectTypeDefinitionNode,
   GraphQLObjectType,
   DefinitionNode,
+  ExecutableDefinitionNode,
+  print,
 } from "graphql";
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import { NotificationHandler, DiagnosticSeverity } from "vscode-languageserver";
@@ -505,5 +507,32 @@ export class GraphQLClientProject extends GraphQLProject {
       });
     }
     return fragmentSpreads;
+  }
+  getOperationWithFragments(
+    operationDefinition: OperationDefinitionNode
+  ): ExecutableDefinitionNode[] {
+    const fragments = this.fragments;
+    const seenFragmentNames = new Set<string>([]);
+    const allDefinitions: ExecutableDefinitionNode[] = [operationDefinition];
+
+    const defintionsToSearch: ExecutableDefinitionNode[] = [
+      operationDefinition,
+    ];
+    let currentDefinition: ExecutableDefinitionNode | undefined;
+    while ((currentDefinition = defintionsToSearch.shift())) {
+      visit(currentDefinition, {
+        FragmentSpread(node: FragmentSpreadNode) {
+          const fragmentName = node.name.value;
+          const fragment = fragments[fragmentName];
+          if (!seenFragmentNames.has(fragmentName) && fragment) {
+            defintionsToSearch.push(fragment);
+            allDefinitions.push(fragment);
+            seenFragmentNames.add(fragmentName);
+          }
+        },
+      });
+    }
+
+    return allDefinitions;
   }
 }

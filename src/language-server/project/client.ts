@@ -24,11 +24,11 @@ import {
 } from "graphql";
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import { NotificationHandler, DiagnosticSeverity } from "vscode-languageserver";
+import LZString from "lz-string";
 
 import { rangeForASTNode } from "../utilities/source";
 import { formatMS } from "../format";
 import { LoadingHandler } from "../loadingHandler";
-import { FileSet } from "../fileSet";
 import { apolloClientSchemaDocument } from "./defaultClientSchema";
 
 import {
@@ -360,14 +360,18 @@ export class GraphQLClientProject extends GraphQLProject {
 
     for (const [uri, queryDocumentsForFile] of this.documentsByFile) {
       for (const queryDocument of queryDocumentsForFile) {
-        if (queryDocument.ast && this.fieldLatencies) {
+        if (queryDocument.ast) {
           const fieldLatencies = this.fieldLatencies;
           const typeInfo = new TypeInfo(this.schema);
           visit(
             queryDocument.ast,
             visitWithTypeInfo(typeInfo, {
               enter: (node) => {
-                if (node.kind == "Field" && typeInfo.getParentType()) {
+                if (
+                  node.kind == "Field" &&
+                  typeInfo.getParentType() &&
+                  fieldLatencies
+                ) {
                   const parentName = typeInfo.getParentType()!.name;
                   const parentEngineStat = fieldLatencies.get(parentName);
                   const engineStat = parentEngineStat
@@ -381,11 +385,35 @@ export class GraphQLClientProject extends GraphQLProject {
                     });
                   }
                 } else if (node.kind == "OperationDefinition") {
+                  const operationWithFragments =
+                    this.getOperationWithFragments(node);
+                  const document = operationWithFragments
+                    .map(print)
+                    .join("\n\n");
+                  const explorerURLState =
+                    LZString.compressToEncodedURIComponent(
+                      JSON.stringify({ document })
+                    );
+
+                  const frontendUrlRoot =
+                    "https://studio-staging.apollographql.com"; // TODO
+
+                  const endpoint = this.config.service?.endpoint;
+                  const variant = this.config.variant;
+                  const graphId = this.config.graph;
+                  this.config.client.service;
+
+                  const runInExplorerLink = graphId
+                    ? `${frontendUrlRoot}/${graphId}/engine/explorer?variant=${variant}&explorerURLState=${explorerURLState}`
+                    : `${frontendUrlRoot}/sandbox/explorer?explorerURLState=${explorerURLState}${
+                        endpoint ? `&endpoint=${endpoint}` : ""
+                      }`;
+
                   decorations.push({
                     document: uri,
                     glyph: ">",
                     range: rangeForASTNode(node),
-                    hoverMessage: "Some hover text",
+                    hoverMessage: `[Run in Studio](${runInExplorerLink})`,
                   });
                 }
               },

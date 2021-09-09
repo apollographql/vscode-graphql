@@ -11,7 +11,7 @@ import {
   SchemaResolveConfig,
 } from "./base";
 
-import { GetSchemaByTag } from "../../graphqlTypes";
+import { GetSchemaByTagQuery } from "../../graphqlTypes";
 import { Debug } from "../../utilities";
 
 export class EngineSchemaProvider implements GraphQLSchemaProvider {
@@ -47,7 +47,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
       );
     }
 
-    const { data, errors } = await this.client.execute<GetSchemaByTag>({
+    const { data, errors } = await this.client.execute<GetSchemaByTagQuery>({
       query: SCHEMA_QUERY,
       variables: {
         id: this.config.graph,

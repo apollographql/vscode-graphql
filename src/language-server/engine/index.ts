@@ -1,7 +1,7 @@
 import { GraphQLDataSource } from "./GraphQLDataSource";
 import { DefaultEngineConfig } from "../config";
 import { SCHEMA_TAGS_AND_FIELD_STATS } from "./operations/schemaTagsAndFieldStats";
-import { SchemaTagsAndFieldStats } from "../graphqlTypes";
+import { SchemaTagsAndFieldStatsQuery } from "../graphqlTypes";
 
 export interface ClientIdentity {
   name?: string;
@@ -53,7 +53,7 @@ export class ApolloEngineClient extends GraphQLDataSource {
   }
 
   async loadSchemaTagsAndFieldStats(serviceID: string) {
-    const { data, errors } = await this.execute<SchemaTagsAndFieldStats>({
+    const { data, errors } = await this.execute<SchemaTagsAndFieldStatsQuery>({
       query: SCHEMA_TAGS_AND_FIELD_STATS,
       variables: {
         id: serviceID,

@@ -1,0 +1,12 @@
+# Would be better to get the schema from the Studio registry once it can be a public variant.
+schema: https://graphql.api.apollographql.com/api/graphql
+generates:
+  ./src/language-server/graphqlTypes.ts:
+    documents:
+      - src/**/*.ts
+      - "!src/**/__tests__**/*.ts"
+    plugins:
+      - typescript
+      - typescript-operations
+    config:
+      avoidOptionals: true

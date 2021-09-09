@@ -1,3 +1,4 @@
+import { MarkdownString } from "vscode";
 import type {
   LanguageClient as GenericLanguageClient,
   NotificationHandler,
@@ -27,8 +28,10 @@ export type ProjectStats =
 
 export interface EngineDecoration {
   document: string;
-  message: string;
+  message?: string;
+  glyph?: string;
   range: Range;
+  hoverMessage?: string;
 }
 
 type Messages = {

@@ -10,6 +10,7 @@ import {
   QuickPickItem,
   Disposable,
   OutputChannel,
+  MarkdownString,
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
@@ -211,21 +212,41 @@ export function activate(context: ExtensionContext) {
     const updateDecorations = () => {
       if (window.activeTextEditor && latestDecorations) {
         const editor = window.activeTextEditor!;
-        const decorations: DecorationOptions[] = latestDecorations
+        const decorations = latestDecorations
           .filter(
             (decoration) =>
               decoration.document ===
               window.activeTextEditor!.document.uri.toString()
           )
-          .map((decoration) => {
+          .map((decoration): DecorationOptions => {
+            const onDiskPath = Uri.file(
+              join(context.extensionPath, "src", "iconRun.svg")
+            );
+
+            const hoverMessage =
+              decoration.hoverMessage === undefined
+                ? undefined
+                : new MarkdownString(decoration.hoverMessage);
+            if (hoverMessage) {
+              hoverMessage.isTrusted = true;
+            }
+
             return {
               range: editor.document.lineAt(decoration.range.start.line).range,
               renderOptions: {
-                after: {
-                  contentText: `${decoration.message}`,
-                  textDecoration: "none; padding-left: 15px; opacity: .5",
-                },
+                after:
+                  decoration.message === undefined
+                    ? undefined
+                    : {
+                        contentText: decoration.message,
+                        textDecoration: "none; padding-left: 15px; opacity: .5",
+                      },
+                before:
+                  decoration.glyph === undefined
+                    ? undefined
+                    : { contentIconPath: onDiskPath },
               },
+              hoverMessage,
             };
           });
 

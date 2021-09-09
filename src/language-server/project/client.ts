@@ -380,6 +380,13 @@ export class GraphQLClientProject extends GraphQLProject {
                       range: rangeForASTNode(node),
                     });
                   }
+                } else if (node.kind == "OperationDefinition") {
+                  decorations.push({
+                    document: uri,
+                    glyph: ">",
+                    range: rangeForASTNode(node),
+                    hoverMessage: "Some hover text",
+                  });
                 }
               },
             })

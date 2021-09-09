@@ -14,7 +14,8 @@ export type ClientID = string;
 export type SchemaTag = string;
 export type ServiceIDAndTag = [ServiceID, SchemaTag?];
 export type ServiceSpecifier = string;
-export type FieldStats = Map<string, Map<string, number | null>>;
+// Map from type name to field name to latency.
+export type FieldLatencies = Map<string, Map<string, number | null>>;
 
 export function noServiceError(service: string | undefined, endpoint?: string) {
   return `Could not find graph ${
@@ -52,7 +53,7 @@ export class ApolloEngineClient extends GraphQLDataSource {
       require("../../package.json").version;
   }
 
-  async loadSchemaTagsAndFieldStats(serviceID: string) {
+  async loadSchemaTagsAndFieldLatencies(serviceID: string) {
     const { data, errors } = await this.execute<SchemaTagsAndFieldStatsQuery>({
       query: SCHEMA_TAGS_AND_FIELD_STATS,
       variables: {
@@ -72,24 +73,24 @@ export class ApolloEngineClient extends GraphQLDataSource {
       ({ tag }: { tag: string }) => tag
     );
 
-    const fieldStats: FieldStats = new Map();
+    const fieldLatencies: FieldLatencies = new Map();
 
-    data.service.stats.fieldStats.forEach((fieldStat) => {
+    data.service.stats.fieldLatencies.forEach((fieldLatency) => {
       // Parse field "ParentType.fieldName:FieldType" into ["ParentType", "fieldName", "FieldType"]
-      const [parentType = null, fieldName = null] = fieldStat.groupBy.field
-        ? fieldStat.groupBy.field.split(/\.|:/)
+      const [parentType = null, fieldName = null] = fieldLatency.groupBy.field
+        ? fieldLatency.groupBy.field.split(/\.|:/)
         : [];
 
       if (!parentType || !fieldName) {
         return;
       }
       const fieldsMap =
-        fieldStats.get(parentType) ||
-        fieldStats.set(parentType, new Map()).get(parentType)!;
+        fieldLatencies.get(parentType) ||
+        fieldLatencies.set(parentType, new Map()).get(parentType)!;
 
-      fieldsMap.set(fieldName, fieldStat.metrics.fieldHistogram.durationMs);
+      fieldsMap.set(fieldName, fieldLatency.metrics.fieldHistogram.durationMs);
     });
 
-    return { schemaTags, fieldStats };
+    return { schemaTags, fieldLatencies };
   }
 }

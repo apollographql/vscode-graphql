@@ -7499,7 +7499,7 @@ export type SchemaTagsAndFieldStatsQueryVariables = Exact<{
 }>;
 
 
-export type SchemaTagsAndFieldStatsQuery = { __typename?: 'Query', service: Maybe<{ __typename?: 'Service', schemaTags: Maybe<Array<{ __typename?: 'SchemaTag', tag: string }>>, stats: { __typename?: 'ServiceStatsWindow', fieldStats: Array<{ __typename?: 'ServiceFieldStatsRecord', groupBy: { __typename?: 'ServiceFieldStatsDimensions', field: Maybe<string> }, metrics: { __typename?: 'ServiceFieldStatsMetrics', fieldHistogram: { __typename?: 'DurationHistogram', durationMs: Maybe<number> } } }> } }> };
+export type SchemaTagsAndFieldStatsQuery = { __typename?: 'Query', service: Maybe<{ __typename?: 'Service', schemaTags: Maybe<Array<{ __typename?: 'SchemaTag', tag: string }>>, stats: { __typename?: 'ServiceStatsWindow', fieldLatencies: Array<{ __typename?: 'ServiceFieldLatenciesRecord', groupBy: { __typename?: 'ServiceFieldLatenciesDimensions', field: Maybe<string> }, metrics: { __typename?: 'ServiceFieldLatenciesMetrics', fieldHistogram: { __typename?: 'DurationHistogram', durationMs: Maybe<number> } } }> } }> };
 
 export type GetSchemaByTagQueryVariables = Exact<{
   tag: Scalars['String'];

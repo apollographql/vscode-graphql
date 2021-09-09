@@ -7,7 +7,7 @@ export const SCHEMA_TAGS_AND_FIELD_STATS = gql`
         tag
       }
       stats(from: "-86400", to: "-0") {
-        fieldStats {
+        fieldLatencies {
           groupBy {
             field
           }

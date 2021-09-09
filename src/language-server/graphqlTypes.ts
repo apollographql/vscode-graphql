@@ -14,6 +14,8 @@ export type Scalars = {
   /** Long type */
   Long: any;
   GraphQLDocument: any;
+  /** A lowercase hexadecimal SHA-256 */
+  SHA256: any;
   /** Arbitrary JSON object */
   Object: any;
   /** A blob (base64'ed in JSON & GraphQL) */
@@ -21,8 +23,6 @@ export type Scalars = {
   StringOrInt: any;
   /** Always null */
   Void: any;
-  /** A lowercase hexadecimal SHA-256 */
-  SHA256: any;
 };
 
 export type Query = {
@@ -349,6 +349,8 @@ export type Service = Identity & {
   deletedAt: Maybe<Scalars['Timestamp']>;
   description: Maybe<Scalars['String']>;
   devGraphOwner: Maybe<User>;
+  /** Get a graphql by hash */
+  document: Maybe<Scalars['String']>;
   firstReportedAt: Maybe<Scalars['Timestamp']>;
   /**
    * When this is true, this graph will be hidden from non-admin members of the org who haven't been explicitly assigned a
@@ -455,6 +457,11 @@ export type ServiceCheckWorkflowsArgs = {
 
 export type ServiceCompositionResultByIdArgs = {
   id: Scalars['ID'];
+};
+
+
+export type ServiceDocumentArgs = {
+  hash: Maybe<Scalars['SHA256']>;
 };
 
 
@@ -715,6 +722,8 @@ export type GraphVariant = {
   __typename?: 'GraphVariant';
   /** As new schema tags keep getting published, activeSchemaPublish refers to the latest. */
   activeSchemaPublish: Maybe<SchemaTag>;
+  /** Filter configuration used to create the contract schema */
+  contractFilterConfig: Maybe<FilterConfig>;
   /** Explorer setting for default headers for a graph */
   defaultHeaders: Maybe<Scalars['String']>;
   derivedVariantCount: Scalars['Int'];
@@ -1472,6 +1481,12 @@ export type TypeFilterConfig = {
   includeIntrospectionTypes: Maybe<Scalars['Boolean']>;
 };
 
+export type FilterConfig = {
+  __typename?: 'FilterConfig';
+  exclude: Array<Scalars['String']>;
+  include: Array<Scalars['String']>;
+};
+
 export type Launch = {
   __typename?: 'Launch';
   approvedAt: Maybe<Scalars['Timestamp']>;
@@ -1521,12 +1536,6 @@ export type FilterBuildInput = {
   __typename?: 'FilterBuildInput';
   filterConfig: FilterConfig;
   schemaHash: Scalars['String'];
-};
-
-export type FilterConfig = {
-  __typename?: 'FilterConfig';
-  exclude: Array<Scalars['String']>;
-  include: Array<Scalars['String']>;
 };
 
 export type BuildResult = BuildFailure | BuildSuccess;
@@ -7493,6 +7502,11 @@ export type Uri = {
   /** A GCS URI */
   gcs: Scalars['String'];
 };
+
+export type FrontendUrlRootQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FrontendUrlRootQuery = { __typename?: 'Query', frontendUrlRoot: string };
 
 export type SchemaTagsAndFieldStatsQueryVariables = Exact<{
   id: Scalars['ID'];

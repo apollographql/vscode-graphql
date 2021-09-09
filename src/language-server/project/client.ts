@@ -54,6 +54,7 @@ import {
 } from "../diagnostics";
 import URI from "vscode-uri";
 import type { EngineDecoration } from "src/messages";
+import { join } from "path";
 
 type Maybe<T> = null | undefined | T;
 
@@ -98,6 +99,7 @@ export class GraphQLClientProject extends GraphQLProject {
   private _onSchemaTags?: NotificationHandler<[ServiceID, SchemaTag[]]>;
 
   private fieldLatencies?: FieldLatencies;
+  private frontendUrlRoot?: string;
 
   private _validationRules?: ValidationRule[];
 
@@ -332,16 +334,19 @@ export class GraphQLClientProject extends GraphQLProject {
     if (!engineClient) return;
 
     const serviceID = this.serviceID;
-    if (!serviceID) return;
 
     await this.loadingHandler.handle(
       `Loading Apollo data for ${this.displayName}`,
       (async () => {
         try {
-          const { schemaTags, fieldLatencies } =
-            await engineClient.loadSchemaTagsAndFieldLatencies(serviceID);
-          this._onSchemaTags && this._onSchemaTags([serviceID, schemaTags]);
-          this.fieldLatencies = fieldLatencies;
+          if (serviceID) {
+            const { schemaTags, fieldLatencies } =
+              await engineClient.loadSchemaTagsAndFieldLatencies(serviceID);
+            this._onSchemaTags && this._onSchemaTags([serviceID, schemaTags]);
+            this.fieldLatencies = fieldLatencies;
+          }
+          const frontendUrlRoot = await engineClient.loadFrontendUrlRoot();
+          this.frontendUrlRoot = frontendUrlRoot;
           this.lastLoadDate = +new Date();
 
           this.generateDecorations();
@@ -396,18 +401,22 @@ export class GraphQLClientProject extends GraphQLProject {
                     );
 
                   const frontendUrlRoot =
-                    "https://studio-staging.apollographql.com"; // TODO
+                    this.frontendUrlRoot ?? "https://studio.apollographql.com";
 
                   const endpoint = this.config.service?.endpoint;
                   const variant = this.config.variant;
                   const graphId = this.config.graph;
                   this.config.client.service;
 
-                  const runInExplorerLink = graphId
-                    ? `${frontendUrlRoot}/${graphId}/engine/explorer?variant=${variant}&explorerURLState=${explorerURLState}`
-                    : `${frontendUrlRoot}/sandbox/explorer?explorerURLState=${explorerURLState}${
+                  const runInExplorerPath = graphId
+                    ? `${graphId}/engine/explorer?variant=${variant}&explorerURLState=${explorerURLState}`
+                    : `/sandbox/explorer?explorerURLState=${explorerURLState}${
                         endpoint ? `&endpoint=${endpoint}` : ""
                       }`;
+                  const runInExplorerLink = join(
+                    frontendUrlRoot,
+                    runInExplorerPath
+                  );
 
                   decorations.push({
                     document: uri,

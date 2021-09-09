@@ -1,7 +1,11 @@
 import { GraphQLDataSource } from "./GraphQLDataSource";
 import { DefaultEngineConfig } from "../config";
 import { SCHEMA_TAGS_AND_FIELD_STATS } from "./operations/schemaTagsAndFieldStats";
-import { SchemaTagsAndFieldStatsQuery } from "../graphqlTypes";
+import {
+  FrontendUrlRootQuery,
+  SchemaTagsAndFieldStatsQuery,
+} from "../graphqlTypes";
+import { FRONTEND_URL_ROOT } from "./operations/frontendUrlRoot";
 
 export interface ClientIdentity {
   name?: string;
@@ -92,5 +96,13 @@ export class ApolloEngineClient extends GraphQLDataSource {
     });
 
     return { schemaTags, fieldLatencies };
+  }
+
+  async loadFrontendUrlRoot() {
+    const { data } = await this.execute<FrontendUrlRootQuery>({
+      query: FRONTEND_URL_ROOT,
+    });
+
+    return data?.frontendUrlRoot;
   }
 }

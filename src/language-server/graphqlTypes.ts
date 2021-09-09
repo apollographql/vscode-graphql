@@ -2183,6 +2183,8 @@ export type ServiceStatsWindow = {
   errorStats: Array<ServiceErrorStatsRecord>;
   fieldLatencies: Array<ServiceFieldLatenciesRecord>;
   fieldStats: Array<ServiceFieldStatsRecord>;
+  fieldUsage: Array<ServiceFieldUsageRecord>;
+  operationCheckStats: Array<ServiceOperationCheckStatsRecord>;
   queryStats: Array<ServiceQueryStatsRecord>;
   /** From field rounded down to the nearest resolution. */
   roundedDownFrom: Scalars['Timestamp'];
@@ -2222,6 +2224,22 @@ export type ServiceStatsWindowFieldStatsArgs = {
   filter?: Maybe<ServiceFieldStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<ServiceFieldStatsOrderBySpec>>;
+};
+
+
+/** A time window with a specified granularity over a given service. */
+export type ServiceStatsWindowFieldUsageArgs = {
+  filter?: Maybe<ServiceFieldUsageFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<ServiceFieldUsageOrderBySpec>>;
+};
+
+
+/** A time window with a specified granularity over a given service. */
+export type ServiceStatsWindowOperationCheckStatsArgs = {
+  filter?: Maybe<ServiceOperationCheckStatsFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<ServiceOperationCheckStatsOrderBySpec>>;
 };
 
 
@@ -2615,6 +2633,172 @@ export type ServiceFieldStatsMetrics = {
   errorsCount: Scalars['Long'];
   fieldHistogram: DurationHistogram;
   requestCount: Scalars['Long'];
+};
+
+/** Filter for data in ServiceFieldUsage. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
+export type ServiceFieldUsageFilter = {
+  and?: Maybe<Array<ServiceFieldUsageFilter>>;
+  /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
+  clientName?: Maybe<Scalars['String']>;
+  /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
+  clientVersion?: Maybe<Scalars['String']>;
+  /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
+  field?: Maybe<Scalars['String']>;
+  in?: Maybe<ServiceFieldUsageFilterIn>;
+  not?: Maybe<ServiceFieldUsageFilter>;
+  or?: Maybe<Array<ServiceFieldUsageFilter>>;
+  /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
+  queryId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
+  queryName?: Maybe<Scalars['String']>;
+  /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
+  schemaHash?: Maybe<Scalars['String']>;
+  /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
+  schemaTag?: Maybe<Scalars['String']>;
+};
+
+/** Filter for data in ServiceFieldUsage. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
+export type ServiceFieldUsageFilterIn = {
+  /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type ServiceFieldUsageOrderBySpec = {
+  column: ServiceFieldUsageColumn;
+  direction: Ordering;
+};
+
+/** Columns of ServiceFieldUsage. */
+export enum ServiceFieldUsageColumn {
+  ClientName = 'CLIENT_NAME',
+  ClientReferenceId = 'CLIENT_REFERENCE_ID',
+  ClientVersion = 'CLIENT_VERSION',
+  ExecutionCount = 'EXECUTION_COUNT',
+  Field = 'FIELD',
+  QueryId = 'QUERY_ID',
+  QueryName = 'QUERY_NAME',
+  ReferencingOperationCount = 'REFERENCING_OPERATION_COUNT',
+  SchemaHash = 'SCHEMA_HASH',
+  SchemaTag = 'SCHEMA_TAG',
+  Timestamp = 'TIMESTAMP'
+}
+
+export type ServiceFieldUsageRecord = {
+  __typename?: 'ServiceFieldUsageRecord';
+  /** Dimensions of ServiceFieldUsage that can be grouped by. */
+  groupBy: ServiceFieldUsageDimensions;
+  /** Metrics of ServiceFieldUsage that can be aggregated over. */
+  metrics: ServiceFieldUsageMetrics;
+  /** Starting segment timestamp. */
+  timestamp: Scalars['Timestamp'];
+};
+
+export type ServiceFieldUsageDimensions = {
+  __typename?: 'ServiceFieldUsageDimensions';
+  clientName?: Maybe<Scalars['String']>;
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientVersion?: Maybe<Scalars['String']>;
+  field?: Maybe<Scalars['String']>;
+  queryId?: Maybe<Scalars['ID']>;
+  queryName?: Maybe<Scalars['String']>;
+  schemaHash?: Maybe<Scalars['String']>;
+  schemaTag?: Maybe<Scalars['String']>;
+};
+
+export type ServiceFieldUsageMetrics = {
+  __typename?: 'ServiceFieldUsageMetrics';
+  executionCount: Scalars['Long'];
+  referencingOperationCount: Scalars['Long'];
+};
+
+/** Filter for data in ServiceOperationCheckStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
+export type ServiceOperationCheckStatsFilter = {
+  and?: Maybe<Array<ServiceOperationCheckStatsFilter>>;
+  /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
+  clientName?: Maybe<Scalars['String']>;
+  /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
+  clientVersion?: Maybe<Scalars['String']>;
+  in?: Maybe<ServiceOperationCheckStatsFilterIn>;
+  not?: Maybe<ServiceOperationCheckStatsFilter>;
+  or?: Maybe<Array<ServiceOperationCheckStatsFilter>>;
+  /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
+  queryId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
+  schemaTag?: Maybe<Scalars['String']>;
+};
+
+/** Filter for data in ServiceOperationCheckStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
+export type ServiceOperationCheckStatsFilterIn = {
+  /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type ServiceOperationCheckStatsOrderBySpec = {
+  column: ServiceOperationCheckStatsColumn;
+  direction: Ordering;
+};
+
+/** Columns of ServiceOperationCheckStats. */
+export enum ServiceOperationCheckStatsColumn {
+  CachedRequestsCount = 'CACHED_REQUESTS_COUNT',
+  ClientName = 'CLIENT_NAME',
+  ClientReferenceId = 'CLIENT_REFERENCE_ID',
+  ClientVersion = 'CLIENT_VERSION',
+  QueryId = 'QUERY_ID',
+  SchemaTag = 'SCHEMA_TAG',
+  Timestamp = 'TIMESTAMP',
+  UncachedRequestsCount = 'UNCACHED_REQUESTS_COUNT'
+}
+
+export type ServiceOperationCheckStatsRecord = {
+  __typename?: 'ServiceOperationCheckStatsRecord';
+  /** Dimensions of ServiceOperationCheckStats that can be grouped by. */
+  groupBy: ServiceOperationCheckStatsDimensions;
+  /** Metrics of ServiceOperationCheckStats that can be aggregated over. */
+  metrics: ServiceOperationCheckStatsMetrics;
+  /** Starting segment timestamp. */
+  timestamp: Scalars['Timestamp'];
+};
+
+export type ServiceOperationCheckStatsDimensions = {
+  __typename?: 'ServiceOperationCheckStatsDimensions';
+  clientName?: Maybe<Scalars['String']>;
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientVersion?: Maybe<Scalars['String']>;
+  queryId?: Maybe<Scalars['ID']>;
+  schemaTag?: Maybe<Scalars['String']>;
+};
+
+export type ServiceOperationCheckStatsMetrics = {
+  __typename?: 'ServiceOperationCheckStatsMetrics';
+  cachedRequestsCount: Scalars['Long'];
+  uncachedRequestsCount: Scalars['Long'];
 };
 
 /** Filter for data in ServiceQueryStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
@@ -3349,6 +3533,8 @@ export type AccountStatsWindow = {
   errorStats: Array<AccountErrorStatsRecord>;
   fieldLatencies: Array<AccountFieldLatenciesRecord>;
   fieldStats: Array<AccountFieldStatsRecord>;
+  fieldUsage: Array<AccountFieldUsageRecord>;
+  operationCheckStats: Array<AccountOperationCheckStatsRecord>;
   queryStats: Array<AccountQueryStatsRecord>;
   /** From field rounded down to the nearest resolution. */
   roundedDownFrom: Scalars['Timestamp'];
@@ -3388,6 +3574,22 @@ export type AccountStatsWindowFieldStatsArgs = {
   filter?: Maybe<AccountFieldStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<AccountFieldStatsOrderBySpec>>;
+};
+
+
+/** A time window with a specified granularity over a given account. */
+export type AccountStatsWindowFieldUsageArgs = {
+  filter?: Maybe<AccountFieldUsageFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<AccountFieldUsageOrderBySpec>>;
+};
+
+
+/** A time window with a specified granularity over a given account. */
+export type AccountStatsWindowOperationCheckStatsArgs = {
+  filter?: Maybe<AccountOperationCheckStatsFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<AccountOperationCheckStatsOrderBySpec>>;
 };
 
 
@@ -3776,6 +3978,184 @@ export type AccountFieldStatsMetrics = {
   errorsCount: Scalars['Long'];
   fieldHistogram: DurationHistogram;
   requestCount: Scalars['Long'];
+};
+
+/** Filter for data in AccountFieldUsage. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
+export type AccountFieldUsageFilter = {
+  and?: Maybe<Array<AccountFieldUsageFilter>>;
+  /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
+  clientName?: Maybe<Scalars['String']>;
+  /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
+  clientVersion?: Maybe<Scalars['String']>;
+  /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
+  field?: Maybe<Scalars['String']>;
+  in?: Maybe<AccountFieldUsageFilterIn>;
+  not?: Maybe<AccountFieldUsageFilter>;
+  or?: Maybe<Array<AccountFieldUsageFilter>>;
+  /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
+  queryId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
+  queryName?: Maybe<Scalars['String']>;
+  /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
+  schemaHash?: Maybe<Scalars['String']>;
+  /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
+  schemaTag?: Maybe<Scalars['String']>;
+  /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+/** Filter for data in AccountFieldUsage. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
+export type AccountFieldUsageFilterIn = {
+  /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+};
+
+export type AccountFieldUsageOrderBySpec = {
+  column: AccountFieldUsageColumn;
+  direction: Ordering;
+};
+
+/** Columns of AccountFieldUsage. */
+export enum AccountFieldUsageColumn {
+  ClientName = 'CLIENT_NAME',
+  ClientReferenceId = 'CLIENT_REFERENCE_ID',
+  ClientVersion = 'CLIENT_VERSION',
+  ExecutionCount = 'EXECUTION_COUNT',
+  Field = 'FIELD',
+  QueryId = 'QUERY_ID',
+  QueryName = 'QUERY_NAME',
+  ReferencingOperationCount = 'REFERENCING_OPERATION_COUNT',
+  SchemaHash = 'SCHEMA_HASH',
+  SchemaTag = 'SCHEMA_TAG',
+  ServiceId = 'SERVICE_ID',
+  Timestamp = 'TIMESTAMP'
+}
+
+export type AccountFieldUsageRecord = {
+  __typename?: 'AccountFieldUsageRecord';
+  /** Dimensions of AccountFieldUsage that can be grouped by. */
+  groupBy: AccountFieldUsageDimensions;
+  /** Metrics of AccountFieldUsage that can be aggregated over. */
+  metrics: AccountFieldUsageMetrics;
+  /** Starting segment timestamp. */
+  timestamp: Scalars['Timestamp'];
+};
+
+export type AccountFieldUsageDimensions = {
+  __typename?: 'AccountFieldUsageDimensions';
+  clientName?: Maybe<Scalars['String']>;
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientVersion?: Maybe<Scalars['String']>;
+  field?: Maybe<Scalars['String']>;
+  queryId?: Maybe<Scalars['ID']>;
+  queryName?: Maybe<Scalars['String']>;
+  schemaHash?: Maybe<Scalars['String']>;
+  schemaTag?: Maybe<Scalars['String']>;
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+export type AccountFieldUsageMetrics = {
+  __typename?: 'AccountFieldUsageMetrics';
+  executionCount: Scalars['Long'];
+  referencingOperationCount: Scalars['Long'];
+};
+
+/** Filter for data in AccountOperationCheckStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
+export type AccountOperationCheckStatsFilter = {
+  and?: Maybe<Array<AccountOperationCheckStatsFilter>>;
+  /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
+  clientName?: Maybe<Scalars['String']>;
+  /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
+  clientVersion?: Maybe<Scalars['String']>;
+  in?: Maybe<AccountOperationCheckStatsFilterIn>;
+  not?: Maybe<AccountOperationCheckStatsFilter>;
+  or?: Maybe<Array<AccountOperationCheckStatsFilter>>;
+  /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
+  queryId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
+  schemaTag?: Maybe<Scalars['String']>;
+  /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+/** Filter for data in AccountOperationCheckStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
+export type AccountOperationCheckStatsFilterIn = {
+  /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+};
+
+export type AccountOperationCheckStatsOrderBySpec = {
+  column: AccountOperationCheckStatsColumn;
+  direction: Ordering;
+};
+
+/** Columns of AccountOperationCheckStats. */
+export enum AccountOperationCheckStatsColumn {
+  CachedRequestsCount = 'CACHED_REQUESTS_COUNT',
+  ClientName = 'CLIENT_NAME',
+  ClientReferenceId = 'CLIENT_REFERENCE_ID',
+  ClientVersion = 'CLIENT_VERSION',
+  QueryId = 'QUERY_ID',
+  SchemaTag = 'SCHEMA_TAG',
+  ServiceId = 'SERVICE_ID',
+  Timestamp = 'TIMESTAMP',
+  UncachedRequestsCount = 'UNCACHED_REQUESTS_COUNT'
+}
+
+export type AccountOperationCheckStatsRecord = {
+  __typename?: 'AccountOperationCheckStatsRecord';
+  /** Dimensions of AccountOperationCheckStats that can be grouped by. */
+  groupBy: AccountOperationCheckStatsDimensions;
+  /** Metrics of AccountOperationCheckStats that can be aggregated over. */
+  metrics: AccountOperationCheckStatsMetrics;
+  /** Starting segment timestamp. */
+  timestamp: Scalars['Timestamp'];
+};
+
+export type AccountOperationCheckStatsDimensions = {
+  __typename?: 'AccountOperationCheckStatsDimensions';
+  clientName?: Maybe<Scalars['String']>;
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientVersion?: Maybe<Scalars['String']>;
+  queryId?: Maybe<Scalars['ID']>;
+  schemaTag?: Maybe<Scalars['String']>;
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+export type AccountOperationCheckStatsMetrics = {
+  __typename?: 'AccountOperationCheckStatsMetrics';
+  cachedRequestsCount: Scalars['Long'];
+  uncachedRequestsCount: Scalars['Long'];
 };
 
 /** Filter for data in AccountQueryStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
@@ -4200,6 +4580,8 @@ export type StatsWindow = {
   errorStats: Array<ErrorStatsRecord>;
   fieldLatencies: Array<FieldLatenciesRecord>;
   fieldStats: Array<FieldStatsRecord>;
+  fieldUsage: Array<FieldUsageRecord>;
+  operationCheckStats: Array<OperationCheckStatsRecord>;
   queryStats: Array<QueryStatsRecord>;
   /** From field rounded down to the nearest resolution. */
   roundedDownFrom: Scalars['Timestamp'];
@@ -4239,6 +4621,22 @@ export type StatsWindowFieldStatsArgs = {
   filter?: Maybe<FieldStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<FieldStatsOrderBySpec>>;
+};
+
+
+/** A time window with a specified granularity. */
+export type StatsWindowFieldUsageArgs = {
+  filter?: Maybe<FieldUsageFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<FieldUsageOrderBySpec>>;
+};
+
+
+/** A time window with a specified granularity. */
+export type StatsWindowOperationCheckStatsArgs = {
+  filter?: Maybe<OperationCheckStatsFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OperationCheckStatsOrderBySpec>>;
 };
 
 
@@ -4639,6 +5037,184 @@ export type FieldStatsMetrics = {
   errorsCount: Scalars['Long'];
   fieldHistogram: DurationHistogram;
   requestCount: Scalars['Long'];
+};
+
+/** Filter for data in FieldUsage. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
+export type FieldUsageFilter = {
+  and?: Maybe<Array<FieldUsageFilter>>;
+  /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
+  clientName?: Maybe<Scalars['String']>;
+  /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
+  clientVersion?: Maybe<Scalars['String']>;
+  /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
+  field?: Maybe<Scalars['String']>;
+  in?: Maybe<FieldUsageFilterIn>;
+  not?: Maybe<FieldUsageFilter>;
+  or?: Maybe<Array<FieldUsageFilter>>;
+  /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
+  queryId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
+  queryName?: Maybe<Scalars['String']>;
+  /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
+  schemaHash?: Maybe<Scalars['String']>;
+  /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
+  schemaTag?: Maybe<Scalars['String']>;
+  /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+/** Filter for data in FieldUsage. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
+export type FieldUsageFilterIn = {
+  /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+};
+
+export type FieldUsageOrderBySpec = {
+  column: FieldUsageColumn;
+  direction: Ordering;
+};
+
+/** Columns of FieldUsage. */
+export enum FieldUsageColumn {
+  ClientName = 'CLIENT_NAME',
+  ClientReferenceId = 'CLIENT_REFERENCE_ID',
+  ClientVersion = 'CLIENT_VERSION',
+  ExecutionCount = 'EXECUTION_COUNT',
+  Field = 'FIELD',
+  QueryId = 'QUERY_ID',
+  QueryName = 'QUERY_NAME',
+  ReferencingOperationCount = 'REFERENCING_OPERATION_COUNT',
+  SchemaHash = 'SCHEMA_HASH',
+  SchemaTag = 'SCHEMA_TAG',
+  ServiceId = 'SERVICE_ID',
+  Timestamp = 'TIMESTAMP'
+}
+
+export type FieldUsageRecord = {
+  __typename?: 'FieldUsageRecord';
+  /** Dimensions of FieldUsage that can be grouped by. */
+  groupBy: FieldUsageDimensions;
+  /** Metrics of FieldUsage that can be aggregated over. */
+  metrics: FieldUsageMetrics;
+  /** Starting segment timestamp. */
+  timestamp: Scalars['Timestamp'];
+};
+
+export type FieldUsageDimensions = {
+  __typename?: 'FieldUsageDimensions';
+  clientName?: Maybe<Scalars['String']>;
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientVersion?: Maybe<Scalars['String']>;
+  field?: Maybe<Scalars['String']>;
+  queryId?: Maybe<Scalars['ID']>;
+  queryName?: Maybe<Scalars['String']>;
+  schemaHash?: Maybe<Scalars['String']>;
+  schemaTag?: Maybe<Scalars['String']>;
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+export type FieldUsageMetrics = {
+  __typename?: 'FieldUsageMetrics';
+  executionCount: Scalars['Long'];
+  referencingOperationCount: Scalars['Long'];
+};
+
+/** Filter for data in OperationCheckStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
+export type OperationCheckStatsFilter = {
+  and?: Maybe<Array<OperationCheckStatsFilter>>;
+  /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
+  clientName?: Maybe<Scalars['String']>;
+  /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
+  clientVersion?: Maybe<Scalars['String']>;
+  in?: Maybe<OperationCheckStatsFilterIn>;
+  not?: Maybe<OperationCheckStatsFilter>;
+  or?: Maybe<Array<OperationCheckStatsFilter>>;
+  /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
+  queryId?: Maybe<Scalars['ID']>;
+  /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
+  schemaTag?: Maybe<Scalars['String']>;
+  /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+/** Filter for data in OperationCheckStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
+export type OperationCheckStatsFilterIn = {
+  /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
+  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+};
+
+export type OperationCheckStatsOrderBySpec = {
+  column: OperationCheckStatsColumn;
+  direction: Ordering;
+};
+
+/** Columns of OperationCheckStats. */
+export enum OperationCheckStatsColumn {
+  CachedRequestsCount = 'CACHED_REQUESTS_COUNT',
+  ClientName = 'CLIENT_NAME',
+  ClientReferenceId = 'CLIENT_REFERENCE_ID',
+  ClientVersion = 'CLIENT_VERSION',
+  QueryId = 'QUERY_ID',
+  SchemaTag = 'SCHEMA_TAG',
+  ServiceId = 'SERVICE_ID',
+  Timestamp = 'TIMESTAMP',
+  UncachedRequestsCount = 'UNCACHED_REQUESTS_COUNT'
+}
+
+export type OperationCheckStatsRecord = {
+  __typename?: 'OperationCheckStatsRecord';
+  /** Dimensions of OperationCheckStats that can be grouped by. */
+  groupBy: OperationCheckStatsDimensions;
+  /** Metrics of OperationCheckStats that can be aggregated over. */
+  metrics: OperationCheckStatsMetrics;
+  /** Starting segment timestamp. */
+  timestamp: Scalars['Timestamp'];
+};
+
+export type OperationCheckStatsDimensions = {
+  __typename?: 'OperationCheckStatsDimensions';
+  clientName?: Maybe<Scalars['String']>;
+  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientVersion?: Maybe<Scalars['String']>;
+  queryId?: Maybe<Scalars['ID']>;
+  schemaTag?: Maybe<Scalars['String']>;
+  serviceId?: Maybe<Scalars['ID']>;
+};
+
+export type OperationCheckStatsMetrics = {
+  __typename?: 'OperationCheckStatsMetrics';
+  cachedRequestsCount: Scalars['Long'];
+  uncachedRequestsCount: Scalars['Long'];
 };
 
 /** Filter for data in QueryStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */

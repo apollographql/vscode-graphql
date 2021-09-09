@@ -3,8 +3,8 @@ schema: https://graphql.api.apollographql.com/api/graphql
 generates:
   ./src/language-server/graphqlTypes.ts:
     documents:
-      - src/language-server/providers/schema/engine.ts
-      - src/language-server/engine/operations/schemaTagsAndFieldStats.ts
+      - src/**/*.ts
+      - "!src/**/__tests__**/*.ts"
     plugins:
       - typescript
       - typescript-operations

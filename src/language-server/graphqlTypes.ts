@@ -27,53 +27,53 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  _odysseyFakeField?: Maybe<Scalars['Boolean']>;
+  _odysseyFakeField: Maybe<Scalars['Boolean']>;
   /** Account by ID */
-  account?: Maybe<Account>;
+  account: Maybe<Account>;
   /** Whether an account ID is available for mutation{newAccount(id:)} */
   accountIDAvailable: Scalars['Boolean'];
   /** All accounts */
-  allAccounts?: Maybe<Array<Account>>;
+  allAccounts: Maybe<Array<Account>>;
   /** All available plans */
   allPlans: Array<BillingPlan>;
   /** All services */
-  allServices?: Maybe<Array<Service>>;
+  allServices: Maybe<Array<Service>>;
   /** All timezones with their offsets from UTC */
   allTimezoneOffsets: Array<TimezoneOffset>;
   /** All users */
-  allUsers?: Maybe<Array<User>>;
+  allUsers: Maybe<Array<User>>;
   /** If this is true, the user is an Apollo administrator who can ignore restrictions based purely on billing plan. */
   canBypassPlanRestrictions: Scalars['Boolean'];
   diffSchemas: Array<Change>;
   /** Get the unsubscribe settings for a given email. */
-  emailPreferences?: Maybe<EmailPreferences>;
+  emailPreferences: Maybe<EmailPreferences>;
   experimentalFeatures: GlobalExperimentalFeatures;
   frontendUrlRoot: Scalars['String'];
   internalActiveCronJobs: Array<CronJob>;
-  internalAdminUsers?: Maybe<Array<InternalAdminUser>>;
+  internalAdminUsers: Maybe<Array<InternalAdminUser>>;
   internalUnresolvedCronExecutionFailures: Array<CronExecution>;
   /** Current identity, null if not authenticated */
-  me?: Maybe<Identity>;
+  me: Maybe<Identity>;
   /** Look up a plan by ID */
-  plan?: Maybe<BillingPlan>;
+  plan: Maybe<BillingPlan>;
   /** Service by ID */
-  service?: Maybe<Service>;
+  service: Maybe<Service>;
   /** Query statistics across all services. For admins only; normal users must go through AccountsStatsWindow or ServiceStatsWindow. */
   stats: StatsWindow;
   /** Get the studio settings for the current user */
-  studioSettings?: Maybe<UserSettings>;
+  studioSettings: Maybe<UserSettings>;
   /** The plan started by AccountMutation.startTeamSubscription */
   teamPlan: BillingPlan;
   /** The plan started by AccountMutation.startTrial */
   trialPlan: BillingPlan;
   /** User by ID */
-  user?: Maybe<User>;
+  user: Maybe<User>;
   /**
    * Access a variant by reference of the form `graphID@variantName`, or `graphID` for the default `current` variant.
    * Returns null when the graph or variant do not exist, or when the graph cannot be accessed.
    * Note that we can return more types implementing Error in the future.
    */
-  variant?: Maybe<GraphVariantLookup>;
+  variant: Maybe<GraphVariantLookup>;
 };
 
 
@@ -88,18 +88,18 @@ export type QueryAccountIdAvailableArgs = {
 
 
 export type QueryAllAccountsArgs = {
-  search?: Maybe<Scalars['String']>;
-  tier?: Maybe<BillingPlanTier>;
+  search: Maybe<Scalars['String']>;
+  tier: Maybe<BillingPlanTier>;
 };
 
 
 export type QueryAllServicesArgs = {
-  search?: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
 };
 
 
 export type QueryAllUsersArgs = {
-  search?: Maybe<Scalars['String']>;
+  search: Maybe<Scalars['String']>;
 };
 
 
@@ -116,7 +116,7 @@ export type QueryEmailPreferencesArgs = {
 
 
 export type QueryPlanArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
 };
 
 
@@ -127,8 +127,8 @@ export type QueryServiceArgs = {
 
 export type QueryStatsArgs = {
   from: Scalars['Timestamp'];
-  resolution?: Maybe<Resolution>;
-  to?: Maybe<Scalars['Timestamp']>;
+  resolution: Maybe<Resolution>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 
@@ -148,7 +148,7 @@ export type QueryVariantArgs = {
 
 export type Account = {
   __typename?: 'Account';
-  auditLogExports?: Maybe<Array<AuditLogExport>>;
+  auditLogExports: Maybe<Array<AuditLogExport>>;
   /** These are the roles that the account is able to use */
   availableRoles: Array<UserPermission>;
   /**
@@ -158,21 +158,21 @@ export type Account = {
    * filename, if such information is available. Client MUST set the "x-apollo-csrf-token" header to
    * MediaUploadInfo.csrfToken.
    */
-  avatarUpload?: Maybe<AvatarUploadResult>;
+  avatarUpload: Maybe<AvatarUploadResult>;
   /**
    * Get an image URL for the account's avatar. Note that CORS is not enabled for these URLs. The size
    * argument is used for bandwidth reduction, and should be the size of the image as displayed in the
    * application. Apollo's media server will downscale larger images to at least the requested size,
    * but this will not happen for third-party media servers.
    */
-  avatarUrl?: Maybe<Scalars['String']>;
-  billingInfo?: Maybe<BillingInfo>;
-  companyUrl?: Maybe<Scalars['String']>;
-  currentBillingMonth?: Maybe<BillingMonth>;
+  avatarUrl: Maybe<Scalars['String']>;
+  billingInfo: Maybe<BillingInfo>;
+  companyUrl: Maybe<Scalars['String']>;
+  currentBillingMonth: Maybe<BillingMonth>;
   currentPlan: BillingPlan;
-  currentSubscription?: Maybe<BillingSubscription>;
+  currentSubscription: Maybe<BillingSubscription>;
   experimentalFeatures: AccountExperimentalFeatures;
-  expiredTrialSubscription?: Maybe<BillingSubscription>;
+  expiredTrialSubscription: Maybe<BillingSubscription>;
   graphIDAvailable: Scalars['Boolean'];
   hasBeenOnTrial: Scalars['Boolean'];
   id: Scalars['ID'];
@@ -181,38 +181,38 @@ export type Account = {
    * shouldn't be used in normal client apps).
    */
   internalID: Scalars['ID'];
-  invitations?: Maybe<Array<AccountInvitation>>;
-  invoices?: Maybe<Array<Invoice>>;
+  invitations: Maybe<Array<AccountInvitation>>;
+  invoices: Maybe<Array<Invoice>>;
   isOnExpiredTrial: Scalars['Boolean'];
   isOnTrial: Scalars['Boolean'];
-  memberships?: Maybe<Array<AccountMembership>>;
+  memberships: Maybe<Array<AccountMembership>>;
   name: Scalars['String'];
-  provisionedAt?: Maybe<Scalars['Timestamp']>;
-  recurlyEmail?: Maybe<Scalars['String']>;
-  requests?: Maybe<Scalars['Long']>;
-  requestsInCurrentBillingPeriod?: Maybe<Scalars['Long']>;
-  roles?: Maybe<AccountRoles>;
+  provisionedAt: Maybe<Scalars['Timestamp']>;
+  recurlyEmail: Maybe<Scalars['String']>;
+  requests: Maybe<Scalars['Long']>;
+  requestsInCurrentBillingPeriod: Maybe<Scalars['Long']>;
+  roles: Maybe<AccountRoles>;
   /** How many seats would be included in your next bill, as best estimated today */
-  seatCountForNextBill?: Maybe<Scalars['Int']>;
-  seats?: Maybe<Seats>;
+  seatCountForNextBill: Maybe<Scalars['Int']>;
+  seats: Maybe<Seats>;
   secondaryIDs: Array<Scalars['ID']>;
   services: Array<Service>;
   /**
    * If non-null, this organization tracks its members through an upstream, eg PingOne;
    * invitations are not possible on SSO-synchronized account.
    */
-  sso?: Maybe<OrganizationSso>;
-  state?: Maybe<AccountState>;
+  sso: Maybe<OrganizationSso>;
+  state: Maybe<AccountState>;
   /** A list of reusable invitations for the organization. */
-  staticInvitations?: Maybe<Array<OrganizationInviteLink>>;
+  staticInvitations: Maybe<Array<OrganizationInviteLink>>;
   /** @deprecated use Account.statsWindow instead */
   stats: AccountStatsWindow;
-  statsWindow?: Maybe<AccountStatsWindow>;
-  subscriptions?: Maybe<Array<BillingSubscription>>;
+  statsWindow: Maybe<AccountStatsWindow>;
+  subscriptions: Maybe<Array<BillingSubscription>>;
   /** Gets a ticket for this org, by id */
-  ticket?: Maybe<ZendeskTicket>;
+  ticket: Maybe<ZendeskTicket>;
   /** List of Zendesk tickets submitted for this org */
-  tickets?: Maybe<Array<ZendeskTicket>>;
+  tickets: Maybe<Array<ZendeskTicket>>;
 };
 
 
@@ -238,21 +238,21 @@ export type AccountRequestsArgs = {
 
 
 export type AccountServicesArgs = {
-  includeDeleted?: Maybe<Scalars['Boolean']>;
+  includeDeleted: Maybe<Scalars['Boolean']>;
 };
 
 
 export type AccountStatsArgs = {
   from: Scalars['Timestamp'];
-  resolution?: Maybe<Resolution>;
-  to?: Maybe<Scalars['Timestamp']>;
+  resolution: Maybe<Resolution>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 
 export type AccountStatsWindowArgs = {
   from: Scalars['Timestamp'];
-  resolution?: Maybe<Resolution>;
-  to?: Maybe<Scalars['Timestamp']>;
+  resolution: Maybe<Resolution>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 
@@ -262,15 +262,15 @@ export type AccountTicketArgs = {
 
 export type AuditLogExport = {
   __typename?: 'AuditLogExport';
-  actors?: Maybe<Array<Identity>>;
-  bigqueryTriggeredAt?: Maybe<Scalars['Timestamp']>;
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  actors: Maybe<Array<Identity>>;
+  bigqueryTriggeredAt: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   createdAt: Scalars['Timestamp'];
-  exportedFiles?: Maybe<Array<Scalars['String']>>;
+  exportedFiles: Maybe<Array<Scalars['String']>>;
   from: Scalars['Timestamp'];
-  graphs?: Maybe<Array<Service>>;
+  graphs: Maybe<Array<Service>>;
   id: Scalars['ID'];
-  requester?: Maybe<User>;
+  requester: Maybe<User>;
   status: AuditStatus;
   to: Scalars['Timestamp'];
 };
@@ -299,9 +299,9 @@ export enum ActorType {
 
 export type Service = Identity & {
   __typename?: 'Service';
-  account?: Maybe<Account>;
-  accountId?: Maybe<Scalars['ID']>;
-  apiKeys?: Maybe<Array<GraphApiKey>>;
+  account: Maybe<Account>;
+  accountId: Maybe<Scalars['ID']>;
+  apiKeys: Maybe<Array<GraphApiKey>>;
   asActor: Actor;
   /**
    * Get an URL to which an avatar image can be uploaded. Client uploads by sending a PUT request
@@ -310,18 +310,18 @@ export type Service = Identity & {
    * filename, if such information is available. Client MUST set the "x-apollo-csrf-token" header to
    * MediaUploadInfo.csrfToken.
    */
-  avatarUpload?: Maybe<AvatarUploadResult>;
+  avatarUpload: Maybe<AvatarUploadResult>;
   /**
    * Get an image URL for the service's avatar. Note that CORS is not enabled for these URLs. The size
    * argument is used for bandwidth reduction, and should be the size of the image as displayed in the
    * application. Apollo's media server will downscale larger images to at least the requested size,
    * but this will not happen for third-party media servers.
    */
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatarUrl: Maybe<Scalars['String']>;
   /** Get available notification endpoints */
-  channels?: Maybe<Array<Channel>>;
+  channels: Maybe<Array<Channel>>;
   /** Get check configuration for this graph. */
-  checkConfiguration?: Maybe<CheckConfiguration>;
+  checkConfiguration: Maybe<CheckConfiguration>;
   /**
    * List of options available for filtering checks for this graph by author.
    * If a filter is passed, constrains results to match the filter.
@@ -338,18 +338,18 @@ export type Service = Identity & {
    */
   checksSubgraphOptions: Array<Scalars['String']>;
   /** Get a check workflow for this graph by its ID */
-  checkWorkflow?: Maybe<CheckWorkflow>;
+  checkWorkflow: Maybe<CheckWorkflow>;
   /** Get check workflows for this graph ordered by creation time, most recent first. */
   checkWorkflows: Array<CheckWorkflow>;
   /** Given a graphCompositionID, return the results of composition. This can represent either a validation or a publish. */
-  compositionResultById?: Maybe<CompositionResult>;
+  compositionResultById: Maybe<CompositionResult>;
   createdAt: Scalars['Timestamp'];
-  createdBy?: Maybe<Identity>;
-  datadogMetricsConfig?: Maybe<DatadogMetricsConfig>;
-  deletedAt?: Maybe<Scalars['Timestamp']>;
-  description?: Maybe<Scalars['String']>;
-  devGraphOwner?: Maybe<User>;
-  firstReportedAt?: Maybe<Scalars['Timestamp']>;
+  createdBy: Maybe<Identity>;
+  datadogMetricsConfig: Maybe<DatadogMetricsConfig>;
+  deletedAt: Maybe<Scalars['Timestamp']>;
+  description: Maybe<Scalars['String']>;
+  devGraphOwner: Maybe<User>;
+  firstReportedAt: Maybe<Scalars['Timestamp']>;
   /**
    * When this is true, this graph will be hidden from non-admin members of the org who haven't been explicitly assigned a
    * role on this graph.
@@ -360,27 +360,27 @@ export type Service = Identity & {
    * List of implementing services that comprise a graph. A non-federated graph should have a single implementing service.
    * Set includeDeleted to see deleted implementing services.
    */
-  implementingServices?: Maybe<GraphImplementors>;
-  lastReportedAt?: Maybe<Scalars['Timestamp']>;
+  implementingServices: Maybe<GraphImplementors>;
+  lastReportedAt: Maybe<Scalars['Timestamp']>;
   /** Current identity, null if not authenticated. */
-  me?: Maybe<Identity>;
+  me: Maybe<Identity>;
   /**
    * This returns the composition result that was most recently published to the graph.
    * Only identities that canQuerySchemas and canQueryImplementingServices have access
    * to this field
    */
-  mostRecentCompositionPublish?: Maybe<CompositionPublishResult>;
-  myRole?: Maybe<UserPermission>;
+  mostRecentCompositionPublish: Maybe<CompositionPublishResult>;
+  myRole: Maybe<UserPermission>;
   /** @deprecated Use Service.title */
   name: Scalars['String'];
-  operation?: Maybe<Operation>;
+  operation: Maybe<Operation>;
   /** Gets the operations and their approved changes for this graph, checkID, and operationID. */
   operationsAcceptedChanges: Array<OperationAcceptedChange>;
   /** Get an operations check result for a specific check ID */
-  operationsCheck?: Maybe<OperationsCheckResult>;
+  operationsCheck: Maybe<OperationsCheckResult>;
   /** Get query triggers for a given variant. If variant is null all the triggers for this service will be gotten. */
-  queryTriggers?: Maybe<Array<QueryTrigger>>;
-  readme?: Maybe<Readme>;
+  queryTriggers: Maybe<Array<QueryTrigger>>;
+  readme: Maybe<Readme>;
   /**
    * Whether registry subscriptions (with any options) are enabled. If variant is not passed, returns true if configuration is present for any variant
    * @deprecated This field will be removed
@@ -388,30 +388,30 @@ export type Service = Identity & {
   registrySubscriptionsEnabled: Scalars['Boolean'];
   reportingEnabled: Scalars['Boolean'];
   /** The list of members that can access this graph, accounting for graph role overrides */
-  roleOverrides?: Maybe<Array<RoleOverride>>;
+  roleOverrides: Maybe<Array<RoleOverride>>;
   /** Which permissions the current user has for interacting with this service */
-  roles?: Maybe<ServiceRoles>;
+  roles: Maybe<ServiceRoles>;
   scheduledSummaries: Array<ScheduledSummary>;
   /** Get a schema by hash OR current tag */
-  schema?: Maybe<Schema>;
+  schema: Maybe<Schema>;
   /** Get the schema tag */
-  schemaTag?: Maybe<SchemaTag>;
-  schemaTagById?: Maybe<SchemaTag>;
+  schemaTag: Maybe<SchemaTag>;
+  schemaTagById: Maybe<SchemaTag>;
   /**
    * Get schema tags, with optional filtering to a set of tags. Always sorted by creation
    * date in reverse chronological order.
    */
-  schemaTags?: Maybe<Array<SchemaTag>>;
+  schemaTags: Maybe<Array<SchemaTag>>;
   /** @deprecated use Service.statsWindow instead */
   stats: ServiceStatsWindow;
-  statsWindow?: Maybe<ServiceStatsWindow>;
+  statsWindow: Maybe<ServiceStatsWindow>;
   /** Generate a test schema publish notification body */
   testSchemaPublishBody: Scalars['String'];
   title: Scalars['String'];
-  trace?: Maybe<Trace>;
+  trace: Maybe<Trace>;
   traceStorageEnabled: Scalars['Boolean'];
   /** A particular variant (sometimes called "tag") of the graph, often representing a live traffic environment (such as "prod"). Each variant can represent a specific URL or destination to query at, analytics, and its own schema history. */
-  variant?: Maybe<GraphVariant>;
+  variant: Maybe<GraphVariant>;
   /** The list of variants that exist for this graph */
   variants: Array<GraphVariant>;
 };
@@ -423,22 +423,22 @@ export type ServiceAvatarUrlArgs = {
 
 
 export type ServiceChannelsArgs = {
-  channelIds?: Maybe<Array<Scalars['ID']>>;
+  channelIds: Maybe<Array<Scalars['ID']>>;
 };
 
 
 export type ServiceChecksAuthorOptionsArgs = {
-  filter?: Maybe<CheckFilterInput>;
+  filter: Maybe<CheckFilterInput>;
 };
 
 
 export type ServiceChecksBranchOptionsArgs = {
-  filter?: Maybe<CheckFilterInput>;
+  filter: Maybe<CheckFilterInput>;
 };
 
 
 export type ServiceChecksSubgraphOptionsArgs = {
-  filter?: Maybe<CheckFilterInput>;
+  filter: Maybe<CheckFilterInput>;
 };
 
 
@@ -448,7 +448,7 @@ export type ServiceCheckWorkflowArgs = {
 
 
 export type ServiceCheckWorkflowsArgs = {
-  filter?: Maybe<CheckFilterInput>;
+  filter: Maybe<CheckFilterInput>;
   limit?: Scalars['Int'];
 };
 
@@ -460,12 +460,12 @@ export type ServiceCompositionResultByIdArgs = {
 
 export type ServiceImplementingServicesArgs = {
   graphVariant: Scalars['String'];
-  includeDeleted?: Maybe<Scalars['Boolean']>;
+  includeDeleted: Maybe<Scalars['Boolean']>;
 };
 
 
 export type ServiceLastReportedAtArgs = {
-  graphVariant?: Maybe<Scalars['String']>;
+  graphVariant: Maybe<Scalars['String']>;
 };
 
 
@@ -491,19 +491,19 @@ export type ServiceOperationsCheckArgs = {
 
 
 export type ServiceQueryTriggersArgs = {
-  graphVariant?: Maybe<Scalars['String']>;
-  operationNames?: Maybe<Array<Scalars['String']>>;
+  graphVariant: Maybe<Scalars['String']>;
+  operationNames: Maybe<Array<Scalars['String']>>;
 };
 
 
 export type ServiceRegistrySubscriptionsEnabledArgs = {
-  graphVariant?: Maybe<Scalars['String']>;
+  graphVariant: Maybe<Scalars['String']>;
 };
 
 
 export type ServiceSchemaArgs = {
-  hash?: Maybe<Scalars['ID']>;
-  tag?: Maybe<Scalars['String']>;
+  hash: Maybe<Scalars['ID']>;
+  tag: Maybe<Scalars['String']>;
 };
 
 
@@ -518,21 +518,21 @@ export type ServiceSchemaTagByIdArgs = {
 
 
 export type ServiceSchemaTagsArgs = {
-  tags?: Maybe<Array<Scalars['String']>>;
+  tags: Maybe<Array<Scalars['String']>>;
 };
 
 
 export type ServiceStatsArgs = {
   from: Scalars['Timestamp'];
-  resolution?: Maybe<Resolution>;
-  to?: Maybe<Scalars['Timestamp']>;
+  resolution: Maybe<Resolution>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 
 export type ServiceStatsWindowArgs = {
   from: Scalars['Timestamp'];
-  resolution?: Maybe<Resolution>;
-  to?: Maybe<Scalars['Timestamp']>;
+  resolution: Maybe<Resolution>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 
@@ -553,16 +553,16 @@ export type ServiceVariantArgs = {
 export type GraphApiKey = ApiKey & {
   __typename?: 'GraphApiKey';
   createdAt: Scalars['Timestamp'];
-  createdBy?: Maybe<Identity>;
+  createdBy: Maybe<Identity>;
   id: Scalars['ID'];
-  keyName?: Maybe<Scalars['String']>;
+  keyName: Maybe<Scalars['String']>;
   role: UserPermission;
   token: Scalars['String'];
 };
 
 export type ApiKey = {
   id: Scalars['ID'];
-  keyName?: Maybe<Scalars['String']>;
+  keyName: Maybe<Scalars['String']>;
   token: Scalars['String'];
 };
 
@@ -607,7 +607,7 @@ export type ChannelSubscription = {
   channels: Array<Channel>;
   enabled: Scalars['Boolean'];
   id: Scalars['ID'];
-  variant?: Maybe<Scalars['String']>;
+  variant: Maybe<Scalars['String']>;
 };
 
 export type CheckConfiguration = {
@@ -642,18 +642,18 @@ export type CheckConfiguration = {
   /** Time when check configuration was last updated */
   updatedAt: Scalars['Timestamp'];
   /** Identity of the last user to update the check configuration */
-  updatedBy?: Maybe<Identity>;
+  updatedBy: Maybe<Identity>;
 };
 
 /** Client filter configuration for a graph. */
 export type ClientFilter = {
   __typename?: 'ClientFilter';
   /** name of the client set by the user and reported alongside metrics */
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
   /** ID, often the name, of the client set by the user and reported alongside metrics */
-  referenceID?: Maybe<Scalars['ID']>;
+  referenceID: Maybe<Scalars['ID']>;
   /** version of the client set by the user and reported alongside metrics */
-  version?: Maybe<Scalars['String']>;
+  version: Maybe<Scalars['String']>;
 };
 
 /** Excluded operation for a graph. */
@@ -665,10 +665,10 @@ export type ExcludedOperation = {
 
 /** Filter options available when listing checks. */
 export type CheckFilterInput = {
-  authors?: Maybe<Array<Scalars['String']>>;
-  branches?: Maybe<Array<Scalars['String']>>;
-  status?: Maybe<CheckFilterInputStatusOption>;
-  subgraphs?: Maybe<Array<Scalars['String']>>;
+  authors: Maybe<Array<Scalars['String']>>;
+  branches: Maybe<Array<Scalars['String']>>;
+  status: Maybe<CheckFilterInputStatusOption>;
+  subgraphs: Maybe<Array<Scalars['String']>>;
 };
 
 /** Options for filtering CheckWorkflows by status */
@@ -684,25 +684,25 @@ export type CheckWorkflow = {
    * The variant provided as a base to check against.  Only the differences from the
    * base schema will be tested in operations checks.
    */
-  baseVariant?: Maybe<GraphVariant>;
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  baseVariant: Maybe<GraphVariant>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   createdAt: Scalars['Timestamp'];
   /** Contextual parameters supplied by the runtime environment where the check was run. */
-  gitContext?: Maybe<GitContext>;
+  gitContext: Maybe<GitContext>;
   id: Scalars['ID'];
   /** The name of the implementing service that was responsible for triggering the validation. */
-  implementingServiceName?: Maybe<Scalars['String']>;
+  implementingServiceName: Maybe<Scalars['String']>;
   /** If this check was created by rerunning, the original check that was rerun. */
-  rerunOf?: Maybe<CheckWorkflow>;
+  rerunOf: Maybe<CheckWorkflow>;
   /** Checks created by re-running this check, most recent first. */
-  reruns?: Maybe<Array<CheckWorkflow>>;
-  startedAt?: Maybe<Scalars['Timestamp']>;
+  reruns: Maybe<Array<CheckWorkflow>>;
+  startedAt: Maybe<Scalars['Timestamp']>;
   /** Overall status of the workflow, based on the underlying task statuses. */
   status: CheckWorkflowStatus;
   /** The set of check tasks associated with this workflow, e.g. OperationsCheck, GraphComposition, etc. */
   tasks: Array<CheckWorkflowTask>;
   /** Configuration of validation at the time the check was run. */
-  validationConfig?: Maybe<SchemaDiffValidationConfig>;
+  validationConfig: Maybe<SchemaDiffValidationConfig>;
 };
 
 
@@ -714,9 +714,9 @@ export type CheckWorkflowRerunsArgs = {
 export type GraphVariant = {
   __typename?: 'GraphVariant';
   /** As new schema tags keep getting published, activeSchemaPublish refers to the latest. */
-  activeSchemaPublish?: Maybe<SchemaTag>;
+  activeSchemaPublish: Maybe<SchemaTag>;
   /** Explorer setting for default headers for a graph */
-  defaultHeaders?: Maybe<Scalars['String']>;
+  defaultHeaders: Maybe<Scalars['String']>;
   derivedVariantCount: Scalars['Int'];
   /** Graph the variant belongs to */
   graph: Service;
@@ -725,36 +725,36 @@ export type GraphVariant = {
   /** Global identifier for the graph variant, in the form `graph@variant`. */
   id: Scalars['ID'];
   /** Returns whether the variant is a contract variant */
-  isContract?: Maybe<Scalars['Boolean']>;
+  isContract: Maybe<Scalars['Boolean']>;
   /** Is this variant one of the current user's favorite variants? */
   isFavoriteOfCurrentUser: Scalars['Boolean'];
   /** If the variant is protected */
   isProtected: Scalars['Boolean'];
   isPublic: Scalars['Boolean'];
-  latestLaunch?: Maybe<Launch>;
-  launch?: Maybe<Launch>;
+  latestLaunch: Maybe<Launch>;
+  launch: Maybe<Launch>;
   launchHistory: Array<Launch>;
-  links?: Maybe<Array<LinkInfo>>;
+  links: Maybe<Array<LinkInfo>>;
   /** Name of the variant, like `variant`. */
   name: Scalars['String'];
   /** Which permissions the current user has for interacting with this variant */
   permissions: GraphVariantPermissions;
   /** Explorer setting for preflight script to run before the actual GraphQL operations is run. */
-  preflightScript?: Maybe<Scalars['String']>;
-  readme?: Maybe<Readme>;
+  preflightScript: Maybe<Scalars['String']>;
+  readme: Maybe<Readme>;
   /** The total number of requests for this variant in the last 24 hours */
-  requestsInLastDay?: Maybe<Scalars['Long']>;
+  requestsInLastDay: Maybe<Scalars['Long']>;
   /** If the graphql endpoint is set up to accept cookies */
-  sendCookies?: Maybe<Scalars['Boolean']>;
-  sourceVariant?: Maybe<GraphVariant>;
+  sendCookies: Maybe<Scalars['Boolean']>;
+  sourceVariant: Maybe<GraphVariant>;
   /** URL where the graph subscription can be queried. */
-  subscriptionUrl?: Maybe<Scalars['String']>;
+  subscriptionUrl: Maybe<Scalars['String']>;
   /** A list of supported directives */
-  supportedDirectives?: Maybe<Array<DirectiveSupportStatus>>;
+  supportedDirectives: Maybe<Array<DirectiveSupportStatus>>;
   /** URL where the graph can be queried. */
-  url?: Maybe<Scalars['String']>;
+  url: Maybe<Scalars['String']>;
   /** The last instant that usage information (e.g. operation stat, client stats) was reported for this variant */
-  usageLastReportedAt?: Maybe<Scalars['Timestamp']>;
+  usageLastReportedAt: Maybe<Scalars['Timestamp']>;
 };
 
 
@@ -772,10 +772,10 @@ export type GraphVariantLaunchHistoryArgs = {
 export type SchemaTag = {
   __typename?: 'SchemaTag';
   /** The composition result that corresponds to this schema repo tag, if it exists. */
-  compositionResult?: Maybe<CompositionResult>;
+  compositionResult: Maybe<CompositionResult>;
   createdAt: Scalars['Timestamp'];
-  diffToPrevious?: Maybe<SchemaDiff>;
-  gitContext?: Maybe<GitContext>;
+  diffToPrevious: Maybe<SchemaDiff>;
+  gitContext: Maybe<GitContext>;
   /**
    * List of previously uploaded SchemaTags under the same tag name, starting with
    * the selected published schema record. Sorted in reverse chronological order
@@ -814,14 +814,14 @@ export type SchemaTag = {
    * The Identity that published this schema and their client info, or null if this isn't
    * a publish. Sub-fields may be null if they weren't recorded.
    */
-  publishedBy?: Maybe<IdentityAndClientInfo>;
+  publishedBy: Maybe<IdentityAndClientInfo>;
   /**
    * Indicates the schemaTag of the schema's original upload, null if this is the
    * first upload of the schema.
    */
-  reversionFrom?: Maybe<SchemaTag>;
+  reversionFrom: Maybe<SchemaTag>;
   schema: Schema;
-  slackNotificationBody?: Maybe<Scalars['String']>;
+  slackNotificationBody: Maybe<Scalars['String']>;
   /** @deprecated Please use variant { name } instead */
   tag: Scalars['String'];
   /** The graph variant this schema tag belongs to. */
@@ -847,7 +847,7 @@ export type CompositionResult = {
    * Supergraph SDL generated by composition (this is not the CSDL, that is a deprecated format).
    * @deprecated Use supergraphSdl instead
    */
-  csdl?: Maybe<Scalars['GraphQLDocument']>;
+  csdl: Maybe<Scalars['GraphQLDocument']>;
   /**
    * List of errors during composition. Errors mean that Apollo was unable to compose the
    * graph's implementing services into a GraphQL schema. This partial schema should not be
@@ -859,13 +859,13 @@ export type CompositionResult = {
   /** List of subgraphs that are included in this composition. */
   subgraphConfigs: Array<SubgraphConfig>;
   /** Supergraph SDL generated by composition. */
-  supergraphSdl?: Maybe<Scalars['GraphQLDocument']>;
+  supergraphSdl: Maybe<Scalars['GraphQLDocument']>;
 };
 
 /** Represents an error from running schema composition on a list of service definitions. */
 export type SchemaCompositionError = {
   __typename?: 'SchemaCompositionError';
-  code?: Maybe<Scalars['String']>;
+  code: Maybe<Scalars['String']>;
   locations: Array<Maybe<SourceLocation>>;
   message: Scalars['String'];
 };
@@ -891,9 +891,9 @@ export type SchemaDiff = {
    * Clients affected by all changes in diff
    * @deprecated Unsupported.
    */
-  affectedClients?: Maybe<Array<AffectedClient>>;
+  affectedClients: Maybe<Array<AffectedClient>>;
   /** Operations affected by all changes in diff */
-  affectedQueries?: Maybe<Array<AffectedQuery>>;
+  affectedQueries: Maybe<Array<AffectedQuery>>;
   /** List of schema changes with associated affected clients and operations */
   changes: Array<Change>;
   /** Summary/counts for all changes in diff */
@@ -901,53 +901,53 @@ export type SchemaDiff = {
   /** Number of affected query operations that are neither marked as SAFE or IGNORED */
   numberOfAffectedOperations: Scalars['Int'];
   /** Number of operations that were validated during schema diff */
-  numberOfCheckedOperations?: Maybe<Scalars['Int']>;
+  numberOfCheckedOperations: Maybe<Scalars['Int']>;
   /** Indication of the success of the change, either failure, warning, or notice. */
   severity: ChangeSeverity;
   /** The tag against which this diff was created */
-  tag?: Maybe<Scalars['String']>;
+  tag: Maybe<Scalars['String']>;
   /** @deprecated use severity instead */
   type: ChangeType;
   /** Configuration of validation */
-  validationConfig?: Maybe<SchemaDiffValidationConfig>;
+  validationConfig: Maybe<SchemaDiffValidationConfig>;
 };
 
 export type AffectedClient = {
   __typename?: 'AffectedClient';
   /** ID, often the name, of the client set by the user and reported alongside metrics */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** version of the client set by the user and reported alongside metrics */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
 };
 
 export type AffectedQuery = {
   __typename?: 'AffectedQuery';
   /** If the operation would be approved if the check ran again. Returns null if queried from SchemaDiff.changes.affectedQueries.alreadyApproved */
-  alreadyApproved?: Maybe<Scalars['Boolean']>;
+  alreadyApproved: Maybe<Scalars['Boolean']>;
   /** If the operation would be ignored if the check ran again */
-  alreadyIgnored?: Maybe<Scalars['Boolean']>;
+  alreadyIgnored: Maybe<Scalars['Boolean']>;
   /** List of changes affecting this query. Returns null if queried from SchemaDiff.changes.affectedQueries.changes */
-  changes?: Maybe<Array<ChangeOnOperation>>;
+  changes: Maybe<Array<ChangeOnOperation>>;
   /** Name to display to the user for the operation */
-  displayName?: Maybe<Scalars['String']>;
+  displayName: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   /** Determines if this query validates against the proposed schema */
-  isValid?: Maybe<Scalars['Boolean']>;
+  isValid: Maybe<Scalars['Boolean']>;
   /** Whether this operation was ignored and its severity was downgraded for that reason */
-  markedAsIgnored?: Maybe<Scalars['Boolean']>;
+  markedAsIgnored: Maybe<Scalars['Boolean']>;
   /** Whether the changes were marked as safe and its severity was downgraded for that reason */
-  markedAsSafe?: Maybe<Scalars['Boolean']>;
+  markedAsSafe: Maybe<Scalars['Boolean']>;
   /** Name provided for the operation, which can be empty string if it is an anonymous operation */
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
   /** First 128 characters of query signature for display */
-  signature?: Maybe<Scalars['String']>;
+  signature: Maybe<Scalars['String']>;
 };
 
 /** Info about a change in the context of an operation it affects */
 export type ChangeOnOperation = {
   __typename?: 'ChangeOnOperation';
   /** Human-readable explanation of the impact of this change on the operation */
-  impact?: Maybe<Scalars['String']>;
+  impact: Maybe<Scalars['String']>;
   /** The semantic info about this change, i.e. info about the change that doesn't depend on the operation */
   semanticChange: SemanticChange;
 };
@@ -955,22 +955,22 @@ export type ChangeOnOperation = {
 export type SemanticChange = {
   __typename?: 'SemanticChange';
   /** Target arg of change made. */
-  argNode?: Maybe<NamedIntrospectionArg>;
+  argNode: Maybe<NamedIntrospectionArg>;
   /**
    * Node related to the top level node that was changed, such as a field in an object,
    * a value in an enum or the object of an interface
    */
-  childNode?: Maybe<NamedIntrospectionValue>;
+  childNode: Maybe<NamedIntrospectionValue>;
   /** Semantic metadata about the type of change */
   definition: ChangeDefinition;
   /** Top level node affected by the change */
-  parentNode?: Maybe<NamedIntrospectionType>;
+  parentNode: Maybe<NamedIntrospectionType>;
 };
 
 export type NamedIntrospectionArg = {
   __typename?: 'NamedIntrospectionArg';
-  description?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
 };
 
 /**
@@ -981,9 +981,9 @@ export type NamedIntrospectionArg = {
  */
 export type NamedIntrospectionValue = {
   __typename?: 'NamedIntrospectionValue';
-  description?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  printedType?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  printedType: Maybe<Scalars['String']>;
 };
 
 /**
@@ -1108,9 +1108,9 @@ export enum ChangeSeverity {
  */
 export type NamedIntrospectionType = {
   __typename?: 'NamedIntrospectionType';
-  description?: Maybe<Scalars['String']>;
-  kind?: Maybe<IntrospectionTypeKind>;
-  name?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
+  kind: Maybe<IntrospectionTypeKind>;
+  name: Maybe<Scalars['String']>;
 };
 
 export enum IntrospectionTypeKind {
@@ -1137,22 +1137,22 @@ export enum IntrospectionTypeKind {
 
 export type Change = {
   __typename?: 'Change';
-  affectedQueries?: Maybe<Array<AffectedQuery>>;
+  affectedQueries: Maybe<Array<AffectedQuery>>;
   /** Target arg of change made. */
-  argNode?: Maybe<NamedIntrospectionArg>;
+  argNode: Maybe<NamedIntrospectionArg>;
   /** Indication of the category of the change (e.g. addition, removal, edit). */
   category: ChangeCategory;
   /**
    * Node related to the top level node that was changed, such as a field in an object,
    * a value in an enum or the object of an interface
    */
-  childNode?: Maybe<NamedIntrospectionValue>;
+  childNode: Maybe<NamedIntrospectionValue>;
   /** Indication of the kind of target and action of the change, e.g. 'TYPE_REMOVED'. */
   code: Scalars['String'];
   /** Explanation of both the target of the change and how it was changed. */
   description: Scalars['String'];
   /** Top level node affected by the change */
-  parentNode?: Maybe<NamedIntrospectionType>;
+  parentNode: Maybe<NamedIntrospectionType>;
   /** Indication of the success of the overall change, either failure, warning, or notice. */
   severity: ChangeSeverity;
   /**
@@ -1246,26 +1246,26 @@ export type TypeChangeSummaryCounts = {
 export type SchemaDiffValidationConfig = {
   __typename?: 'SchemaDiffValidationConfig';
   /** Clients to ignore during validation. */
-  excludedClients?: Maybe<Array<ClientInfoFilterOutput>>;
+  excludedClients: Maybe<Array<ClientInfoFilterOutput>>;
   /**
    * delta in seconds from current time that determines the start of the window
    * for reported metrics included in a schema diff. A day window from the present
    * day would have a `from` value of -86400. In rare cases, this could be an ISO
    * timestamp if the user passed one in on diff creation
    */
-  from?: Maybe<Scalars['Timestamp']>;
+  from: Maybe<Scalars['Timestamp']>;
   /** Operation IDs to ignore during validation. */
-  ignoredOperations?: Maybe<Array<Scalars['ID']>>;
+  ignoredOperations: Maybe<Array<Scalars['ID']>>;
   /** Variants to include during validation. */
-  includedVariants?: Maybe<Array<Scalars['String']>>;
+  includedVariants: Maybe<Array<Scalars['String']>>;
   /** Minimum number of requests within the window for a query to be considered. */
-  queryCountThreshold?: Maybe<Scalars['Int']>;
+  queryCountThreshold: Maybe<Scalars['Int']>;
   /**
    * Number of requests within the window for a query to be considered, relative to
    * total request count. Expected values are between 0 and 0.05 (minimum 5% of
    * total request volume)
    */
-  queryCountThresholdPercentage?: Maybe<Scalars['Float']>;
+  queryCountThresholdPercentage: Maybe<Scalars['Float']>;
   /**
    * delta in seconds from current time that determines the end of the
    * window for reported metrics included in a schema diff. A day window
@@ -1273,26 +1273,26 @@ export type SchemaDiffValidationConfig = {
    * cases, this could be an ISO timestamp if the user passed one in on diff
    * creation
    */
-  to?: Maybe<Scalars['Timestamp']>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 /** Filter options to exclude clients. Used as an output type for SchemaDiffValidationConfig. */
 export type ClientInfoFilterOutput = {
   __typename?: 'ClientInfoFilterOutput';
-  name?: Maybe<Scalars['String']>;
-  referenceID?: Maybe<Scalars['ID']>;
-  version?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  referenceID: Maybe<Scalars['ID']>;
+  version: Maybe<Scalars['String']>;
 };
 
 export type GitContext = {
   __typename?: 'GitContext';
-  branch?: Maybe<Scalars['String']>;
-  commit?: Maybe<Scalars['ID']>;
-  committer?: Maybe<Scalars['String']>;
-  commitUrl?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  remoteHost?: Maybe<GitRemoteHost>;
-  remoteUrl?: Maybe<Scalars['String']>;
+  branch: Maybe<Scalars['String']>;
+  commit: Maybe<Scalars['ID']>;
+  committer: Maybe<Scalars['String']>;
+  commitUrl: Maybe<Scalars['String']>;
+  message: Maybe<Scalars['String']>;
+  remoteHost: Maybe<GitRemoteHost>;
+  remoteUrl: Maybe<Scalars['String']>;
 };
 
 export enum GitRemoteHost {
@@ -1305,21 +1305,21 @@ export enum GitRemoteHost {
 export type IdentityAndClientInfo = {
   __typename?: 'IdentityAndClientInfo';
   /** The clientName given to Apollo Cloud when the actor performed the action */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** The clientVersion given to Apollo Cloud when the actor performed the action */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Identity info about the actor */
-  identity?: Maybe<Identity>;
+  identity: Maybe<Identity>;
 };
 
 export type Schema = {
   __typename?: 'Schema';
   createdAt: Scalars['Timestamp'];
-  createTemporaryURL?: Maybe<TemporaryUrl>;
+  createTemporaryURL: Maybe<TemporaryUrl>;
   document: Scalars['GraphQLDocument'];
   /** The number of fields; this includes user defined fields only, excluding built-in types and fields */
   fieldCount: Scalars['Int'];
-  gitContext?: Maybe<GitContext>;
+  gitContext: Maybe<GitContext>;
   hash: Scalars['ID'];
   introspection: IntrospectionSchema;
   /** The number of types; this includes user defined types only, excluding built-in types */
@@ -1339,9 +1339,9 @@ export type TemporaryUrl = {
 export type IntrospectionSchema = {
   __typename?: 'IntrospectionSchema';
   directives: Array<IntrospectionDirective>;
-  mutationType?: Maybe<IntrospectionType>;
+  mutationType: Maybe<IntrospectionType>;
   queryType: IntrospectionType;
-  subscriptionType?: Maybe<IntrospectionType>;
+  subscriptionType: Maybe<IntrospectionType>;
   types: Array<IntrospectionType>;
 };
 
@@ -1353,7 +1353,7 @@ export type IntrospectionSchemaTypesArgs = {
 export type IntrospectionDirective = {
   __typename?: 'IntrospectionDirective';
   args: Array<IntrospectionInputValue>;
-  description?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   locations: Array<IntrospectionDirectiveLocation>;
   name: Scalars['String'];
 };
@@ -1361,8 +1361,8 @@ export type IntrospectionDirective = {
 /** Values associated with introspection result for an input field */
 export type IntrospectionInputValue = {
   __typename?: 'IntrospectionInputValue';
-  defaultValue?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  defaultValue: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   name: Scalars['String'];
   type: IntrospectionType;
 };
@@ -1371,16 +1371,16 @@ export type IntrospectionInputValue = {
 export type IntrospectionType = {
   __typename?: 'IntrospectionType';
   /** the base kind of the type this references, ignoring lists and nullability */
-  baseKind?: Maybe<IntrospectionTypeKind>;
-  description?: Maybe<Scalars['String']>;
-  enumValues?: Maybe<Array<IntrospectionEnumValue>>;
-  fields?: Maybe<Array<IntrospectionField>>;
-  inputFields?: Maybe<Array<IntrospectionInputValue>>;
-  interfaces?: Maybe<Array<IntrospectionType>>;
-  kind?: Maybe<IntrospectionTypeKind>;
-  name?: Maybe<Scalars['String']>;
-  ofType?: Maybe<IntrospectionType>;
-  possibleTypes?: Maybe<Array<IntrospectionType>>;
+  baseKind: Maybe<IntrospectionTypeKind>;
+  description: Maybe<Scalars['String']>;
+  enumValues: Maybe<Array<IntrospectionEnumValue>>;
+  fields: Maybe<Array<IntrospectionField>>;
+  inputFields: Maybe<Array<IntrospectionInputValue>>;
+  interfaces: Maybe<Array<IntrospectionType>>;
+  kind: Maybe<IntrospectionTypeKind>;
+  name: Maybe<Scalars['String']>;
+  ofType: Maybe<IntrospectionType>;
+  possibleTypes: Maybe<Array<IntrospectionType>>;
   /** printed representation of type, including nested nullability and list ofTypes */
   printed: Scalars['String'];
 };
@@ -1395,9 +1395,9 @@ export type IntrospectionTypeEnumValuesArgs = {
 export type IntrospectionEnumValue = {
   __typename?: 'IntrospectionEnumValue';
   /** @deprecated Use deprecationReason instead */
-  depreactionReason?: Maybe<Scalars['String']>;
-  deprecationReason?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  depreactionReason: Maybe<Scalars['String']>;
+  deprecationReason: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   isDeprecated: Scalars['Boolean'];
   name: Scalars['String'];
 };
@@ -1406,8 +1406,8 @@ export type IntrospectionEnumValue = {
 export type IntrospectionField = {
   __typename?: 'IntrospectionField';
   args: Array<IntrospectionInputValue>;
-  deprecationReason?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  deprecationReason: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   isDeprecated: Scalars['Boolean'];
   name: Scalars['String'];
   type: IntrospectionType;
@@ -1465,41 +1465,41 @@ export enum IntrospectionDirectiveLocation {
  */
 export type TypeFilterConfig = {
   /** include abstract types (interfaces and unions) */
-  includeAbstractTypes?: Maybe<Scalars['Boolean']>;
+  includeAbstractTypes: Maybe<Scalars['Boolean']>;
   /** include built in scalars (i.e. Boolean, Int, etc) */
-  includeBuiltInTypes?: Maybe<Scalars['Boolean']>;
+  includeBuiltInTypes: Maybe<Scalars['Boolean']>;
   /** include reserved introspection types (i.e. __Type) */
-  includeIntrospectionTypes?: Maybe<Scalars['Boolean']>;
+  includeIntrospectionTypes: Maybe<Scalars['Boolean']>;
 };
 
 export type Launch = {
   __typename?: 'Launch';
-  approvedAt?: Maybe<Scalars['Timestamp']>;
-  build?: Maybe<Build>;
+  approvedAt: Maybe<Scalars['Timestamp']>;
+  build: Maybe<Build>;
   buildInput: BuildInput;
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   createdAt: Scalars['Timestamp'];
-  downstreamLaunches?: Maybe<Array<Launch>>;
+  downstreamLaunches: Maybe<Array<Launch>>;
   id: Scalars['ID'];
-  isAvailable?: Maybe<Scalars['Boolean']>;
-  isCompleted?: Maybe<Scalars['Boolean']>;
-  isPublished?: Maybe<Scalars['Boolean']>;
-  isTarget?: Maybe<Scalars['Boolean']>;
-  latestSequenceStep?: Maybe<LaunchSequenceStep>;
+  isAvailable: Maybe<Scalars['Boolean']>;
+  isCompleted: Maybe<Scalars['Boolean']>;
+  isPublished: Maybe<Scalars['Boolean']>;
+  isTarget: Maybe<Scalars['Boolean']>;
+  latestSequenceStep: Maybe<LaunchSequenceStep>;
   results: Array<LaunchResult>;
-  schemaTag?: Maybe<SchemaTag>;
+  schemaTag: Maybe<SchemaTag>;
   sequence: Array<LaunchSequenceStep>;
   shortenedID: Scalars['String'];
   status: LaunchStatus;
-  subgraphChanges?: Maybe<Array<SubgraphChange>>;
-  supersededAt?: Maybe<Scalars['Timestamp']>;
-  supersededBy?: Maybe<Launch>;
+  subgraphChanges: Maybe<Array<SubgraphChange>>;
+  supersededAt: Maybe<Scalars['Timestamp']>;
+  supersededBy: Maybe<Launch>;
 };
 
 export type Build = {
   __typename?: 'Build';
   input: BuildInput;
-  result?: Maybe<BuildResult>;
+  result: Maybe<BuildResult>;
 };
 
 export type BuildInput = CompositionBuildInput | FilterBuildInput;
@@ -1507,7 +1507,7 @@ export type BuildInput = CompositionBuildInput | FilterBuildInput;
 export type CompositionBuildInput = {
   __typename?: 'CompositionBuildInput';
   subgraphs: Array<Subgraph>;
-  version?: Maybe<Scalars['String']>;
+  version: Maybe<Scalars['String']>;
 };
 
 export type Subgraph = {
@@ -1538,7 +1538,7 @@ export type BuildFailure = {
 
 export type BuildError = {
   __typename?: 'BuildError';
-  code?: Maybe<Scalars['String']>;
+  code: Maybe<Scalars['String']>;
   locations: Array<SourceLocation>;
   message: Scalars['String'];
 };
@@ -1559,35 +1559,35 @@ export type LaunchSequenceStep = LaunchSequenceBuildStep | LaunchSequenceCheckSt
 
 export type LaunchSequenceBuildStep = {
   __typename?: 'LaunchSequenceBuildStep';
-  completedAt?: Maybe<Scalars['Timestamp']>;
-  startedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
+  startedAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type LaunchSequenceCheckStep = {
   __typename?: 'LaunchSequenceCheckStep';
-  completedAt?: Maybe<Scalars['Timestamp']>;
-  startedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
+  startedAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type LaunchSequenceCompletedStep = {
   __typename?: 'LaunchSequenceCompletedStep';
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type LaunchSequenceInitiatedStep = {
   __typename?: 'LaunchSequenceInitiatedStep';
-  startedAt?: Maybe<Scalars['Timestamp']>;
+  startedAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type LaunchSequencePublishStep = {
   __typename?: 'LaunchSequencePublishStep';
-  completedAt?: Maybe<Scalars['Timestamp']>;
-  startedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
+  startedAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type LaunchSequenceSupersededStep = {
   __typename?: 'LaunchSequenceSupersededStep';
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
 };
 
 /** more result types will be supported in the future */
@@ -1621,7 +1621,7 @@ export type LinkInfo = {
   __typename?: 'LinkInfo';
   createdAt: Scalars['Timestamp'];
   id: Scalars['ID'];
-  title?: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
   type: LinkInfoType;
   url: Scalars['String'];
 };
@@ -1654,7 +1654,7 @@ export type Readme = {
   content: Scalars['String'];
   id: Scalars['ID'];
   lastUpdatedAt: Scalars['Timestamp'];
-  lastUpdatedBy?: Maybe<Identity>;
+  lastUpdatedBy: Maybe<Identity>;
 };
 
 /** Support for a single directive on a graph variant */
@@ -1673,7 +1673,7 @@ export enum CheckWorkflowStatus {
 }
 
 export type CheckWorkflowTask = {
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   createdAt: Scalars['Timestamp'];
   id: Scalars['ID'];
   status: CheckWorkflowTaskStatus;
@@ -1703,7 +1703,7 @@ export enum DatadogApiRegion {
 
 export type User = Identity & {
   __typename?: 'User';
-  acceptedPrivacyPolicyAt?: Maybe<Scalars['Timestamp']>;
+  acceptedPrivacyPolicyAt: Maybe<Scalars['Timestamp']>;
   /** @deprecated Replaced with User.memberships.account */
   accounts: Array<Account>;
   apiKeys: Array<UserApiKey>;
@@ -1715,43 +1715,43 @@ export type User = Identity & {
    * filename, if such information is available. Client MUST set the "x-apollo-csrf-token" header to
    * MediaUploadInfo.csrfToken.
    */
-  avatarUpload?: Maybe<AvatarUploadResult>;
+  avatarUpload: Maybe<AvatarUploadResult>;
   /**
    * Get an image URL for the user's avatar. Note that CORS is not enabled for these URLs. The size
    * argument is used for bandwidth reduction, and should be the size of the image as displayed in the
    * application. Apollo's media server will downscale larger images to at least the requested size,
    * but this will not happen for third-party media servers.
    */
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatarUrl: Maybe<Scalars['String']>;
   betaFeaturesOn: Scalars['Boolean'];
   canUpdateAvatar: Scalars['Boolean'];
   canUpdateEmail: Scalars['Boolean'];
   canUpdateFullName: Scalars['Boolean'];
   createdAt: Scalars['Timestamp'];
-  email?: Maybe<Scalars['String']>;
-  emailModifiedAt?: Maybe<Scalars['Timestamp']>;
+  email: Maybe<Scalars['String']>;
+  emailModifiedAt: Maybe<Scalars['Timestamp']>;
   emailVerified: Scalars['Boolean'];
   experimentalFeatures: UserExperimentalFeatures;
-  featureIntros?: Maybe<FeatureIntros>;
+  featureIntros: Maybe<FeatureIntros>;
   fullName: Scalars['String'];
   /** The user's GitHub username, if they log in via GitHub. May be null even for GitHub users in some edge cases. */
-  githubUsername?: Maybe<Scalars['String']>;
+  githubUsername: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   /**
    * This role is reserved exclusively for internal MDG employees, and it controls what access they may have to other
    * organizations. Only admins are allowed to see this field.
    */
-  internalAdminRole?: Maybe<InternalMdgAdminRole>;
+  internalAdminRole: Maybe<InternalMdgAdminRole>;
   /** Last time any API token from this user was used against AGM services */
-  lastAuthenticatedAt?: Maybe<Scalars['Timestamp']>;
-  logoutAfterIdleMs?: Maybe<Scalars['Int']>;
+  lastAuthenticatedAt: Maybe<Scalars['Timestamp']>;
+  logoutAfterIdleMs: Maybe<Scalars['Int']>;
   memberships: Array<UserMembership>;
   name: Scalars['String'];
   odysseyCourses: Array<OdysseyCourse>;
   odysseyTasks: Array<OdysseyTask>;
   synchronized: Scalars['Boolean'];
   /** List of Zendesk tickets this user has submitted */
-  tickets?: Maybe<Array<ZendeskTicket>>;
+  tickets: Maybe<Array<ZendeskTicket>>;
   type: UserType;
 };
 
@@ -1768,7 +1768,7 @@ export type UserAvatarUrlArgs = {
 export type UserApiKey = ApiKey & {
   __typename?: 'UserApiKey';
   id: Scalars['ID'];
-  keyName?: Maybe<Scalars['String']>;
+  keyName: Maybe<Scalars['String']>;
   token: Scalars['String'];
 };
 
@@ -1801,29 +1801,29 @@ export type UserMembership = {
 
 export type OdysseyCourse = {
   __typename?: 'OdysseyCourse';
-  completedAt?: Maybe<Scalars['Timestamp']>;
-  enrolledAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
+  enrolledAt: Maybe<Scalars['Timestamp']>;
   id: Scalars['ID'];
 };
 
 export type OdysseyTask = {
   __typename?: 'OdysseyTask';
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   id: Scalars['ID'];
-  value?: Maybe<Scalars['String']>;
+  value: Maybe<Scalars['String']>;
 };
 
 export type ZendeskTicket = {
   __typename?: 'ZendeskTicket';
   createdAt: Scalars['Timestamp'];
   description: Scalars['String'];
-  graph?: Maybe<Service>;
+  graph: Maybe<Service>;
   id: Scalars['Int'];
-  organization?: Maybe<Account>;
+  organization: Maybe<Account>;
   priority: TicketPriority;
-  status?: Maybe<TicketStatus>;
+  status: Maybe<TicketStatus>;
   subject: Scalars['String'];
-  user?: Maybe<User>;
+  user: Maybe<User>;
 };
 
 export enum TicketPriority {
@@ -1886,7 +1886,7 @@ export type FederatedImplementingService = {
   /** Timestamp for when this implementing service was updated */
   updatedAt: Scalars['Timestamp'];
   /** URL of the graphql endpoint of the implementing service */
-  url?: Maybe<Scalars['String']>;
+  url: Maybe<Scalars['String']>;
 };
 
 /** Schema for an implementing service with associated metadata */
@@ -1923,12 +1923,12 @@ export type NonFederatedImplementingService = {
 export type CompositionPublishResult = CompositionResult & {
   __typename?: 'CompositionPublishResult';
   /** The produced composition config. Will be null if there are any errors */
-  compositionConfig?: Maybe<CompositionConfig>;
+  compositionConfig: Maybe<CompositionConfig>;
   /**
    * Supergraph SDL generated by composition (this is not the CSDL, that is a deprecated format).
    * @deprecated Use supergraphSdl instead
    */
-  csdl?: Maybe<Scalars['GraphQLDocument']>;
+  csdl: Maybe<Scalars['GraphQLDocument']>;
   /**
    * List of errors during composition. Errors mean that Apollo was unable to compose the
    * graph's implementing services into a GraphQL schema. This partial schema should not be
@@ -1940,10 +1940,10 @@ export type CompositionPublishResult = CompositionResult & {
   /** List of subgraphs that are included in this composition. */
   subgraphConfigs: Array<SubgraphConfig>;
   /** Supergraph SDL generated by composition. */
-  supergraphSdl?: Maybe<Scalars['GraphQLDocument']>;
+  supergraphSdl: Maybe<Scalars['GraphQLDocument']>;
   /** Whether the gateway link was updated. */
   updatedGateway: Scalars['Boolean'];
-  webhookNotificationBody?: Maybe<Scalars['String']>;
+  webhookNotificationBody: Maybe<Scalars['String']>;
 };
 
 /** The composition config exposed to the gateway */
@@ -1970,8 +1970,8 @@ export type ImplementingServiceLocation = {
 export type Operation = {
   __typename?: 'Operation';
   id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  signature?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  signature: Maybe<Scalars['String']>;
   truncated: Scalars['Boolean'];
 };
 
@@ -1988,32 +1988,32 @@ export type OperationAcceptedChange = {
 
 export type StoredApprovedChange = {
   __typename?: 'StoredApprovedChange';
-  argNode?: Maybe<NamedIntrospectionArgNoDescription>;
-  childNode?: Maybe<NamedIntrospectionValueNoDescription>;
+  argNode: Maybe<NamedIntrospectionArgNoDescription>;
+  childNode: Maybe<NamedIntrospectionValueNoDescription>;
   code: ChangeCode;
-  parentNode?: Maybe<NamedIntrospectionTypeNoDescription>;
+  parentNode: Maybe<NamedIntrospectionTypeNoDescription>;
 };
 
 export type NamedIntrospectionArgNoDescription = {
   __typename?: 'NamedIntrospectionArgNoDescription';
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
 };
 
 export type NamedIntrospectionValueNoDescription = {
   __typename?: 'NamedIntrospectionValueNoDescription';
-  name?: Maybe<Scalars['String']>;
-  printedType?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  printedType: Maybe<Scalars['String']>;
 };
 
 export type NamedIntrospectionTypeNoDescription = {
   __typename?: 'NamedIntrospectionTypeNoDescription';
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
 };
 
 export type OperationsCheckResult = {
   __typename?: 'OperationsCheckResult';
   /** Operations affected by all changes in diff */
-  affectedQueries?: Maybe<Array<AffectedQuery>>;
+  affectedQueries: Maybe<Array<AffectedQuery>>;
   /** List of schema changes with associated affected clients and operations */
   changes: Array<Change>;
   /** Summary/counts for all changes in diff */
@@ -2033,11 +2033,11 @@ export type OperationsCheckResult = {
 
 export type OperationsCheckTask = CheckWorkflowTask & {
   __typename?: 'OperationsCheckTask';
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   createdAt: Scalars['Timestamp'];
   id: Scalars['ID'];
   /** The result of the check. */
-  result?: Maybe<OperationsCheckResult>;
+  result: Maybe<OperationsCheckResult>;
   status: CheckWorkflowTaskStatus;
   workflow: CheckWorkflow;
 };
@@ -2052,12 +2052,12 @@ export type QueryTrigger = ChannelSubscription & {
   id: Scalars['ID'];
   metric: QueryTriggerMetric;
   operationNames: Array<Scalars['String']>;
-  percentile?: Maybe<Scalars['Float']>;
+  percentile: Maybe<Scalars['Float']>;
   scope: QueryTriggerScope;
   serviceId: Scalars['String'];
   state: QueryTriggerState;
   threshold: Scalars['Float'];
-  variant?: Maybe<Scalars['String']>;
+  variant: Maybe<Scalars['String']>;
   window: QueryTriggerWindow;
 };
 
@@ -2092,7 +2092,7 @@ export enum QueryTriggerScope {
 export type QueryTriggerState = {
   __typename?: 'QueryTriggerState';
   evaluatedAt: Scalars['Timestamp'];
-  lastTriggeredAt?: Maybe<Scalars['Timestamp']>;
+  lastTriggeredAt: Maybe<Scalars['Timestamp']>;
   operations: Array<QueryTriggerStateOperation>;
   triggered: Scalars['Boolean'];
 };
@@ -2159,7 +2159,7 @@ export type ServiceRoles = {
 export type ScheduledSummary = ChannelSubscription & {
   __typename?: 'ScheduledSummary';
   /** @deprecated Use channels list instead */
-  channel?: Maybe<Channel>;
+  channel: Maybe<Channel>;
   channels: Array<Channel>;
   enabled: Scalars['Boolean'];
   id: Scalars['ID'];
@@ -2197,117 +2197,117 @@ export type ServiceStatsWindow = {
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowEdgeServerInfosArgs = {
-  filter?: Maybe<ServiceEdgeServerInfosFilter>;
+  filter: Maybe<ServiceEdgeServerInfosFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceEdgeServerInfosOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceEdgeServerInfosOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowErrorStatsArgs = {
-  filter?: Maybe<ServiceErrorStatsFilter>;
+  filter: Maybe<ServiceErrorStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceErrorStatsOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceErrorStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowFieldLatenciesArgs = {
-  filter?: Maybe<ServiceFieldLatenciesFilter>;
+  filter: Maybe<ServiceFieldLatenciesFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceFieldLatenciesOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceFieldLatenciesOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowFieldStatsArgs = {
-  filter?: Maybe<ServiceFieldStatsFilter>;
+  filter: Maybe<ServiceFieldStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceFieldStatsOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceFieldStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowFieldUsageArgs = {
-  filter?: Maybe<ServiceFieldUsageFilter>;
+  filter: Maybe<ServiceFieldUsageFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceFieldUsageOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceFieldUsageOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowOperationCheckStatsArgs = {
-  filter?: Maybe<ServiceOperationCheckStatsFilter>;
+  filter: Maybe<ServiceOperationCheckStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceOperationCheckStatsOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceOperationCheckStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowQueryStatsArgs = {
-  filter?: Maybe<ServiceQueryStatsFilter>;
+  filter: Maybe<ServiceQueryStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceQueryStatsOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceQueryStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowTracePathErrorsRefsArgs = {
-  filter?: Maybe<ServiceTracePathErrorsRefsFilter>;
+  filter: Maybe<ServiceTracePathErrorsRefsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceTracePathErrorsRefsOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceTracePathErrorsRefsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given service. */
 export type ServiceStatsWindowTraceRefsArgs = {
-  filter?: Maybe<ServiceTraceRefsFilter>;
+  filter: Maybe<ServiceTraceRefsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ServiceTraceRefsOrderBySpec>>;
+  orderBy: Maybe<Array<ServiceTraceRefsOrderBySpec>>;
 };
 
 /** Filter for data in ServiceEdgeServerInfos. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceEdgeServerInfosFilter = {
-  and?: Maybe<Array<ServiceEdgeServerInfosFilter>>;
+  and: Maybe<Array<ServiceEdgeServerInfosFilter>>;
   /** Selects rows whose bootId dimension equals the given value if not null. To query for the null value, use {in: {bootId: [null]}} instead. */
-  bootId?: Maybe<Scalars['ID']>;
+  bootId: Maybe<Scalars['ID']>;
   /** Selects rows whose executableSchemaId dimension equals the given value if not null. To query for the null value, use {in: {executableSchemaId: [null]}} instead. */
-  executableSchemaId?: Maybe<Scalars['ID']>;
-  in?: Maybe<ServiceEdgeServerInfosFilterIn>;
+  executableSchemaId: Maybe<Scalars['ID']>;
+  in: Maybe<ServiceEdgeServerInfosFilterIn>;
   /** Selects rows whose libraryVersion dimension equals the given value if not null. To query for the null value, use {in: {libraryVersion: [null]}} instead. */
-  libraryVersion?: Maybe<Scalars['String']>;
-  not?: Maybe<ServiceEdgeServerInfosFilter>;
-  or?: Maybe<Array<ServiceEdgeServerInfosFilter>>;
+  libraryVersion: Maybe<Scalars['String']>;
+  not: Maybe<ServiceEdgeServerInfosFilter>;
+  or: Maybe<Array<ServiceEdgeServerInfosFilter>>;
   /** Selects rows whose platform dimension equals the given value if not null. To query for the null value, use {in: {platform: [null]}} instead. */
-  platform?: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
   /** Selects rows whose runtimeVersion dimension equals the given value if not null. To query for the null value, use {in: {runtimeVersion: [null]}} instead. */
-  runtimeVersion?: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serverId dimension equals the given value if not null. To query for the null value, use {in: {serverId: [null]}} instead. */
-  serverId?: Maybe<Scalars['ID']>;
+  serverId: Maybe<Scalars['ID']>;
   /** Selects rows whose userVersion dimension equals the given value if not null. To query for the null value, use {in: {userVersion: [null]}} instead. */
-  userVersion?: Maybe<Scalars['String']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceEdgeServerInfos. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceEdgeServerInfosFilterIn = {
   /** Selects rows whose bootId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  bootId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  bootId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose executableSchemaId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  executableSchemaId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  executableSchemaId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose libraryVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  libraryVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  libraryVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose platform dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  platform?: Maybe<Array<Maybe<Scalars['String']>>>;
+  platform: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose runtimeVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  runtimeVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  runtimeVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serverId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serverId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serverId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose userVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  userVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  userVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ServiceEdgeServerInfosOrderBySpec = {
@@ -2343,62 +2343,62 @@ export type ServiceEdgeServerInfosRecord = {
 
 export type ServiceEdgeServerInfosDimensions = {
   __typename?: 'ServiceEdgeServerInfosDimensions';
-  bootId?: Maybe<Scalars['ID']>;
-  executableSchemaId?: Maybe<Scalars['ID']>;
-  libraryVersion?: Maybe<Scalars['String']>;
-  platform?: Maybe<Scalars['String']>;
-  runtimeVersion?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serverId?: Maybe<Scalars['ID']>;
-  userVersion?: Maybe<Scalars['String']>;
+  bootId: Maybe<Scalars['ID']>;
+  executableSchemaId: Maybe<Scalars['ID']>;
+  libraryVersion: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serverId: Maybe<Scalars['ID']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceErrorStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceErrorStatsFilter = {
-  and?: Maybe<Array<ServiceErrorStatsFilter>>;
+  and: Maybe<Array<ServiceErrorStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
-  in?: Maybe<ServiceErrorStatsFilterIn>;
-  not?: Maybe<ServiceErrorStatsFilter>;
-  or?: Maybe<Array<ServiceErrorStatsFilter>>;
+  clientVersion: Maybe<Scalars['String']>;
+  in: Maybe<ServiceErrorStatsFilterIn>;
+  not: Maybe<ServiceErrorStatsFilter>;
+  or: Maybe<Array<ServiceErrorStatsFilter>>;
   /** Selects rows whose path dimension equals the given value if not null. To query for the null value, use {in: {path: [null]}} instead. */
-  path?: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceErrorStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceErrorStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose path dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  path?: Maybe<Array<Maybe<Scalars['String']>>>;
+  path: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ServiceErrorStatsOrderBySpec = {
@@ -2434,15 +2434,15 @@ export type ServiceErrorStatsRecord = {
 
 export type ServiceErrorStatsDimensions = {
   __typename?: 'ServiceErrorStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type ServiceErrorStatsMetrics = {
@@ -2453,26 +2453,26 @@ export type ServiceErrorStatsMetrics = {
 
 /** Filter for data in ServiceFieldLatencies. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceFieldLatenciesFilter = {
-  and?: Maybe<Array<ServiceFieldLatenciesFilter>>;
+  and: Maybe<Array<ServiceFieldLatenciesFilter>>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<ServiceFieldLatenciesFilterIn>;
-  not?: Maybe<ServiceFieldLatenciesFilter>;
-  or?: Maybe<Array<ServiceFieldLatenciesFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<ServiceFieldLatenciesFilterIn>;
+  not: Maybe<ServiceFieldLatenciesFilter>;
+  or: Maybe<Array<ServiceFieldLatenciesFilter>>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceFieldLatencies. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceFieldLatenciesFilterIn = {
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ServiceFieldLatenciesOrderBySpec = {
@@ -2501,9 +2501,9 @@ export type ServiceFieldLatenciesRecord = {
 
 export type ServiceFieldLatenciesDimensions = {
   __typename?: 'ServiceFieldLatenciesDimensions';
-  field?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
+  field: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
 };
 
 export type ServiceFieldLatenciesMetrics = {
@@ -2513,9 +2513,9 @@ export type ServiceFieldLatenciesMetrics = {
 
 export type DurationHistogram = {
   __typename?: 'DurationHistogram';
-  averageDurationMs?: Maybe<Scalars['Float']>;
+  averageDurationMs: Maybe<Scalars['Float']>;
   buckets: Array<DurationHistogramBucket>;
-  durationMs?: Maybe<Scalars['Float']>;
+  durationMs: Maybe<Scalars['Float']>;
   /** Counts per durationBucket, where sequences of zeroes are replaced with the negative of their size */
   sparseBuckets: Array<Scalars['Long']>;
   totalCount: Scalars['Long'];
@@ -2537,50 +2537,50 @@ export type DurationHistogramBucket = {
 
 /** Filter for data in ServiceFieldStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceFieldStatsFilter = {
-  and?: Maybe<Array<ServiceFieldStatsFilter>>;
+  and: Maybe<Array<ServiceFieldStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<ServiceFieldStatsFilterIn>;
-  not?: Maybe<ServiceFieldStatsFilter>;
-  or?: Maybe<Array<ServiceFieldStatsFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<ServiceFieldStatsFilterIn>;
+  not: Maybe<ServiceFieldStatsFilter>;
+  or: Maybe<Array<ServiceFieldStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceFieldStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceFieldStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ServiceFieldStatsOrderBySpec = {
@@ -2617,15 +2617,15 @@ export type ServiceFieldStatsRecord = {
 
 export type ServiceFieldStatsDimensions = {
   __typename?: 'ServiceFieldStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  field?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  field: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type ServiceFieldStatsMetrics = {
@@ -2637,46 +2637,46 @@ export type ServiceFieldStatsMetrics = {
 
 /** Filter for data in ServiceFieldUsage. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceFieldUsageFilter = {
-  and?: Maybe<Array<ServiceFieldUsageFilter>>;
+  and: Maybe<Array<ServiceFieldUsageFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<ServiceFieldUsageFilterIn>;
-  not?: Maybe<ServiceFieldUsageFilter>;
-  or?: Maybe<Array<ServiceFieldUsageFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<ServiceFieldUsageFilterIn>;
+  not: Maybe<ServiceFieldUsageFilter>;
+  or: Maybe<Array<ServiceFieldUsageFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceFieldUsage. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceFieldUsageFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ServiceFieldUsageOrderBySpec = {
@@ -2711,14 +2711,14 @@ export type ServiceFieldUsageRecord = {
 
 export type ServiceFieldUsageDimensions = {
   __typename?: 'ServiceFieldUsageDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  field?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  field: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
 };
 
 export type ServiceFieldUsageMetrics = {
@@ -2729,34 +2729,34 @@ export type ServiceFieldUsageMetrics = {
 
 /** Filter for data in ServiceOperationCheckStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceOperationCheckStatsFilter = {
-  and?: Maybe<Array<ServiceOperationCheckStatsFilter>>;
+  and: Maybe<Array<ServiceOperationCheckStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
-  in?: Maybe<ServiceOperationCheckStatsFilterIn>;
-  not?: Maybe<ServiceOperationCheckStatsFilter>;
-  or?: Maybe<Array<ServiceOperationCheckStatsFilter>>;
+  clientVersion: Maybe<Scalars['String']>;
+  in: Maybe<ServiceOperationCheckStatsFilterIn>;
+  not: Maybe<ServiceOperationCheckStatsFilter>;
+  or: Maybe<Array<ServiceOperationCheckStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceOperationCheckStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceOperationCheckStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ServiceOperationCheckStatsOrderBySpec = {
@@ -2788,11 +2788,11 @@ export type ServiceOperationCheckStatsRecord = {
 
 export type ServiceOperationCheckStatsDimensions = {
   __typename?: 'ServiceOperationCheckStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  schemaTag?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  schemaTag: Maybe<Scalars['String']>;
 };
 
 export type ServiceOperationCheckStatsMetrics = {
@@ -2803,50 +2803,50 @@ export type ServiceOperationCheckStatsMetrics = {
 
 /** Filter for data in ServiceQueryStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceQueryStatsFilter = {
-  and?: Maybe<Array<ServiceQueryStatsFilter>>;
+  and: Maybe<Array<ServiceQueryStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose fromEngineproxy dimension equals the given value if not null. To query for the null value, use {in: {fromEngineproxy: [null]}} instead. */
-  fromEngineproxy?: Maybe<Scalars['String']>;
-  in?: Maybe<ServiceQueryStatsFilterIn>;
-  not?: Maybe<ServiceQueryStatsFilter>;
-  or?: Maybe<Array<ServiceQueryStatsFilter>>;
+  fromEngineproxy: Maybe<Scalars['String']>;
+  in: Maybe<ServiceQueryStatsFilterIn>;
+  not: Maybe<ServiceQueryStatsFilter>;
+  or: Maybe<Array<ServiceQueryStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ServiceQueryStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceQueryStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose fromEngineproxy dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  fromEngineproxy?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fromEngineproxy: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ServiceQueryStatsOrderBySpec = {
@@ -2888,16 +2888,16 @@ export type ServiceQueryStatsRecord = {
 
 export type ServiceQueryStatsDimensions = {
   __typename?: 'ServiceQueryStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  fromEngineproxy?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  querySignature?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  fromEngineproxy: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  querySignature: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type ServiceQueryStatsMetrics = {
@@ -2916,66 +2916,66 @@ export type ServiceQueryStatsMetrics = {
 
 /** Filter for data in ServiceTracePathErrorsRefs. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceTracePathErrorsRefsFilter = {
-  and?: Maybe<Array<ServiceTracePathErrorsRefsFilter>>;
+  and: Maybe<Array<ServiceTracePathErrorsRefsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose durationBucket dimension equals the given value if not null. To query for the null value, use {in: {durationBucket: [null]}} instead. */
-  durationBucket?: Maybe<Scalars['Int']>;
+  durationBucket: Maybe<Scalars['Int']>;
   /** Selects rows whose errorMessage dimension equals the given value if not null. To query for the null value, use {in: {errorMessage: [null]}} instead. */
-  errorMessage?: Maybe<Scalars['String']>;
-  in?: Maybe<ServiceTracePathErrorsRefsFilterIn>;
-  not?: Maybe<ServiceTracePathErrorsRefsFilter>;
-  or?: Maybe<Array<ServiceTracePathErrorsRefsFilter>>;
+  errorMessage: Maybe<Scalars['String']>;
+  in: Maybe<ServiceTracePathErrorsRefsFilterIn>;
+  not: Maybe<ServiceTracePathErrorsRefsFilter>;
+  or: Maybe<Array<ServiceTracePathErrorsRefsFilter>>;
   /** Selects rows whose path dimension equals the given value if not null. To query for the null value, use {in: {path: [null]}} instead. */
-  path?: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
   /** Selects rows whose traceHttpStatusCode dimension equals the given value if not null. To query for the null value, use {in: {traceHttpStatusCode: [null]}} instead. */
-  traceHttpStatusCode?: Maybe<Scalars['Int']>;
+  traceHttpStatusCode: Maybe<Scalars['Int']>;
   /** Selects rows whose traceId dimension equals the given value if not null. To query for the null value, use {in: {traceId: [null]}} instead. */
-  traceId?: Maybe<Scalars['ID']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in ServiceTracePathErrorsRefs. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceTracePathErrorsRefsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose durationBucket dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  durationBucket?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  durationBucket: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose errorMessage dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  errorMessage?: Maybe<Array<Maybe<Scalars['String']>>>;
+  errorMessage: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose path dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  path?: Maybe<Array<Maybe<Scalars['String']>>>;
+  path: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose traceHttpStatusCode dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceHttpStatusCode?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  traceHttpStatusCode: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose traceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  traceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type ServiceTracePathErrorsRefsOrderBySpec = {
@@ -3017,20 +3017,20 @@ export type ServiceTracePathErrorsRefsRecord = {
 
 export type ServiceTracePathErrorsRefsDimensions = {
   __typename?: 'ServiceTracePathErrorsRefsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  durationBucket?: Maybe<Scalars['Int']>;
-  errorMessage?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceVersion?: Maybe<Scalars['String']>;
-  traceHttpStatusCode?: Maybe<Scalars['Int']>;
-  traceId?: Maybe<Scalars['ID']>;
-  traceStartsAt?: Maybe<Scalars['Timestamp']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  durationBucket: Maybe<Scalars['Int']>;
+  errorMessage: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
+  traceHttpStatusCode: Maybe<Scalars['Int']>;
+  traceId: Maybe<Scalars['ID']>;
+  traceStartsAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type ServiceTracePathErrorsRefsMetrics = {
@@ -3042,54 +3042,54 @@ export type ServiceTracePathErrorsRefsMetrics = {
 
 /** Filter for data in ServiceTraceRefs. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ServiceTraceRefsFilter = {
-  and?: Maybe<Array<ServiceTraceRefsFilter>>;
+  and: Maybe<Array<ServiceTraceRefsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose durationBucket dimension equals the given value if not null. To query for the null value, use {in: {durationBucket: [null]}} instead. */
-  durationBucket?: Maybe<Scalars['Int']>;
-  in?: Maybe<ServiceTraceRefsFilterIn>;
-  not?: Maybe<ServiceTraceRefsFilter>;
-  or?: Maybe<Array<ServiceTraceRefsFilter>>;
+  durationBucket: Maybe<Scalars['Int']>;
+  in: Maybe<ServiceTraceRefsFilterIn>;
+  not: Maybe<ServiceTraceRefsFilter>;
+  or: Maybe<Array<ServiceTraceRefsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
   /** Selects rows whose traceId dimension equals the given value if not null. To query for the null value, use {in: {traceId: [null]}} instead. */
-  traceId?: Maybe<Scalars['ID']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in ServiceTraceRefs. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ServiceTraceRefsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose durationBucket dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  durationBucket?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  durationBucket: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose traceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  traceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type ServiceTraceRefsOrderBySpec = {
@@ -3126,17 +3126,17 @@ export type ServiceTraceRefsRecord = {
 
 export type ServiceTraceRefsDimensions = {
   __typename?: 'ServiceTraceRefsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  durationBucket?: Maybe<Scalars['Int']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  querySignature?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceVersion?: Maybe<Scalars['String']>;
-  traceId?: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  durationBucket: Maybe<Scalars['Int']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  querySignature: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 export type ServiceTraceRefsMetrics = {
@@ -3147,16 +3147,16 @@ export type ServiceTraceRefsMetrics = {
 
 export type Trace = {
   __typename?: 'Trace';
-  cacheMaxAgeMs?: Maybe<Scalars['Float']>;
-  cacheScope?: Maybe<CacheScope>;
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
+  cacheMaxAgeMs: Maybe<Scalars['Float']>;
+  cacheScope: Maybe<CacheScope>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
   durationMs: Scalars['Float'];
   endTime: Scalars['Timestamp'];
-  http?: Maybe<TraceHttp>;
+  http: Maybe<TraceHttp>;
   id: Scalars['ID'];
-  operationName?: Maybe<Scalars['String']>;
+  operationName: Maybe<Scalars['String']>;
   protobuf: Protobuf;
   root: TraceNode;
   signature: Scalars['String'];
@@ -3174,10 +3174,10 @@ export enum CacheScope {
 
 export type TraceHttp = {
   __typename?: 'TraceHTTP';
-  host?: Maybe<Scalars['String']>;
+  host: Maybe<Scalars['String']>;
   method: HttpMethod;
-  path?: Maybe<Scalars['String']>;
-  protocol?: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  protocol: Maybe<Scalars['String']>;
   requestHeaders: Array<StringToString>;
   responseHeaders: Array<StringToString>;
   secure: Scalars['Boolean'];
@@ -3206,16 +3206,16 @@ export type StringToString = {
 
 export type Protobuf = {
   __typename?: 'Protobuf';
-  json?: Maybe<Scalars['String']>;
-  object?: Maybe<Scalars['Object']>;
+  json: Maybe<Scalars['String']>;
+  object: Maybe<Scalars['Object']>;
   raw: Scalars['Blob'];
   text: Scalars['String'];
 };
 
 export type TraceNode = {
   __typename?: 'TraceNode';
-  cacheMaxAgeMs?: Maybe<Scalars['Float']>;
-  cacheScope?: Maybe<CacheScope>;
+  cacheMaxAgeMs: Maybe<Scalars['Float']>;
+  cacheScope: Maybe<CacheScope>;
   children: Array<TraceNode>;
   childrenIds: Array<Scalars['ID']>;
   descendants: Array<TraceNode>;
@@ -3223,13 +3223,13 @@ export type TraceNode = {
   endTime: Scalars['Timestamp'];
   errors: Array<TraceError>;
   id: Scalars['ID'];
-  key?: Maybe<Scalars['StringOrInt']>;
-  originalFieldName?: Maybe<Scalars['String']>;
+  key: Maybe<Scalars['StringOrInt']>;
+  originalFieldName: Maybe<Scalars['String']>;
   parent: Scalars['ID'];
-  parentId?: Maybe<Scalars['ID']>;
+  parentId: Maybe<Scalars['ID']>;
   path: Array<Scalars['String']>;
   startTime: Scalars['Timestamp'];
-  type?: Maybe<Scalars['String']>;
+  type: Maybe<Scalars['String']>;
 };
 
 export type TraceError = {
@@ -3237,7 +3237,7 @@ export type TraceError = {
   json: Scalars['String'];
   locations: Array<TraceSourceLocation>;
   message: Scalars['String'];
-  timestamp?: Maybe<Scalars['Timestamp']>;
+  timestamp: Maybe<Scalars['Timestamp']>;
 };
 
 export type TraceSourceLocation = {
@@ -3258,23 +3258,23 @@ export enum AuditStatus {
 export type BillingInfo = {
   __typename?: 'BillingInfo';
   address: BillingAddress;
-  cardType?: Maybe<Scalars['String']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastFour?: Maybe<Scalars['Int']>;
-  lastName?: Maybe<Scalars['String']>;
-  month?: Maybe<Scalars['Int']>;
-  vatNumber?: Maybe<Scalars['String']>;
-  year?: Maybe<Scalars['Int']>;
+  cardType: Maybe<Scalars['String']>;
+  firstName: Maybe<Scalars['String']>;
+  lastFour: Maybe<Scalars['Int']>;
+  lastName: Maybe<Scalars['String']>;
+  month: Maybe<Scalars['Int']>;
+  vatNumber: Maybe<Scalars['String']>;
+  year: Maybe<Scalars['Int']>;
 };
 
 export type BillingAddress = {
   __typename?: 'BillingAddress';
-  address1?: Maybe<Scalars['String']>;
-  address2?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
-  state?: Maybe<Scalars['String']>;
-  zip?: Maybe<Scalars['String']>;
+  address1: Maybe<Scalars['String']>;
+  address2: Maybe<Scalars['String']>;
+  city: Maybe<Scalars['String']>;
+  country: Maybe<Scalars['String']>;
+  state: Maybe<Scalars['String']>;
+  zip: Maybe<Scalars['String']>;
 };
 
 export type BillingMonth = {
@@ -3288,15 +3288,15 @@ export type BillingPlan = {
   __typename?: 'BillingPlan';
   addons: Array<BillingPlanAddon>;
   billingModel: BillingModel;
-  billingPeriod?: Maybe<BillingPeriod>;
+  billingPeriod: Maybe<BillingPeriod>;
   capabilities: BillingPlanCapabilities;
-  description?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isTrial: Scalars['Boolean'];
   kind: BillingPlanKind;
   name: Scalars['String'];
   /** The price of every seat */
-  pricePerSeatInUsdCents?: Maybe<Scalars['Int']>;
+  pricePerSeatInUsdCents: Maybe<Scalars['Int']>;
   /** The price of subscribing to this plan with a quantity of 1 (currently always the case) */
   pricePerUnitInUsdCents: Scalars['Int'];
   /** Whether the plan is accessible by all users in QueryRoot.allPlans, QueryRoot.plan, or AccountMutation.setPlan */
@@ -3331,8 +3331,8 @@ export type BillingPlanCapabilities = {
   federation: Scalars['Boolean'];
   launches: Scalars['Boolean'];
   maxAuditInDays: Scalars['Int'];
-  maxRangeInDays?: Maybe<Scalars['Int']>;
-  maxRequestsPerMonth?: Maybe<Scalars['Long']>;
+  maxRangeInDays: Maybe<Scalars['Int']>;
+  maxRequestsPerMonth: Maybe<Scalars['Long']>;
   metrics: Scalars['Boolean'];
   notifications: Scalars['Boolean'];
   operationRegistry: Scalars['Boolean'];
@@ -3365,13 +3365,13 @@ export type BillingSubscription = {
   autoRenew: Scalars['Boolean'];
   /** The price of the subscription when ignoring add-ons (such as seats), ie quantity * pricePerUnitInUsdCents */
   basePriceInUsdCents: Scalars['Long'];
-  canceledAt?: Maybe<Scalars['Timestamp']>;
+  canceledAt: Maybe<Scalars['Timestamp']>;
   currentPeriodEndsAt: Scalars['Timestamp'];
   currentPeriodStartedAt: Scalars['Timestamp'];
-  expiresAt?: Maybe<Scalars['Timestamp']>;
+  expiresAt: Maybe<Scalars['Timestamp']>;
   plan: BillingPlan;
   /** The price of every seat */
-  pricePerSeatInUsdCents?: Maybe<Scalars['Int']>;
+  pricePerSeatInUsdCents: Maybe<Scalars['Int']>;
   /** The price of every unit in the subscription (hence multiplied by quantity to get to the basePriceInUsdCents) */
   pricePerUnitInUsdCents: Scalars['Int'];
   quantity: Scalars['Int'];
@@ -3384,7 +3384,7 @@ export type BillingSubscription = {
    * When this subscription's trial period expires (if it is a trial). Not the same as the
    * subscription's Recurly expiration).
    */
-  trialExpiresAt?: Maybe<Scalars['Timestamp']>;
+  trialExpiresAt: Maybe<Scalars['Timestamp']>;
   uuid: Scalars['ID'];
 };
 
@@ -3422,25 +3422,25 @@ export type AccountExperimentalFeatures = {
 export type AccountInvitation = {
   __typename?: 'AccountInvitation';
   /** An accepted invitation cannot be used anymore */
-  acceptedAt?: Maybe<Scalars['Timestamp']>;
+  acceptedAt: Maybe<Scalars['Timestamp']>;
   /** Who accepted the invitation */
-  acceptedBy?: Maybe<User>;
+  acceptedBy: Maybe<User>;
   /** Time the invitation was created */
   createdAt: Scalars['Timestamp'];
   /** Who created the invitation */
-  createdBy?: Maybe<User>;
+  createdBy: Maybe<User>;
   email: Scalars['String'];
   id: Scalars['ID'];
   /** Last time we sent an email for the invitation */
-  lastSentAt?: Maybe<Scalars['Timestamp']>;
+  lastSentAt: Maybe<Scalars['Timestamp']>;
   /** Access role for the invitee */
   role: UserPermission;
 };
 
 export type Invoice = {
   __typename?: 'Invoice';
-  closedAt?: Maybe<Scalars['Timestamp']>;
-  collectionMethod?: Maybe<Scalars['String']>;
+  closedAt: Maybe<Scalars['Timestamp']>;
+  collectionMethod: Maybe<Scalars['String']>;
   createdAt: Scalars['Timestamp'];
   invoiceNumber: Scalars['Int'];
   state: InvoiceState;
@@ -3462,7 +3462,7 @@ export type AccountMembership = {
   account: Account;
   createdAt: Scalars['Timestamp'];
   /** If this membership is a free seat (based on role) */
-  free?: Maybe<Scalars['Boolean']>;
+  free: Maybe<Scalars['Boolean']>;
   permission: UserPermission;
   user: User;
 };
@@ -3547,121 +3547,121 @@ export type AccountStatsWindow = {
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowEdgeServerInfosArgs = {
-  filter?: Maybe<AccountEdgeServerInfosFilter>;
+  filter: Maybe<AccountEdgeServerInfosFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountEdgeServerInfosOrderBySpec>>;
+  orderBy: Maybe<Array<AccountEdgeServerInfosOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowErrorStatsArgs = {
-  filter?: Maybe<AccountErrorStatsFilter>;
+  filter: Maybe<AccountErrorStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountErrorStatsOrderBySpec>>;
+  orderBy: Maybe<Array<AccountErrorStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowFieldLatenciesArgs = {
-  filter?: Maybe<AccountFieldLatenciesFilter>;
+  filter: Maybe<AccountFieldLatenciesFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountFieldLatenciesOrderBySpec>>;
+  orderBy: Maybe<Array<AccountFieldLatenciesOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowFieldStatsArgs = {
-  filter?: Maybe<AccountFieldStatsFilter>;
+  filter: Maybe<AccountFieldStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountFieldStatsOrderBySpec>>;
+  orderBy: Maybe<Array<AccountFieldStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowFieldUsageArgs = {
-  filter?: Maybe<AccountFieldUsageFilter>;
+  filter: Maybe<AccountFieldUsageFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountFieldUsageOrderBySpec>>;
+  orderBy: Maybe<Array<AccountFieldUsageOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowOperationCheckStatsArgs = {
-  filter?: Maybe<AccountOperationCheckStatsFilter>;
+  filter: Maybe<AccountOperationCheckStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountOperationCheckStatsOrderBySpec>>;
+  orderBy: Maybe<Array<AccountOperationCheckStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowQueryStatsArgs = {
-  filter?: Maybe<AccountQueryStatsFilter>;
+  filter: Maybe<AccountQueryStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountQueryStatsOrderBySpec>>;
+  orderBy: Maybe<Array<AccountQueryStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowTracePathErrorsRefsArgs = {
-  filter?: Maybe<AccountTracePathErrorsRefsFilter>;
+  filter: Maybe<AccountTracePathErrorsRefsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountTracePathErrorsRefsOrderBySpec>>;
+  orderBy: Maybe<Array<AccountTracePathErrorsRefsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity over a given account. */
 export type AccountStatsWindowTraceRefsArgs = {
-  filter?: Maybe<AccountTraceRefsFilter>;
+  filter: Maybe<AccountTraceRefsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<AccountTraceRefsOrderBySpec>>;
+  orderBy: Maybe<Array<AccountTraceRefsOrderBySpec>>;
 };
 
 /** Filter for data in AccountEdgeServerInfos. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountEdgeServerInfosFilter = {
-  and?: Maybe<Array<AccountEdgeServerInfosFilter>>;
+  and: Maybe<Array<AccountEdgeServerInfosFilter>>;
   /** Selects rows whose bootId dimension equals the given value if not null. To query for the null value, use {in: {bootId: [null]}} instead. */
-  bootId?: Maybe<Scalars['ID']>;
+  bootId: Maybe<Scalars['ID']>;
   /** Selects rows whose executableSchemaId dimension equals the given value if not null. To query for the null value, use {in: {executableSchemaId: [null]}} instead. */
-  executableSchemaId?: Maybe<Scalars['ID']>;
-  in?: Maybe<AccountEdgeServerInfosFilterIn>;
+  executableSchemaId: Maybe<Scalars['ID']>;
+  in: Maybe<AccountEdgeServerInfosFilterIn>;
   /** Selects rows whose libraryVersion dimension equals the given value if not null. To query for the null value, use {in: {libraryVersion: [null]}} instead. */
-  libraryVersion?: Maybe<Scalars['String']>;
-  not?: Maybe<AccountEdgeServerInfosFilter>;
-  or?: Maybe<Array<AccountEdgeServerInfosFilter>>;
+  libraryVersion: Maybe<Scalars['String']>;
+  not: Maybe<AccountEdgeServerInfosFilter>;
+  or: Maybe<Array<AccountEdgeServerInfosFilter>>;
   /** Selects rows whose platform dimension equals the given value if not null. To query for the null value, use {in: {platform: [null]}} instead. */
-  platform?: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
   /** Selects rows whose runtimeVersion dimension equals the given value if not null. To query for the null value, use {in: {runtimeVersion: [null]}} instead. */
-  runtimeVersion?: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serverId dimension equals the given value if not null. To query for the null value, use {in: {serverId: [null]}} instead. */
-  serverId?: Maybe<Scalars['ID']>;
+  serverId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose userVersion dimension equals the given value if not null. To query for the null value, use {in: {userVersion: [null]}} instead. */
-  userVersion?: Maybe<Scalars['String']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in AccountEdgeServerInfos. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountEdgeServerInfosFilterIn = {
   /** Selects rows whose bootId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  bootId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  bootId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose executableSchemaId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  executableSchemaId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  executableSchemaId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose libraryVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  libraryVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  libraryVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose platform dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  platform?: Maybe<Array<Maybe<Scalars['String']>>>;
+  platform: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose runtimeVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  runtimeVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  runtimeVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serverId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serverId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serverId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose userVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  userVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  userVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type AccountEdgeServerInfosOrderBySpec = {
@@ -3693,67 +3693,67 @@ export type AccountEdgeServerInfosRecord = {
 
 export type AccountEdgeServerInfosDimensions = {
   __typename?: 'AccountEdgeServerInfosDimensions';
-  bootId?: Maybe<Scalars['ID']>;
-  executableSchemaId?: Maybe<Scalars['ID']>;
-  libraryVersion?: Maybe<Scalars['String']>;
-  platform?: Maybe<Scalars['String']>;
-  runtimeVersion?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serverId?: Maybe<Scalars['ID']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  userVersion?: Maybe<Scalars['String']>;
+  bootId: Maybe<Scalars['ID']>;
+  executableSchemaId: Maybe<Scalars['ID']>;
+  libraryVersion: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serverId: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in AccountErrorStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountErrorStatsFilter = {
-  and?: Maybe<Array<AccountErrorStatsFilter>>;
+  and: Maybe<Array<AccountErrorStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
-  in?: Maybe<AccountErrorStatsFilterIn>;
-  not?: Maybe<AccountErrorStatsFilter>;
-  or?: Maybe<Array<AccountErrorStatsFilter>>;
+  clientVersion: Maybe<Scalars['String']>;
+  in: Maybe<AccountErrorStatsFilterIn>;
+  not: Maybe<AccountErrorStatsFilter>;
+  or: Maybe<Array<AccountErrorStatsFilter>>;
   /** Selects rows whose path dimension equals the given value if not null. To query for the null value, use {in: {path: [null]}} instead. */
-  path?: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in AccountErrorStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountErrorStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose path dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  path?: Maybe<Array<Maybe<Scalars['String']>>>;
+  path: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type AccountErrorStatsOrderBySpec = {
@@ -3790,16 +3790,16 @@ export type AccountErrorStatsRecord = {
 
 export type AccountErrorStatsDimensions = {
   __typename?: 'AccountErrorStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type AccountErrorStatsMetrics = {
@@ -3810,30 +3810,30 @@ export type AccountErrorStatsMetrics = {
 
 /** Filter for data in AccountFieldLatencies. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountFieldLatenciesFilter = {
-  and?: Maybe<Array<AccountFieldLatenciesFilter>>;
+  and: Maybe<Array<AccountFieldLatenciesFilter>>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<AccountFieldLatenciesFilterIn>;
-  not?: Maybe<AccountFieldLatenciesFilter>;
-  or?: Maybe<Array<AccountFieldLatenciesFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<AccountFieldLatenciesFilterIn>;
+  not: Maybe<AccountFieldLatenciesFilter>;
+  or: Maybe<Array<AccountFieldLatenciesFilter>>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in AccountFieldLatencies. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountFieldLatenciesFilterIn = {
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type AccountFieldLatenciesOrderBySpec = {
@@ -3863,10 +3863,10 @@ export type AccountFieldLatenciesRecord = {
 
 export type AccountFieldLatenciesDimensions = {
   __typename?: 'AccountFieldLatenciesDimensions';
-  field?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
+  field: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 export type AccountFieldLatenciesMetrics = {
@@ -3876,54 +3876,54 @@ export type AccountFieldLatenciesMetrics = {
 
 /** Filter for data in AccountFieldStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountFieldStatsFilter = {
-  and?: Maybe<Array<AccountFieldStatsFilter>>;
+  and: Maybe<Array<AccountFieldStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<AccountFieldStatsFilterIn>;
-  not?: Maybe<AccountFieldStatsFilter>;
-  or?: Maybe<Array<AccountFieldStatsFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<AccountFieldStatsFilterIn>;
+  not: Maybe<AccountFieldStatsFilter>;
+  or: Maybe<Array<AccountFieldStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in AccountFieldStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountFieldStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type AccountFieldStatsOrderBySpec = {
@@ -3961,16 +3961,16 @@ export type AccountFieldStatsRecord = {
 
 export type AccountFieldStatsDimensions = {
   __typename?: 'AccountFieldStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  field?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  field: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type AccountFieldStatsMetrics = {
@@ -3982,50 +3982,50 @@ export type AccountFieldStatsMetrics = {
 
 /** Filter for data in AccountFieldUsage. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountFieldUsageFilter = {
-  and?: Maybe<Array<AccountFieldUsageFilter>>;
+  and: Maybe<Array<AccountFieldUsageFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<AccountFieldUsageFilterIn>;
-  not?: Maybe<AccountFieldUsageFilter>;
-  or?: Maybe<Array<AccountFieldUsageFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<AccountFieldUsageFilterIn>;
+  not: Maybe<AccountFieldUsageFilter>;
+  or: Maybe<Array<AccountFieldUsageFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in AccountFieldUsage. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountFieldUsageFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type AccountFieldUsageOrderBySpec = {
@@ -4061,15 +4061,15 @@ export type AccountFieldUsageRecord = {
 
 export type AccountFieldUsageDimensions = {
   __typename?: 'AccountFieldUsageDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  field?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  field: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 export type AccountFieldUsageMetrics = {
@@ -4080,38 +4080,38 @@ export type AccountFieldUsageMetrics = {
 
 /** Filter for data in AccountOperationCheckStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountOperationCheckStatsFilter = {
-  and?: Maybe<Array<AccountOperationCheckStatsFilter>>;
+  and: Maybe<Array<AccountOperationCheckStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
-  in?: Maybe<AccountOperationCheckStatsFilterIn>;
-  not?: Maybe<AccountOperationCheckStatsFilter>;
-  or?: Maybe<Array<AccountOperationCheckStatsFilter>>;
+  clientVersion: Maybe<Scalars['String']>;
+  in: Maybe<AccountOperationCheckStatsFilterIn>;
+  not: Maybe<AccountOperationCheckStatsFilter>;
+  or: Maybe<Array<AccountOperationCheckStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in AccountOperationCheckStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountOperationCheckStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type AccountOperationCheckStatsOrderBySpec = {
@@ -4144,12 +4144,12 @@ export type AccountOperationCheckStatsRecord = {
 
 export type AccountOperationCheckStatsDimensions = {
   __typename?: 'AccountOperationCheckStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 export type AccountOperationCheckStatsMetrics = {
@@ -4160,54 +4160,54 @@ export type AccountOperationCheckStatsMetrics = {
 
 /** Filter for data in AccountQueryStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountQueryStatsFilter = {
-  and?: Maybe<Array<AccountQueryStatsFilter>>;
+  and: Maybe<Array<AccountQueryStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose fromEngineproxy dimension equals the given value if not null. To query for the null value, use {in: {fromEngineproxy: [null]}} instead. */
-  fromEngineproxy?: Maybe<Scalars['String']>;
-  in?: Maybe<AccountQueryStatsFilterIn>;
-  not?: Maybe<AccountQueryStatsFilter>;
-  or?: Maybe<Array<AccountQueryStatsFilter>>;
+  fromEngineproxy: Maybe<Scalars['String']>;
+  in: Maybe<AccountQueryStatsFilterIn>;
+  not: Maybe<AccountQueryStatsFilter>;
+  or: Maybe<Array<AccountQueryStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in AccountQueryStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountQueryStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose fromEngineproxy dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  fromEngineproxy?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fromEngineproxy: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type AccountQueryStatsOrderBySpec = {
@@ -4250,17 +4250,17 @@ export type AccountQueryStatsRecord = {
 
 export type AccountQueryStatsDimensions = {
   __typename?: 'AccountQueryStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  fromEngineproxy?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  querySignature?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  fromEngineproxy: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  querySignature: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type AccountQueryStatsMetrics = {
@@ -4279,70 +4279,70 @@ export type AccountQueryStatsMetrics = {
 
 /** Filter for data in AccountTracePathErrorsRefs. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountTracePathErrorsRefsFilter = {
-  and?: Maybe<Array<AccountTracePathErrorsRefsFilter>>;
+  and: Maybe<Array<AccountTracePathErrorsRefsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose durationBucket dimension equals the given value if not null. To query for the null value, use {in: {durationBucket: [null]}} instead. */
-  durationBucket?: Maybe<Scalars['Int']>;
+  durationBucket: Maybe<Scalars['Int']>;
   /** Selects rows whose errorMessage dimension equals the given value if not null. To query for the null value, use {in: {errorMessage: [null]}} instead. */
-  errorMessage?: Maybe<Scalars['String']>;
-  in?: Maybe<AccountTracePathErrorsRefsFilterIn>;
-  not?: Maybe<AccountTracePathErrorsRefsFilter>;
-  or?: Maybe<Array<AccountTracePathErrorsRefsFilter>>;
+  errorMessage: Maybe<Scalars['String']>;
+  in: Maybe<AccountTracePathErrorsRefsFilterIn>;
+  not: Maybe<AccountTracePathErrorsRefsFilter>;
+  or: Maybe<Array<AccountTracePathErrorsRefsFilter>>;
   /** Selects rows whose path dimension equals the given value if not null. To query for the null value, use {in: {path: [null]}} instead. */
-  path?: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
   /** Selects rows whose traceHttpStatusCode dimension equals the given value if not null. To query for the null value, use {in: {traceHttpStatusCode: [null]}} instead. */
-  traceHttpStatusCode?: Maybe<Scalars['Int']>;
+  traceHttpStatusCode: Maybe<Scalars['Int']>;
   /** Selects rows whose traceId dimension equals the given value if not null. To query for the null value, use {in: {traceId: [null]}} instead. */
-  traceId?: Maybe<Scalars['ID']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in AccountTracePathErrorsRefs. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountTracePathErrorsRefsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose durationBucket dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  durationBucket?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  durationBucket: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose errorMessage dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  errorMessage?: Maybe<Array<Maybe<Scalars['String']>>>;
+  errorMessage: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose path dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  path?: Maybe<Array<Maybe<Scalars['String']>>>;
+  path: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose traceHttpStatusCode dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceHttpStatusCode?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  traceHttpStatusCode: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose traceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  traceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type AccountTracePathErrorsRefsOrderBySpec = {
@@ -4385,21 +4385,21 @@ export type AccountTracePathErrorsRefsRecord = {
 
 export type AccountTracePathErrorsRefsDimensions = {
   __typename?: 'AccountTracePathErrorsRefsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  durationBucket?: Maybe<Scalars['Int']>;
-  errorMessage?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
-  traceHttpStatusCode?: Maybe<Scalars['Int']>;
-  traceId?: Maybe<Scalars['ID']>;
-  traceStartsAt?: Maybe<Scalars['Timestamp']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  durationBucket: Maybe<Scalars['Int']>;
+  errorMessage: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
+  traceHttpStatusCode: Maybe<Scalars['Int']>;
+  traceId: Maybe<Scalars['ID']>;
+  traceStartsAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type AccountTracePathErrorsRefsMetrics = {
@@ -4411,58 +4411,58 @@ export type AccountTracePathErrorsRefsMetrics = {
 
 /** Filter for data in AccountTraceRefs. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type AccountTraceRefsFilter = {
-  and?: Maybe<Array<AccountTraceRefsFilter>>;
+  and: Maybe<Array<AccountTraceRefsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose durationBucket dimension equals the given value if not null. To query for the null value, use {in: {durationBucket: [null]}} instead. */
-  durationBucket?: Maybe<Scalars['Int']>;
-  in?: Maybe<AccountTraceRefsFilterIn>;
-  not?: Maybe<AccountTraceRefsFilter>;
-  or?: Maybe<Array<AccountTraceRefsFilter>>;
+  durationBucket: Maybe<Scalars['Int']>;
+  in: Maybe<AccountTraceRefsFilterIn>;
+  not: Maybe<AccountTraceRefsFilter>;
+  or: Maybe<Array<AccountTraceRefsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
   /** Selects rows whose traceId dimension equals the given value if not null. To query for the null value, use {in: {traceId: [null]}} instead. */
-  traceId?: Maybe<Scalars['ID']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in AccountTraceRefs. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type AccountTraceRefsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose durationBucket dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  durationBucket?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  durationBucket: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose traceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  traceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type AccountTraceRefsOrderBySpec = {
@@ -4500,18 +4500,18 @@ export type AccountTraceRefsRecord = {
 
 export type AccountTraceRefsDimensions = {
   __typename?: 'AccountTraceRefsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  durationBucket?: Maybe<Scalars['Int']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  querySignature?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
-  traceId?: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  durationBucket: Maybe<Scalars['Int']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  querySignature: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 export type AccountTraceRefsMetrics = {
@@ -4552,17 +4552,17 @@ export type CronJob = {
 
 
 export type CronJobRecentExecutionsArgs = {
-  n?: Maybe<Scalars['Int']>;
+  n: Maybe<Scalars['Int']>;
 };
 
 export type CronExecution = {
   __typename?: 'CronExecution';
-  completedAt?: Maybe<Scalars['Timestamp']>;
-  failure?: Maybe<Scalars['String']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
+  failure: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   job: CronJob;
-  resolvedAt?: Maybe<Scalars['Timestamp']>;
-  resolvedBy?: Maybe<Actor>;
+  resolvedAt: Maybe<Scalars['Timestamp']>;
+  resolvedBy: Maybe<Actor>;
   schedule: Scalars['String'];
   startedAt: Scalars['Timestamp'];
 };
@@ -4594,121 +4594,121 @@ export type StatsWindow = {
 
 /** A time window with a specified granularity. */
 export type StatsWindowEdgeServerInfosArgs = {
-  filter?: Maybe<EdgeServerInfosFilter>;
+  filter: Maybe<EdgeServerInfosFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<EdgeServerInfosOrderBySpec>>;
+  orderBy: Maybe<Array<EdgeServerInfosOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowErrorStatsArgs = {
-  filter?: Maybe<ErrorStatsFilter>;
+  filter: Maybe<ErrorStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<ErrorStatsOrderBySpec>>;
+  orderBy: Maybe<Array<ErrorStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowFieldLatenciesArgs = {
-  filter?: Maybe<FieldLatenciesFilter>;
+  filter: Maybe<FieldLatenciesFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<FieldLatenciesOrderBySpec>>;
+  orderBy: Maybe<Array<FieldLatenciesOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowFieldStatsArgs = {
-  filter?: Maybe<FieldStatsFilter>;
+  filter: Maybe<FieldStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<FieldStatsOrderBySpec>>;
+  orderBy: Maybe<Array<FieldStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowFieldUsageArgs = {
-  filter?: Maybe<FieldUsageFilter>;
+  filter: Maybe<FieldUsageFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<FieldUsageOrderBySpec>>;
+  orderBy: Maybe<Array<FieldUsageOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowOperationCheckStatsArgs = {
-  filter?: Maybe<OperationCheckStatsFilter>;
+  filter: Maybe<OperationCheckStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<OperationCheckStatsOrderBySpec>>;
+  orderBy: Maybe<Array<OperationCheckStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowQueryStatsArgs = {
-  filter?: Maybe<QueryStatsFilter>;
+  filter: Maybe<QueryStatsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<QueryStatsOrderBySpec>>;
+  orderBy: Maybe<Array<QueryStatsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowTracePathErrorsRefsArgs = {
-  filter?: Maybe<TracePathErrorsRefsFilter>;
+  filter: Maybe<TracePathErrorsRefsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<TracePathErrorsRefsOrderBySpec>>;
+  orderBy: Maybe<Array<TracePathErrorsRefsOrderBySpec>>;
 };
 
 
 /** A time window with a specified granularity. */
 export type StatsWindowTraceRefsArgs = {
-  filter?: Maybe<TraceRefsFilter>;
+  filter: Maybe<TraceRefsFilter>;
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<TraceRefsOrderBySpec>>;
+  orderBy: Maybe<Array<TraceRefsOrderBySpec>>;
 };
 
 /** Filter for data in EdgeServerInfos. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type EdgeServerInfosFilter = {
-  and?: Maybe<Array<EdgeServerInfosFilter>>;
+  and: Maybe<Array<EdgeServerInfosFilter>>;
   /** Selects rows whose bootId dimension equals the given value if not null. To query for the null value, use {in: {bootId: [null]}} instead. */
-  bootId?: Maybe<Scalars['ID']>;
+  bootId: Maybe<Scalars['ID']>;
   /** Selects rows whose executableSchemaId dimension equals the given value if not null. To query for the null value, use {in: {executableSchemaId: [null]}} instead. */
-  executableSchemaId?: Maybe<Scalars['ID']>;
-  in?: Maybe<EdgeServerInfosFilterIn>;
+  executableSchemaId: Maybe<Scalars['ID']>;
+  in: Maybe<EdgeServerInfosFilterIn>;
   /** Selects rows whose libraryVersion dimension equals the given value if not null. To query for the null value, use {in: {libraryVersion: [null]}} instead. */
-  libraryVersion?: Maybe<Scalars['String']>;
-  not?: Maybe<EdgeServerInfosFilter>;
-  or?: Maybe<Array<EdgeServerInfosFilter>>;
+  libraryVersion: Maybe<Scalars['String']>;
+  not: Maybe<EdgeServerInfosFilter>;
+  or: Maybe<Array<EdgeServerInfosFilter>>;
   /** Selects rows whose platform dimension equals the given value if not null. To query for the null value, use {in: {platform: [null]}} instead. */
-  platform?: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
   /** Selects rows whose runtimeVersion dimension equals the given value if not null. To query for the null value, use {in: {runtimeVersion: [null]}} instead. */
-  runtimeVersion?: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serverId dimension equals the given value if not null. To query for the null value, use {in: {serverId: [null]}} instead. */
-  serverId?: Maybe<Scalars['ID']>;
+  serverId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose userVersion dimension equals the given value if not null. To query for the null value, use {in: {userVersion: [null]}} instead. */
-  userVersion?: Maybe<Scalars['String']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in EdgeServerInfos. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type EdgeServerInfosFilterIn = {
   /** Selects rows whose bootId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  bootId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  bootId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose executableSchemaId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  executableSchemaId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  executableSchemaId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose libraryVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  libraryVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  libraryVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose platform dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  platform?: Maybe<Array<Maybe<Scalars['String']>>>;
+  platform: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose runtimeVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  runtimeVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  runtimeVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serverId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serverId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serverId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose userVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  userVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  userVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type EdgeServerInfosOrderBySpec = {
@@ -4740,71 +4740,71 @@ export type EdgeServerInfosRecord = {
 
 export type EdgeServerInfosDimensions = {
   __typename?: 'EdgeServerInfosDimensions';
-  bootId?: Maybe<Scalars['ID']>;
-  executableSchemaId?: Maybe<Scalars['ID']>;
-  libraryVersion?: Maybe<Scalars['String']>;
-  platform?: Maybe<Scalars['String']>;
-  runtimeVersion?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serverId?: Maybe<Scalars['ID']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  userVersion?: Maybe<Scalars['String']>;
+  bootId: Maybe<Scalars['ID']>;
+  executableSchemaId: Maybe<Scalars['ID']>;
+  libraryVersion: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serverId: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ErrorStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type ErrorStatsFilter = {
   /** Selects rows whose accountId dimension equals the given value if not null. To query for the null value, use {in: {accountId: [null]}} instead. */
-  accountId?: Maybe<Scalars['ID']>;
-  and?: Maybe<Array<ErrorStatsFilter>>;
+  accountId: Maybe<Scalars['ID']>;
+  and: Maybe<Array<ErrorStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
-  in?: Maybe<ErrorStatsFilterIn>;
-  not?: Maybe<ErrorStatsFilter>;
-  or?: Maybe<Array<ErrorStatsFilter>>;
+  clientVersion: Maybe<Scalars['String']>;
+  in: Maybe<ErrorStatsFilterIn>;
+  not: Maybe<ErrorStatsFilter>;
+  or: Maybe<Array<ErrorStatsFilter>>;
   /** Selects rows whose path dimension equals the given value if not null. To query for the null value, use {in: {path: [null]}} instead. */
-  path?: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in ErrorStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type ErrorStatsFilterIn = {
   /** Selects rows whose accountId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  accountId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  accountId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose path dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  path?: Maybe<Array<Maybe<Scalars['String']>>>;
+  path: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type ErrorStatsOrderBySpec = {
@@ -4842,17 +4842,17 @@ export type ErrorStatsRecord = {
 
 export type ErrorStatsDimensions = {
   __typename?: 'ErrorStatsDimensions';
-  accountId?: Maybe<Scalars['ID']>;
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  accountId: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type ErrorStatsMetrics = {
@@ -4863,30 +4863,30 @@ export type ErrorStatsMetrics = {
 
 /** Filter for data in FieldLatencies. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type FieldLatenciesFilter = {
-  and?: Maybe<Array<FieldLatenciesFilter>>;
+  and: Maybe<Array<FieldLatenciesFilter>>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<FieldLatenciesFilterIn>;
-  not?: Maybe<FieldLatenciesFilter>;
-  or?: Maybe<Array<FieldLatenciesFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<FieldLatenciesFilterIn>;
+  not: Maybe<FieldLatenciesFilter>;
+  or: Maybe<Array<FieldLatenciesFilter>>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in FieldLatencies. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type FieldLatenciesFilterIn = {
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type FieldLatenciesOrderBySpec = {
@@ -4916,10 +4916,10 @@ export type FieldLatenciesRecord = {
 
 export type FieldLatenciesDimensions = {
   __typename?: 'FieldLatenciesDimensions';
-  field?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
+  field: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 export type FieldLatenciesMetrics = {
@@ -4930,57 +4930,57 @@ export type FieldLatenciesMetrics = {
 /** Filter for data in FieldStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type FieldStatsFilter = {
   /** Selects rows whose accountId dimension equals the given value if not null. To query for the null value, use {in: {accountId: [null]}} instead. */
-  accountId?: Maybe<Scalars['ID']>;
-  and?: Maybe<Array<FieldStatsFilter>>;
+  accountId: Maybe<Scalars['ID']>;
+  and: Maybe<Array<FieldStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<FieldStatsFilterIn>;
-  not?: Maybe<FieldStatsFilter>;
-  or?: Maybe<Array<FieldStatsFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<FieldStatsFilterIn>;
+  not: Maybe<FieldStatsFilter>;
+  or: Maybe<Array<FieldStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in FieldStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type FieldStatsFilterIn = {
   /** Selects rows whose accountId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  accountId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  accountId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type FieldStatsOrderBySpec = {
@@ -5019,17 +5019,17 @@ export type FieldStatsRecord = {
 
 export type FieldStatsDimensions = {
   __typename?: 'FieldStatsDimensions';
-  accountId?: Maybe<Scalars['ID']>;
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  field?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  accountId: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  field: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type FieldStatsMetrics = {
@@ -5041,50 +5041,50 @@ export type FieldStatsMetrics = {
 
 /** Filter for data in FieldUsage. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type FieldUsageFilter = {
-  and?: Maybe<Array<FieldUsageFilter>>;
+  and: Maybe<Array<FieldUsageFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose field dimension equals the given value if not null. To query for the null value, use {in: {field: [null]}} instead. */
-  field?: Maybe<Scalars['String']>;
-  in?: Maybe<FieldUsageFilterIn>;
-  not?: Maybe<FieldUsageFilter>;
-  or?: Maybe<Array<FieldUsageFilter>>;
+  field: Maybe<Scalars['String']>;
+  in: Maybe<FieldUsageFilterIn>;
+  not: Maybe<FieldUsageFilter>;
+  or: Maybe<Array<FieldUsageFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in FieldUsage. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type FieldUsageFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose field dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  field?: Maybe<Array<Maybe<Scalars['String']>>>;
+  field: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type FieldUsageOrderBySpec = {
@@ -5120,15 +5120,15 @@ export type FieldUsageRecord = {
 
 export type FieldUsageDimensions = {
   __typename?: 'FieldUsageDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  field?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  field: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 export type FieldUsageMetrics = {
@@ -5139,38 +5139,38 @@ export type FieldUsageMetrics = {
 
 /** Filter for data in OperationCheckStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type OperationCheckStatsFilter = {
-  and?: Maybe<Array<OperationCheckStatsFilter>>;
+  and: Maybe<Array<OperationCheckStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
-  in?: Maybe<OperationCheckStatsFilterIn>;
-  not?: Maybe<OperationCheckStatsFilter>;
-  or?: Maybe<Array<OperationCheckStatsFilter>>;
+  clientVersion: Maybe<Scalars['String']>;
+  in: Maybe<OperationCheckStatsFilterIn>;
+  not: Maybe<OperationCheckStatsFilter>;
+  or: Maybe<Array<OperationCheckStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in OperationCheckStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type OperationCheckStatsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type OperationCheckStatsOrderBySpec = {
@@ -5203,12 +5203,12 @@ export type OperationCheckStatsRecord = {
 
 export type OperationCheckStatsDimensions = {
   __typename?: 'OperationCheckStatsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
 };
 
 export type OperationCheckStatsMetrics = {
@@ -5220,57 +5220,57 @@ export type OperationCheckStatsMetrics = {
 /** Filter for data in QueryStats. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type QueryStatsFilter = {
   /** Selects rows whose accountId dimension equals the given value if not null. To query for the null value, use {in: {accountId: [null]}} instead. */
-  accountId?: Maybe<Scalars['ID']>;
-  and?: Maybe<Array<QueryStatsFilter>>;
+  accountId: Maybe<Scalars['ID']>;
+  and: Maybe<Array<QueryStatsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose fromEngineproxy dimension equals the given value if not null. To query for the null value, use {in: {fromEngineproxy: [null]}} instead. */
-  fromEngineproxy?: Maybe<Scalars['String']>;
-  in?: Maybe<QueryStatsFilterIn>;
-  not?: Maybe<QueryStatsFilter>;
-  or?: Maybe<Array<QueryStatsFilter>>;
+  fromEngineproxy: Maybe<Scalars['String']>;
+  in: Maybe<QueryStatsFilterIn>;
+  not: Maybe<QueryStatsFilter>;
+  or: Maybe<Array<QueryStatsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 /** Filter for data in QueryStats. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type QueryStatsFilterIn = {
   /** Selects rows whose accountId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  accountId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  accountId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose fromEngineproxy dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  fromEngineproxy?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fromEngineproxy: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type QueryStatsOrderBySpec = {
@@ -5314,18 +5314,18 @@ export type QueryStatsRecord = {
 
 export type QueryStatsDimensions = {
   __typename?: 'QueryStatsDimensions';
-  accountId?: Maybe<Scalars['ID']>;
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  fromEngineproxy?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  querySignature?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
+  accountId: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  fromEngineproxy: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  querySignature: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
 };
 
 export type QueryStatsMetrics = {
@@ -5344,70 +5344,70 @@ export type QueryStatsMetrics = {
 
 /** Filter for data in TracePathErrorsRefs. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type TracePathErrorsRefsFilter = {
-  and?: Maybe<Array<TracePathErrorsRefsFilter>>;
+  and: Maybe<Array<TracePathErrorsRefsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose durationBucket dimension equals the given value if not null. To query for the null value, use {in: {durationBucket: [null]}} instead. */
-  durationBucket?: Maybe<Scalars['Int']>;
+  durationBucket: Maybe<Scalars['Int']>;
   /** Selects rows whose errorMessage dimension equals the given value if not null. To query for the null value, use {in: {errorMessage: [null]}} instead. */
-  errorMessage?: Maybe<Scalars['String']>;
-  in?: Maybe<TracePathErrorsRefsFilterIn>;
-  not?: Maybe<TracePathErrorsRefsFilter>;
-  or?: Maybe<Array<TracePathErrorsRefsFilter>>;
+  errorMessage: Maybe<Scalars['String']>;
+  in: Maybe<TracePathErrorsRefsFilterIn>;
+  not: Maybe<TracePathErrorsRefsFilter>;
+  or: Maybe<Array<TracePathErrorsRefsFilter>>;
   /** Selects rows whose path dimension equals the given value if not null. To query for the null value, use {in: {path: [null]}} instead. */
-  path?: Maybe<Scalars['String']>;
+  path: Maybe<Scalars['String']>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
   /** Selects rows whose traceHttpStatusCode dimension equals the given value if not null. To query for the null value, use {in: {traceHttpStatusCode: [null]}} instead. */
-  traceHttpStatusCode?: Maybe<Scalars['Int']>;
+  traceHttpStatusCode: Maybe<Scalars['Int']>;
   /** Selects rows whose traceId dimension equals the given value if not null. To query for the null value, use {in: {traceId: [null]}} instead. */
-  traceId?: Maybe<Scalars['ID']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in TracePathErrorsRefs. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type TracePathErrorsRefsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose durationBucket dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  durationBucket?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  durationBucket: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose errorMessage dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  errorMessage?: Maybe<Array<Maybe<Scalars['String']>>>;
+  errorMessage: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose path dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  path?: Maybe<Array<Maybe<Scalars['String']>>>;
+  path: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose traceHttpStatusCode dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceHttpStatusCode?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  traceHttpStatusCode: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose traceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  traceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type TracePathErrorsRefsOrderBySpec = {
@@ -5450,22 +5450,22 @@ export type TracePathErrorsRefsRecord = {
 
 export type TracePathErrorsRefsDimensions = {
   __typename?: 'TracePathErrorsRefsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  durationBucket?: Maybe<Scalars['Int']>;
-  errorMessage?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  durationBucket: Maybe<Scalars['Int']>;
+  errorMessage: Maybe<Scalars['String']>;
   /** If metrics were collected from a federated service, this field will be prefixed with `service:<SERVICE_NAME>.` */
-  path?: Maybe<Scalars['String']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
-  traceHttpStatusCode?: Maybe<Scalars['Int']>;
-  traceId?: Maybe<Scalars['ID']>;
-  traceStartsAt?: Maybe<Scalars['Timestamp']>;
+  path: Maybe<Scalars['String']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
+  traceHttpStatusCode: Maybe<Scalars['Int']>;
+  traceId: Maybe<Scalars['ID']>;
+  traceStartsAt: Maybe<Scalars['Timestamp']>;
 };
 
 export type TracePathErrorsRefsMetrics = {
@@ -5477,58 +5477,58 @@ export type TracePathErrorsRefsMetrics = {
 
 /** Filter for data in TraceRefs. Fields with dimension names represent equality checks. All fields are implicitly ANDed together. */
 export type TraceRefsFilter = {
-  and?: Maybe<Array<TraceRefsFilter>>;
+  and: Maybe<Array<TraceRefsFilter>>;
   /** Selects rows whose clientName dimension equals the given value if not null. To query for the null value, use {in: {clientName: [null]}} instead. */
-  clientName?: Maybe<Scalars['String']>;
+  clientName: Maybe<Scalars['String']>;
   /** Selects rows whose clientReferenceId dimension equals the given value if not null. To query for the null value, use {in: {clientReferenceId: [null]}} instead. */
-  clientReferenceId?: Maybe<Scalars['ID']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
   /** Selects rows whose clientVersion dimension equals the given value if not null. To query for the null value, use {in: {clientVersion: [null]}} instead. */
-  clientVersion?: Maybe<Scalars['String']>;
+  clientVersion: Maybe<Scalars['String']>;
   /** Selects rows whose durationBucket dimension equals the given value if not null. To query for the null value, use {in: {durationBucket: [null]}} instead. */
-  durationBucket?: Maybe<Scalars['Int']>;
-  in?: Maybe<TraceRefsFilterIn>;
-  not?: Maybe<TraceRefsFilter>;
-  or?: Maybe<Array<TraceRefsFilter>>;
+  durationBucket: Maybe<Scalars['Int']>;
+  in: Maybe<TraceRefsFilterIn>;
+  not: Maybe<TraceRefsFilter>;
+  or: Maybe<Array<TraceRefsFilter>>;
   /** Selects rows whose queryId dimension equals the given value if not null. To query for the null value, use {in: {queryId: [null]}} instead. */
-  queryId?: Maybe<Scalars['ID']>;
+  queryId: Maybe<Scalars['ID']>;
   /** Selects rows whose queryName dimension equals the given value if not null. To query for the null value, use {in: {queryName: [null]}} instead. */
-  queryName?: Maybe<Scalars['String']>;
+  queryName: Maybe<Scalars['String']>;
   /** Selects rows whose schemaHash dimension equals the given value if not null. To query for the null value, use {in: {schemaHash: [null]}} instead. */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
   /** Selects rows whose schemaTag dimension equals the given value if not null. To query for the null value, use {in: {schemaTag: [null]}} instead. */
-  schemaTag?: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
   /** Selects rows whose serviceId dimension equals the given value if not null. To query for the null value, use {in: {serviceId: [null]}} instead. */
-  serviceId?: Maybe<Scalars['ID']>;
+  serviceId: Maybe<Scalars['ID']>;
   /** Selects rows whose serviceVersion dimension equals the given value if not null. To query for the null value, use {in: {serviceVersion: [null]}} instead. */
-  serviceVersion?: Maybe<Scalars['String']>;
+  serviceVersion: Maybe<Scalars['String']>;
   /** Selects rows whose traceId dimension equals the given value if not null. To query for the null value, use {in: {traceId: [null]}} instead. */
-  traceId?: Maybe<Scalars['ID']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 /** Filter for data in TraceRefs. Fields match if the corresponding dimension's value is in the given list. All fields are implicitly ANDed together. */
 export type TraceRefsFilterIn = {
   /** Selects rows whose clientName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose clientReferenceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientReferenceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  clientReferenceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose clientVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  clientVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  clientVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose durationBucket dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  durationBucket?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  durationBucket: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Selects rows whose queryId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  queryId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose queryName dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  queryName?: Maybe<Array<Maybe<Scalars['String']>>>;
+  queryName: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaHash dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaHash?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaHash: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose schemaTag dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  schemaTag?: Maybe<Array<Maybe<Scalars['String']>>>;
+  schemaTag: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose serviceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  serviceId: Maybe<Array<Maybe<Scalars['ID']>>>;
   /** Selects rows whose serviceVersion dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  serviceVersion?: Maybe<Array<Maybe<Scalars['String']>>>;
+  serviceVersion: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Selects rows whose traceId dimension is in the given list. A null value in the list means a row with null for that dimension. */
-  traceId?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  traceId: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type TraceRefsOrderBySpec = {
@@ -5566,18 +5566,18 @@ export type TraceRefsRecord = {
 
 export type TraceRefsDimensions = {
   __typename?: 'TraceRefsDimensions';
-  clientName?: Maybe<Scalars['String']>;
-  clientReferenceId?: Maybe<Scalars['ID']>;
-  clientVersion?: Maybe<Scalars['String']>;
-  durationBucket?: Maybe<Scalars['Int']>;
-  queryId?: Maybe<Scalars['ID']>;
-  queryName?: Maybe<Scalars['String']>;
-  querySignature?: Maybe<Scalars['String']>;
-  schemaHash?: Maybe<Scalars['String']>;
-  schemaTag?: Maybe<Scalars['String']>;
-  serviceId?: Maybe<Scalars['ID']>;
-  serviceVersion?: Maybe<Scalars['String']>;
-  traceId?: Maybe<Scalars['ID']>;
+  clientName: Maybe<Scalars['String']>;
+  clientReferenceId: Maybe<Scalars['ID']>;
+  clientVersion: Maybe<Scalars['String']>;
+  durationBucket: Maybe<Scalars['Int']>;
+  queryId: Maybe<Scalars['ID']>;
+  queryName: Maybe<Scalars['String']>;
+  querySignature: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
+  schemaTag: Maybe<Scalars['String']>;
+  serviceId: Maybe<Scalars['ID']>;
+  serviceVersion: Maybe<Scalars['String']>;
+  traceId: Maybe<Scalars['ID']>;
 };
 
 export type TraceRefsMetrics = {
@@ -5624,38 +5624,38 @@ export type Error = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  account?: Maybe<AccountMutation>;
+  account: Maybe<AccountMutation>;
   /**
    * Finalize a password reset with a token included in the E-mail link,
    * returns the corresponding login email when successful
    */
-  finalizePasswordReset?: Maybe<Scalars['String']>;
+  finalizePasswordReset: Maybe<Scalars['String']>;
   /** Join an account with a token */
-  joinAccount?: Maybe<Account>;
-  me?: Maybe<IdentityMutation>;
-  newAccount?: Maybe<Account>;
-  newService?: Maybe<Service>;
+  joinAccount: Maybe<Account>;
+  me: Maybe<IdentityMutation>;
+  newAccount: Maybe<Account>;
+  newService: Maybe<Service>;
   /** Refresh all plans from third-party billing service */
-  plansRefreshBilling?: Maybe<Scalars['Void']>;
+  plansRefreshBilling: Maybe<Scalars['Void']>;
   /** Report a running GraphQL server's schema. */
-  reportSchema?: Maybe<ReportSchemaResult>;
+  reportSchema: Maybe<ReportSchemaResult>;
   /** Ask for a user's password to be reset by E-mail */
-  resetPassword?: Maybe<Scalars['Void']>;
-  resolveAllInternalCronExecutions?: Maybe<Scalars['Void']>;
-  resolveInternalCronExecution?: Maybe<CronExecution>;
-  service?: Maybe<ServiceMutation>;
+  resetPassword: Maybe<Scalars['Void']>;
+  resolveAllInternalCronExecutions: Maybe<Scalars['Void']>;
+  resolveInternalCronExecution: Maybe<CronExecution>;
+  service: Maybe<ServiceMutation>;
   /** Set the subscriptions for a given email */
-  setSubscriptions?: Maybe<EmailPreferences>;
+  setSubscriptions: Maybe<EmailPreferences>;
   /** Set the studio settings for the current user */
-  setUserSettings?: Maybe<UserSettings>;
-  signUp?: Maybe<User>;
+  setUserSettings: Maybe<UserSettings>;
+  signUp: Maybe<User>;
   /** This is called by the form shown to users after they delete their user or organization account. */
-  submitPostDeletionFeedback?: Maybe<Scalars['Void']>;
+  submitPostDeletionFeedback: Maybe<Scalars['Void']>;
   /** Mutation for basic engagement tracking in studio */
-  track?: Maybe<Scalars['Void']>;
+  track: Maybe<Scalars['Void']>;
   /** Unsubscribe a given email from all emails */
-  unsubscribeFromAll?: Maybe<EmailPreferences>;
-  user?: Maybe<UserMutation>;
+  unsubscribeFromAll: Maybe<EmailPreferences>;
+  user: Maybe<UserMutation>;
 };
 
 
@@ -5677,24 +5677,24 @@ export type MutationJoinAccountArgs = {
 
 
 export type MutationNewAccountArgs = {
-  companyUrl?: Maybe<Scalars['String']>;
+  companyUrl: Maybe<Scalars['String']>;
   id: Scalars['ID'];
 };
 
 
 export type MutationNewServiceArgs = {
   accountId: Scalars['ID'];
-  description?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   hiddenFromUninvitedNonAdminAccountMembers?: Scalars['Boolean'];
   id: Scalars['ID'];
   isDev?: Scalars['Boolean'];
-  name?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
 };
 
 
 export type MutationReportSchemaArgs = {
-  coreSchema?: Maybe<Scalars['String']>;
+  coreSchema: Maybe<Scalars['String']>;
   report: SchemaReport;
 };
 
@@ -5705,8 +5705,8 @@ export type MutationResetPasswordArgs = {
 
 
 export type MutationResolveAllInternalCronExecutionsArgs = {
-  group?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  group: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
 };
 
 
@@ -5728,7 +5728,7 @@ export type MutationSetSubscriptionsArgs = {
 
 
 export type MutationSetUserSettingsArgs = {
-  newSettings?: Maybe<UserSettingsInput>;
+  newSettings: Maybe<UserSettingsInput>;
 };
 
 
@@ -5736,13 +5736,13 @@ export type MutationSignUpArgs = {
   email: Scalars['String'];
   fullName: Scalars['String'];
   password: Scalars['String'];
-  referrer?: Maybe<Scalars['String']>;
-  trackingGoogleClientId?: Maybe<Scalars['String']>;
-  trackingMarketoClientId?: Maybe<Scalars['String']>;
-  userSegment?: Maybe<UserSegment>;
-  utmCampaign?: Maybe<Scalars['String']>;
-  utmMedium?: Maybe<Scalars['String']>;
-  utmSource?: Maybe<Scalars['String']>;
+  referrer: Maybe<Scalars['String']>;
+  trackingGoogleClientId: Maybe<Scalars['String']>;
+  trackingMarketoClientId: Maybe<Scalars['String']>;
+  userSegment: Maybe<UserSegment>;
+  utmCampaign: Maybe<Scalars['String']>;
+  utmMedium: Maybe<Scalars['String']>;
+  utmSource: Maybe<Scalars['String']>;
 };
 
 
@@ -5772,65 +5772,65 @@ export type MutationUserArgs = {
 
 export type AccountMutation = {
   __typename?: 'AccountMutation';
-  auditExport?: Maybe<AuditLogExportMutation>;
+  auditExport: Maybe<AuditLogExportMutation>;
   /** Cancel a pending change from an annual team subscription to a monthly team subscription when the current period expires. */
-  cancelConvertAnnualTeamSubscriptionToMonthlyAtNextPeriod?: Maybe<Account>;
+  cancelConvertAnnualTeamSubscriptionToMonthlyAtNextPeriod: Maybe<Account>;
   /** Cancel account subscriptions, subscriptions will remain active until the end of the paid period */
-  cancelSubscriptions?: Maybe<Account>;
+  cancelSubscriptions: Maybe<Account>;
   /** Changes an annual team subscription to a monthly team subscription when the current period expires. */
-  convertAnnualTeamSubscriptionToMonthlyAtNextPeriod?: Maybe<Account>;
+  convertAnnualTeamSubscriptionToMonthlyAtNextPeriod: Maybe<Account>;
   /** Changes a monthly team subscription to an annual team subscription. */
-  convertMonthlyTeamSubscriptionToAnnual?: Maybe<Account>;
-  createStaticInvitation?: Maybe<OrganizationInviteLink>;
+  convertMonthlyTeamSubscriptionToAnnual: Maybe<Account>;
+  createStaticInvitation: Maybe<OrganizationInviteLink>;
   /** Delete the account's avatar. Requires Account.canUpdateAvatar to be true. */
-  deleteAvatar?: Maybe<AvatarDeleteError>;
+  deleteAvatar: Maybe<AvatarDeleteError>;
   /** Acknowledge that a trial has expired and return to community */
-  dismissExpiredTrial?: Maybe<Account>;
+  dismissExpiredTrial: Maybe<Account>;
   /** Apollo admins only: extend an ongoing trial */
-  extendTrial?: Maybe<Account>;
+  extendTrial: Maybe<Account>;
   /** Hard delete an account and all associated services */
-  hardDelete?: Maybe<Scalars['Void']>;
+  hardDelete: Maybe<Scalars['Void']>;
   /** Send an invitation to join the account by E-mail */
-  invite?: Maybe<AccountInvitation>;
+  invite: Maybe<AccountInvitation>;
   /** Reactivate a canceled current subscription */
-  reactivateCurrentSubscription?: Maybe<Account>;
+  reactivateCurrentSubscription: Maybe<Account>;
   /** Refresh billing information from third-party billing service */
-  refreshBilling?: Maybe<Scalars['Void']>;
+  refreshBilling: Maybe<Scalars['Void']>;
   /** Delete an invitation */
-  removeInvitation?: Maybe<Scalars['Void']>;
+  removeInvitation: Maybe<Scalars['Void']>;
   /** Remove a member of the account */
-  removeMember?: Maybe<Account>;
-  requestAuditExport?: Maybe<Account>;
+  removeMember: Maybe<Account>;
+  requestAuditExport: Maybe<Account>;
   /** Send a new E-mail for an existing invitation */
-  resendInvitation?: Maybe<AccountInvitation>;
-  revokeStaticInvitation?: Maybe<OrganizationInviteLink>;
+  resendInvitation: Maybe<AccountInvitation>;
+  revokeStaticInvitation: Maybe<OrganizationInviteLink>;
   /** Apollo admins only: set the billing plan to an arbitrary plan */
-  setPlan?: Maybe<Scalars['Void']>;
+  setPlan: Maybe<Scalars['Void']>;
   /** Start a new team subscription with the given billing period */
-  startTeamSubscription?: Maybe<Account>;
+  startTeamSubscription: Maybe<Account>;
   /** Start a team trial */
-  startTrial?: Maybe<Account>;
+  startTrial: Maybe<Account>;
   /** This is called by the form shown to users after they cancel their team subscription. */
-  submitTeamCancellationFeedback?: Maybe<Scalars['Void']>;
+  submitTeamCancellationFeedback: Maybe<Scalars['Void']>;
   /** Apollo admins only: terminate any ongoing subscriptions in the account, without refunds */
-  terminateSubscriptions?: Maybe<Account>;
+  terminateSubscriptions: Maybe<Account>;
   /** Update the billing address for a Recurly token */
-  updateBillingAddress?: Maybe<Account>;
+  updateBillingAddress: Maybe<Account>;
   /** Update the billing information from a Recurly token */
-  updateBillingInfo?: Maybe<Scalars['Void']>;
-  updateCompanyUrl?: Maybe<Account>;
+  updateBillingInfo: Maybe<Scalars['Void']>;
+  updateCompanyUrl: Maybe<Account>;
   /** Set the E-mail address of the account, used notably for billing */
-  updateEmail?: Maybe<Scalars['Void']>;
+  updateEmail: Maybe<Scalars['Void']>;
   /** Update the account ID */
-  updateID?: Maybe<Account>;
+  updateID: Maybe<Account>;
   /** Update the company name */
-  updateName?: Maybe<Scalars['Void']>;
+  updateName: Maybe<Scalars['Void']>;
   /** Apollo admins only: enable or disable an account for PingOne SSO login */
-  updatePingOneSSOIDPID?: Maybe<Account>;
+  updatePingOneSSOIDPID: Maybe<Account>;
   /** Updates the role assigned to new SSO users. */
-  updateSSODefaultRole?: Maybe<OrganizationSso>;
+  updateSSODefaultRole: Maybe<OrganizationSso>;
   /** A (currently) internal to Apollo mutation to update a user's role within an organization */
-  updateUserPermission?: Maybe<User>;
+  updateUserPermission: Maybe<User>;
 };
 
 
@@ -5851,12 +5851,12 @@ export type AccountMutationExtendTrialArgs = {
 
 export type AccountMutationInviteArgs = {
   email: Scalars['String'];
-  role?: Maybe<UserPermission>;
+  role: Maybe<UserPermission>;
 };
 
 
 export type AccountMutationRemoveInvitationArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
 };
 
 
@@ -5866,15 +5866,15 @@ export type AccountMutationRemoveMemberArgs = {
 
 
 export type AccountMutationRequestAuditExportArgs = {
-  actors?: Maybe<Array<ActorInput>>;
+  actors: Maybe<Array<ActorInput>>;
   from: Scalars['Timestamp'];
-  graphIds?: Maybe<Array<Scalars['String']>>;
+  graphIds: Maybe<Array<Scalars['String']>>;
   to: Scalars['Timestamp'];
 };
 
 
 export type AccountMutationResendInvitationArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
 };
 
 
@@ -5909,7 +5909,7 @@ export type AccountMutationUpdateBillingInfoArgs = {
 
 
 export type AccountMutationUpdateCompanyUrlArgs = {
-  companyUrl?: Maybe<Scalars['String']>;
+  companyUrl: Maybe<Scalars['String']>;
 };
 
 
@@ -5929,7 +5929,7 @@ export type AccountMutationUpdateNameArgs = {
 
 
 export type AccountMutationUpdatePingOneSsoidpidArgs = {
-  idpid?: Maybe<Scalars['String']>;
+  idpid: Maybe<Scalars['String']>;
 };
 
 
@@ -5945,8 +5945,8 @@ export type AccountMutationUpdateUserPermissionArgs = {
 
 export type AuditLogExportMutation = {
   __typename?: 'AuditLogExportMutation';
-  cancel?: Maybe<Account>;
-  delete?: Maybe<Account>;
+  cancel: Maybe<Account>;
+  delete: Maybe<Account>;
 };
 
 export type AvatarDeleteError = {
@@ -5968,7 +5968,7 @@ export type ActorInput = {
 /** Billing address inpnut */
 export type BillingAddressInput = {
   address1: Scalars['String'];
-  address2?: Maybe<Scalars['String']>;
+  address2: Maybe<Scalars['String']>;
   city: Scalars['String'];
   country: Scalars['String'];
   state: Scalars['String'];
@@ -5996,13 +5996,13 @@ export type ServiceMutation = {
    */
   checkSchema: CheckSchemaResult;
   /** Make changes to a check workflow. */
-  checkWorkflow?: Maybe<CheckWorkflowMutation>;
+  checkWorkflow: Maybe<CheckWorkflowMutation>;
   createCompositionStatusSubscription: SchemaPublishSubscription;
   createSchemaPublishSubscription: SchemaPublishSubscription;
   /** Soft delete a graph. Data associated with the graph is not permanently deleted; Apollo support can undo. */
-  delete?: Maybe<Scalars['Void']>;
+  delete: Maybe<Scalars['Void']>;
   /** Delete the service's avatar. Requires Service.roles.canUpdateAvatar to be true. */
-  deleteAvatar?: Maybe<AvatarDeleteError>;
+  deleteAvatar: Maybe<AvatarDeleteError>;
   /** Delete an existing channel */
   deleteChannel: Scalars['Boolean'];
   /** Delete an existing query trigger */
@@ -6017,10 +6017,10 @@ export type ServiceMutation = {
   deleteScheduledSummary: Scalars['Boolean'];
   deleteSchemaTag: DeleteSchemaTagResult;
   /** Given a UTC timestamp, delete all traces associated with this Service, on that corresponding day. If a timestamp to is provided, deletes all days inclusive. */
-  deleteTraces?: Maybe<Scalars['Void']>;
-  disableDatadogForwardingLegacyMetricNames?: Maybe<Service>;
+  deleteTraces: Maybe<Scalars['Void']>;
+  disableDatadogForwardingLegacyMetricNames: Maybe<Service>;
   /** Hard delete a graph and all data associated with it. Its ID cannot be reused. */
-  hardDelete?: Maybe<Scalars['Void']>;
+  hardDelete: Maybe<Scalars['Void']>;
   /** @deprecated Use service.id */
   id: Scalars['ID'];
   /**
@@ -6030,7 +6030,7 @@ export type ServiceMutation = {
    * Returns true if the operation is newly ignored,
    * false if it already was.
    */
-  ignoreOperationsInChecks?: Maybe<IgnoreOperationsInChecksResult>;
+  ignoreOperationsInChecks: Maybe<IgnoreOperationsInChecksResult>;
   /**
    * Mark the changeset that affects an operation in a given check instance as safe.
    * Note that only operations marked as behavior changes are allowed to be marked as safe.
@@ -6038,17 +6038,17 @@ export type ServiceMutation = {
   markChangesForOperationAsSafe: MarkChangesForOperationAsSafeResult;
   newKey: GraphApiKey;
   /** Adds an override to the given users permission for this graph */
-  overrideUserPermission?: Maybe<Service>;
+  overrideUserPermission: Maybe<Service>;
   /** Returns a preview of the Core and API schema contracts derived from a source variant and a set of filter configurations */
   previewContractVariant: ContractVariantPreviewResult;
   /** Promote the schema with the given SHA-256 hash to active for the given variant/tag. */
   promoteSchema: PromoteSchemaResponseOrError;
-  registerOperationsWithResponse?: Maybe<RegisterOperationsMutationResponse>;
+  registerOperationsWithResponse: Maybe<RegisterOperationsMutationResponse>;
   removeImplementingServiceAndTriggerComposition: CompositionAndRemoveResult;
-  removeKey?: Maybe<Scalars['Void']>;
-  renameKey?: Maybe<GraphApiKey>;
+  removeKey: Maybe<Scalars['Void']>;
+  renameKey: Maybe<GraphApiKey>;
   /** @deprecated use Mutation.reportSchema instead */
-  reportServerInfo?: Maybe<ReportServerInfoResult>;
+  reportServerInfo: Maybe<ReportServerInfoResult>;
   service: Service;
   /**
    * Store a given schema document. This schema will be attached to the graph but
@@ -6056,41 +6056,41 @@ export type ServiceMutation = {
    */
   storeSchemaDocument: StoreSchemaResponseOrError;
   /** Test Slack notification channel */
-  testSlackChannel?: Maybe<Scalars['Void']>;
+  testSlackChannel: Maybe<Scalars['Void']>;
   testSubscriptionForChannel: Scalars['String'];
-  transfer?: Maybe<Service>;
-  triggerRepublish?: Maybe<Scalars['Void']>;
-  undelete?: Maybe<Service>;
+  transfer: Maybe<Service>;
+  triggerRepublish: Maybe<Scalars['Void']>;
+  undelete: Maybe<Service>;
   /**
    * Revert the effects of ignoreOperation.
    * Returns true if the operation is no longer ignored,
    * false if it wasn't.
    */
-  unignoreOperationsInChecks?: Maybe<UnignoreOperationsInChecksResult>;
+  unignoreOperationsInChecks: Maybe<UnignoreOperationsInChecksResult>;
   /** Unmark changes for an operation as safe. */
   unmarkChangesForOperationAsSafe: MarkChangesForOperationAsSafeResult;
   /** Update schema check configuration for a graph. */
   updateCheckConfiguration: CheckConfiguration;
-  updateDatadogMetricsConfig?: Maybe<DatadogMetricsConfig>;
-  updateDescription?: Maybe<Service>;
+  updateDatadogMetricsConfig: Maybe<DatadogMetricsConfig>;
+  updateDescription: Maybe<Service>;
   /** Update hiddenFromUninvitedNonAdminAccountMembers */
-  updateHiddenFromUninvitedNonAdminAccountMembers?: Maybe<Service>;
-  updateReadme?: Maybe<Service>;
-  updateTitle?: Maybe<Service>;
-  uploadSchema?: Maybe<UploadSchemaMutationResponse>;
-  upsertChannel?: Maybe<Channel>;
+  updateHiddenFromUninvitedNonAdminAccountMembers: Maybe<Service>;
+  updateReadme: Maybe<Service>;
+  updateTitle: Maybe<Service>;
+  uploadSchema: Maybe<UploadSchemaMutationResponse>;
+  upsertChannel: Maybe<Channel>;
   /** Creates a contract schema from a source variant and a set of filter configurations */
   upsertContractVariant: ContractVariantUpsertResult;
-  upsertImplementingServiceAndTriggerComposition?: Maybe<CompositionAndUpsertResult>;
+  upsertImplementingServiceAndTriggerComposition: Maybe<CompositionAndUpsertResult>;
   /** Create/update PagerDuty notification channel */
-  upsertPagerDutyChannel?: Maybe<PagerDutyChannel>;
-  upsertQueryTrigger?: Maybe<QueryTrigger>;
+  upsertPagerDutyChannel: Maybe<PagerDutyChannel>;
+  upsertQueryTrigger: Maybe<QueryTrigger>;
   /** Create or update a subscription for a service. */
   upsertRegistrySubscription: RegistrySubscription;
-  upsertScheduledSummary?: Maybe<ScheduledSummary>;
+  upsertScheduledSummary: Maybe<ScheduledSummary>;
   /** Create/update Slack notification channel */
-  upsertSlackChannel?: Maybe<SlackChannel>;
-  upsertWebhookChannel?: Maybe<WebhookChannel>;
+  upsertSlackChannel: Maybe<SlackChannel>;
+  upsertWebhookChannel: Maybe<WebhookChannel>;
   validateOperations: ValidateOperationsResult;
   /**
    * This mutation will not result in any changes to the implementing service
@@ -6101,30 +6101,30 @@ export type ServiceMutation = {
    */
   validatePartialSchemaOfImplementingServiceAgainstGraph: CompositionValidationResult;
   /** Make changes to a graph variant. */
-  variant?: Maybe<GraphVariantMutation>;
+  variant: Maybe<GraphVariantMutation>;
 };
 
 
 export type ServiceMutationCheckPartialSchemaArgs = {
-  frontend?: Maybe<Scalars['String']>;
-  gitContext?: Maybe<GitContextInput>;
+  frontend: Maybe<Scalars['String']>;
+  gitContext: Maybe<GitContextInput>;
   graphVariant: Scalars['String'];
-  historicParameters?: Maybe<HistoricQueryParameters>;
+  historicParameters: Maybe<HistoricQueryParameters>;
   implementingServiceName: Scalars['String'];
   partialSchema: PartialSchemaInput;
-  useMaximumRetention?: Maybe<Scalars['Boolean']>;
+  useMaximumRetention: Maybe<Scalars['Boolean']>;
 };
 
 
 export type ServiceMutationCheckSchemaArgs = {
   baseSchemaTag?: Maybe<Scalars['String']>;
-  frontend?: Maybe<Scalars['String']>;
-  gitContext?: Maybe<GitContextInput>;
-  historicParameters?: Maybe<HistoricQueryParameters>;
-  proposedSchema?: Maybe<IntrospectionSchemaInput>;
-  proposedSchemaDocument?: Maybe<Scalars['String']>;
-  proposedSchemaHash?: Maybe<Scalars['String']>;
-  useMaximumRetention?: Maybe<Scalars['Boolean']>;
+  frontend: Maybe<Scalars['String']>;
+  gitContext: Maybe<GitContextInput>;
+  historicParameters: Maybe<HistoricQueryParameters>;
+  proposedSchema: Maybe<IntrospectionSchemaInput>;
+  proposedSchemaDocument: Maybe<Scalars['String']>;
+  proposedSchemaHash: Maybe<Scalars['String']>;
+  useMaximumRetention: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -6177,7 +6177,7 @@ export type ServiceMutationDeleteSchemaTagArgs = {
 
 export type ServiceMutationDeleteTracesArgs = {
   from: Scalars['Timestamp'];
-  to?: Maybe<Scalars['Timestamp']>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 
@@ -6193,13 +6193,13 @@ export type ServiceMutationMarkChangesForOperationAsSafeArgs = {
 
 
 export type ServiceMutationNewKeyArgs = {
-  keyName?: Maybe<Scalars['String']>;
+  keyName: Maybe<Scalars['String']>;
   role?: UserPermission;
 };
 
 
 export type ServiceMutationOverrideUserPermissionArgs = {
-  permission?: Maybe<UserPermission>;
+  permission: Maybe<UserPermission>;
   userID: Scalars['ID'];
 };
 
@@ -6212,17 +6212,17 @@ export type ServiceMutationPreviewContractVariantArgs = {
 
 export type ServiceMutationPromoteSchemaArgs = {
   graphVariant: Scalars['String'];
-  historicParameters?: Maybe<HistoricQueryParameters>;
+  historicParameters: Maybe<HistoricQueryParameters>;
   overrideComposedSchema?: Scalars['Boolean'];
   sha256: Scalars['SHA256'];
 };
 
 
 export type ServiceMutationRegisterOperationsWithResponseArgs = {
-  clientIdentity?: Maybe<RegisteredClientIdentityInput>;
-  gitContext?: Maybe<GitContextInput>;
+  clientIdentity: Maybe<RegisteredClientIdentityInput>;
+  gitContext: Maybe<GitContextInput>;
   graphVariant?: Scalars['String'];
-  manifestVersion?: Maybe<Scalars['Int']>;
+  manifestVersion: Maybe<Scalars['Int']>;
   operations: Array<RegisteredOperationInput>;
 };
 
@@ -6235,18 +6235,18 @@ export type ServiceMutationRemoveImplementingServiceAndTriggerCompositionArgs = 
 
 
 export type ServiceMutationRemoveKeyArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
 };
 
 
 export type ServiceMutationRenameKeyArgs = {
   id: Scalars['ID'];
-  newKeyName?: Maybe<Scalars['String']>;
+  newKeyName: Maybe<Scalars['String']>;
 };
 
 
 export type ServiceMutationReportServerInfoArgs = {
-  executableSchema?: Maybe<Scalars['String']>;
+  executableSchema: Maybe<Scalars['String']>;
   info: EdgeServerInfo;
 };
 
@@ -6290,20 +6290,20 @@ export type ServiceMutationUnmarkChangesForOperationAsSafeArgs = {
 
 
 export type ServiceMutationUpdateCheckConfigurationArgs = {
-  excludedClients?: Maybe<Array<ClientFilterInput>>;
-  excludedOperations?: Maybe<Array<ExcludedOperationInput>>;
-  includeBaseVariant?: Maybe<Scalars['Boolean']>;
-  includedVariants?: Maybe<Array<Scalars['String']>>;
-  operationCountThreshold?: Maybe<Scalars['Int']>;
-  operationCountThresholdPercentage?: Maybe<Scalars['Float']>;
-  timeRangeSeconds?: Maybe<Scalars['Long']>;
+  excludedClients: Maybe<Array<ClientFilterInput>>;
+  excludedOperations: Maybe<Array<ExcludedOperationInput>>;
+  includeBaseVariant: Maybe<Scalars['Boolean']>;
+  includedVariants: Maybe<Array<Scalars['String']>>;
+  operationCountThreshold: Maybe<Scalars['Int']>;
+  operationCountThresholdPercentage: Maybe<Scalars['Float']>;
+  timeRangeSeconds: Maybe<Scalars['Long']>;
 };
 
 
 export type ServiceMutationUpdateDatadogMetricsConfigArgs = {
-  apiKey?: Maybe<Scalars['String']>;
-  apiRegion?: Maybe<DatadogApiRegion>;
-  enabled?: Maybe<Scalars['Boolean']>;
+  apiKey: Maybe<Scalars['String']>;
+  apiRegion: Maybe<DatadogApiRegion>;
+  enabled: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -6329,20 +6329,20 @@ export type ServiceMutationUpdateTitleArgs = {
 
 export type ServiceMutationUploadSchemaArgs = {
   errorOnBadRequest?: Scalars['Boolean'];
-  gitContext?: Maybe<GitContextInput>;
-  historicParameters?: Maybe<HistoricQueryParameters>;
+  gitContext: Maybe<GitContextInput>;
+  historicParameters: Maybe<HistoricQueryParameters>;
   overrideComposedSchema?: Scalars['Boolean'];
-  schema?: Maybe<IntrospectionSchemaInput>;
-  schemaDocument?: Maybe<Scalars['String']>;
+  schema: Maybe<IntrospectionSchemaInput>;
+  schemaDocument: Maybe<Scalars['String']>;
   tag: Scalars['String'];
 };
 
 
 export type ServiceMutationUpsertChannelArgs = {
-  id?: Maybe<Scalars['ID']>;
-  pagerDutyChannel?: Maybe<PagerDutyChannelInput>;
-  slackChannel?: Maybe<SlackChannelInput>;
-  webhookChannel?: Maybe<WebhookChannelInput>;
+  id: Maybe<Scalars['ID']>;
+  pagerDutyChannel: Maybe<PagerDutyChannelInput>;
+  slackChannel: Maybe<SlackChannelInput>;
+  webhookChannel: Maybe<WebhookChannelInput>;
 };
 
 
@@ -6355,60 +6355,60 @@ export type ServiceMutationUpsertContractVariantArgs = {
 
 export type ServiceMutationUpsertImplementingServiceAndTriggerCompositionArgs = {
   activePartialSchema: PartialSchemaInput;
-  gitContext?: Maybe<GitContextInput>;
+  gitContext: Maybe<GitContextInput>;
   graphVariant: Scalars['String'];
   name: Scalars['String'];
   revision: Scalars['String'];
-  url?: Maybe<Scalars['String']>;
+  url: Maybe<Scalars['String']>;
 };
 
 
 export type ServiceMutationUpsertPagerDutyChannelArgs = {
   channel: PagerDutyChannelInput;
-  id?: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
 };
 
 
 export type ServiceMutationUpsertQueryTriggerArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
   trigger: QueryTriggerInput;
 };
 
 
 export type ServiceMutationUpsertRegistrySubscriptionArgs = {
-  channelID?: Maybe<Scalars['ID']>;
-  id?: Maybe<Scalars['ID']>;
-  options?: Maybe<SubscriptionOptionsInput>;
-  variant?: Maybe<Scalars['String']>;
+  channelID: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
+  options: Maybe<SubscriptionOptionsInput>;
+  variant: Maybe<Scalars['String']>;
 };
 
 
 export type ServiceMutationUpsertScheduledSummaryArgs = {
-  channelID?: Maybe<Scalars['ID']>;
-  enabled?: Maybe<Scalars['Boolean']>;
-  id?: Maybe<Scalars['ID']>;
-  tag?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  variant?: Maybe<Scalars['String']>;
+  channelID: Maybe<Scalars['ID']>;
+  enabled: Maybe<Scalars['Boolean']>;
+  id: Maybe<Scalars['ID']>;
+  tag: Maybe<Scalars['String']>;
+  timezone: Maybe<Scalars['String']>;
+  variant: Maybe<Scalars['String']>;
 };
 
 
 export type ServiceMutationUpsertSlackChannelArgs = {
   channel: SlackChannelInput;
-  id?: Maybe<Scalars['ID']>;
+  id: Maybe<Scalars['ID']>;
 };
 
 
 export type ServiceMutationUpsertWebhookChannelArgs = {
-  id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
-  secretToken?: Maybe<Scalars['String']>;
+  id: Maybe<Scalars['ID']>;
+  name: Maybe<Scalars['String']>;
+  secretToken: Maybe<Scalars['String']>;
   url: Scalars['String'];
 };
 
 
 export type ServiceMutationValidateOperationsArgs = {
-  gitContext?: Maybe<GitContextInput>;
+  gitContext: Maybe<GitContextInput>;
   operations: Array<OperationDocumentInput>;
   tag?: Maybe<Scalars['String']>;
 };
@@ -6427,19 +6427,19 @@ export type ServiceMutationVariantArgs = {
 
 /** This is stored with a schema when it is uploaded */
 export type GitContextInput = {
-  branch?: Maybe<Scalars['String']>;
-  commit?: Maybe<Scalars['ID']>;
-  committer?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  remoteUrl?: Maybe<Scalars['String']>;
+  branch: Maybe<Scalars['String']>;
+  commit: Maybe<Scalars['ID']>;
+  committer: Maybe<Scalars['String']>;
+  message: Maybe<Scalars['String']>;
+  remoteUrl: Maybe<Scalars['String']>;
 };
 
 export type HistoricQueryParameters = {
   /** A list of clients to filter out during validation. */
-  excludedClients?: Maybe<Array<ClientInfoFilter>>;
-  from?: Maybe<Scalars['Timestamp']>;
+  excludedClients: Maybe<Array<ClientInfoFilter>>;
+  from: Maybe<Scalars['Timestamp']>;
   /** A list of operation IDs to filter out during validation. */
-  ignoredOperations?: Maybe<Array<Scalars['ID']>>;
+  ignoredOperations: Maybe<Array<Scalars['ID']>>;
   /**
    * A list of variants to include in the validation. If no variants are provided
    * then this defaults to the "current" variant along with the base variant. The
@@ -6448,23 +6448,23 @@ export type HistoricQueryParameters = {
    * same as null inside of `in`, and 'current') in this metrics fetch. This strategy
    * supports users who have not tagged their metrics or schema.
    */
-  includedVariants?: Maybe<Array<Scalars['String']>>;
+  includedVariants: Maybe<Array<Scalars['String']>>;
   /** Minimum number of requests within the window for a query to be considered. */
-  queryCountThreshold?: Maybe<Scalars['Int']>;
+  queryCountThreshold: Maybe<Scalars['Int']>;
   /**
    * Number of requests within the window for a query to be considered, relative to
    * total request count. Expected values are between 0 and 0.05 (minimum 5% of total
    * request volume)
    */
-  queryCountThresholdPercentage?: Maybe<Scalars['Float']>;
-  to?: Maybe<Scalars['Timestamp']>;
+  queryCountThresholdPercentage: Maybe<Scalars['Float']>;
+  to: Maybe<Scalars['Timestamp']>;
 };
 
 /** Filter options to exclude by client reference ID, client name, and client version. */
 export type ClientInfoFilter = {
-  name?: Maybe<Scalars['String']>;
-  referenceID?: Maybe<Scalars['ID']>;
-  version?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  referenceID: Maybe<Scalars['ID']>;
+  version: Maybe<Scalars['String']>;
 };
 
 /**
@@ -6483,22 +6483,22 @@ export type PartialSchemaInput = {
    * Hash of the partial schema to associate; error is thrown if only the hash is
    * specified and the hash has not been seen before
    */
-  hash?: Maybe<Scalars['String']>;
+  hash: Maybe<Scalars['String']>;
   /**
    * Contents of the partial schema in SDL syntax, but may reference types
    * that aren't defined in this document
    */
-  sdl?: Maybe<Scalars['String']>;
+  sdl: Maybe<Scalars['String']>;
 };
 
 export type CheckPartialSchemaResult = {
   __typename?: 'CheckPartialSchemaResult';
   /** Result of traffic validation. This will be null if composition validation was unsuccessful. */
-  checkSchemaResult?: Maybe<CheckSchemaResult>;
+  checkSchemaResult: Maybe<CheckSchemaResult>;
   /** Result of composition validation run before the schema check. */
   compositionValidationResult: CompositionValidationResult;
   /** Workflow associated with the composition validation. */
-  workflow?: Maybe<CheckWorkflow>;
+  workflow: Maybe<CheckWorkflow>;
 };
 
 export type CheckSchemaResult = {
@@ -6508,9 +6508,9 @@ export type CheckSchemaResult = {
   /** ID of the operations check that was created */
   operationsCheckID: Scalars['ID'];
   /** Generated url to view schema diff in Engine */
-  targetUrl?: Maybe<Scalars['String']>;
+  targetUrl: Maybe<Scalars['String']>;
   /** Workflow associated with this check result */
-  workflow?: Maybe<CheckWorkflow>;
+  workflow: Maybe<CheckWorkflow>;
 };
 
 /** Metadata about the result of compositions validation run in the cloud */
@@ -6523,12 +6523,12 @@ export type CompositionValidationResult = CompositionResult & {
    * in running composition. Will be null if any errors are encountered. Also may contain a schema hash if
    * one could be computed, which can be used for schema validation.
    */
-  compositionValidationDetails?: Maybe<CompositionValidationDetails>;
+  compositionValidationDetails: Maybe<CompositionValidationDetails>;
   /**
    * Supergraph SDL generated by composition (this is not the CSDL, that is a deprecated format).
    * @deprecated Use supergraphSdl instead
    */
-  csdl?: Maybe<Scalars['GraphQLDocument']>;
+  csdl: Maybe<Scalars['GraphQLDocument']>;
   /**
    * List of errors during composition. Errors mean that Apollo was unable to compose the
    * graph's implementing services into a GraphQL schema. This partial schema should not be
@@ -6542,9 +6542,9 @@ export type CompositionValidationResult = CompositionResult & {
   /** List of subgraphs that are included in this composition. */
   subgraphConfigs: Array<SubgraphConfig>;
   /** Supergraph SDL generated by composition. */
-  supergraphSdl?: Maybe<Scalars['GraphQLDocument']>;
+  supergraphSdl: Maybe<Scalars['GraphQLDocument']>;
   /** If created as part of a check workflow, the associated workflow task. */
-  workflowTask?: Maybe<CompositionCheckTask>;
+  workflowTask: Maybe<CompositionCheckTask>;
 };
 
 /** The composition config exposed to the gateway */
@@ -6553,7 +6553,7 @@ export type CompositionValidationDetails = {
   /** List of implementing service partial schemas that comprised the graph composed during validation */
   implementingServices: Array<FederatedImplementingServicePartialSchema>;
   /** Hash of the composed schema */
-  schemaHash?: Maybe<Scalars['String']>;
+  schemaHash: Maybe<Scalars['String']>;
 };
 
 /** A minimal representation of a federated implementing service, using only a name and partial schema SDL */
@@ -6567,61 +6567,61 @@ export type FederatedImplementingServicePartialSchema = {
 
 export type CompositionCheckTask = CheckWorkflowTask & {
   __typename?: 'CompositionCheckTask';
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   createdAt: Scalars['Timestamp'];
   id: Scalars['ID'];
   /** The result of the composition. */
-  result?: Maybe<CompositionResult>;
+  result: Maybe<CompositionResult>;
   status: CheckWorkflowTaskStatus;
   workflow: CheckWorkflow;
 };
 
 /** __Schema introspection type */
 export type IntrospectionSchemaInput = {
-  description?: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   directives: Array<IntrospectionDirectiveInput>;
-  mutationType?: Maybe<IntrospectionTypeRefInput>;
+  mutationType: Maybe<IntrospectionTypeRefInput>;
   queryType: IntrospectionTypeRefInput;
-  subscriptionType?: Maybe<IntrospectionTypeRefInput>;
-  types?: Maybe<Array<IntrospectionTypeInput>>;
+  subscriptionType: Maybe<IntrospectionTypeRefInput>;
+  types: Maybe<Array<IntrospectionTypeInput>>;
 };
 
 export type IntrospectionDirectiveInput = {
   args: Array<IntrospectionInputValueInput>;
-  description?: Maybe<Scalars['String']>;
-  isRepeatable?: Maybe<Scalars['Boolean']>;
+  description: Maybe<Scalars['String']>;
+  isRepeatable: Maybe<Scalars['Boolean']>;
   locations: Array<IntrospectionDirectiveLocation>;
   name: Scalars['String'];
 };
 
 /** __Value introspection type */
 export type IntrospectionInputValueInput = {
-  defaultValue?: Maybe<Scalars['String']>;
-  deprecationReason?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  isDeprecated?: Maybe<Scalars['Boolean']>;
+  defaultValue: Maybe<Scalars['String']>;
+  deprecationReason: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
+  isDeprecated: Maybe<Scalars['Boolean']>;
   name: Scalars['String'];
   type: IntrospectionTypeInput;
 };
 
 /** __Type introspection type */
 export type IntrospectionTypeInput = {
-  description?: Maybe<Scalars['String']>;
-  enumValues?: Maybe<Array<IntrospectionEnumValueInput>>;
-  fields?: Maybe<Array<IntrospectionFieldInput>>;
-  inputFields?: Maybe<Array<IntrospectionInputValueInput>>;
-  interfaces?: Maybe<Array<IntrospectionTypeInput>>;
+  description: Maybe<Scalars['String']>;
+  enumValues: Maybe<Array<IntrospectionEnumValueInput>>;
+  fields: Maybe<Array<IntrospectionFieldInput>>;
+  inputFields: Maybe<Array<IntrospectionInputValueInput>>;
+  interfaces: Maybe<Array<IntrospectionTypeInput>>;
   kind: IntrospectionTypeKind;
-  name?: Maybe<Scalars['String']>;
-  ofType?: Maybe<IntrospectionTypeInput>;
-  possibleTypes?: Maybe<Array<IntrospectionTypeInput>>;
-  specifiedByUrl?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  ofType: Maybe<IntrospectionTypeInput>;
+  possibleTypes: Maybe<Array<IntrospectionTypeInput>>;
+  specifiedByUrl: Maybe<Scalars['String']>;
 };
 
 /** __EnumValue introspection type */
 export type IntrospectionEnumValueInput = {
-  deprecationReason?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  deprecationReason: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   isDeprecated: Scalars['Boolean'];
   name: Scalars['String'];
 };
@@ -6629,8 +6629,8 @@ export type IntrospectionEnumValueInput = {
 /** __Field introspection type */
 export type IntrospectionFieldInput = {
   args: Array<IntrospectionInputValueInput>;
-  deprecationReason?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  deprecationReason: Maybe<Scalars['String']>;
+  description: Maybe<Scalars['String']>;
   isDeprecated: Scalars['Boolean'];
   name: Scalars['String'];
   type: IntrospectionTypeInput;
@@ -6638,22 +6638,22 @@ export type IntrospectionFieldInput = {
 
 /** Shallow __Type introspection type */
 export type IntrospectionTypeRefInput = {
-  kind?: Maybe<Scalars['String']>;
+  kind: Maybe<Scalars['String']>;
   name: Scalars['String'];
 };
 
 export type CheckWorkflowMutation = {
   __typename?: 'CheckWorkflowMutation';
   /** Re-run a check workflow using the current configuration. A new workflow is created and returned. */
-  rerun?: Maybe<CheckWorkflowRerunResult>;
+  rerun: Maybe<CheckWorkflowRerunResult>;
 };
 
 export type CheckWorkflowRerunResult = {
   __typename?: 'CheckWorkflowRerunResult';
   /** Check workflow created by re-running. */
-  result?: Maybe<CheckWorkflow>;
+  result: Maybe<CheckWorkflow>;
   /** Check workflow that was rerun. */
-  source?: Maybe<CheckWorkflow>;
+  source: Maybe<CheckWorkflow>;
 };
 
 export type SchemaPublishSubscription = ChannelSubscription & {
@@ -6663,7 +6663,7 @@ export type SchemaPublishSubscription = ChannelSubscription & {
   enabled: Scalars['Boolean'];
   id: Scalars['ID'];
   lastUpdatedAt: Scalars['Timestamp'];
-  variant?: Maybe<Scalars['String']>;
+  variant: Maybe<Scalars['String']>;
 };
 
 export type DeleteSchemaTagResult = {
@@ -6684,7 +6684,7 @@ export type MarkChangesForOperationAsSafeResult = {
    * This might return null if no behavior changes were found for the affected operation ID.
    * This is a weird situation that should never happen.
    */
-  affectedOperation?: Maybe<AffectedQuery>;
+  affectedOperation: Maybe<AffectedQuery>;
   message: Scalars['String'];
   success: Scalars['Boolean'];
 };
@@ -6751,30 +6751,30 @@ export enum PromoteSchemaResponseCode {
 export type RegisteredClientIdentityInput = {
   identifier: Scalars['String'];
   name: Scalars['String'];
-  version?: Maybe<Scalars['String']>;
+  version: Maybe<Scalars['String']>;
 };
 
 export type RegisteredOperationInput = {
-  document?: Maybe<Scalars['String']>;
-  metadata?: Maybe<RegisteredOperationMetadataInput>;
+  document: Maybe<Scalars['String']>;
+  metadata: Maybe<RegisteredOperationMetadataInput>;
   signature: Scalars['ID'];
 };
 
 export type RegisteredOperationMetadataInput = {
   /** This will be used to link existing records in Engine to a new ID. */
-  engineSignature?: Maybe<Scalars['String']>;
+  engineSignature: Maybe<Scalars['String']>;
 };
 
 export type RegisterOperationsMutationResponse = {
   __typename?: 'RegisterOperationsMutationResponse';
-  invalidOperations?: Maybe<Array<InvalidOperation>>;
-  newOperations?: Maybe<Array<RegisteredOperation>>;
+  invalidOperations: Maybe<Array<InvalidOperation>>;
+  newOperations: Maybe<Array<RegisteredOperation>>;
   registrationSuccess: Scalars['Boolean'];
 };
 
 export type InvalidOperation = {
   __typename?: 'InvalidOperation';
-  errors?: Maybe<Array<OperationValidationError>>;
+  errors: Maybe<Array<OperationValidationError>>;
   signature: Scalars['ID'];
 };
 
@@ -6792,7 +6792,7 @@ export type RegisteredOperation = {
 export type CompositionAndRemoveResult = {
   __typename?: 'CompositionAndRemoveResult';
   /** The produced composition config. Will be null if there are any errors */
-  compositionConfig?: Maybe<CompositionConfig>;
+  compositionConfig: Maybe<CompositionConfig>;
   /** Whether the removed implementing service existed. */
   didExist: Scalars['Boolean'];
   /**
@@ -6815,17 +6815,17 @@ export type EdgeServerInfo = {
   /** A unique identifier for the executable GraphQL served by the edge server. length must be <= 64 characters. */
   executableSchemaId: Scalars['String'];
   /** The graph variant, defaults to 'current' */
-  graphVariant?: Scalars['String'];
+  graphVariant: Scalars['String'];
   /** The version of the edge server reporting agent, e.g. apollo-server-2.8, graphql-java-3.1, etc. length must be <= 256 characters. */
-  libraryVersion?: Maybe<Scalars['String']>;
+  libraryVersion: Maybe<Scalars['String']>;
   /** The infra environment in which this edge server is running, e.g. localhost, Kubernetes, AWS Lambda, Google CloudRun, AWS ECS, etc. length must be <= 256 characters. */
-  platform?: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
   /** The runtime in which the edge server is running, e.g. node 12.03, zulu8.46.0.19-ca-jdk8.0.252-macosx_x64, etc. length must be <= 256 characters. */
-  runtimeVersion?: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
   /** If available, an identifier for the edge server instance, such that when restarting this instance it will have the same serverId, with a different bootId. For example, in Kubernetes this might be the pod name. Length must be <= 256 characters. */
-  serverId?: Maybe<Scalars['String']>;
+  serverId: Maybe<Scalars['String']>;
   /** An identifier used to distinguish the version (from the user's perspective) of the edge server's code itself. For instance, the git sha of the server's repository or the docker sha of the associated image this server runs with. Length must be <= 256 characters. */
-  userVersion?: Maybe<Scalars['String']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 export type ReportServerInfoResult = {
@@ -6853,15 +6853,15 @@ export type StoreSchemaResponse = {
 
 /** Slack notification message */
 export type SlackNotificationInput = {
-  color?: Maybe<Scalars['String']>;
+  color: Maybe<Scalars['String']>;
   fallback: Scalars['String'];
-  fields?: Maybe<Array<SlackNotificationField>>;
-  iconUrl?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['String']>;
-  timestamp?: Maybe<Scalars['Timestamp']>;
-  title?: Maybe<Scalars['String']>;
-  titleLink?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
+  fields: Maybe<Array<SlackNotificationField>>;
+  iconUrl: Maybe<Scalars['String']>;
+  text: Maybe<Scalars['String']>;
+  timestamp: Maybe<Scalars['Timestamp']>;
+  title: Maybe<Scalars['String']>;
+  titleLink: Maybe<Scalars['String']>;
+  username: Maybe<Scalars['String']>;
 };
 
 export type SlackNotificationField = {
@@ -6880,11 +6880,11 @@ export type UnignoreOperationsInChecksResult = {
  */
 export type ClientFilterInput = {
   /** name of the client set by the user and reported alongside metrics */
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
   /** ID, often the name, of the client set by the user and reported alongside metrics */
-  referenceID?: Maybe<Scalars['ID']>;
+  referenceID: Maybe<Scalars['ID']>;
   /** version of the client set by the user and reported alongside metrics */
-  version?: Maybe<Scalars['String']>;
+  version: Maybe<Scalars['String']>;
 };
 
 /** Option to filter by operation ID. */
@@ -6898,25 +6898,25 @@ export type UploadSchemaMutationResponse = {
   code: Scalars['String'];
   message: Scalars['String'];
   success: Scalars['Boolean'];
-  tag?: Maybe<SchemaTag>;
+  tag: Maybe<SchemaTag>;
 };
 
 /** PagerDuty notification channel parameters */
 export type PagerDutyChannelInput = {
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
   routingKey: Scalars['String'];
 };
 
 /** Slack notification channel parameters */
 export type SlackChannelInput = {
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
   url: Scalars['String'];
 };
 
 /** PagerDuty notification channel parameters */
 export type WebhookChannelInput = {
-  name?: Maybe<Scalars['String']>;
-  secretToken?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
+  secretToken: Maybe<Scalars['String']>;
   url: Scalars['String'];
 };
 
@@ -6936,7 +6936,7 @@ export type ContractVariantUpsertSuccess = {
 export type CompositionAndUpsertResult = {
   __typename?: 'CompositionAndUpsertResult';
   /** The produced composition config. Will be null if there are any errors */
-  compositionConfig?: Maybe<CompositionConfig>;
+  compositionConfig: Maybe<CompositionConfig>;
   /**
    * List of errors during composition. Errors mean that Apollo was unable to compose the
    * graph's implementing services into a GraphQL schema. This partial schema should not be
@@ -6966,16 +6966,16 @@ export type PagerDutyChannel = Channel & {
 
 /** Query trigger */
 export type QueryTriggerInput = {
-  channelIds?: Maybe<Array<Scalars['String']>>;
+  channelIds: Maybe<Array<Scalars['String']>>;
   comparisonOperator: ComparisonOperator;
-  enabled?: Maybe<Scalars['Boolean']>;
-  excludedOperationNames?: Maybe<Array<Scalars['String']>>;
+  enabled: Maybe<Scalars['Boolean']>;
+  excludedOperationNames: Maybe<Array<Scalars['String']>>;
   metric: QueryTriggerMetric;
-  operationNames?: Maybe<Array<Scalars['String']>>;
-  percentile?: Maybe<Scalars['Float']>;
-  scope?: Maybe<QueryTriggerScope>;
+  operationNames: Maybe<Array<Scalars['String']>>;
+  percentile: Maybe<Scalars['Float']>;
+  scope: Maybe<QueryTriggerScope>;
   threshold: Scalars['Float'];
-  variant?: Maybe<Scalars['String']>;
+  variant: Maybe<Scalars['String']>;
   window: QueryTriggerWindow;
 };
 
@@ -6986,7 +6986,7 @@ export type SubscriptionOptionsInput = {
 
 export type RegistrySubscription = ChannelSubscription & {
   __typename?: 'RegistrySubscription';
-  channel?: Maybe<Channel>;
+  channel: Maybe<Channel>;
   /** @deprecated Use channels list instead */
   channels: Array<Channel>;
   createdAt: Scalars['Timestamp'];
@@ -6994,7 +6994,7 @@ export type RegistrySubscription = ChannelSubscription & {
   id: Scalars['ID'];
   lastUpdatedAt: Scalars['Timestamp'];
   options: SubscriptionOptions;
-  variant?: Maybe<Scalars['String']>;
+  variant: Maybe<Scalars['String']>;
 };
 
 export type SubscriptionOptions = {
@@ -7017,7 +7017,7 @@ export type WebhookChannel = Channel & {
   __typename?: 'WebhookChannel';
   id: Scalars['ID'];
   name: Scalars['String'];
-  secretToken?: Maybe<Scalars['String']>;
+  secretToken: Maybe<Scalars['String']>;
   subscriptions: Array<ChannelSubscription>;
   url: Scalars['String'];
 };
@@ -7026,7 +7026,7 @@ export type OperationDocumentInput = {
   /** Operation document body */
   body: Scalars['String'];
   /** Operation name */
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
 };
 
 export type ValidateOperationsResult = {
@@ -7061,7 +7061,7 @@ export type OperationDocument = {
   /** Operation document body */
   body: Scalars['String'];
   /** Operation name */
-  name?: Maybe<Scalars['String']>;
+  name: Maybe<Scalars['String']>;
 };
 
 export enum ValidationErrorType {
@@ -7074,7 +7074,7 @@ export enum ValidationErrorType {
 export type GraphVariantMutation = {
   __typename?: 'GraphVariantMutation';
   addLinkToVariant: GraphVariant;
-  enableTagAndInaccessible?: Maybe<GraphVariant>;
+  enableTagAndInaccessible: Maybe<GraphVariant>;
   /** Graph ID of the variant */
   graphId: Scalars['String'];
   /** Global identifier for the graph variant, in the form `graph@variant`. */
@@ -7084,20 +7084,20 @@ export type GraphVariantMutation = {
   relaunch: RelaunchResult;
   removeLinkFromVariant: GraphVariant;
   setIsFavoriteOfCurrentUser: GraphVariant;
-  updateDefaultHeaders?: Maybe<GraphVariant>;
-  updateIsProtected?: Maybe<GraphVariant>;
-  updatePreflightScript?: Maybe<GraphVariant>;
-  updateSendCookies?: Maybe<GraphVariant>;
-  updateSubscriptionURL?: Maybe<GraphVariant>;
-  updateURL?: Maybe<GraphVariant>;
-  updateVariantIsPublic?: Maybe<GraphVariant>;
-  updateVariantReadme?: Maybe<GraphVariant>;
+  updateDefaultHeaders: Maybe<GraphVariant>;
+  updateIsProtected: Maybe<GraphVariant>;
+  updatePreflightScript: Maybe<GraphVariant>;
+  updateSendCookies: Maybe<GraphVariant>;
+  updateSubscriptionURL: Maybe<GraphVariant>;
+  updateURL: Maybe<GraphVariant>;
+  updateVariantIsPublic: Maybe<GraphVariant>;
+  updateVariantReadme: Maybe<GraphVariant>;
 };
 
 
 /** Modifies a variant of a graph, also called a schema tag in parts of our product. */
 export type GraphVariantMutationAddLinkToVariantArgs = {
-  title?: Maybe<Scalars['String']>;
+  title: Maybe<Scalars['String']>;
   type: LinkInfoType;
   url: Scalars['String'];
 };
@@ -7123,7 +7123,7 @@ export type GraphVariantMutationSetIsFavoriteOfCurrentUserArgs = {
 
 /** Modifies a variant of a graph, also called a schema tag in parts of our product. */
 export type GraphVariantMutationUpdateDefaultHeadersArgs = {
-  defaultHeaders?: Maybe<Scalars['String']>;
+  defaultHeaders: Maybe<Scalars['String']>;
 };
 
 
@@ -7135,7 +7135,7 @@ export type GraphVariantMutationUpdateIsProtectedArgs = {
 
 /** Modifies a variant of a graph, also called a schema tag in parts of our product. */
 export type GraphVariantMutationUpdatePreflightScriptArgs = {
-  preflightScript?: Maybe<Scalars['String']>;
+  preflightScript: Maybe<Scalars['String']>;
 };
 
 
@@ -7147,13 +7147,13 @@ export type GraphVariantMutationUpdateSendCookiesArgs = {
 
 /** Modifies a variant of a graph, also called a schema tag in parts of our product. */
 export type GraphVariantMutationUpdateSubscriptionUrlArgs = {
-  subscriptionUrl?: Maybe<Scalars['String']>;
+  subscriptionUrl: Maybe<Scalars['String']>;
 };
 
 
 /** Modifies a variant of a graph, also called a schema tag in parts of our product. */
 export type GraphVariantMutationUpdateUrlArgs = {
-  url?: Maybe<Scalars['String']>;
+  url: Maybe<Scalars['String']>;
 };
 
 
@@ -7183,48 +7183,48 @@ export type RelaunchError = {
 
 export type UserMutation = {
   __typename?: 'UserMutation';
-  acceptPrivacyPolicy?: Maybe<Scalars['Void']>;
+  acceptPrivacyPolicy: Maybe<Scalars['Void']>;
   /** Change the user's password */
-  changePassword?: Maybe<Scalars['Void']>;
-  createOdysseyCourses?: Maybe<Array<OdysseyCourse>>;
-  createOdysseyTasks?: Maybe<Array<OdysseyTask>>;
+  changePassword: Maybe<Scalars['Void']>;
+  createOdysseyCourses: Maybe<Array<OdysseyCourse>>;
+  createOdysseyTasks: Maybe<Array<OdysseyTask>>;
   /** Delete the user's avatar. Requires User.canUpdateAvatar to be true. */
-  deleteAvatar?: Maybe<AvatarDeleteError>;
+  deleteAvatar: Maybe<AvatarDeleteError>;
   /** Hard deletes the associated user. Throws an error otherwise with reason included. */
-  hardDelete?: Maybe<Scalars['Void']>;
+  hardDelete: Maybe<Scalars['Void']>;
   /** Create a new API key for this user. Must take in a name for this key. */
   newKey: UserApiKey;
   /**
    * Create a new API key for this user if there are no current API keys.
    * If an API key already exists, this will return one at random and not create a new one.
    */
-  provisionKey?: Maybe<ApiKeyProvision>;
+  provisionKey: Maybe<ApiKeyProvision>;
   /** Refresh information about the user from its upstream service (eg list of organizations from GitHub) */
-  refresh?: Maybe<User>;
+  refresh: Maybe<User>;
   /** Removes the given key from this user. Can be used to remove either a web cookie or a user API key. */
-  removeKey?: Maybe<Scalars['Void']>;
+  removeKey: Maybe<Scalars['Void']>;
   /** Renames the given key to the new key name. */
-  renameKey?: Maybe<UserApiKey>;
-  resendVerificationEmail?: Maybe<Scalars['Void']>;
-  setOdysseyCourse?: Maybe<OdysseyCourse>;
-  setOdysseyTask?: Maybe<OdysseyTask>;
+  renameKey: Maybe<UserApiKey>;
+  resendVerificationEmail: Maybe<Scalars['Void']>;
+  setOdysseyCourse: Maybe<OdysseyCourse>;
+  setOdysseyTask: Maybe<OdysseyTask>;
   /** Submit a zendesk ticket for this user */
-  submitZendeskTicket?: Maybe<ZendeskTicket>;
+  submitZendeskTicket: Maybe<ZendeskTicket>;
   /** Update information about a user; all arguments are optional */
-  update?: Maybe<User>;
+  update: Maybe<User>;
   /** Updates this users' preference concerning opting into beta features. */
-  updateBetaFeaturesOn?: Maybe<User>;
+  updateBetaFeaturesOn: Maybe<User>;
   /** Update the status of a feature for this. For example, if you want to hide an introductory popup. */
-  updateFeatureIntros?: Maybe<User>;
+  updateFeatureIntros: Maybe<User>;
   /**
    * Update user to have the given internal mdg admin role.
    * It is necessary to be an MDG_INTERNAL_SUPER_ADMIN to perform update.
    * Additionally, upserting a null value explicitly revokes this user's
    * admin status.
    */
-  updateRole?: Maybe<User>;
+  updateRole: Maybe<User>;
   user: User;
-  verifyEmail?: Maybe<User>;
+  verifyEmail: Maybe<User>;
 };
 
 
@@ -7261,7 +7261,7 @@ export type UserMutationRemoveKeyArgs = {
 
 export type UserMutationRenameKeyArgs = {
   id: Scalars['ID'];
-  newKeyName?: Maybe<Scalars['String']>;
+  newKeyName: Maybe<Scalars['String']>;
 };
 
 
@@ -7276,22 +7276,22 @@ export type UserMutationSetOdysseyTaskArgs = {
 
 
 export type UserMutationSubmitZendeskTicketArgs = {
-  collaborators?: Maybe<Array<Scalars['String']>>;
+  collaborators: Maybe<Array<Scalars['String']>>;
   email: Scalars['String'];
   ticket: ZendeskTicketInput;
 };
 
 
 export type UserMutationUpdateArgs = {
-  email?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
-  referrer?: Maybe<Scalars['String']>;
-  trackingGoogleClientId?: Maybe<Scalars['String']>;
-  trackingMarketoClientId?: Maybe<Scalars['String']>;
-  userSegment?: Maybe<UserSegment>;
-  utmCampaign?: Maybe<Scalars['String']>;
-  utmMedium?: Maybe<Scalars['String']>;
-  utmSource?: Maybe<Scalars['String']>;
+  email: Maybe<Scalars['String']>;
+  fullName: Maybe<Scalars['String']>;
+  referrer: Maybe<Scalars['String']>;
+  trackingGoogleClientId: Maybe<Scalars['String']>;
+  trackingMarketoClientId: Maybe<Scalars['String']>;
+  userSegment: Maybe<UserSegment>;
+  utmCampaign: Maybe<Scalars['String']>;
+  utmMedium: Maybe<Scalars['String']>;
+  utmSource: Maybe<Scalars['String']>;
 };
 
 
@@ -7301,12 +7301,12 @@ export type UserMutationUpdateBetaFeaturesOnArgs = {
 
 
 export type UserMutationUpdateFeatureIntrosArgs = {
-  newFeatureIntros?: Maybe<FeatureIntrosInput>;
+  newFeatureIntros: Maybe<FeatureIntrosInput>;
 };
 
 
 export type UserMutationUpdateRoleArgs = {
-  newRole?: Maybe<InternalMdgAdminRole>;
+  newRole: Maybe<InternalMdgAdminRole>;
 };
 
 
@@ -7315,14 +7315,14 @@ export type UserMutationVerifyEmailArgs = {
 };
 
 export type OdysseyCourseInput = {
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   courseId: Scalars['String'];
 };
 
 export type OdysseyTaskInput = {
-  completedAt?: Maybe<Scalars['Timestamp']>;
+  completedAt: Maybe<Scalars['Timestamp']>;
   taskId: Scalars['String'];
-  value?: Maybe<Scalars['String']>;
+  value: Maybe<Scalars['String']>;
 };
 
 export type ApiKeyProvision = {
@@ -7334,8 +7334,8 @@ export type ApiKeyProvision = {
 /** Zendesk ticket input */
 export type ZendeskTicketInput = {
   description: Scalars['String'];
-  graphId?: Maybe<Scalars['String']>;
-  organizationId?: Maybe<Scalars['String']>;
+  graphId: Maybe<Scalars['String']>;
+  organizationId: Maybe<Scalars['String']>;
   priority: TicketPriority;
   subject: Scalars['String'];
 };
@@ -7351,9 +7351,9 @@ export enum UserSegment {
 
 /** Feature Intros Input Type */
 export type FeatureIntrosInput = {
-  devGraph?: Maybe<Scalars['Boolean']>;
-  federatedGraph?: Maybe<Scalars['Boolean']>;
-  freeConsumerSeats?: Maybe<Scalars['Boolean']>;
+  devGraph: Maybe<Scalars['Boolean']>;
+  federatedGraph: Maybe<Scalars['Boolean']>;
+  freeConsumerSeats: Maybe<Scalars['Boolean']>;
 };
 
 export type SchemaReport = {
@@ -7364,15 +7364,15 @@ export type SchemaReport = {
   /** The graph ref (eg, 'id@variant') */
   graphRef: Scalars['String'];
   /** The version of the edge server reporting agent, e.g. apollo-server-2.8, graphql-java-3.1, etc. length must be <= 256 characters. */
-  libraryVersion?: Maybe<Scalars['String']>;
+  libraryVersion: Maybe<Scalars['String']>;
   /** The infra environment in which this edge server is running, e.g. localhost, Kubernetes, AWS Lambda, Google CloudRun, AWS ECS, etc. length must be <= 256 characters. */
-  platform?: Maybe<Scalars['String']>;
+  platform: Maybe<Scalars['String']>;
   /** The runtime in which the edge server is running, e.g. node 12.03, zulu8.46.0.19-ca-jdk8.0.252-macosx_x64, etc. length must be <= 256 characters. */
-  runtimeVersion?: Maybe<Scalars['String']>;
+  runtimeVersion: Maybe<Scalars['String']>;
   /** If available, an identifier for the edge server instance, such that when restarting this instance it will have the same serverId, with a different bootId. For example, in Kubernetes this might be the pod name. Length must be <= 256 characters. */
-  serverId?: Maybe<Scalars['String']>;
+  serverId: Maybe<Scalars['String']>;
   /** An identifier used to distinguish the version (from the user's perspective) of the edge server's code itself. For instance, the git sha of the server's repository or the docker sha of the associated image this server runs with. Length must be <= 256 characters. */
-  userVersion?: Maybe<Scalars['String']>;
+  userVersion: Maybe<Scalars['String']>;
 };
 
 export type ReportSchemaResult = {
@@ -7382,13 +7382,13 @@ export type ReportSchemaResult = {
 
 /** Explorer user settings input */
 export type UserSettingsInput = {
-  appNavCollapsed?: Maybe<Scalars['Boolean']>;
-  autoManageVariables?: Maybe<Scalars['Boolean']>;
-  mockingResponses?: Maybe<Scalars['Boolean']>;
-  preflightScriptEnabled?: Maybe<Scalars['Boolean']>;
-  responseHints?: Maybe<ResponseHints>;
-  tableMode?: Maybe<Scalars['Boolean']>;
-  themeName?: Maybe<ThemeName>;
+  appNavCollapsed: Maybe<Scalars['Boolean']>;
+  autoManageVariables: Maybe<Scalars['Boolean']>;
+  mockingResponses: Maybe<Scalars['Boolean']>;
+  preflightScriptEnabled: Maybe<Scalars['Boolean']>;
+  responseHints: Maybe<ResponseHints>;
+  tableMode: Maybe<Scalars['Boolean']>;
+  themeName: Maybe<ThemeName>;
 };
 
 export enum DeletionTargetType {
@@ -7410,26 +7410,26 @@ export type CompositionStatusSubscription = ChannelSubscription & {
   enabled: Scalars['Boolean'];
   id: Scalars['ID'];
   lastUpdatedAt: Scalars['Timestamp'];
-  variant?: Maybe<Scalars['String']>;
+  variant: Maybe<Scalars['String']>;
 };
 
 export type InternalIdentity = Identity & {
   __typename?: 'InternalIdentity';
   accounts: Array<Account>;
   asActor: Actor;
-  email?: Maybe<Scalars['String']>;
+  email: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];
 };
 
 /** query documents to validate against */
 export type QueryDocumentInput = {
-  document?: Maybe<Scalars['String']>;
+  document: Maybe<Scalars['String']>;
 };
 
 export type RegistryApiKey = {
   __typename?: 'RegistryApiKey';
-  keyName?: Maybe<Scalars['String']>;
+  keyName: Maybe<Scalars['String']>;
   token: Scalars['String'];
 };
 
@@ -7499,7 +7499,7 @@ export type SchemaTagsAndFieldStatsQueryVariables = Exact<{
 }>;
 
 
-export type SchemaTagsAndFieldStatsQuery = { __typename?: 'Query', service?: Maybe<{ __typename?: 'Service', schemaTags?: Maybe<Array<{ __typename?: 'SchemaTag', tag: string }>>, stats: { __typename?: 'ServiceStatsWindow', fieldStats: Array<{ __typename?: 'ServiceFieldStatsRecord', groupBy: { __typename?: 'ServiceFieldStatsDimensions', field?: Maybe<string> }, metrics: { __typename?: 'ServiceFieldStatsMetrics', fieldHistogram: { __typename?: 'DurationHistogram', durationMs?: Maybe<number> } } }> } }> };
+export type SchemaTagsAndFieldStatsQuery = { __typename?: 'Query', service: Maybe<{ __typename?: 'Service', schemaTags: Maybe<Array<{ __typename?: 'SchemaTag', tag: string }>>, stats: { __typename?: 'ServiceStatsWindow', fieldStats: Array<{ __typename?: 'ServiceFieldStatsRecord', groupBy: { __typename?: 'ServiceFieldStatsDimensions', field: Maybe<string> }, metrics: { __typename?: 'ServiceFieldStatsMetrics', fieldHistogram: { __typename?: 'DurationHistogram', durationMs: Maybe<number> } } }> } }> };
 
 export type GetSchemaByTagQueryVariables = Exact<{
   tag: Scalars['String'];
@@ -7507,10 +7507,10 @@ export type GetSchemaByTagQueryVariables = Exact<{
 }>;
 
 
-export type GetSchemaByTagQuery = { __typename?: 'Query', service?: Maybe<{ __typename: 'Service', schema?: Maybe<{ __typename?: 'Schema', hash: string, __schema: { __typename?: 'IntrospectionSchema', queryType: { __typename?: 'IntrospectionType', name?: Maybe<string> }, mutationType?: Maybe<{ __typename?: 'IntrospectionType', name?: Maybe<string> }>, subscriptionType?: Maybe<{ __typename?: 'IntrospectionType', name?: Maybe<string> }>, types: Array<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, description?: Maybe<string>, fields?: Maybe<Array<{ __typename?: 'IntrospectionField', name: string, description?: Maybe<string>, isDeprecated: boolean, deprecationReason?: Maybe<string>, args: Array<{ __typename?: 'IntrospectionInputValue', name: string, description?: Maybe<string>, defaultValue?: Maybe<string>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } }>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } }>>, inputFields?: Maybe<Array<{ __typename?: 'IntrospectionInputValue', name: string, description?: Maybe<string>, defaultValue?: Maybe<string>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } }>>, interfaces?: Maybe<Array<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> }>>, enumValues?: Maybe<Array<{ __typename?: 'IntrospectionEnumValue', name: string, description?: Maybe<string>, isDeprecated: boolean, deprecationReason?: Maybe<string> }>>, possibleTypes?: Maybe<Array<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> }>> }>, directives: Array<{ __typename?: 'IntrospectionDirective', name: string, description?: Maybe<string>, locations: Array<IntrospectionDirectiveLocation>, args: Array<{ __typename?: 'IntrospectionInputValue', name: string, description?: Maybe<string>, defaultValue?: Maybe<string>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } }> }> } }> }> };
+export type GetSchemaByTagQuery = { __typename?: 'Query', service: Maybe<{ __typename: 'Service', schema: Maybe<{ __typename?: 'Schema', hash: string, __schema: { __typename?: 'IntrospectionSchema', queryType: { __typename?: 'IntrospectionType', name: Maybe<string> }, mutationType: Maybe<{ __typename?: 'IntrospectionType', name: Maybe<string> }>, subscriptionType: Maybe<{ __typename?: 'IntrospectionType', name: Maybe<string> }>, types: Array<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, description: Maybe<string>, fields: Maybe<Array<{ __typename?: 'IntrospectionField', name: string, description: Maybe<string>, isDeprecated: boolean, deprecationReason: Maybe<string>, args: Array<{ __typename?: 'IntrospectionInputValue', name: string, description: Maybe<string>, defaultValue: Maybe<string>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } }>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } }>>, inputFields: Maybe<Array<{ __typename?: 'IntrospectionInputValue', name: string, description: Maybe<string>, defaultValue: Maybe<string>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } }>>, interfaces: Maybe<Array<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> }>>, enumValues: Maybe<Array<{ __typename?: 'IntrospectionEnumValue', name: string, description: Maybe<string>, isDeprecated: boolean, deprecationReason: Maybe<string> }>>, possibleTypes: Maybe<Array<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> }>> }>, directives: Array<{ __typename?: 'IntrospectionDirective', name: string, description: Maybe<string>, locations: Array<IntrospectionDirectiveLocation>, args: Array<{ __typename?: 'IntrospectionInputValue', name: string, description: Maybe<string>, defaultValue: Maybe<string>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } }> }> } }> }> };
 
-export type IntrospectionFullTypeFragment = { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, description?: Maybe<string>, fields?: Maybe<Array<{ __typename?: 'IntrospectionField', name: string, description?: Maybe<string>, isDeprecated: boolean, deprecationReason?: Maybe<string>, args: Array<{ __typename?: 'IntrospectionInputValue', name: string, description?: Maybe<string>, defaultValue?: Maybe<string>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } }>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } }>>, inputFields?: Maybe<Array<{ __typename?: 'IntrospectionInputValue', name: string, description?: Maybe<string>, defaultValue?: Maybe<string>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } }>>, interfaces?: Maybe<Array<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> }>>, enumValues?: Maybe<Array<{ __typename?: 'IntrospectionEnumValue', name: string, description?: Maybe<string>, isDeprecated: boolean, deprecationReason?: Maybe<string> }>>, possibleTypes?: Maybe<Array<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> }>> };
+export type IntrospectionFullTypeFragment = { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, description: Maybe<string>, fields: Maybe<Array<{ __typename?: 'IntrospectionField', name: string, description: Maybe<string>, isDeprecated: boolean, deprecationReason: Maybe<string>, args: Array<{ __typename?: 'IntrospectionInputValue', name: string, description: Maybe<string>, defaultValue: Maybe<string>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } }>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } }>>, inputFields: Maybe<Array<{ __typename?: 'IntrospectionInputValue', name: string, description: Maybe<string>, defaultValue: Maybe<string>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } }>>, interfaces: Maybe<Array<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> }>>, enumValues: Maybe<Array<{ __typename?: 'IntrospectionEnumValue', name: string, description: Maybe<string>, isDeprecated: boolean, deprecationReason: Maybe<string> }>>, possibleTypes: Maybe<Array<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> }>> };
 
-export type IntrospectionInputValueFragment = { __typename?: 'IntrospectionInputValue', name: string, description?: Maybe<string>, defaultValue?: Maybe<string>, type: { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> } };
+export type IntrospectionInputValueFragment = { __typename?: 'IntrospectionInputValue', name: string, description: Maybe<string>, defaultValue: Maybe<string>, type: { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> } };
 
-export type IntrospectionTypeRefFragment = { __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string>, ofType?: Maybe<{ __typename?: 'IntrospectionType', kind?: Maybe<IntrospectionTypeKind>, name?: Maybe<string> }> }> }> }> }> }> }> };
+export type IntrospectionTypeRefFragment = { __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string>, ofType: Maybe<{ __typename?: 'IntrospectionType', kind: Maybe<IntrospectionTypeKind>, name: Maybe<string> }> }> }> }> }> }> }> };

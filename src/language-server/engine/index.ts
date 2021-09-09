@@ -87,10 +87,7 @@ export class ApolloEngineClient extends GraphQLDataSource {
         fieldStats.get(parentType) ||
         fieldStats.set(parentType, new Map()).get(parentType)!;
 
-      fieldsMap.set(
-        fieldName,
-        fieldStat.metrics.fieldHistogram.durationMs ?? null
-      );
+      fieldsMap.set(fieldName, fieldStat.metrics.fieldHistogram.durationMs);
     });
 
     return { schemaTags, fieldStats };

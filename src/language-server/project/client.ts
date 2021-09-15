@@ -29,7 +29,12 @@ import { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
 import { apolloClientSchemaDocument } from "./defaultClientSchema";
 
-import { FieldStats, SchemaTag, ServiceID, ClientIdentity } from "../engine";
+import {
+  FieldLatencies,
+  SchemaTag,
+  ServiceID,
+  ClientIdentity,
+} from "../engine";
 import { ClientConfig } from "../config";
 import {
   removeDirectives,
@@ -89,7 +94,7 @@ export class GraphQLClientProject extends GraphQLProject {
   private _onDecorations?: (any: any) => void;
   private _onSchemaTags?: NotificationHandler<[ServiceID, SchemaTag[]]>;
 
-  private fieldStats?: FieldStats;
+  private fieldLatencies?: FieldLatencies;
 
   private _validationRules?: ValidationRule[];
 
@@ -330,10 +335,10 @@ export class GraphQLClientProject extends GraphQLProject {
       `Loading Apollo data for ${this.displayName}`,
       (async () => {
         try {
-          const { schemaTags, fieldStats } =
-            await engineClient.loadSchemaTagsAndFieldStats(serviceID);
+          const { schemaTags, fieldLatencies } =
+            await engineClient.loadSchemaTagsAndFieldLatencies(serviceID);
           this._onSchemaTags && this._onSchemaTags([serviceID, schemaTags]);
-          this.fieldStats = fieldStats;
+          this.fieldLatencies = fieldLatencies;
           this.lastLoadDate = +new Date();
 
           this.generateDecorations();
@@ -352,8 +357,8 @@ export class GraphQLClientProject extends GraphQLProject {
 
     for (const [uri, queryDocumentsForFile] of this.documentsByFile) {
       for (const queryDocument of queryDocumentsForFile) {
-        if (queryDocument.ast && this.fieldStats) {
-          const fieldStats = this.fieldStats;
+        if (queryDocument.ast && this.fieldLatencies) {
+          const fieldLatencies = this.fieldLatencies;
           const typeInfo = new TypeInfo(this.schema);
           visit(
             queryDocument.ast,
@@ -361,7 +366,7 @@ export class GraphQLClientProject extends GraphQLProject {
               enter: (node) => {
                 if (node.kind == "Field" && typeInfo.getParentType()) {
                   const parentName = typeInfo.getParentType()!.name;
-                  const parentEngineStat = fieldStats.get(parentName);
+                  const parentEngineStat = fieldLatencies.get(parentName);
                   const engineStat = parentEngineStat
                     ? parentEngineStat.get(node.name.value)
                     : undefined;

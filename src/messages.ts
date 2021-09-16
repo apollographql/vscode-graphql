@@ -1,9 +1,11 @@
+import { MarkdownString } from "vscode";
 import type {
   LanguageClient as GenericLanguageClient,
   NotificationHandler,
   NotificationHandler0,
   NotificationType,
   NotificationType0,
+  Range,
 } from "vscode-languageclient";
 import type { IConnection as GenericConnection } from "vscode-languageserver";
 
@@ -24,13 +26,21 @@ export type ProjectStats =
     }
   | { loaded: false };
 
+export interface EngineDecoration {
+  document: string;
+  message?: string;
+  glyph?: string;
+  range: Range;
+  hoverMessage?: string;
+}
+
 type Messages = {
   "apollographql/statsLoaded": ProjectStats;
   "apollographql/configFilesFound": string;
   "apollographql/tagsLoaded": string;
   "apollographql/loadingComplete": number;
   "apollographql/loading": { message: string; token: number };
-  "apollographql/engineDecorations": any[];
+  "apollographql/engineDecorations": { decorations: EngineDecoration[] };
   serverDebugMessage: {
     type: "info" | "warning" | "error" | "errorTelemetry";
     message: string;

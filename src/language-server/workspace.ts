@@ -19,6 +19,7 @@ import { GraphQLClientProject, isClientProject } from "./project/client";
 import { GraphQLServiceProject } from "./project/service";
 import URI from "vscode-uri";
 import { Debug } from "./utilities";
+import type { EngineDecoration } from "src/messages";
 
 export interface WorkspaceConfig {
   clientIdentity?: ClientIdentity;
@@ -26,7 +27,7 @@ export interface WorkspaceConfig {
 
 export class GraphQLWorkspace {
   private _onDiagnostics?: NotificationHandler<PublishDiagnosticsParams>;
-  private _onDecorations?: NotificationHandler<any>;
+  private _onDecorations?: NotificationHandler<EngineDecoration[]>;
   private _onSchemaTags?: NotificationHandler<[ServiceID, SchemaTag[]]>;
   private _onConfigFilesFound?: NotificationHandler<ApolloConfig[]>;
   private _projectForFileCache: Map<string, GraphQLProject> = new Map();
@@ -42,7 +43,7 @@ export class GraphQLWorkspace {
     this._onDiagnostics = handler;
   }
 
-  onDecorations(handler: NotificationHandler<any>) {
+  onDecorations(handler: NotificationHandler<EngineDecoration[]>) {
     this._onDecorations = handler;
   }
 

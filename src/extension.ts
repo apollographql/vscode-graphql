@@ -10,11 +10,12 @@ import {
   QuickPickItem,
   Disposable,
   OutputChannel,
+  MarkdownString,
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
 import { NotificationType } from "vscode-languageclient";
-import type { LanguageClient } from "./messages";
+import type { EngineDecoration, LanguageClient } from "./messages";
 import {
   printNoFileOpenMessage,
   printStatsToClientOutputChannel,
@@ -206,25 +207,46 @@ export function activate(context: ExtensionContext) {
     });
 
     const engineDecoration = window.createTextEditorDecorationType({});
-    let latestDecs: any[] | undefined = undefined;
+    let latestDecorations: EngineDecoration[] | undefined = undefined;
 
     const updateDecorations = () => {
-      if (window.activeTextEditor && latestDecs) {
+      if (window.activeTextEditor && latestDecorations) {
         const editor = window.activeTextEditor!;
-        const decorations: DecorationOptions[] = latestDecs
+        const decorations = latestDecorations
           .filter(
-            (d) =>
-              d.document === window.activeTextEditor!.document.uri.toString()
+            (decoration) =>
+              decoration.document ===
+              window.activeTextEditor!.document.uri.toString()
           )
-          .map((dec) => {
+          .map((decoration): DecorationOptions => {
+            const onDiskPath = Uri.file(
+              join(context.extensionPath, "src", "iconRun.svg")
+            );
+
+            const hoverMessage =
+              decoration.hoverMessage === undefined
+                ? undefined
+                : new MarkdownString(decoration.hoverMessage);
+            if (hoverMessage) {
+              hoverMessage.isTrusted = true;
+            }
+
             return {
-              range: editor.document.lineAt(dec.range.start.line).range,
+              range: editor.document.lineAt(decoration.range.start.line).range,
               renderOptions: {
-                after: {
-                  contentText: `${dec.message}`,
-                  textDecoration: "none; padding-left: 15px; opacity: .5",
-                },
+                after:
+                  decoration.message === undefined
+                    ? undefined
+                    : {
+                        contentText: decoration.message,
+                        textDecoration: "none; padding-left: 15px; opacity: .5",
+                      },
+                before:
+                  decoration.glyph === undefined
+                    ? undefined
+                    : { contentIconPath: onDiskPath },
               },
+              hoverMessage,
             };
           });
 
@@ -232,10 +254,13 @@ export function activate(context: ExtensionContext) {
       }
     };
 
-    client.onNotification("apollographql/engineDecorations", (...decs) => {
-      latestDecs = decs;
-      updateDecorations();
-    });
+    client.onNotification(
+      "apollographql/engineDecorations",
+      ({ decorations }) => {
+        latestDecorations = decorations;
+        updateDecorations();
+      }
+    );
 
     window.onDidChangeActiveTextEditor(() => {
       updateDecorations();

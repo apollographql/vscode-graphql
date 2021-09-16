@@ -19,14 +19,16 @@ import {
   ObjectTypeDefinitionNode,
   GraphQLObjectType,
   DefinitionNode,
+  ExecutableDefinitionNode,
+  print,
 } from "graphql";
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import { NotificationHandler, DiagnosticSeverity } from "vscode-languageserver";
+import LZString from "lz-string";
 
 import { rangeForASTNode } from "../utilities/source";
 import { formatMS } from "../format";
 import { LoadingHandler } from "../loadingHandler";
-import { FileSet } from "../fileSet";
 import { apolloClientSchemaDocument } from "./defaultClientSchema";
 
 import {
@@ -51,6 +53,8 @@ import {
   diagnosticsFromError,
 } from "../diagnostics";
 import URI from "vscode-uri";
+import type { EngineDecoration } from "src/messages";
+import { join } from "path";
 
 type Maybe<T> = null | undefined | T;
 
@@ -95,6 +99,7 @@ export class GraphQLClientProject extends GraphQLProject {
   private _onSchemaTags?: NotificationHandler<[ServiceID, SchemaTag[]]>;
 
   private fieldLatencies?: FieldLatencies;
+  private frontendUrlRoot?: string;
 
   private _validationRules?: ValidationRule[];
 
@@ -329,16 +334,19 @@ export class GraphQLClientProject extends GraphQLProject {
     if (!engineClient) return;
 
     const serviceID = this.serviceID;
-    if (!serviceID) return;
 
     await this.loadingHandler.handle(
       `Loading Apollo data for ${this.displayName}`,
       (async () => {
         try {
-          const { schemaTags, fieldLatencies } =
-            await engineClient.loadSchemaTagsAndFieldLatencies(serviceID);
-          this._onSchemaTags && this._onSchemaTags([serviceID, schemaTags]);
-          this.fieldLatencies = fieldLatencies;
+          if (serviceID) {
+            const { schemaTags, fieldLatencies } =
+              await engineClient.loadSchemaTagsAndFieldLatencies(serviceID);
+            this._onSchemaTags && this._onSchemaTags([serviceID, schemaTags]);
+            this.fieldLatencies = fieldLatencies;
+          }
+          const frontendUrlRoot = await engineClient.loadFrontendUrlRoot();
+          this.frontendUrlRoot = frontendUrlRoot;
           this.lastLoadDate = +new Date();
 
           this.generateDecorations();
@@ -353,18 +361,22 @@ export class GraphQLClientProject extends GraphQLProject {
     if (!this._onDecorations) return;
     if (!this.schema) return;
 
-    const decorations: any[] = [];
+    const decorations: EngineDecoration[] = [];
 
     for (const [uri, queryDocumentsForFile] of this.documentsByFile) {
       for (const queryDocument of queryDocumentsForFile) {
-        if (queryDocument.ast && this.fieldLatencies) {
+        if (queryDocument.ast) {
           const fieldLatencies = this.fieldLatencies;
           const typeInfo = new TypeInfo(this.schema);
           visit(
             queryDocument.ast,
             visitWithTypeInfo(typeInfo, {
               enter: (node) => {
-                if (node.kind == "Field" && typeInfo.getParentType()) {
+                if (
+                  node.kind == "Field" &&
+                  typeInfo.getParentType() &&
+                  fieldLatencies
+                ) {
                   const parentName = typeInfo.getParentType()!.name;
                   const parentEngineStat = fieldLatencies.get(parentName);
                   const engineStat = parentEngineStat
@@ -377,6 +389,41 @@ export class GraphQLClientProject extends GraphQLProject {
                       range: rangeForASTNode(node),
                     });
                   }
+                } else if (node.kind == "OperationDefinition") {
+                  const operationWithFragments =
+                    this.getOperationWithFragments(node);
+                  const document = operationWithFragments
+                    .map(print)
+                    .join("\n\n");
+                  const explorerURLState =
+                    LZString.compressToEncodedURIComponent(
+                      JSON.stringify({ document })
+                    );
+
+                  const frontendUrlRoot =
+                    this.frontendUrlRoot ?? "https://studio.apollographql.com";
+
+                  const endpoint = this.config.service?.endpoint;
+                  const variant = this.config.variant;
+                  const graphId = this.config.graph;
+                  this.config.client.service;
+
+                  const runInExplorerPath = graphId
+                    ? `${graphId}/engine/explorer?variant=${variant}&explorerURLState=${explorerURLState}`
+                    : `/sandbox/explorer?explorerURLState=${explorerURLState}${
+                        endpoint ? `&endpoint=${endpoint}` : ""
+                      }`;
+                  const runInExplorerLink = join(
+                    frontendUrlRoot,
+                    runInExplorerPath
+                  );
+
+                  decorations.push({
+                    document: uri,
+                    glyph: ">",
+                    range: rangeForASTNode(node),
+                    hoverMessage: `[Run in Studio](${runInExplorerLink})`,
+                  });
                 }
               },
             })
@@ -504,5 +551,32 @@ export class GraphQLClientProject extends GraphQLProject {
       });
     }
     return fragmentSpreads;
+  }
+  getOperationWithFragments(
+    operationDefinition: OperationDefinitionNode
+  ): ExecutableDefinitionNode[] {
+    const fragments = this.fragments;
+    const seenFragmentNames = new Set<string>([]);
+    const allDefinitions: ExecutableDefinitionNode[] = [operationDefinition];
+
+    const defintionsToSearch: ExecutableDefinitionNode[] = [
+      operationDefinition,
+    ];
+    let currentDefinition: ExecutableDefinitionNode | undefined;
+    while ((currentDefinition = defintionsToSearch.shift())) {
+      visit(currentDefinition, {
+        FragmentSpread(node: FragmentSpreadNode) {
+          const fragmentName = node.name.value;
+          const fragment = fragments[fragmentName];
+          if (!seenFragmentNames.has(fragmentName) && fragment) {
+            defintionsToSearch.push(fragment);
+            allDefinitions.push(fragment);
+            seenFragmentNames.add(fragmentName);
+          }
+        },
+      });
+    }
+
+    return allDefinitions;
   }
 }

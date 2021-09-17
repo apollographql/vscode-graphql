@@ -65,7 +65,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
       result = readFileSync(path, {
         encoding: "utf-8",
       });
-    } catch (err) {
+    } catch (err: any) {
       throw new Error(`Unable to read file ${path}. ${err.message}`);
     }
 
@@ -149,7 +149,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
       result = readFileSync(path, {
         encoding: "utf-8",
       });
-    } catch (err) {
+    } catch (err: any) {
       return Debug.error(`Unable to read file ${path}. ${err.message}`);
     }
 

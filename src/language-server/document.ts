@@ -22,7 +22,7 @@ export class GraphQLDocument {
   constructor(public source: Source) {
     try {
       this.ast = parse(source);
-    } catch (error) {
+    } catch (error: any) {
       // Don't add syntax errors when GraphQL has been commented out
       if (maybeCommentedOut(source.body)) return;
 

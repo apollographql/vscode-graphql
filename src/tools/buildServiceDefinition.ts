@@ -202,7 +202,7 @@ export function buildServiceDefinition(
     }
 
     return { schema };
-  } catch (error) {
+  } catch (error: any) {
     return { errors: [error] };
   }
 }

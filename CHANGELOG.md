@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### vNEXT
+
+- Switch Studio query that fetches timing hints to use a newer field. This should have no user-observable impact, though we may eventually remove the old field once most users have upgraded their extensions. [#22](https://github.com/apollographql/vscode-graphql/pull/22)
+
 ### 1.19.4
 
 - Fix VS Code extension performance issues for larger projects [#1938](https://github.com/apollographql/apollo-tooling/pull/1938)

@@ -220,7 +220,7 @@ export function activate(context: ExtensionContext) {
           )
           .map((decoration): DecorationOptions => {
             const onDiskPath = Uri.file(
-              join(context.extensionPath, "src", "iconRun.svg")
+              join(context.extensionPath, "images", "iconRun.svg")
             );
 
             const hoverMessage =

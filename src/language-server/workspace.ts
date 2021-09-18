@@ -185,7 +185,7 @@ export class GraphQLWorkspace {
     let error;
     try {
       config = await loadConfig({ configPath, requireConfig: true });
-    } catch (e) {
+    } catch (e: any) {
       config = null;
       error = e;
     }

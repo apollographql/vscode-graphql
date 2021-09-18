@@ -1,18 +1,23 @@
 # CHANGELOG
 
-### vNEXT
+### 1.19.5
 
+- Add a 'Run in explorer' gutter action. [#20](https://github.com/apollographql/vscode-graphql/pull/20)
 - Switch Studio query that fetches timing hints to use a newer field. This should have no user-observable impact, though we may eventually remove the old field once most users have upgraded their extensions. [#22](https://github.com/apollographql/vscode-graphql/pull/22)
+- Add support for highlighting Svelte files [#17](https://github.com/apollographql/vscode-graphql/pull/17)
+- Add support for `.cjs` files [#4](https://github.com/apollographql/vscode-graphql/pull/4)
+- Exclude localSchemaFile when looking for graphql documents. This should fix the common case for hitting `VSCode Plugin: Loading Schema Twice` errors. [#8](https://github.com/apollographql/vscode-graphql/pull/8)
 
 ### 1.19.4
 
 - Fix VS Code extension performance issues for larger projects [#1938](https://github.com/apollographql/apollo-tooling/pull/1938)
 
--> *Note:* This project used to live in the [apollo-tooling](https://github.com/apollographql/apollo-tooling) repo. Refer to the [apollo-tooling CHANGELOG](https://github.com/apollographql/apollo-tooling/blob/master/CHANGELOG.md) for full list of changes before April 25, 2021. See below for filtered changelog from apollo-tooling.
+-> _Note:_ This project used to live in the [apollo-tooling](https://github.com/apollographql/apollo-tooling) repo. Refer to the [apollo-tooling CHANGELOG](https://github.com/apollographql/apollo-tooling/blob/master/CHANGELOG.md) for full list of changes before April 25, 2021. See below for filtered changelog from apollo-tooling.
 
 ## Legacy apollo-tooling Changelog
 
 ### apollo-tools@0.5.1
+
 - Remove dependency on `apollo-env`, so using this package no longer installs polyfills.
 
 ### apollo-env@0.10.0
@@ -22,10 +27,10 @@
 ### apollo-env@0.9.0
 
 - The following utility functions are no longer exported from `apollo-env` and can now be found in the `apollo-graphql` library:
-    - `createHash`
-    - `isNodeLike`
-    - `mapValues`
-    - `isNotNullOrDefined`
+  - `createHash`
+  - `isNodeLike`
+  - `mapValues`
+  - `isNotNullOrDefined`
 
 ### `apollo-language-server@1.14.3`
 

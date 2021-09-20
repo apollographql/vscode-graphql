@@ -1,9 +1,16 @@
+.circleci
 .vscode
 .vscode-test
 src
 .env
+.eslintrc.js
+.git
 .gitignore
+.nvmrc
 .prettierrc
+codegen.yml
+graphql.configuration.json
 jest.config.ts
+package-lock.json
 tsconfig.build.json
 tsconfig.json

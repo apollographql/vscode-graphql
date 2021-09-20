@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.19.6
+
+- Fix 'Run in explorer' link. [#25](https://github.com/apollographql/vscode-graphql/pull/25)
+
 ### 1.19.5
 
 - Add a 'Run in explorer' gutter action. [#20](https://github.com/apollographql/vscode-graphql/pull/20)

@@ -409,7 +409,7 @@ export class GraphQLClientProject extends GraphQLProject {
                   this.config.client.service;
 
                   const runInExplorerPath = graphId
-                    ? `${graphId}/engine/explorer?variant=${variant}&explorerURLState=${explorerURLState}`
+                    ? `/graph/${graphId}/explorer?variant=${variant}&explorerURLState=${explorerURLState}`
                     : `/sandbox/explorer?explorerURLState=${explorerURLState}${
                         endpoint ? `&endpoint=${endpoint}` : ""
                       }`;

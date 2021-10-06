@@ -14,6 +14,7 @@ import { GraphQLLanguageProvider } from "./languageProvider";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
 import type { Connection } from "src/messages";
+import URI from "vscode-uri";
 
 const connection: Connection = createConnection(ProposedFeatures.all);
 Debug.SetConnection(connection);
@@ -123,10 +124,19 @@ const documents: TextDocuments = new TextDocuments();
 // for open, change and close text document events
 documents.listen(connection);
 
+function isFile(uri: string) {
+  return URI.parse(uri).scheme === "file";
+}
+
 documents.onDidChangeContent(
   debounceHandler((params) => {
     const project = workspace.projectForFile(params.document.uri);
     if (!project) return;
+
+    // Only watch changes to files
+    if (!isFile(params.document.uri)) {
+      return;
+    }
 
     project.documentDidChange(params.document);
   })
@@ -145,6 +155,11 @@ connection.onDidChangeWatchedFiles((params) => {
     // Don't respond to changes in files that are currently open,
     // because we'll get content change notifications instead
     if (type === FileChangeType.Changed) {
+      continue;
+    }
+
+    // Only watch changes to files
+    if (!isFile(uri)) {
       continue;
     }
 

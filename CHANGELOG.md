@@ -3,6 +3,7 @@
 ### Next
 
 - Specify files with conflicting documents for the 'There are multiple definitions' message. [#29](https://github.com/apollographql/vscode-graphql/pull/29)
+- Dont watch non file documents. Diff view will no longer crash extension. [#28](https://github.com/apollographql/vscode-graphql/pull/28)
 
 ### 1.19.6
 

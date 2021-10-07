@@ -418,11 +418,19 @@ export class GraphQLClientProject extends GraphQLProject {
                   const runInExplorerPath = graphId
                     ? stringifyUrl({
                         url: `/graph/${graphId}/explorer`,
-                        query: { variant, explorerURLState },
+                        query: {
+                          variant,
+                          explorerURLState,
+                          referrer: "vscode",
+                        },
                       })
                     : stringifyUrl({
                         url: "/sandbox/explorer",
-                        query: { endpoint, explorerURLState },
+                        query: {
+                          endpoint,
+                          explorerURLState,
+                          referrer: "vscode",
+                        },
                       });
                   const runInExplorerLink = join(
                     frontendUrlRoot,

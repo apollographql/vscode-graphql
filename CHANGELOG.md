@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### Next
+
+- Specify files with conflicting documents for the 'There are multiple definitions' message. [#29](https://github.com/apollographql/vscode-graphql/pull/29)
+
 ### 1.19.6
 
 - Fix 'Run in explorer' link. [#25](https://github.com/apollographql/vscode-graphql/pull/25)

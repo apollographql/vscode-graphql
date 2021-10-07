@@ -243,17 +243,26 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
   }
 
   checkForDuplicateOperations(): void {
-    const operations = Object.create(null);
-    for (const document of this.documents) {
-      if (!document.ast) continue;
-      for (const definition of document.ast.definitions) {
-        if (definition.kind === Kind.OPERATION_DEFINITION && definition.name) {
-          if (operations[definition.name.value]) {
-            throw new Error(
-              `️️There are multiple definitions for the \`${definition.name.value}\` operation. Please rename or remove all operations with the duplicated name before continuing.`
-            );
+    const filePathForOperationName: Record<string, string> = {};
+    for (const [fileUri, documentsForFile] of this.documentsByFile.entries()) {
+      const filePath = URI.parse(fileUri).fsPath;
+      for (const document of documentsForFile) {
+        if (!document.ast) continue;
+        for (const definition of document.ast.definitions) {
+          if (
+            definition.kind === Kind.OPERATION_DEFINITION &&
+            definition.name
+          ) {
+            const operationName = definition.name.value;
+            if (operationName in filePathForOperationName) {
+              const conflictingFilePath =
+                filePathForOperationName[operationName];
+              throw new Error(
+                `️️There are multiple definitions for the \`${definition.name.value}\` operation. Please fix all naming conflicts before continuing.\nConflicting definitions found at ${filePath} and ${conflictingFilePath}.`
+              );
+            }
+            filePathForOperationName[operationName] = filePath;
           }
-          operations[definition.name.value] = definition;
         }
       }
     }

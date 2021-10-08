@@ -26,13 +26,19 @@ export type ProjectStats =
     }
   | { loaded: false };
 
-export interface EngineDecoration {
-  document: string;
-  message?: string;
-  glyph?: string;
-  range: Range;
-  hoverMessage?: string;
-}
+export type EngineDecoration =
+  | {
+      type: "text";
+      document: string;
+      message: string;
+      range: Range;
+    }
+  | {
+      type: "runGlyph";
+      document: string;
+      range: Range;
+      hoverMessage: string;
+    };
 
 type Messages = {
   "apollographql/statsLoaded": ProjectStats;

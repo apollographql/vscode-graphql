@@ -384,6 +384,7 @@ export class GraphQLClientProject extends GraphQLProject {
                     : undefined;
                   if (engineStat && engineStat > 1) {
                     decorations.push({
+                      type: "text",
                       document: uri,
                       message: `~${formatMS(engineStat, 0)}`,
                       range: rangeForASTNode(node),
@@ -419,8 +420,8 @@ export class GraphQLClientProject extends GraphQLProject {
                   );
 
                   decorations.push({
+                    type: "runGlyph",
                     document: uri,
-                    glyph: ">",
                     range: rangeForASTNode(node),
                     hoverMessage: `[Run in Studio](${runInExplorerLink})`,
                   });

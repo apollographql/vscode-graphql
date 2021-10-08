@@ -1,1 +1,8 @@
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 19h-15A1.5 1.5 0 0 1 1 17.5v-15A1.5 1.5 0 0 1 2.5 1h15A1.5 1.5 0 0 1 19 2.5v15a1.5 1.5 0 0 1-1.5 1.5Z" fill="#2075D6" stroke="#2075D6" stroke-linecap="round" stroke-linejoin="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7 6.502v6.424c0 .367.317.608.592.453l5.667-3.213a.549.549 0 0 0 0-.905L7.592 6.047C7.317 5.893 7 6.135 7 6.502Z" fill="#2075D6" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" viewBox="0 0 20 20" width="7" height="7">
+  <title>
+    Exported from Streamline App (https://app.streamlineicons.com)
+  </title>
+  <g transform="matrix(2.54 0 0 2.54 10 9.97)" id="LVKu-U2gXNoh456TxJx47"  >
+    <path style="stroke: rgb(255,255,255); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: evenodd; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-10.25, -9.71)" d="M 7 6.502 L 7 12.926 C 7 13.293 7.317 13.534 7.592 13.379 L 13.259 10.166 C 13.408058725855952 10.063593398311438 13.49712261259461 9.89434694032026 13.49712261259461 9.7135 C 13.49712261259461 9.532653059679742 13.408058725855952 9.363406601688563 13.259 9.261000000000001 L 7.592 6.047 C 7.317 5.893 7 6.135 7 6.502 Z" stroke-linecap="round" />
+  </g>
+</svg>

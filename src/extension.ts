@@ -256,13 +256,16 @@ export function activate(context: ExtensionContext) {
               hoverMessage.isTrusted = true;
             }
 
+            const indentation = decoration.range.start.character;
             return {
               range: editor.document.lineAt(decoration.range.start.line).range,
               renderOptions: {
                 before: {
                   contentIconPath: runIconOnDiskPath,
-                  textDecoration:
-                    "none; margin-right: -18px; padding-top: 0px; padding-left: 6px; border-radius: .20rem",
+                  textDecoration: `none; padding-top: 0px; padding-left: 6px; border-radius: .20rem; ${
+                    // If the text is already indented, don't push it over
+                    indentation <= 2 ? "" : "margin-right: -18px;"
+                  }`,
                   backgroundColor: "#2075D6",
                   // This plus the padding-left should add up to 18 to match the height
                   width: "12px",

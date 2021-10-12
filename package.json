@@ -43,6 +43,7 @@
     "apollo-link-http": "^1.5.5",
     "apollo-server-errors": "^2.0.2",
     "await-to-js": "^2.0.1",
+    "codemirror": "^5.63.3",
     "core-js": "^3.0.1",
     "cosmiconfig": "^5.0.6",
     "dotenv": "^10.0.0",

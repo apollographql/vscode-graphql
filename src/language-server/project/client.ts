@@ -25,6 +25,7 @@ import {
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import { NotificationHandler, DiagnosticSeverity } from "vscode-languageserver";
 import LZString from "lz-string";
+import { stringifyUrl } from "query-string";
 
 import { rangeForASTNode } from "../utilities/source";
 import { formatMS } from "../format";
@@ -403,16 +404,34 @@ export class GraphQLClientProject extends GraphQLProject {
                   const frontendUrlRoot =
                     this.frontendUrlRoot ?? "https://studio.apollographql.com";
 
-                  const endpoint = this.config.service?.endpoint;
                   const variant = this.config.variant;
                   const graphId = this.config.graph;
-                  this.config.client.service;
+
+                  const { client, service } = this.config;
+                  const remoteServiceConfig =
+                    typeof client.service === "object" &&
+                    "url" in client.service
+                      ? client.service
+                      : service?.endpoint;
+                  const endpoint = remoteServiceConfig?.url;
 
                   const runInExplorerPath = graphId
-                    ? `/graph/${graphId}/explorer?variant=${variant}&explorerURLState=${explorerURLState}`
-                    : `/sandbox/explorer?explorerURLState=${explorerURLState}${
-                        endpoint ? `&endpoint=${endpoint}` : ""
-                      }`;
+                    ? stringifyUrl({
+                        url: `/graph/${graphId}/explorer`,
+                        query: {
+                          variant,
+                          explorerURLState,
+                          referrer: "vscode",
+                        },
+                      })
+                    : stringifyUrl({
+                        url: "/sandbox/explorer",
+                        query: {
+                          endpoint,
+                          explorerURLState,
+                          referrer: "vscode",
+                        },
+                      });
                   const runInExplorerLink = join(
                     frontendUrlRoot,
                     runInExplorerPath

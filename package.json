@@ -57,6 +57,7 @@
     "minimatch": "^3.0.4",
     "moment": "^2.29.1",
     "node-fetch": "^2.2.0",
+    "query-string": "^7.0.1",
     "resolve-from": "^5.0.0",
     "sha.js": "^2.4.11",
     "vscode-languageclient": "^5.2.1",

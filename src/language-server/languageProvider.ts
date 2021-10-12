@@ -20,6 +20,7 @@ import {
 
 // should eventually be moved into this package, since we're overriding a lot of the existing behavior here
 import { getAutocompleteSuggestions } from "graphql-language-service-interface";
+import { Position as GraphQlPosition } from "graphql-language-service-utils";
 import {
   getTokenAtPosition,
   getTypeInfo,
@@ -65,6 +66,7 @@ import { isNotNullOrUndefined } from "../tools";
 import type { CodeActionInfo } from "./errors/validation";
 import { GraphQLDiagnostic } from "./diagnostics";
 import type { ProjectStats } from "src/messages";
+import { isInterfaceType } from "graphql";
 
 const DirectiveLocations = Object.keys(DirectiveLocation);
 
@@ -126,16 +128,21 @@ export class GraphQLLanguageProvider {
 
     if (!project.schema) return [];
 
-    const positionInDocument = positionFromPositionInContainingDocument(
+    const rawPositionInDocument = positionFromPositionInContainingDocument(
       document.source,
       position
     );
+    const positionInDocument = new GraphQlPosition(
+      rawPositionInDocument.line,
+      rawPositionInDocument.character
+    );
+
     const token = getTokenAtPosition(document.source.body, positionInDocument);
     const state =
       token.state.kind === "Invalid" ? token.state.prevState : token.state;
     const typeInfo = getTypeInfo(project.schema, token.state);
 
-    if (state.kind === "DirectiveLocation") {
+    if (state?.kind === "DirectiveDef") {
       return DirectiveLocations.map((location) => ({
         label: location,
         kind: CompletionItemKind.Constant,
@@ -149,16 +156,15 @@ export class GraphQLLanguageProvider {
     );
 
     if (
-      state.kind === "SelectionSet" ||
-      state.kind === "Field" ||
-      state.kind === "AliasedField"
+      state?.kind === "SelectionSet" ||
+      state?.kind === "Field" ||
+      state?.kind === "AliasedField"
     ) {
       const parentType = typeInfo.parentType;
-      const parentFields = {
-        ...(parentType.getFields() as {
-          [label: string]: GraphQLField<any, any>;
-        }),
-      };
+      const parentFields =
+        isInterfaceType(parentType) || isObjectType(parentType)
+          ? parentType.getFields()
+          : {};
 
       if (isAbstractType(parentType)) {
         parentFields[TypeNameMetaFieldDef.name] = TypeNameMetaFieldDef;
@@ -189,9 +195,9 @@ export class GraphQLLanguageProvider {
               : ``;
 
           const isClientType =
-            parentType.clientSchema &&
-            parentType.clientSchema.localFields &&
-            parentType.clientSchema.localFields.includes(suggestedField.name);
+            parentType &&
+            "clientSchema" in parentType &&
+            parentType.clientSchema?.localFields?.includes(suggestedField.name);
           const directives = isClientType ? " @client" : "";
 
           const snippet = hasFields(suggestedField.type)
@@ -207,7 +213,7 @@ export class GraphQLLanguageProvider {
       });
     }
 
-    if (state.kind === "Directive") {
+    if (state?.kind === "Directive") {
       return suggestions.map((suggest) => {
         const directive = project.schema!.getDirective(suggest.label);
         if (!directive) {
@@ -241,7 +247,9 @@ export class GraphQLLanguageProvider {
           if (typeof suggest.documentation === "string") {
             content.push(suggest.documentation);
           } else {
-            content.push(suggest.documentation.value);
+            // TODO (jason) `(string | MarkupContent) & (string | null)` is a weird type,
+            // leaving this for safety for now
+            content.push((suggest.documentation as any).value);
           }
         }
 

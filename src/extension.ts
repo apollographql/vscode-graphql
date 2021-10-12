@@ -206,22 +206,47 @@ export function activate(context: ExtensionContext) {
       );
     });
 
-    const engineDecoration = window.createTextEditorDecorationType({});
+    const runIconOnDiskPath = Uri.file(
+      join(context.extensionPath, "images", "IconRun.svg")
+    );
+
+    const textDecorationType = window.createTextEditorDecorationType({});
+    const runGlyphDecorationType = window.createTextEditorDecorationType({});
     let latestDecorations: EngineDecoration[] | undefined = undefined;
 
     const updateDecorations = () => {
       if (window.activeTextEditor && latestDecorations) {
         const editor = window.activeTextEditor!;
-        const decorations = latestDecorations
-          .filter(
-            (decoration) =>
-              decoration.document ===
-              window.activeTextEditor!.document.uri.toString()
-          )
-          .map((decoration): DecorationOptions => {
-            const onDiskPath = Uri.file(
-              join(context.extensionPath, "images", "iconRun.svg")
-            );
+
+        const decorationsForDocument = latestDecorations.filter(
+          (decoration) =>
+            decoration.document ===
+            window.activeTextEditor!.document.uri.toString()
+        );
+
+        const textDecorations = decorationsForDocument.flatMap(
+          (decoration): DecorationOptions | DecorationOptions[] => {
+            if (decoration.type !== "text") {
+              return [];
+            }
+
+            return {
+              range: editor.document.lineAt(decoration.range.start.line).range,
+              renderOptions: {
+                after: {
+                  contentText: decoration.message,
+                  textDecoration: "none; padding-left: 15px; opacity: .5",
+                },
+              },
+            };
+          }
+        );
+
+        const runGlyphDecorations = decorationsForDocument.flatMap(
+          (decoration): DecorationOptions | DecorationOptions[] => {
+            if (decoration.type !== "runGlyph") {
+              return [];
+            }
 
             const hoverMessage =
               decoration.hoverMessage === undefined
@@ -231,26 +256,35 @@ export function activate(context: ExtensionContext) {
               hoverMessage.isTrusted = true;
             }
 
+            const indentation = decoration.range.start.character;
             return {
               range: editor.document.lineAt(decoration.range.start.line).range,
               renderOptions: {
-                after:
-                  decoration.message === undefined
-                    ? undefined
-                    : {
-                        contentText: decoration.message,
-                        textDecoration: "none; padding-left: 15px; opacity: .5",
-                      },
-                before:
-                  decoration.glyph === undefined
-                    ? undefined
-                    : { contentIconPath: onDiskPath },
+                before: {
+                  contentIconPath: runIconOnDiskPath,
+                  textDecoration: `none; padding-top: 0px; padding-left: 6px; border-radius: .20rem; ${
+                    // If the text is already indented, don't push it over
+                    indentation <= 2 ? "" : "margin-right: -18px;"
+                  }`,
+                  backgroundColor: "#2075D6",
+                  // This plus the padding-left should add up to 18 to match the height
+                  width: "12px",
+                  height: "18px",
+                },
               },
               hoverMessage,
             };
-          });
+          }
+        );
 
-        window.activeTextEditor!.setDecorations(engineDecoration, decorations);
+        window.activeTextEditor!.setDecorations(
+          textDecorationType,
+          textDecorations
+        );
+        window.activeTextEditor!.setDecorations(
+          runGlyphDecorationType,
+          runGlyphDecorations
+        );
       }
     };
 

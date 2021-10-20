@@ -65,7 +65,7 @@
       "patterns": [
         {
           "begin": "\\s*\\b(implements)\\b\\s*",
-          "end": "\\s*(?={)",
+          "end": "\\s*(?=[{@])",
           "beginCaptures": {
             "1": { "name": "keyword.implements.graphql.RRR" }
           },

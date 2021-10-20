@@ -65,7 +65,7 @@
       "patterns": [
         {
           "begin": "\\s*\\b(implements)\\b\\s*",
-          "end": "\\s*(?={)",
+          "end": "\\s*(?=[{@])",
           "beginCaptures": {
             "1": { "name": "keyword.implements.graphql.RRR" }
           },
@@ -119,7 +119,7 @@
         { "include": "#graphql-type-object" },
         { "include": "#graphql-colon" },
         { "include": "#graphql-input-types" },
-        { "include": "#graphql-directive"},
+        { "include": "#graphql-directive" },
         { "include": "#literal-quasi-embedded" }
       ]
     },

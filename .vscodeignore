@@ -8,6 +8,7 @@ src
 .gitignore
 .nvmrc
 .prettierrc
+.gitattributes
 codegen.yml
 graphql.configuration.json
 jest.config.ts

@@ -142,7 +142,7 @@
         "injectTo": [
           "source.js",
           "source.ts",
-          "source.js.jsx",
+          "source.jsx",
           "source.tsx",
           "source.vue",
           "source.svelte"

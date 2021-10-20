@@ -119,7 +119,7 @@
         { "include": "#graphql-type-object" },
         { "include": "#graphql-colon" },
         { "include": "#graphql-input-types" },
-        { "include": "#graphql-directive"},
+        { "include": "#graphql-directive" },
         { "include": "#literal-quasi-embedded" }
       ]
     },

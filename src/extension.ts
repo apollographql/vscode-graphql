@@ -11,6 +11,7 @@ import {
   Disposable,
   OutputChannel,
   MarkdownString,
+  Range,
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
@@ -256,19 +257,20 @@ export function activate(context: ExtensionContext) {
               hoverMessage.isTrusted = true;
             }
 
-            const indentation = decoration.range.start.character;
+            const endOfLinePosition = editor.document.lineAt(
+              decoration.range.start.line
+            ).range.end;
             return {
-              range: editor.document.lineAt(decoration.range.start.line).range,
+              // Hover range of just the end of the line (and the icon) so the hover shows above the icon,
+              // not over at the start of the line
+              range: new Range(endOfLinePosition, endOfLinePosition),
               renderOptions: {
-                before: {
+                after: {
                   contentIconPath: runIconOnDiskPath,
-                  textDecoration: `none; padding-top: 0px; padding-left: 6px; border-radius: .20rem; ${
-                    // If the text is already indented, don't push it over
-                    indentation <= 2 ? "" : "margin-right: -18px;"
-                  }`,
+                  textDecoration:
+                    "none; border-radius: .20rem; margin-left: 8px; text-align: center;",
                   backgroundColor: "#2075D6",
-                  // This plus the padding-left should add up to 18 to match the height
-                  width: "12px",
+                  width: "18px",
                   height: "18px",
                 },
               },

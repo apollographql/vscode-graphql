@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### vNext
+### 1.19.8
 
 - Move 'Run in Studio' icon to end of line [#42](https://github.com/apollographql/vscode-graphql/pull/42)
 - Fix syntax highlighting for directives on types [#36](https://github.com/apollographql/vscode-graphql/pull/36)

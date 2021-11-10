@@ -11,6 +11,7 @@ import {
   Disposable,
   OutputChannel,
   MarkdownString,
+  Range,
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
@@ -256,8 +257,13 @@ export function activate(context: ExtensionContext) {
               hoverMessage.isTrusted = true;
             }
 
+            const endOfLinePosition = editor.document.lineAt(
+              decoration.range.start.line
+            ).range.end;
             return {
-              range: editor.document.lineAt(decoration.range.start.line).range,
+              // Hover range of just the end of the line (and the icon) so the hover shows above the icon,
+              // not over at the start of the line
+              range: new Range(endOfLinePosition, endOfLinePosition),
               renderOptions: {
                 after: {
                   contentIconPath: runIconOnDiskPath,

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### vNext
+
+- Move 'Run in Studio' icon to end of line [#42](https://github.com/apollographql/vscode-graphql/pull/42)
+- Fix syntax highlighting for directives on types [#36](https://github.com/apollographql/vscode-graphql/pull/36)
+
 ### 1.19.7
 
 - Specify files with conflicting documents for the 'There are multiple definitions' message. [#29](https://github.com/apollographql/vscode-graphql/pull/29)

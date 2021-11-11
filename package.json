@@ -103,7 +103,7 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Configuration",
+      "title": "Apollo GraphQL",
       "properties": {
         "apollographql.trace.server": {
           "scope": "window",

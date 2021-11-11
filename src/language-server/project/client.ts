@@ -33,7 +33,7 @@ import { LoadingHandler } from "../loadingHandler";
 import { apolloClientSchemaDocument } from "./defaultClientSchema";
 
 import {
-  FieldLatencies,
+  FieldLatenciesMS,
   SchemaTag,
   ServiceID,
   ClientIdentity,
@@ -99,7 +99,7 @@ export class GraphQLClientProject extends GraphQLProject {
   private _onDecorations?: (any: any) => void;
   private _onSchemaTags?: NotificationHandler<[ServiceID, SchemaTag[]]>;
 
-  private fieldLatencies?: FieldLatencies;
+  private fieldLatenciesMS?: FieldLatenciesMS;
   private frontendUrlRoot?: string;
 
   private _validationRules?: ValidationRule[];
@@ -341,10 +341,10 @@ export class GraphQLClientProject extends GraphQLProject {
       (async () => {
         try {
           if (serviceID) {
-            const { schemaTags, fieldLatencies } =
+            const { schemaTags, fieldLatenciesMS } =
               await engineClient.loadSchemaTagsAndFieldLatencies(serviceID);
             this._onSchemaTags && this._onSchemaTags([serviceID, schemaTags]);
-            this.fieldLatencies = fieldLatencies;
+            this.fieldLatenciesMS = fieldLatenciesMS;
           }
           const frontendUrlRoot = await engineClient.loadFrontendUrlRoot();
           this.frontendUrlRoot = frontendUrlRoot;
@@ -367,7 +367,7 @@ export class GraphQLClientProject extends GraphQLProject {
     for (const [uri, queryDocumentsForFile] of this.documentsByFile) {
       for (const queryDocument of queryDocumentsForFile) {
         if (queryDocument.ast) {
-          const fieldLatencies = this.fieldLatencies;
+          const fieldLatenciesMS = this.fieldLatenciesMS;
           const typeInfo = new TypeInfo(this.schema);
           visit(
             queryDocument.ast,
@@ -376,18 +376,18 @@ export class GraphQLClientProject extends GraphQLProject {
                 if (
                   node.kind == "Field" &&
                   typeInfo.getParentType() &&
-                  fieldLatencies
+                  fieldLatenciesMS
                 ) {
                   const parentName = typeInfo.getParentType()!.name;
-                  const parentEngineStat = fieldLatencies.get(parentName);
-                  const engineStat = parentEngineStat
-                    ? parentEngineStat.get(node.name.value)
+                  const parentEngineStatMS = fieldLatenciesMS.get(parentName);
+                  const engineStatMS = parentEngineStatMS
+                    ? parentEngineStatMS.get(node.name.value)
                     : undefined;
-                  if (engineStat && engineStat > 1) {
+                  if (engineStatMS && engineStatMS > 1) {
                     decorations.push({
                       type: "text",
                       document: uri,
-                      message: `~${formatMS(engineStat, 0)}`,
+                      message: `~${formatMS(engineStatMS, 0)}`,
                       range: rangeForASTNode(node),
                     });
                   }

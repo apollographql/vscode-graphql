@@ -9,7 +9,8 @@ export const SCHEMA_TAGS_AND_FIELD_STATS = gql`
       stats(from: "-86400", to: "-0") {
         fieldLatencies {
           groupBy {
-            field
+            parentType
+            fieldName
           }
           metrics {
             fieldHistogram {

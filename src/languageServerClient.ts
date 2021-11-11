@@ -3,6 +3,7 @@ import {
   TransportKind,
   LanguageClientOptions,
   LanguageClient,
+  RevealOutputChannelOn,
 } from "vscode-languageclient";
 import { workspace, OutputChannel } from "vscode";
 
@@ -63,6 +64,9 @@ export function getLanguageServerClient(
       ],
     },
     outputChannel,
+    revealOutputChannelOn: workspace.getConfiguration('apollographql').get("debug.revealOutputOnLanguageServerError") ?
+      RevealOutputChannelOn.Error :
+      RevealOutputChannelOn.Never
   };
 
   return new LanguageClient(

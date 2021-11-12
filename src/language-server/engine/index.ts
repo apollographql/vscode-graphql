@@ -18,8 +18,8 @@ export type ClientID = string;
 export type SchemaTag = string;
 export type ServiceIDAndTag = [ServiceID, SchemaTag?];
 export type ServiceSpecifier = string;
-// Map from type name to field name to latency.
-export type FieldLatencies = Map<string, Map<string, number | null>>;
+// Map from parent type name to field name to latency in ms.
+export type FieldLatenciesMS = Map<string, Map<string, number | null>>;
 
 export function noServiceError(service: string | undefined, endpoint?: string) {
   return `Could not find graph ${
@@ -77,25 +77,22 @@ export class ApolloEngineClient extends GraphQLDataSource {
       ({ tag }: { tag: string }) => tag
     );
 
-    const fieldLatencies: FieldLatencies = new Map();
+    const fieldLatenciesMS: FieldLatenciesMS = new Map();
 
     data.service.stats.fieldLatencies.forEach((fieldLatency) => {
-      // Parse field "ParentType.fieldName:FieldType" into ["ParentType", "fieldName", "FieldType"]
-      const [parentType = null, fieldName = null] = fieldLatency.groupBy.field
-        ? fieldLatency.groupBy.field.split(/\.|:/)
-        : [];
+      const { parentType, fieldName } = fieldLatency.groupBy;
 
       if (!parentType || !fieldName) {
         return;
       }
       const fieldsMap =
-        fieldLatencies.get(parentType) ||
-        fieldLatencies.set(parentType, new Map()).get(parentType)!;
+        fieldLatenciesMS.get(parentType) ||
+        fieldLatenciesMS.set(parentType, new Map()).get(parentType)!;
 
       fieldsMap.set(fieldName, fieldLatency.metrics.fieldHistogram.durationMs);
     });
 
-    return { schemaTags, fieldLatencies };
+    return { schemaTags, fieldLatenciesMS };
   }
 
   async loadFrontendUrlRoot() {

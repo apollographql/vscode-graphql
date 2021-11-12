@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### 1.19.9
+
+- Add validation/completion for #graphql annotated strings in js [#47](https://github.com/apollographql/vscode-graphql/pull/47)
+- Add config option for disabling 'Run in Studio' button [#46](https://github.com/apollographql/vscode-graphql/pull/46)
+- Add config option to disable switching to output tab on error [#44](https://github.com/apollographql/vscode-graphql/pull/44)
+
 ### 1.19.8
 
 - Move 'Run in Studio' icon to end of line [#42](https://github.com/apollographql/vscode-graphql/pull/42)

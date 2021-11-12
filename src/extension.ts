@@ -283,10 +283,16 @@ export function activate(context: ExtensionContext) {
           textDecorationType,
           textDecorations
         );
-        window.activeTextEditor!.setDecorations(
-          runGlyphDecorationType,
-          runGlyphDecorations
-        );
+        if (
+          workspace
+            .getConfiguration("apollographql")
+            .get("display.showRunInStudioButton")
+        ) {
+          window.activeTextEditor!.setDecorations(
+            runGlyphDecorationType,
+            runGlyphDecorations
+          );
+        }
       }
     };
 

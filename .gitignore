@@ -12,7 +12,7 @@ lib
 !.vscode/extensions.json
 
 .DS_Store
-vscode-graphql-*.vsix
+vscode-apollo-*.vsix
 .env
 
 # files generated from tests

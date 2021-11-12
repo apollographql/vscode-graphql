@@ -64,9 +64,11 @@ export function getLanguageServerClient(
       ],
     },
     outputChannel,
-    revealOutputChannelOn: workspace.getConfiguration('apollographql').get("debug.revealOutputOnLanguageServerError") ?
-      RevealOutputChannelOn.Error :
-      RevealOutputChannelOn.Never
+    revealOutputChannelOn: workspace
+      .getConfiguration("apollographql")
+      .get("debug.revealOutputOnLanguageServerError")
+      ? RevealOutputChannelOn.Error
+      : RevealOutputChannelOn.Never,
   };
 
   return new LanguageClient(

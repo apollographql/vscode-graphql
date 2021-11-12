@@ -121,6 +121,12 @@
           "default": true,
           "markdownDescription": "Switches to the \"Output\" tab whenever an error occurs in the language server.",
           "scope": "window"
+        },
+        "apollographql.display.showRunInStudioButton": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show a \"Run in Studio\" button to the right of Operation Signatures.",
+          "scope": "window"
         }
       }
     },

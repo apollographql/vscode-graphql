@@ -157,4 +157,68 @@ describe("extractGraphQLDocuments", () => {
       expect(documents?.[0].ast?.definitions.length).toBe(1);
     });
   });
+
+  describe("extracting documents from Elixir extension nodes", () => {
+    const mockTextDocument = (text: string): TextDocument => ({
+      getText: jest.fn().mockReturnValue(text),
+      offsetAt(): number {
+        return 0;
+      },
+      positionAt(): Position {
+        return {
+          character: 0,
+          line: 0,
+        };
+      },
+      languageId: "elixir",
+      lineCount: 0,
+      uri: "",
+      version: 1,
+    });
+
+    it("works with function style node", () => {
+      const textDocument = mockTextDocument(`
+      gql("""
+        query SomeQuery {
+          id
+        }
+      """)
+    `);
+      const documents = extractGraphQLDocuments(textDocument);
+
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(1);
+    });
+
+    it("works with function style node with sigil", () => {
+      const textDocument = mockTextDocument(`
+      gql(r"""
+        query SomeQuery {
+          id
+        }
+      """)
+    `);
+      const documents = extractGraphQLDocuments(textDocument);
+
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(1);
+    });
+
+    it("works with custom sigil", () => {
+      const textDocument = mockTextDocument(`
+      ~gql"""
+        query SomeQuery {
+          id
+        }
+      """
+    `);
+      const documents = extractGraphQLDocuments(textDocument);
+
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(1);
+    });
+  });
 });

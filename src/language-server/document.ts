@@ -242,13 +242,13 @@ function extractGraphQLDocumentsFromElixirStrings(
   const documents: GraphQLDocument[] = [];
 
   const regExp = new RegExp(
-    `\\b(${tagName}\\(\\s*r?("""))([\\s\\S]+?)\\2\\s*\\)`,
+    `(~${tagName}"""|\\b${tagName}\\(\\s*r?""")([\\s\\S]+?)"""(\\s*\\))?`,
     "gm"
   );
 
   let result;
   while ((result = regExp.exec(text)) !== null) {
-    const contents = replacePlaceholdersWithWhiteSpace(result[3]);
+    const contents = replacePlaceholdersWithWhiteSpace(result[2]);
     const position = document.positionAt(result.index + result[1].length);
     const locationOffset: SourceLocation = {
       line: position.line + 1,

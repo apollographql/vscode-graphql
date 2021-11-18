@@ -35,6 +35,17 @@
           ]
         }
       ]
+    },
+    {
+      "name": "taggedTemplates",
+      "contentName": "meta.embedded.block.graphql",
+      "begin": "\\~(gql|graphql|GQL|GRAPHQL)(\"\"\")",
+      "end": "((\\2))",
+      "patterns": [
+        {
+          "include": "source.graphql"
+        }
+      ]
     }
   ],
   "scopeName": "inline.graphql.elixir"

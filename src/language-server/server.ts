@@ -152,6 +152,13 @@ connection.onDidChangeWatchedFiles((params) => {
       workspace.reloadProjectForConfig(uri);
     }
 
+    if (workspace.localSchemaChanged(uri)) {
+      connection.sendNotification(
+        "apollographql/localSchemaChanged",
+        undefined
+      );
+    }
+
     // Don't respond to changes in files that are currently open,
     // because we'll get content change notifications instead
     if (type === FileChangeType.Changed) {

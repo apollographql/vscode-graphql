@@ -159,6 +159,19 @@ export function activate(context: ExtensionContext) {
       client.sendNotification("apollographql/reloadService");
     });
 
+    client.onNotification("apollographql/localSchemaChanged", (params) => {
+      if (
+        workspace
+          .getConfiguration("apollographql")
+          .get("run.reloadServiceAfterLocalSchemaChanged")
+      ) {
+        client.outputChannel.appendLine("------------------------------");
+        client.outputChannel.appendLine(`🚀 Apollo GraphQL Reload Service`);
+        client.outputChannel.appendLine("------------------------------");
+        client.sendNotification("apollographql/reloadService");
+      }
+    });
+
     // For some reason, non-strings can only be sent in one direction. For now, messages
     // coming from the language server just need to be stringified and parsed.
     client.onNotification("apollographql/tagsLoaded", (params) => {

@@ -127,6 +127,12 @@
           "default": true,
           "markdownDescription": "Show a \"Run in Studio\" button to the right of Operation Signatures.",
           "scope": "window"
+        },
+        "apollographql.run.reloadServiceAfterLocalSchemaChanged": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Reload service after local schema changed",
+          "scope": "window"
         }
       }
     },

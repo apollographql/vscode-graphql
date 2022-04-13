@@ -124,10 +124,11 @@
       ]
     },
     "graphql-schema": {
-      "begin": "\\s*\\b(schema)\\b",
-      "end": "(?<=})",
+      "begin": "\\s*\\b(extend)?\\b\\s*\\b(schema)\\b",
+      "end": "\\s*(?!\\s|#|{|@|$)",
       "beginCaptures": {
-        "1": { "name": "keyword.schema.graphql" }
+        "1": { "name": "keyword.extend.graphql" },
+        "2": { "name": "keyword.schema.graphql" }
       },
       "patterns": [
         {
@@ -165,6 +166,7 @@
             { "include": "#graphql-skip-newlines" }
           ]
         },
+        { "include": "#graphql-directive" },
         { "include": "#graphql-comment" },
         { "include": "#graphql-skip-newlines" }
       ]

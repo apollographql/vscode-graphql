@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### vNext
+
+- Fix highlighting on schema extension directives [#66](https://github.com/apollographql/vscode-graphql/pull/66)
+
 ### 1.19.9
 
 - Add validation/completion for #graphql annotated strings in js [#47](https://github.com/apollographql/vscode-graphql/pull/47)

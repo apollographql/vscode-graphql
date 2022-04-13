@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### vNext
+### 1.19.10
 
 - Fix highlighting on schema extension directives [#66](https://github.com/apollographql/vscode-graphql/pull/66)
 

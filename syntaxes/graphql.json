@@ -540,7 +540,8 @@
             { "include": "#graphql-enum-value" },
             { "include": "#literal-quasi-embedded" }
           ]
-        }
+        },
+        { "include": "#graphql-directive" }
       ]
     },
     "graphql-enum-value": {

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.19.11
+
+- Fix directive highlighting on enums and arguments [#6716](https://github.com/apollographql/vscode-graphql/pull/71)
+
 ### 1.19.10
 
 - Fix highlighting on schema extension directives [#66](https://github.com/apollographql/vscode-graphql/pull/66)

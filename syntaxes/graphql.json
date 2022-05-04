@@ -297,7 +297,7 @@
       "match": "\\s*\\b(scalar)\\b\\s*([_A-Za-z][_0-9A-Za-z]*)",
       "captures": {
         "1": { "name": "keyword.scalar.graphql" },
-        "2": { "name": "entity.scalar.graphql" }
+        "2": { "name": "support.type.enum.graphql" }
       }
     },
     "graphql-scalar-type": {

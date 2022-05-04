@@ -263,7 +263,8 @@
         { "include": "#graphql-input-types" },
         { "include": "#graphql-variable-assignment" },
         { "include": "#literal-quasi-embedded" },
-        { "include": "#graphql-skip-newlines" }
+        { "include": "#graphql-skip-newlines" },
+        { "include": "#graphql-directive" }
       ]
     },
     "graphql-input-types": {
@@ -297,7 +298,7 @@
       "match": "\\s*\\b(scalar)\\b\\s*([_A-Za-z][_0-9A-Za-z]*)",
       "captures": {
         "1": { "name": "keyword.scalar.graphql" },
-        "2": { "name": "entity.scalar.graphql" }
+        "2": { "name": "support.type.enum.graphql" }
       }
     },
     "graphql-scalar-type": {
@@ -535,12 +536,13 @@
           },
           "patterns": [
             { "include": "#graphql-object-type" },
-
+            { "include": "#graphql-directive" },
             { "include": "#graphql-comment" },
             { "include": "#graphql-enum-value" },
             { "include": "#literal-quasi-embedded" }
           ]
-        }
+        },
+        { "include": "#graphql-directive" }
       ]
     },
     "graphql-enum-value": {

@@ -263,7 +263,8 @@
         { "include": "#graphql-input-types" },
         { "include": "#graphql-variable-assignment" },
         { "include": "#literal-quasi-embedded" },
-        { "include": "#graphql-skip-newlines" }
+        { "include": "#graphql-skip-newlines" },
+        { "include": "#graphql-directive" }
       ]
     },
     "graphql-input-types": {

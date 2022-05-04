@@ -535,7 +535,7 @@
           },
           "patterns": [
             { "include": "#graphql-object-type" },
-
+            { "include": "#graphql-directive" },
             { "include": "#graphql-comment" },
             { "include": "#graphql-enum-value" },
             { "include": "#literal-quasi-embedded" }

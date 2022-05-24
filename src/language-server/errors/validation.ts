@@ -175,7 +175,7 @@ export function NoMissingClientDirectives(context: ValidationContext) {
     const fieldDef = context.getFieldDef();
 
     // if we don't have a type to check then we can early return
-    if (!parentType) return;
+    if (!parentType || fieldDef) return;
 
     // here we collect all of the fields on a type that are marked "local"
     const clientFields =

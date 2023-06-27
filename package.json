@@ -177,6 +177,16 @@
       },
       {
         "injectTo": [
+          "source.lua"
+        ],
+        "scopeName": "inline.graphql.lua",
+        "path": "./syntaxes/graphql.lua.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.graphql": "graphql"
+        }
+      },
+      {
+        "injectTo": [
           "source.ruby"
         ],
         "scopeName": "inline.graphql.ruby",

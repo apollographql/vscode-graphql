@@ -14,4 +14,3 @@ graphql.configuration.json
 jest.config.ts
 package-lock.json
 tsconfig.build.json
-tsconfig.json

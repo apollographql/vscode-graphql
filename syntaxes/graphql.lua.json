@@ -4,6 +4,31 @@
   "patterns": [
     {
       "contentName": "meta.embedded.block.graphql",
+      "begin": "(--\\[\\[)\\s*(gql)\\s*(\\]\\])\\s*(\\[\\[)",
+      "beginCaptures": {
+        "1": {
+          "name": "comment.block.lua"
+        },
+        "2": {
+          "name": "entity.name.function.lua"
+        },
+        "3": {
+          "name": "comment.block.lua"
+        },
+        "4": {
+          "name": "string.quoted.double.lua"
+        }
+      },
+      "end": "(\\]\\])",
+      "endCaptures": {
+        "1": {
+          "name": "string.quoted.double.lua"
+        }
+      },
+      "patterns": [{ "include": "source.graphql" }]
+    },
+    {
+      "contentName": "meta.embedded.block.graphql",
       "begin": "(gql)\\(?\\s*(\\[\\[)",
       "beginCaptures": {
         "1": {

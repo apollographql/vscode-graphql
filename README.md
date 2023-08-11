@@ -17,7 +17,7 @@ The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience
 
 <h2 id="getting-started">Getting started</h2>
 
-Some features of this extension (like syntax highlighting) will work without any configuration, but to get all of the benefits of the VS Code experience, it's best to link the schema that is being developed against **before** installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/platform/schema-registry.html#setup) to the Apollo schema registry. Once that is done, two steps are needed:
+Some features of this extension (like syntax highlighting) will work without any configuration, but to get all of the benefits of the VS Code experience, it's best to link the schema that is being developed against **before** installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/) to the Apollo schema registry. Once that is done, two steps are needed:
 
 1. Create an `apollo.config.js` at the root of the project
 2. Copy an API key from the Apollo Studio dashboard of the published graph

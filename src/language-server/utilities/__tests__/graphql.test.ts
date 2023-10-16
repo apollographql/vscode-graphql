@@ -83,9 +83,9 @@ describe("removeDirectiveAnnotatedFields", () => {
       print(
         removeDirectiveAnnotatedFields(
           parse(`query Query { fieldToKeep fieldToRemove @client }`),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
             "query Query {
               fieldToKeep
@@ -106,9 +106,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               }
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
       "query Query {
         fieldToKeep
@@ -130,9 +130,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               hello
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
         "{
           me {
@@ -155,9 +155,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               }
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
             "{
               me {
@@ -181,9 +181,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               ... ClientObject
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
       "{
         me {
@@ -232,9 +232,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               }
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
       "fragment LaunchTile on Launch {
         __typename
@@ -287,9 +287,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               }
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
       "fragment One on Node {
         ...Two
@@ -333,9 +333,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               }
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
       "{
         me {
@@ -366,9 +366,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               }
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
       "{
         name
@@ -392,9 +392,9 @@ describe("removeDirectiveAnnotatedFields", () => {
               }
             }
           `),
-          ["client"]
-        )
-      )
+          ["client"],
+        ),
+      ),
     ).toMatchInlineSnapshot(`
       "fragment One on Node {
         id

@@ -13,7 +13,7 @@ import {
   DefaultEngineConfig,
 } from "./config";
 import { getServiceFromKey } from "./utils";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 import { Debug } from "../utilities";
 
 // config settings
@@ -84,11 +84,11 @@ export async function loadConfig({
   let loadedConfig;
   try {
     loadedConfig = (await explorer.search(
-      configPath
+      configPath,
     )) as ConfigResult<ApolloConfigFormat>;
   } catch (error) {
     Debug.error(`A config file failed to load with options: ${JSON.stringify(
-      arguments[0]
+      arguments[0],
     )}.
     The error was: ${error}`);
     return null;
@@ -96,20 +96,20 @@ export async function loadConfig({
 
   if (configPath && !loadedConfig) {
     Debug.error(
-      `A config file failed to load at '${configPath}'. This is likely because this file is empty or malformed. For more information, please refer to: https://go.apollo.dev/t/config`
+      `A config file failed to load at '${configPath}'. This is likely because this file is empty or malformed. For more information, please refer to: https://go.apollo.dev/t/config`,
     );
     return null;
   }
 
   if (loadedConfig && loadedConfig.filepath.endsWith("package.json")) {
     Debug.warning(
-      'The "apollo" package.json configuration key will no longer be supported in Apollo v3. Please use the apollo.config.js file for Apollo project configuration. For more information, see: https://go.apollo.dev/t/config'
+      'The "apollo" package.json configuration key will no longer be supported in Apollo v3. Please use the apollo.config.js file for Apollo project configuration. For more information, see: https://go.apollo.dev/t/config',
     );
   }
 
   if (requireConfig && !loadedConfig) {
     Debug.error(
-      `No Apollo config found for project. For more information, please refer to: https://go.apollo.dev/t/config`
+      `No Apollo config found for project. For more information, please refer to: https://go.apollo.dev/t/config`,
     );
     return null;
   }
@@ -129,18 +129,18 @@ export async function loadConfig({
 
     if (existsSync(dotEnvPath) && lstatSync(dotEnvPath).isFile()) {
       const env: { [key: string]: string } = require("dotenv").parse(
-        readFileSync(dotEnvPath)
+        readFileSync(dotEnvPath),
       );
       const legacyKey = env[legacyKeyEnvVar];
       const key = env[keyEnvVar];
       if (legacyKey && key) {
         Debug.warning(
-          `Both ${legacyKeyEnvVar} and ${keyEnvVar} were found. ${keyEnvVar} will take precedence.`
+          `Both ${legacyKeyEnvVar} and ${keyEnvVar} were found. ${keyEnvVar} will take precedence.`,
         );
       }
       if (legacyKey) {
         Debug.warning(
-          `[Deprecation warning] Setting the key via ${legacyKeyEnvVar} is deprecated and will not be supported in future versions. Please use ${keyEnvVar} instead.`
+          `[Deprecation warning] Setting the key via ${legacyKeyEnvVar} is deprecated and will not be supported in future versions. Please use ${keyEnvVar} instead.`,
         );
       }
       apiKey = key || legacyKey;
@@ -165,7 +165,7 @@ export async function loadConfig({
     projectType = "service";
   } else {
     Debug.error(
-      "Unable to resolve project type. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config"
+      "Unable to resolve project type. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config",
     );
     return null;
   }

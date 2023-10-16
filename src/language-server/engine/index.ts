@@ -31,7 +31,7 @@ export class ApolloEngineClient extends GraphQLDataSource {
   constructor(
     private engineKey: string,
     engineEndpoint: string = DefaultEngineConfig.endpoint,
-    private clientIdentity?: ClientIdentity
+    private clientIdentity?: ClientIdentity,
   ) {
     super();
     this.baseURL = engineEndpoint;
@@ -69,12 +69,12 @@ export class ApolloEngineClient extends GraphQLDataSource {
       throw new Error(
         errors
           ? errors.map((error) => error.message).join("\n")
-          : "No service returned. Make sure your service name and API key match"
+          : "No service returned. Make sure your service name and API key match",
       );
     }
 
     const schemaTags: string[] = data.service.schemaTags.map(
-      ({ tag }: { tag: string }) => tag
+      ({ tag }: { tag: string }) => tag,
     );
 
     const fieldLatenciesMS: FieldLatenciesMS = new Map();

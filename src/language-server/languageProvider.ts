@@ -93,7 +93,7 @@ function locationForASTNode(node: ASTNode): Location | null {
 }
 
 function symbolForFieldDefinition(
-  definition: FieldDefinitionNode
+  definition: FieldDefinitionNode,
 ): DocumentSymbol {
   return {
     name: definition.name.value,
@@ -118,7 +118,7 @@ export class GraphQLLanguageProvider {
   async provideCompletionItems(
     uri: DocumentUri,
     position: Position,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<CompletionItem[]> {
     const project = this.workspace.projectForFile(uri);
     if (!(project && project instanceof GraphQLClientProject)) return [];
@@ -130,11 +130,11 @@ export class GraphQLLanguageProvider {
 
     const rawPositionInDocument = positionFromPositionInContainingDocument(
       document.source,
-      position
+      position,
     );
     const positionInDocument = new GraphQlPosition(
       rawPositionInDocument.line,
-      rawPositionInDocument.character
+      rawPositionInDocument.character,
     );
 
     const token = getTokenAtPosition(document.source.body, positionInDocument);
@@ -152,7 +152,7 @@ export class GraphQLLanguageProvider {
     const suggestions = getAutocompleteSuggestions(
       project.schema,
       document.source.body,
-      positionInDocument
+      positionInDocument,
     );
 
     if (
@@ -185,7 +185,7 @@ export class GraphQLLanguageProvider {
           return suggest;
         } else {
           const requiredArgs = suggestedField.args.filter((a) =>
-            isNonNullType(a.type)
+            isNonNullType(a.type),
           );
           const paramsSection =
             requiredArgs.length > 0
@@ -239,7 +239,7 @@ export class GraphQLLanguageProvider {
 
         const content = [
           [`\`\`\`graphql`, `@${suggest.label}${argsString}`, `\`\`\``].join(
-            "\n"
+            "\n",
           ),
         ];
 
@@ -273,7 +273,7 @@ export class GraphQLLanguageProvider {
   async provideHover(
     uri: DocumentUri,
     position: Position,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<Hover | null> {
     const project = this.workspace.projectForFile(uri);
     if (!(project && project instanceof GraphQLClientProject)) return null;
@@ -285,14 +285,14 @@ export class GraphQLLanguageProvider {
 
     const positionInDocument = positionFromPositionInContainingDocument(
       document.source,
-      position
+      position,
     );
 
     const nodeAndTypeInfo = getASTNodeAndTypeInfoAtPosition(
       document.source,
       positionInDocument,
       document.ast,
-      project.schema
+      project.schema,
     );
 
     if (nodeAndTypeInfo) {
@@ -332,7 +332,7 @@ export class GraphQLLanguageProvider {
             const isResolvedLocally =
               node.directives &&
               node.directives.some(
-                (directive) => directive.name.value === "client"
+                (directive) => directive.name.value === "client",
               );
 
             const content = [
@@ -370,7 +370,7 @@ export class GraphQLLanguageProvider {
 
         case Kind.NAMED_TYPE: {
           const type = project.schema.getType(
-            node.name.value
+            node.name.value,
           ) as GraphQLNamedType | void;
           if (!type) break;
 
@@ -436,7 +436,7 @@ export class GraphQLLanguageProvider {
   async provideDefinition(
     uri: DocumentUri,
     position: Position,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<Definition | null> {
     const project = this.workspace.projectForFile(uri);
     if (!(project && project instanceof GraphQLClientProject)) return null;
@@ -448,14 +448,14 @@ export class GraphQLLanguageProvider {
 
     const positionInDocument = positionFromPositionInContainingDocument(
       document.source,
-      position
+      position,
     );
 
     const nodeAndTypeInfo = getASTNodeAndTypeInfoAtPosition(
       document.source,
       positionInDocument,
       document.ast,
-      project.schema
+      project.schema,
     );
 
     if (nodeAndTypeInfo) {
@@ -500,7 +500,7 @@ export class GraphQLLanguageProvider {
     uri: DocumentUri,
     position: Position,
     _context: ReferenceContext,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<Location[] | null> {
     const project = this.workspace.projectForFile(uri);
     if (!project) return null;
@@ -511,14 +511,14 @@ export class GraphQLLanguageProvider {
 
     const positionInDocument = positionFromPositionInContainingDocument(
       document.source,
-      position
+      position,
     );
 
     const nodeAndTypeInfo = getASTNodeAndTypeInfoAtPosition(
       document.source,
       positionInDocument,
       document.ast,
-      project.schema
+      project.schema,
     );
 
     if (nodeAndTypeInfo) {
@@ -579,7 +579,7 @@ export class GraphQLLanguageProvider {
 
   async provideDocumentSymbol(
     uri: DocumentUri,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<DocumentSymbol[]> {
     const project = this.workspace.projectForFile(uri);
     if (!project) return [];
@@ -628,7 +628,7 @@ export class GraphQLLanguageProvider {
 
   async provideWorkspaceSymbol(
     query: string,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<SymbolInformation[]> {
     const symbols: SymbolInformation[] = [];
     for (const project of this.workspace.projects) {
@@ -650,7 +650,7 @@ export class GraphQLLanguageProvider {
 
   async provideCodeLenses(
     uri: DocumentUri,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<CodeLens[]> {
     const project = this.workspace.projectForFile(uri);
     if (!(project && project instanceof GraphQLClientProject)) return [];
@@ -736,7 +736,7 @@ export class GraphQLLanguageProvider {
   async provideCodeAction(
     uri: DocumentUri,
     range: Range,
-    _token: CancellationToken
+    _token: CancellationToken,
   ): Promise<CodeAction[]> {
     function isPositionLessThanOrEqual(a: Position, b: Position) {
       return a.line !== b.line ? a.line < b.line : a.character <= b.character;
@@ -787,7 +787,7 @@ export class GraphQLLanguageProvider {
       const codeAction = CodeAction.create(
         message,
         { changes: { [uri]: edits } },
-        CodeActionKind.QuickFix
+        CodeActionKind.QuickFix,
       );
 
       result.push(codeAction);

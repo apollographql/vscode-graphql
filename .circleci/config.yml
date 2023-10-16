@@ -49,7 +49,7 @@ jobs:
           name: TypeScript Check
           command: npm run typecheck
 
-  test-unit:
+  test:
     executor: node
     steps:
       - checkout
@@ -58,8 +58,8 @@ jobs:
           name: Ensure test reports output dir exists
           command: mkdir -p /tmp/test-reports/test-unit
       - run:
-          name: Test Unit
-          command: npm run test-unit -- --ci --reporters=jest-junit
+          name: Test
+          command: npm run test -- --ci --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: "/tmp/test-reports/test-unit"
       - store_test_results:
@@ -70,7 +70,7 @@ workflows:
     jobs:
       - lint
       - typescript
-      - test-unit
+      - test
   security-scans:
     jobs:
       - secops/gitleaks:

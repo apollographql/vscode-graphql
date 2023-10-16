@@ -30,7 +30,7 @@ interface GraphQLServiceDefinition {
 }
 
 export function buildServiceDefinition(
-  modules: GraphQLSchemaModule[]
+  modules: GraphQLSchemaModule[],
 ): GraphQLServiceDefinition {
   const errors: GraphQLError[] = [];
 
@@ -87,14 +87,14 @@ export function buildServiceDefinition(
   }
 
   for (const [typeName, typeDefinitions] of Object.entries(
-    typeDefinitionsMap
+    typeDefinitionsMap,
   )) {
     if (typeDefinitions.length > 1) {
       errors.push(
         new GraphQLError(
           `Type "${typeName}" was defined more than once.`,
-          typeDefinitions
-        )
+          typeDefinitions,
+        ),
       );
     }
   }
@@ -104,8 +104,8 @@ export function buildServiceDefinition(
       errors.push(
         new GraphQLError(
           `Directive "${directiveName}" was defined more than once.`,
-          directives
-        )
+          directives,
+        ),
       );
     }
   }
@@ -131,13 +131,13 @@ export function buildServiceDefinition(
       if (operationTypeMap[operation]) {
         throw new GraphQLError(
           `Must provide only one ${operation} type in schema.`,
-          [schemaDefinition]
+          [schemaDefinition],
         );
       }
       if (!(typeDefinitionsMap[typeName] || typeExtensionsMap[typeName])) {
         throw new GraphQLError(
           `Specified ${operation} type "${typeName}" not found in document.`,
-          [schemaDefinition]
+          [schemaDefinition],
         );
       }
       operationTypeMap[operation] = typeName;
@@ -166,8 +166,8 @@ export function buildServiceDefinition(
         errors.push(
           new GraphQLError(
             `Cannot extend type "${typeName}" because it does not exist in the existing schema.`,
-            typeExtensions
-          )
+            typeExtensions,
+          ),
         );
       }
     }
@@ -209,7 +209,7 @@ export function buildServiceDefinition(
 
 function addResolversToSchema(
   schema: GraphQLSchema,
-  resolvers: GraphQLResolverMap<unknown>
+  resolvers: GraphQLResolverMap<unknown>,
 ) {
   for (const [typeName, fieldConfigs] of Object.entries(resolvers)) {
     const type = schema.getType(typeName);

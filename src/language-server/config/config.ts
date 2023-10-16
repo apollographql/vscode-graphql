@@ -1,7 +1,7 @@
 import { dirname } from "path";
 import merge from "lodash.merge";
 import { ClientID, ServiceID, ServiceSpecifier } from "../engine";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 import { WithRequired } from "../../env";
 import { getGraphIdFromConfig, parseServiceSpecifier } from "./utils";
 import { ValidationRule } from "graphql/validation/ValidationContext";
@@ -135,7 +135,10 @@ export class ApolloConfig {
   private _variant?: string;
   private _graphId?: string;
 
-  constructor(public rawConfig: ApolloConfigFormat, public configURI?: URI) {
+  constructor(
+    public rawConfig: ApolloConfigFormat,
+    public configURI?: URI,
+  ) {
     this.isService = !!rawConfig.service;
     this.isClient = !!rawConfig.client;
     this.engine = rawConfig.engine!;

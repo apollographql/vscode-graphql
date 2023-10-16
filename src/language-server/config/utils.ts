@@ -14,7 +14,7 @@ export function isClientConfig(config: ApolloConfig): config is ClientConfig {
 
 // checks the `config.client.service` object for a localSchemaFile
 export function isLocalServiceConfig(
-  config: ClientServiceConfig
+  config: ClientServiceConfig,
 ): config is LocalServiceConfig {
   return !!(config as LocalServiceConfig).localSchemaFile;
 }
@@ -41,7 +41,7 @@ export function getGraphIdFromConfig(config: ApolloConfigFormat) {
   if (config.client) {
     if (typeof config.client.service === "string") {
       return parseServiceSpecifier(
-        config.client.service as ServiceSpecifier
+        config.client.service as ServiceSpecifier,
       )[0];
     }
     return config.client.service && config.client.service.name;

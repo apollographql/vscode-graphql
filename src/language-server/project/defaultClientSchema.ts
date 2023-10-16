@@ -41,5 +41,5 @@ directive @connection(
 `;
 
 export const apolloClientSchemaDocument = new GraphQLDocument(
-  new Source(apolloClientSchema)
+  new Source(apolloClientSchema),
 );

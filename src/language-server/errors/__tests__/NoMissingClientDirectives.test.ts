@@ -5,7 +5,7 @@ import { basename } from "path";
 import { vol } from "memfs";
 import { LoadingHandler } from "../../loadingHandler";
 import { ApolloConfig, ClientConfig } from "../../config";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 
 const serviceSchema = /* GraphQL */ `
   type Query {

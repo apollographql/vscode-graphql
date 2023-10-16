@@ -30,7 +30,7 @@ export class GraphQLDocument {
       // So we use the online parser to get the range of the token at that location
       const range = rangeInContainingDocument(
         source,
-        rangeOfTokenAtLocation(error.locations[0], source.body)
+        rangeOfTokenAtLocation(error.locations[0], source.body),
       );
       this.syntaxErrors.push({
         severity: DiagnosticSeverity.Error,
@@ -45,7 +45,7 @@ export class GraphQLDocument {
     if (position.line < this.source.locationOffset.line - 1) return false;
     const end = positionFromSourceLocation(
       this.source,
-      getLocation(this.source, this.source.body.length)
+      getLocation(this.source, this.source.body.length),
     );
     return position.line <= end.line;
   }
@@ -53,7 +53,7 @@ export class GraphQLDocument {
 
 export function extractGraphQLDocuments(
   document: TextDocument,
-  tagName: string = "gql"
+  tagName: string = "gql",
 ): GraphQLDocument[] | null {
   switch (document.languageId) {
     case "graphql":
@@ -84,7 +84,7 @@ export function extractGraphQLDocuments(
 
 function extractGraphQLDocumentsFromJSTemplateLiterals(
   document: TextDocument,
-  tagName: string
+  tagName: string,
 ): GraphQLDocument[] | null {
   const text = document.getText();
 
@@ -92,7 +92,7 @@ function extractGraphQLDocumentsFromJSTemplateLiterals(
 
   const regExp = new RegExp(
     `(?:${tagName}(?:\\s|\\()*\`|\`#graphql)([\\s\\S]+?)\`\\)?`,
-    "gm"
+    "gm",
   );
 
   let result;
@@ -114,7 +114,7 @@ function extractGraphQLDocumentsFromJSTemplateLiterals(
 
 function extractGraphQLDocumentsFromPythonStrings(
   document: TextDocument,
-  tagName: string
+  tagName: string,
 ): GraphQLDocument[] | null {
   const text = document.getText();
 
@@ -122,7 +122,7 @@ function extractGraphQLDocumentsFromPythonStrings(
 
   const regExp = new RegExp(
     `\\b(${tagName}\\s*\\(\\s*[bfru]*("(?:"")?|'(?:'')?))([\\s\\S]+?)\\2\\s*\\)`,
-    "gm"
+    "gm",
   );
 
   let result;
@@ -144,7 +144,7 @@ function extractGraphQLDocumentsFromPythonStrings(
 
 function extractGraphQLDocumentsFromRubyStrings(
   document: TextDocument,
-  tagName: string
+  tagName: string,
 ): GraphQLDocument[] | null {
   const text = document.getText();
 
@@ -171,7 +171,7 @@ function extractGraphQLDocumentsFromRubyStrings(
 
 function extractGraphQLDocumentsFromDartStrings(
   document: TextDocument,
-  tagName: string
+  tagName: string,
 ): GraphQLDocument[] | null {
   const text = document.getText();
 
@@ -179,7 +179,7 @@ function extractGraphQLDocumentsFromDartStrings(
 
   const regExp = new RegExp(
     `\\b(${tagName}\\(\\s*r?("""|'''))([\\s\\S]+?)\\2\\s*\\)`,
-    "gm"
+    "gm",
   );
 
   let result;
@@ -201,7 +201,7 @@ function extractGraphQLDocumentsFromDartStrings(
 
 function extractGraphQLDocumentsFromReasonStrings(
   document: TextDocument,
-  tagName: string
+  tagName: string,
 ): GraphQLDocument[] | null {
   const text = document.getText();
 
@@ -214,7 +214,7 @@ function extractGraphQLDocumentsFromReasonStrings(
   }
 
   const reasonRegexp = new RegExp(
-    /(?<=\[%(graphql|relay\.\w*)[\s\S]*{\|)[.\s\S]+?(?=\|})/gm
+    /(?<=\[%(graphql|relay\.\w*)[\s\S]*{\|)[.\s\S]+?(?=\|})/gm,
   );
 
   let result;
@@ -236,14 +236,14 @@ function extractGraphQLDocumentsFromReasonStrings(
 
 function extractGraphQLDocumentsFromElixirStrings(
   document: TextDocument,
-  tagName: string
+  tagName: string,
 ): GraphQLDocument[] | null {
   const text = document.getText();
   const documents: GraphQLDocument[] = [];
 
   const regExp = new RegExp(
     `\\b(${tagName}\\(\\s*r?("""))([\\s\\S]+?)\\2\\s*\\)`,
-    "gm"
+    "gm",
   );
 
   let result;

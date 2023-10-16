@@ -46,7 +46,7 @@ function isError(response: any): response is ErrorShape {
 
 export function activate(context: ExtensionContext) {
   const serverModule = context.asAbsolutePath(
-    join("lib/language-server", "server.js")
+    join("lib/language-server", "server.js"),
   );
 
   // Initialize language client
@@ -145,11 +145,11 @@ export function activate(context: ExtensionContext) {
         } else {
           Debug.error(
             `Invalid response type in message apollographql/configFilesFound:\n${JSON.stringify(
-              response
-            )}`
+              response,
+            )}`,
           );
         }
-      }
+      },
     );
 
     commands.registerCommand("apollographql/reloadService", () => {
@@ -203,12 +203,12 @@ export function activate(context: ExtensionContext) {
           return new Promise<void>((resolve) => {
             currentLoadingResolve.set(token, resolve);
           });
-        }
+        },
       );
     });
 
     const runIconOnDiskPath = Uri.file(
-      join(context.extensionPath, "images", "IconRun.svg")
+      join(context.extensionPath, "images", "IconRun.svg"),
     );
 
     const textDecorationType = window.createTextEditorDecorationType({});
@@ -222,7 +222,7 @@ export function activate(context: ExtensionContext) {
         const decorationsForDocument = latestDecorations.filter(
           (decoration) =>
             decoration.document ===
-            window.activeTextEditor!.document.uri.toString()
+            window.activeTextEditor!.document.uri.toString(),
         );
 
         const textDecorations = decorationsForDocument.flatMap(
@@ -240,7 +240,7 @@ export function activate(context: ExtensionContext) {
                 },
               },
             };
-          }
+          },
         );
 
         const runGlyphDecorations = decorationsForDocument.flatMap(
@@ -258,7 +258,7 @@ export function activate(context: ExtensionContext) {
             }
 
             const endOfLinePosition = editor.document.lineAt(
-              decoration.range.start.line
+              decoration.range.start.line,
             ).range.end;
             return {
               // Hover range of just the end of the line (and the icon) so the hover shows above the icon,
@@ -276,12 +276,12 @@ export function activate(context: ExtensionContext) {
               },
               hoverMessage,
             };
-          }
+          },
         );
 
         window.activeTextEditor!.setDecorations(
           textDecorationType,
-          textDecorations
+          textDecorations,
         );
         if (
           workspace
@@ -290,7 +290,7 @@ export function activate(context: ExtensionContext) {
         ) {
           window.activeTextEditor!.setDecorations(
             runGlyphDecorationType,
-            runGlyphDecorations
+            runGlyphDecorations,
           );
         }
       }
@@ -301,7 +301,7 @@ export function activate(context: ExtensionContext) {
       ({ decorations }) => {
         latestDecorations = decorations;
         updateDecorations();
-      }
+      },
     );
 
     window.onDidChangeActiveTextEditor(() => {

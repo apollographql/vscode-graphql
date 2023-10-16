@@ -39,7 +39,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
       linkExecute(createHttpLink(options), {
         query: parse(getIntrospectionQuery()),
         context: { headers },
-      })
+      }),
     ).catch((e) => {
       // html response from introspection
       if (isString(e.message) && e.message.includes("token <")) {
@@ -51,7 +51,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
             "-----------------------------\n" +
             "For more information, please refer to: https://go.apollo.dev/t/config \n\n" +
             "The following error occurred:\n-----------------------------\n" +
-            e.message
+            e.message,
         );
       }
 
@@ -71,7 +71,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
             "\nFor more information, please refer to: https://go.apollo.dev/t/config \n\n" +
             "The following error occurred: \n" +
             "-----------------------------\n" +
-            e.message
+            e.message,
         );
       }
       // 404 with a non-default url
@@ -79,7 +79,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
         throw new Error(
           "Failed to connect to a running GraphQL endpoint at " +
             url +
-            "\nThis may be because you didn't start your service or the endpoint URL is incorrect."
+            "\nThis may be because you didn't start your service or the endpoint URL is incorrect.",
         );
       }
       throw new Error(e);
@@ -99,7 +99,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
   }
 
   onSchemaChange(
-    _handler: NotificationHandler<GraphQLSchema>
+    _handler: NotificationHandler<GraphQLSchema>,
   ): SchemaChangeUnsubscribeHandler {
     throw new Error("Polling of endpoint not implemented yet");
     return () => {};
@@ -131,18 +131,18 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
       linkExecute(createHttpLink(options), {
         query: parse(getFederationInfoQuery),
         context: { headers },
-      })
+      }),
     )) as ExecutionResult<{ _service: { sdl: string } }>;
 
     if (errors && errors.length) {
       return Debug.error(
-        errors.map(({ message }: Error) => message).join("\n")
+        errors.map(({ message }: Error) => message).join("\n"),
       );
     }
 
     if (!data || !data._service) {
       return Debug.error(
-        "No data received from server when querying for _service."
+        "No data received from server when querying for _service.",
       );
     }
 

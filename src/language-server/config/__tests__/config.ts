@@ -1,5 +1,5 @@
 import { ApolloConfig, ApolloConfigFormat, DefaultConfigBase } from "../";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 
 describe("ApolloConfig", () => {
   describe("confifDirURI", () => {
@@ -7,24 +7,24 @@ describe("ApolloConfig", () => {
       const uri = URI.parse("/test/dir/name");
       const config = new ApolloConfig(
         { service: { name: "hai", ...DefaultConfigBase } },
-        uri
+        uri,
       );
       // can be either /test/dir/name or \\test\\dir\\name depending on platform
       // this difference is fine :)
       expect(config.configDirURI?.fsPath).toMatch(
-        /\/test\/dir\/name|\\test\\dir\\name/
+        /\/test\/dir\/name|\\test\\dir\\name/,
       );
     });
     it("properly parses filepaths for configDirURI", () => {
       const uri = URI.parse("/test/dir/name/apollo.config.js");
       const config = new ApolloConfig(
         { service: { name: "hai", ...DefaultConfigBase } },
-        uri
+        uri,
       );
       // can be either /test/dir/name or \\test\\dir\\name depending on platform
       // this difference is fine :)
       expect(config.configDirURI?.fsPath).toMatch(
-        /\/test\/dir\/name|\\test\\dir\\name/
+        /\/test\/dir\/name|\\test\\dir\\name/,
       );
     });
   });

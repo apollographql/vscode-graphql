@@ -22,7 +22,7 @@ type applyArg = [
   string | number | undefined,
   any,
   readonly (string | number)[],
-  readonly any[]
+  readonly any[],
 ];
 
 /**
@@ -31,7 +31,7 @@ type applyArg = [
  */
 export function visitWithTypeInfo(
   typeInfo: TypeInfo,
-  visitor: Visitor<ASTKindToNode>
+  visitor: Visitor<ASTKindToNode>,
 ): Visitor<ASTKindToNode> {
   return {
     enter(node: ASTNode) {
@@ -67,23 +67,23 @@ export function visitWithTypeInfo(
 
 export function positionFromPositionInContainingDocument(
   source: Source,
-  position: Position
+  position: Position,
 ) {
   if (!source.locationOffset) return position;
   return Position.create(
     position.line - (source.locationOffset.line - 1),
-    position.character
+    position.character,
   );
 }
 
 export function positionInContainingDocument(
   source: Source,
-  position: Position
+  position: Position,
 ): Position {
   if (!source.locationOffset) return position;
   return Position.create(
     source.locationOffset.line - 1 + position.line,
-    position.character
+    position.character,
   );
 }
 
@@ -91,7 +91,7 @@ export function rangeInContainingDocument(source: Source, range: Range): Range {
   if (!source.locationOffset) return range;
   return Range.create(
     positionInContainingDocument(source, range.start),
-    positionInContainingDocument(source, range.end)
+    positionInContainingDocument(source, range.end),
   );
 }
 
@@ -101,13 +101,13 @@ export function rangeForASTNode(node: ASTNode): Range {
 
   return Range.create(
     positionFromSourceLocation(source, getLocation(source, location.start)),
-    positionFromSourceLocation(source, getLocation(source, location.end))
+    positionFromSourceLocation(source, getLocation(source, location.end)),
   );
 }
 
 export function positionFromSourceLocation(
   source: Source,
-  location: SourceLocation
+  location: SourceLocation,
 ) {
   return Position.create(
     (source.locationOffset ? source.locationOffset.line - 1 : 0) +
@@ -117,7 +117,7 @@ export function positionFromSourceLocation(
       ? source.locationOffset.column - 1
       : 0) +
       location.column -
-      1
+      1,
   );
 }
 
@@ -132,7 +132,7 @@ export function positionToOffset(source: Source, position: Position): number {
     position.character +
     linesUntilPosition
       .map(
-        (line) => line.length + lineEndingLength // count EOL
+        (line) => line.length + lineEndingLength, // count EOL
       )
       .reduce((a, b) => a + b, 0)
   );
@@ -142,7 +142,7 @@ export function getASTNodeAndTypeInfoAtPosition(
   source: Source,
   position: Position,
   root: ASTNode,
-  schema: GraphQLSchema
+  schema: GraphQLSchema,
 ): [ASTNode, TypeInfo] | null {
   const offset = positionToOffset(source, position);
 
@@ -171,7 +171,7 @@ export function getASTNodeAndTypeInfoAtPosition(
         }
         return;
       },
-    })
+    }),
   );
 
   if (nodeContainingPosition) {

@@ -24,7 +24,7 @@ export {
 
 export function schemaProviderFromConfig(
   config: ApolloConfig,
-  clientIdentity?: ClientIdentity // engine provider needs this
+  clientIdentity?: ClientIdentity, // engine provider needs this
 ): GraphQLSchemaProvider {
   // we need this to be first because there will pretty much always be a
   // url (since it's a default). If there is a localSchemaFile, we need to
@@ -34,7 +34,7 @@ export function schemaProviderFromConfig(
     return new FileSchemaProvider(
       isListOfSchemaFiles
         ? { paths: config.service.localSchemaFile as string[] }
-        : { path: config.service.localSchemaFile as string }
+        : { path: config.service.localSchemaFile as string },
     );
   }
 
@@ -50,14 +50,14 @@ export function schemaProviderFromConfig(
     if (config.client.service) {
       if (isLocalServiceConfig(config.client.service)) {
         const isListOfSchemaFiles = Array.isArray(
-          config.client.service.localSchemaFile
+          config.client.service.localSchemaFile,
         );
         return new FileSchemaProvider(
           isListOfSchemaFiles
             ? { paths: config.client.service.localSchemaFile as string[] }
             : {
                 path: config.client.service.localSchemaFile as string,
-              }
+              },
         );
       }
 
@@ -70,6 +70,6 @@ export function schemaProviderFromConfig(
   }
 
   throw new Error(
-    "No schema provider was created, because the project type was unable to be resolved from your config. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config"
+    "No schema provider was created, because the project type was unable to be resolved from your config. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config",
   );
 }

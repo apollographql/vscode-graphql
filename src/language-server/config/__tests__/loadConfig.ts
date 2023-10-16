@@ -191,7 +191,7 @@ describe("loadConfig", () => {
       });
 
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/config file failed to load/i)
+        expect.stringMatching(/config file failed to load/i),
       );
 
       spy.mockRestore();
@@ -210,7 +210,7 @@ describe("loadConfig", () => {
       });
 
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/config file failed to load/i)
+        expect.stringMatching(/config file failed to load/i),
       );
 
       spy.mockRestore();
@@ -230,7 +230,7 @@ describe("loadConfig", () => {
       });
 
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/The "apollo" package.json configuration/i)
+        expect.stringMatching(/The "apollo" package.json configuration/i),
       );
 
       spy.mockRestore();
@@ -248,7 +248,7 @@ describe("loadConfig", () => {
       });
 
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/no apollo config/i)
+        expect.stringMatching(/no apollo config/i),
       );
       spy.mockRestore();
     });
@@ -267,7 +267,7 @@ describe("loadConfig", () => {
       });
 
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/unable to resolve/i)
+        expect.stringMatching(/unable to resolve/i),
       );
       spy.mockRestore();
     });
@@ -332,7 +332,7 @@ describe("loadConfig", () => {
 
       expect(config?.client?.service).toEqual("yoshi");
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Deprecation warning/i)
+        expect.stringMatching(/Deprecation warning/i),
       );
     });
 
@@ -350,7 +350,7 @@ describe("loadConfig", () => {
 
       expect(config?.engine.apiKey).toEqual("service:yoshi:65489061ko");
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Both ENGINE_API_KEY and APOLLO_KEY were found/i)
+        expect.stringMatching(/Both ENGINE_API_KEY and APOLLO_KEY were found/i),
       );
     });
 
@@ -471,7 +471,7 @@ describe("loadConfig", () => {
       });
 
       expect(config?.rawConfig?.client?.includes).toEqual(
-        DefaultClientConfig.includes
+        DefaultClientConfig.includes,
       );
     });
 
@@ -486,7 +486,7 @@ describe("loadConfig", () => {
       });
 
       expect(config?.rawConfig?.service?.includes).toEqual(
-        DefaultServiceConfig.includes
+        DefaultServiceConfig.includes,
       );
     });
 
@@ -501,7 +501,7 @@ describe("loadConfig", () => {
       });
 
       expect(config?.rawConfig?.engine?.endpoint).toEqual(
-        DefaultEngineConfig.endpoint
+        DefaultEngineConfig.endpoint,
       );
     });
   });

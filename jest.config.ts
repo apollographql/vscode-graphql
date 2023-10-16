@@ -1,10 +1,14 @@
-import type { Config } from '@jest/types';
+import type { Config } from "@jest/types";
 
 const config: Config.InitialOptions = {
-  roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.test.ts'],
+  roots: ["<rootDir>/src"],
+  snapshotFormat: {
+    escapeString: true,
+    printBasicPrototype: true,
+  },
+  testMatch: ["**/__tests__/**/*.test.ts"],
   transform: {
-    '^.+\\.(ts)$': 'ts-jest',
+    "^.+\\.(ts)$": "ts-jest",
   },
 };
 

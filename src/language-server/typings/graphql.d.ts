@@ -10,13 +10,13 @@ import {
 // to `@types/graphql`.
 declare module "graphql/language/predicates" {
   function isExecutableDefinitionNode(
-    node: ASTNode
+    node: ASTNode,
   ): node is OperationDefinitionNode | FragmentDefinitionNode;
   function isTypeSystemDefinitionNode(
-    node: ASTNode
+    node: ASTNode,
   ): node is TypeSystemDefinitionNode;
   function isTypeSystemExtensionNode(
-    node: ASTNode
+    node: ASTNode,
   ): node is TypeSystemExtensionNode;
 }
 

@@ -35,7 +35,7 @@ export function logError(error: Error) {
 export function logErrorMessage(
   message: string,
   fileName?: string,
-  lineNumber?: number
+  lineNumber?: number,
 ) {
   if (isRunningFromXcodeScript) {
     if (fileName && lineNumber) {

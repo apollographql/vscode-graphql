@@ -9,7 +9,7 @@ export type SchemaChangeUnsubscribeHandler = () => void;
 export interface GraphQLSchemaProvider {
   resolveSchema(config?: SchemaResolveConfig): Promise<GraphQLSchema>;
   onSchemaChange(
-    handler: NotificationHandler<GraphQLSchema>
+    handler: NotificationHandler<GraphQLSchema>,
   ): SchemaChangeUnsubscribeHandler;
   resolveFederatedServiceSDL(): Promise<string | void>;
 }

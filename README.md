@@ -1,11 +1,11 @@
 <div align="center">
 
 <p>
-	<a href="https://www.apollographql.com/"><img src="https://raw.githubusercontent.com/apollographql/apollo-client-devtools/main/assets/apollo-wordmark.svg" height="100" alt="Apollo Client"></a>
+	<a href="https://www.apollographql.com/"><img src="https://raw.githubusercontent.com/apollographql/apollo-client-devtools/main/assets/apollo-wordmark.svg" height="100" alt=""></a>
 </p>
 <h1>Apollo GraphQL for VS Code</h1>
 
-[![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/apollographql.vscode-apollo)](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) [![Build Status](https://circleci.com/gh/apollographql/vscode-graphql.svg?style=svg)](https://circleci.com/gh/apollographql/vscode-graphql) [![Join the community](https://img.shields.io/discourse/status?label=Join%20the%20community&server=https%3A%2F%2Fcommunity.apollographql.com)](https://community.apollographql.com) [![Join our Discord server](https://img.shields.io/discord/1022972389463687228.svg?color=7389D8&labelColor=6A7EC2&logo=discord&logoColor=ffffff&style=flat-square)](https://discord.gg/graphos)
+[![Visual Studio Marketplace Version (including pre-releases)](https://img.shields.io/visual-studio-marketplace/v/apollographql.vscode-apollo)](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/apollographql.vscode-apollo)](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) [![Build Status](https://circleci.com/gh/apollographql/vscode-graphql.svg?style=svg)](https://circleci.com/gh/apollographql/vscode-graphql) [![Join the community](https://img.shields.io/discourse/status?label=Join%20the%20community&server=https%3A%2F%2Fcommunity.apollographql.com)](https://community.apollographql.com) [![Join our Discord server](https://img.shields.io/discord/1022972389463687228.svg?color=7389D8&labelColor=6A7EC2&logo=discord&logoColor=ffffff&style=flat-square)](https://discord.gg/graphos)
 
 </div>
 
@@ -38,8 +38,8 @@ In order for the VS Code plugin to know how to find the schema, it needs to be l
 ```js
 module.exports = {
   client: {
-    service: "my-graphql-app"
-  }
+    service: "my-graphql-app",
+  },
 };
 ```
 
@@ -71,9 +71,9 @@ module.exports = {
   client: {
     service: {
       name: "my-graphql-app",
-      url: "http://localhost:4000/graphql"
-    }
-  }
+      url: "http://localhost:4000/graphql",
+    },
+  },
 };
 ```
 

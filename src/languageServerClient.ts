@@ -11,7 +11,7 @@ const { version, referenceID } = require("../package.json");
 
 export function getLanguageServerClient(
   serverModule: string,
-  outputChannel: OutputChannel
+  outputChannel: OutputChannel,
 ) {
   const env = {
     APOLLO_CLIENT_NAME: "Apollo VS Code",
@@ -59,7 +59,7 @@ export function getLanguageServerClient(
       fileEvents: [
         workspace.createFileSystemWatcher("**/.env?(.local)"),
         workspace.createFileSystemWatcher(
-          "**/*.{graphql,js,ts,jsx,tsx,vue,svelte,py,rb,dart,re,ex,exs}"
+          "**/*.{graphql,js,ts,jsx,tsx,vue,svelte,py,rb,dart,re,ex,exs}",
         ),
       ],
     },
@@ -75,6 +75,6 @@ export function getLanguageServerClient(
     "apollographql",
     "Apollo GraphQL",
     serverOptions,
-    clientOptions
+    clientOptions,
   );
 }

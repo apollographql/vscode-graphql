@@ -1,6 +1,6 @@
 declare function fetch(
   input?: RequestInfo,
-  init?: RequestInit
+  init?: RequestInit,
 ): Promise<Response>;
 
 declare interface GlobalFetch {

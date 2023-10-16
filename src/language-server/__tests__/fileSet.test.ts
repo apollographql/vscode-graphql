@@ -1,5 +1,5 @@
 import { FileSet } from "../fileSet";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 
 describe("fileSet", () => {
   describe("includesFile", () => {

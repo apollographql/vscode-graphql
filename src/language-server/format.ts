@@ -4,7 +4,7 @@ export function formatMS(
   ms: number,
   d: number,
   allowMicros = false,
-  allowNanos = true
+  allowNanos = true,
 ) {
   if (ms === 0 || ms === null) return "0";
   const bounds = [

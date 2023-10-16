@@ -23,7 +23,7 @@ export function collectExecutableDefinitionDiagnositics(
   schema: GraphQLSchema,
   queryDocument: GraphQLDocument,
   fragments: { [fragmentName: string]: FragmentDefinitionNode } = {},
-  rules?: ValidationRule[]
+  rules?: ValidationRule[],
 ): Diagnostic[] {
   const ast = queryDocument.ast;
   if (!ast) return queryDocument.syntaxErrors;
@@ -39,19 +39,19 @@ export function collectExecutableDefinitionDiagnositics(
     schema,
     astWithExecutableDefinitions,
     fragments,
-    rules
+    rules,
   )) {
     diagnostics.push(
-      ...diagnosticsFromError(error, DiagnosticSeverity.Error, "Validation")
+      ...diagnosticsFromError(error, DiagnosticSeverity.Error, "Validation"),
     );
   }
 
   for (const error of findDeprecatedUsages(
     schema,
-    astWithExecutableDefinitions
+    astWithExecutableDefinitions,
   )) {
     diagnostics.push(
-      ...diagnosticsFromError(error, DiagnosticSeverity.Warning, "Deprecation")
+      ...diagnosticsFromError(error, DiagnosticSeverity.Warning, "Deprecation"),
     );
   }
 
@@ -61,7 +61,7 @@ export function collectExecutableDefinitionDiagnositics(
 export function diagnosticsFromError(
   error: GraphQLError,
   severity: DiagnosticSeverity,
-  type: string
+  type: string,
 ): GraphQLDiagnostic[] {
   if (!error.nodes) {
     return [];

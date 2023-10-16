@@ -4,7 +4,7 @@ export type GraphQLObjectResolver<TSource, TContext> = (
   source: TSource,
   fields: Record<string, ReadonlyArray<FieldNode>>,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => any;
 
 declare module "graphql/type/definition" {

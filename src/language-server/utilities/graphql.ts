@@ -36,7 +36,7 @@ export function isNamedNode(node: ASTNode): node is NamedNode {
 }
 
 export function isDirectiveDefinitionNode(
-  node: ASTNode
+  node: ASTNode,
 ): node is DirectiveDefinitionNode {
   return node.kind === Kind.DIRECTIVE_DEFINITION;
 }
@@ -58,7 +58,7 @@ export function highlightNodeForNode(node: ASTNode): ASTNode {
 export function getFieldDef(
   schema: GraphQLSchema,
   parentType: GraphQLCompositeType,
-  fieldAST: FieldNode
+  fieldAST: FieldNode,
 ): GraphQLField<any, any> | undefined {
   const name = fieldAST.name.value;
   if (
@@ -93,7 +93,7 @@ export function getFieldDef(
  */
 export function removeDirectives<AST extends ASTNode>(
   ast: AST,
-  directiveNames: string[]
+  directiveNames: string[],
 ): AST {
   if (!directiveNames.length) return ast;
   return visit(ast, {
@@ -117,7 +117,7 @@ export function removeDirectives<AST extends ASTNode>(
  */
 function removeOrphanedFragmentDefinitions<AST extends ASTNode>(
   ast: AST,
-  fragmentNamesEligibleForRemoval: Set<string>
+  fragmentNamesEligibleForRemoval: Set<string>,
 ): AST {
   /**
    * Flag to keep track of removing any fragments
@@ -172,7 +172,7 @@ function removeOrphanedFragmentDefinitions<AST extends ASTNode>(
       */
     return removeOrphanedFragmentDefinitions(
       ast,
-      fragmentNamesEligibleForRemoval
+      fragmentNamesEligibleForRemoval,
     );
   }
 
@@ -208,7 +208,7 @@ function removeNodesWithEmptySelectionSets<AST extends ASTNode>(ast: AST): AST {
  */
 export function removeDirectiveAnnotatedFields<AST extends ASTNode>(
   ast: AST,
-  directiveNames: string[]
+  directiveNames: string[],
 ): AST {
   print;
   if (!directiveNames.length) return ast;
@@ -236,7 +236,7 @@ export function removeDirectiveAnnotatedFields<AST extends ASTNode>(
         "directives" in node &&
         node.directives &&
         node.directives.find((directive) =>
-          directiveNames.includes(directive.name.value)
+          directiveNames.includes(directive.name.value),
         )
       ) {
         /*
@@ -318,7 +318,7 @@ export function withTypenameFieldAddedWhereNeeded(ast: ASTNode) {
               !(
                 selection.kind === "Field" &&
                 selection.name.value === "__typename"
-              )
+              ),
           ),
         };
       },
@@ -357,7 +357,7 @@ export function simpleCollectFields(
   context: ExecutionContext,
   selectionSet: SelectionSetNode,
   fields: Record<string, FieldNode[]>,
-  visitedFragmentNames: Record<string, boolean>
+  visitedFragmentNames: Record<string, boolean>,
 ): Record<string, FieldNode[]> {
   for (const selection of selectionSet.selections) {
     switch (selection.kind) {
@@ -374,7 +374,7 @@ export function simpleCollectFields(
           context,
           selection.selectionSet,
           fields,
-          visitedFragmentNames
+          visitedFragmentNames,
         );
         break;
       }
@@ -388,7 +388,7 @@ export function simpleCollectFields(
           context,
           fragment.selectionSet,
           fields,
-          visitedFragmentNames
+          visitedFragmentNames,
         );
         break;
       }
@@ -397,7 +397,7 @@ export function simpleCollectFields(
   return fields;
 }
 export function hasClientDirective(
-  node: FieldNode | InlineFragmentNode | FragmentDefinitionNode
+  node: FieldNode | InlineFragmentNode | FragmentDefinitionNode,
 ) {
   return (
     node.directives &&

@@ -1,6 +1,6 @@
 import path, { extname } from "path";
 import { lstatSync, readFileSync } from "fs";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 
 import {
   TypeSystemDefinitionNode,
@@ -116,7 +116,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
       this.engineClient = new ApolloEngineClient(
         engine.apiKey!,
         engine.endpoint,
-        clientIdentity
+        clientIdentity,
       );
     }
 
@@ -130,7 +130,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
       .catch((error) => {
         console.error(error);
         this.loadingHandler.showError(
-          `Error initializing Apollo GraphQL project "${this.displayName}": ${error}`
+          `Error initializing Apollo GraphQL project "${this.displayName}": ${error}`,
         );
       });
   }
@@ -202,7 +202,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
 
           this.fileDidChange(uri);
         }
-      })()
+      })(),
     );
   }
 
@@ -231,7 +231,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
   documentDidChange(document: TextDocument) {
     const documents = extractGraphQLDocuments(
       document,
-      this.config.client && this.config.client.tagName
+      this.config.client && this.config.client.tagName,
     );
     if (documents) {
       this.documentsByFile.set(document.uri, documents);
@@ -258,7 +258,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
               const conflictingFilePath =
                 filePathForOperationName[operationName];
               throw new Error(
-                `️️There are multiple definitions for the \`${definition.name.value}\` operation. Please fix all naming conflicts before continuing.\nConflicting definitions found at ${filePath} and ${conflictingFilePath}.`
+                `️️There are multiple definitions for the \`${definition.name.value}\` operation. Please fix all naming conflicts before continuing.\nConflicting definitions found at ${filePath} and ${conflictingFilePath}.`,
               );
             }
             filePathForOperationName[operationName] = filePath;
@@ -313,7 +313,7 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
         ? localSchemaFile
         : [localSchemaFile]
     ).map((filePath) =>
-      path.relative(this.rootURI.fsPath, path.join(process.cwd(), filePath))
+      path.relative(this.rootURI.fsPath, path.join(process.cwd(), filePath)),
     );
   }
 
@@ -333,13 +333,13 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
 
   documentAt(
     uri: DocumentUri,
-    position: Position
+    position: Position,
   ): GraphQLDocument | undefined {
     const queryDocuments = this.documentsByFile.get(uri);
     if (!queryDocuments) return undefined;
 
     return queryDocuments.find((document) =>
-      document.containsPosition(position)
+      document.containsPosition(position),
     );
   }
 

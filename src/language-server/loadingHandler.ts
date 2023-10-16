@@ -17,19 +17,19 @@ export class LanguageServerLoadingHandler implements LoadingHandler {
     this.latestLoadingToken += 1;
     this.connection.sendNotification(
       new NotificationType<any, void>("apollographql/loading"),
-      { message, token }
+      { message, token },
     );
     try {
       const ret = await value;
       this.connection.sendNotification(
         new NotificationType<any, void>("apollographql/loadingComplete"),
-        token
+        token,
       );
       return ret;
     } catch (e) {
       this.connection.sendNotification(
         new NotificationType<any, void>("apollographql/loadingComplete"),
-        token
+        token,
       );
       this.showError(`Error in "${message}": ${e}`);
       throw e;
@@ -40,19 +40,19 @@ export class LanguageServerLoadingHandler implements LoadingHandler {
     this.latestLoadingToken += 1;
     this.connection.sendNotification(
       new NotificationType<any, void>("apollographql/loading"),
-      { message, token }
+      { message, token },
     );
     try {
       const ret = value();
       this.connection.sendNotification(
         new NotificationType<any, void>("apollographql/loadingComplete"),
-        token
+        token,
       );
       return ret;
     } catch (e) {
       this.connection.sendNotification(
         new NotificationType<any, void>("apollographql/loadingComplete"),
-        token
+        token,
       );
       this.showError(`Error in "${message}": ${e}`);
       throw e;

@@ -26,7 +26,7 @@ export class GraphQLDataSource<TContext = any> {
 
   // XXX can we kill the casting here?
   public async execute<T>(
-    operation: GraphQLRequest
+    operation: GraphQLRequest,
   ): Promise<GraphQLResponse<T>> {
     return this.executeSingleOperation(operation) as Promise<
       GraphQLResponse<T>
@@ -86,7 +86,7 @@ export class GraphQLDataSource<TContext = any> {
 
     if (!baseURL) {
       throw new ApolloError(
-        "Cannot make request to GraphQL API, missing baseURL"
+        "Cannot make request to GraphQL API, missing baseURL",
       );
     }
 
@@ -108,7 +108,7 @@ export class GraphQLDataSource<TContext = any> {
       const { result, response } = operation.getContext();
       if (graphQLErrors) {
         graphQLErrors.map((graphqlError) =>
-          console.error(`[GraphQL error]: ${graphqlError.message}`)
+          console.error(`[GraphQL error]: ${graphqlError.message}`),
         );
       }
 

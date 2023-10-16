@@ -1,7 +1,7 @@
 import minimatch from "minimatch";
 import glob from "glob";
 import { invariant } from "../tools";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 import { normalizeURI } from "./utilities";
 import { resolve } from "path";
 
@@ -37,13 +37,13 @@ export class FileSet {
       this.includes.some((include) => {
         return minimatch(
           normalizedFilePath,
-          resolve(this.rootURI.fsPath, include)
+          resolve(this.rootURI.fsPath, include),
         );
       }) &&
       !this.excludes.some((exclude) => {
         return minimatch(
           normalizedFilePath,
-          resolve(this.rootURI.fsPath, exclude)
+          resolve(this.rootURI.fsPath, exclude),
         );
       })
     );

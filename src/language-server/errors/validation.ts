@@ -48,7 +48,7 @@ export function getValidationErrors(
   schema: GraphQLSchema,
   document: DocumentNode,
   fragments?: { [fragmentName: string]: FragmentDefinitionNode },
-  rules: ValidationRule[] = defaultValidationRules
+  rules: ValidationRule[] = defaultValidationRules,
 ) {
   const typeInfo = new TypeInfo(schema);
 
@@ -83,7 +83,7 @@ export function getValidationErrors(
 
 export function validateQueryDocument(
   schema: GraphQLSchema,
-  document: DocumentNode
+  document: DocumentNode,
 ) {
   try {
     const validationErrors = getValidationErrors(schema, document);
@@ -106,7 +106,7 @@ export function NoAnonymousQueries(context: ValidationContext) {
         context.reportError(
           new GraphQLError("Apollo does not support anonymous operations", [
             node,
-          ])
+          ]),
         );
       }
       return false;
@@ -122,8 +122,8 @@ export function NoTypenameAlias(context: ValidationContext) {
         context.reportError(
           new GraphQLError(
             "Apollo needs to be able to insert __typename when needed, please do not use it as an alias",
-            [node]
-          )
+            [node],
+          ),
         );
       }
     },
@@ -138,7 +138,7 @@ function hasClientSchema(schema: GraphQLSchema): boolean {
   return Boolean(
     (query && query.clientSchema) ||
       (mutation && mutation.clientSchema) ||
-      (subscription && subscription.clientSchema)
+      (subscription && subscription.clientSchema),
   );
 }
 
@@ -159,10 +159,10 @@ export function NoMissingClientDirectives(context: ValidationContext) {
     Object.create(null),
     undefined,
     undefined,
-    undefined
+    undefined,
   );
   function visitor(
-    node: FieldNode | InlineFragmentNode | FragmentDefinitionNode
+    node: FieldNode | InlineFragmentNode | FragmentDefinitionNode,
   ) {
     // In cases where we are looking at a FragmentDefinition, there is no parent type
     // but instead, the FragmentDefinition contains the type that we can read from the
@@ -194,7 +194,7 @@ export function NoMissingClientDirectives(context: ValidationContext) {
         // fields are simple because we can just see if the name exists in the local fields
         // array on the parent type
         selectsClientFieldSet = Boolean(
-          clientFields && clientFields.includes(fieldDef?.name || "")
+          clientFields && clientFields.includes(fieldDef?.name || ""),
         );
         message += `local field "${node.name.value}"`;
         break;
@@ -207,7 +207,7 @@ export function NoMissingClientDirectives(context: ValidationContext) {
           executionContext as ExecutionContext,
           node.selectionSet,
           Object.create(null),
-          Object.create(null)
+          Object.create(null),
         );
 
         // once we have a list of fields on the fragment, we can compare them
@@ -215,7 +215,7 @@ export function NoMissingClientDirectives(context: ValidationContext) {
         // subset of the overall local fields types
         const fieldNames = Object.entries(fields).map(([name]) => name);
         selectsClientFieldSet = fieldNames.every(
-          (field) => clientFields && clientFields.includes(field)
+          (field) => clientFields && clientFields.includes(field),
         );
         message += `fragment ${
           "name" in node ? `"${node.name.value}" ` : ""
@@ -247,9 +247,9 @@ export function NoMissingClientDirectives(context: ValidationContext) {
             TextEdit.insert(
               positionFromSourceLocation(
                 source,
-                getLocation(source, locToInsertDirective)
+                getLocation(source, locToInsertDirective),
               ),
-              " @client"
+              " @client",
             ),
           ],
         };
@@ -257,7 +257,7 @@ export function NoMissingClientDirectives(context: ValidationContext) {
       }
 
       context.reportError(
-        new GraphQLError(message, [node], null, null, null, null, extensions)
+        new GraphQLError(message, [node], null, null, null, null, extensions),
       );
     }
 

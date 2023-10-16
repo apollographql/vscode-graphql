@@ -17,7 +17,7 @@ export const timeSince = (date: number) => {
 
 export const printNoFileOpenMessage = (
   client: LanguageClient,
-  extVersion: string
+  extVersion: string,
 ) => {
   client.outputChannel.appendLine("------------------------------");
   client.outputChannel.appendLine(`🚀 Apollo GraphQL v${extVersion}`);
@@ -27,7 +27,7 @@ export const printNoFileOpenMessage = (
 export const printStatsToClientOutputChannel = (
   client: LanguageClient,
   stats: ProjectStats,
-  extVersion: string
+  extVersion: string,
 ) => {
   client.outputChannel.appendLine("------------------------------");
   client.outputChannel.appendLine(`🚀 Apollo GraphQL v${extVersion}`);
@@ -37,7 +37,7 @@ export const printStatsToClientOutputChannel = (
     client.outputChannel.appendLine(
       "❌ Service stats could not be loaded. This may be because you're missing an apollo.config.js file " +
         "or it is misconfigured. For more information about configuring Apollo projects, " +
-        "see the guide here (https://go.apollo.dev/t/config)."
+        "see the guide here (https://go.apollo.dev/t/config).",
     );
     return;
   }
@@ -54,12 +54,12 @@ export const printStatsToClientOutputChannel = (
       client.outputChannel.appendLine(
         `📈 Number of Types: ${stats.types.total} (${
           stats.types.client
-        } client ${stats.types.client === 1 ? "type" : "types"})`
+        } client ${stats.types.client === 1 ? "type" : "types"})`,
       );
 
     if (stats.lastFetch && timeSince(stats.lastFetch)) {
       client.outputChannel.appendLine(
-        `🗓 Last Fetched ${timeSince(stats.lastFetch)} Ago`
+        `🗓 Last Fetched ${timeSince(stats.lastFetch)} Ago`,
       );
     }
     client.outputChannel.appendLine("------------------------------");

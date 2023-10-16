@@ -17,7 +17,7 @@ import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { ServiceID, SchemaTag, ClientIdentity } from "./engine";
 import { GraphQLClientProject, isClientProject } from "./project/client";
 import { GraphQLServiceProject } from "./project/service";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 import { Debug } from "./utilities";
 import type { EngineDecoration } from "src/messages";
 
@@ -36,7 +36,7 @@ export class GraphQLWorkspace {
 
   constructor(
     private LanguageServerLoadingHandler: LanguageServerLoadingHandler,
-    private config: WorkspaceConfig
+    private config: WorkspaceConfig,
   ) {}
 
   onDiagnostics(handler: NotificationHandler<PublishDiagnosticsParams>) {
@@ -121,7 +121,7 @@ export class GraphQLWorkspace {
         cwd: URI.parse(folder.uri).fsPath,
         absolute: true,
         ignore: "**/node_modules/**",
-      }
+      },
     );
 
     // only have unique possible folders
@@ -136,7 +136,7 @@ export class GraphQLWorkspace {
           if (config) {
             foundConfigs.push(config);
             const projectsForConfig = config.projects.map((projectConfig) =>
-              this.createProject({ config, folder })
+              this.createProject({ config, folder }),
             );
 
             const existingProjects =
@@ -148,11 +148,11 @@ export class GraphQLWorkspace {
             ]);
           } else {
             Debug.error(
-              `Workspace failed to load config from: ${configFolder}/`
+              `Workspace failed to load config from: ${configFolder}/`,
             );
           }
         })
-        .catch((error) => Debug.error(error))
+        .catch((error) => Debug.error(error)),
     );
 
     await Promise.all(projectConfigs);
@@ -173,7 +173,7 @@ export class GraphQLWorkspace {
             config: project.config,
             folder: { uri } as WorkspaceFolder,
           });
-        })
+        }),
       );
     });
   }

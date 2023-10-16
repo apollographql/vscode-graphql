@@ -14,7 +14,7 @@ import { GraphQLLanguageProvider } from "./languageProvider";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
 import type { Connection } from "src/messages";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 
 const connection: Connection = createConnection(ProposedFeatures.all);
 Debug.SetConnection(connection);
@@ -24,7 +24,7 @@ let hasWorkspaceFolderCapability = false;
 // Awaitable promise for sending messages before the connection is initialized
 let initializeConnection: () => void;
 const whenConnectionInitialized: Promise<void> = new Promise(
-  (resolve) => (initializeConnection = resolve)
+  (resolve) => (initializeConnection = resolve),
 );
 
 const workspace = new GraphQLWorkspace(
@@ -35,7 +35,7 @@ const workspace = new GraphQLWorkspace(
       version: process.env["APOLLO_CLIENT_VERSION"],
       referenceID: process.env["APOLLO_CLIENT_REFERENCE_ID"],
     },
-  }
+  },
 );
 
 workspace.onDiagnostics((params) => {
@@ -51,7 +51,7 @@ workspace.onDecorations((params) => {
 workspace.onSchemaTags((params) => {
   connection.sendNotification(
     "apollographql/tagsLoaded",
-    JSON.stringify(params)
+    JSON.stringify(params),
   );
 });
 
@@ -63,7 +63,7 @@ workspace.onConfigFilesFound(async (params) => {
     params instanceof Error
       ? // Can't stringify Errors, just results in "{}"
         JSON.stringify({ message: params.message, stack: params.stack })
-      : JSON.stringify(params)
+      : JSON.stringify(params),
   );
 });
 
@@ -77,7 +77,7 @@ connection.onInitialize(async ({ capabilities, workspaceFolders }) => {
     // like `textDocument/codeLens`, and that way these can await `GraphQLProject#whenReady` to make sure
     // we provide them eventually.
     await Promise.all(
-      workspaceFolders.map((folder) => workspace.addProjectsInFolder(folder))
+      workspaceFolders.map((folder) => workspace.addProjectsInFolder(folder)),
     );
   }
 
@@ -110,7 +110,7 @@ connection.onInitialized(async () => {
     connection.workspace.onDidChangeWorkspaceFolders(async (event) => {
       await Promise.all([
         ...event.removed.map((folder) =>
-          workspace.removeProjectsInFolder(folder)
+          workspace.removeProjectsInFolder(folder),
         ),
         ...event.added.map((folder) => workspace.addProjectsInFolder(folder)),
       ]);
@@ -139,7 +139,7 @@ documents.onDidChangeContent(
     }
 
     project.documentDidChange(params.document);
-  })
+  }),
 );
 
 connection.onDidChangeWatchedFiles((params) => {
@@ -180,15 +180,19 @@ connection.onDidChangeWatchedFiles((params) => {
 const languageProvider = new GraphQLLanguageProvider(workspace);
 
 connection.onHover((params, token) =>
-  languageProvider.provideHover(params.textDocument.uri, params.position, token)
+  languageProvider.provideHover(
+    params.textDocument.uri,
+    params.position,
+    token,
+  ),
 );
 
 connection.onDefinition((params, token) =>
   languageProvider.provideDefinition(
     params.textDocument.uri,
     params.position,
-    token
-  )
+    token,
+  ),
 );
 
 connection.onReferences((params, token) =>
@@ -196,16 +200,16 @@ connection.onReferences((params, token) =>
     params.textDocument.uri,
     params.position,
     params.context,
-    token
-  )
+    token,
+  ),
 );
 
 connection.onDocumentSymbol((params, token) =>
-  languageProvider.provideDocumentSymbol(params.textDocument.uri, token)
+  languageProvider.provideDocumentSymbol(params.textDocument.uri, token),
 );
 
 connection.onWorkspaceSymbol((params, token) =>
-  languageProvider.provideWorkspaceSymbol(params.query, token)
+  languageProvider.provideWorkspaceSymbol(params.query, token),
 );
 
 connection.onCompletion(
@@ -213,15 +217,15 @@ connection.onCompletion(
     languageProvider.provideCompletionItems(
       params.textDocument.uri,
       params.position,
-      token
-    )
-  )
+      token,
+    ),
+  ),
 );
 
 connection.onCodeLens(
   debounceHandler((params, token) =>
-    languageProvider.provideCodeLenses(params.textDocument.uri, token)
-  )
+    languageProvider.provideCodeLenses(params.textDocument.uri, token),
+  ),
 );
 
 connection.onCodeAction(
@@ -229,18 +233,18 @@ connection.onCodeAction(
     languageProvider.provideCodeAction(
       params.textDocument.uri,
       params.range,
-      token
-    )
-  )
+      token,
+    ),
+  ),
 );
 
 connection.onNotification("apollographql/reloadService", () =>
-  workspace.reloadService()
+  workspace.reloadService(),
 );
 
 connection.onNotification(
   "apollographql/tagSelected",
-  (selection: QuickPickItem) => workspace.updateSchemaTag(selection)
+  (selection: QuickPickItem) => workspace.updateSchemaTag(selection),
 );
 
 connection.onNotification("apollographql/getStats", async ({ uri }) => {

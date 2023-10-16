@@ -20,7 +20,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
 
   constructor(
     private config: ClientConfig,
-    private clientIdentity?: ClientIdentity
+    private clientIdentity?: ClientIdentity,
   ) {}
 
   async resolveSchema(override: SchemaResolveConfig) {
@@ -29,7 +29,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
 
     if (!this.config.graph) {
       throw new Error(
-        `No graph ID found for client. Please specify a graph ID via the config or the --graph flag`
+        `No graph ID found for client. Please specify a graph ID via the config or the --graph flag`,
       );
     }
 
@@ -37,13 +37,13 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
     if (!this.client) {
       if (!engine.apiKey) {
         throw new Error(
-          `No API key found. Please set ${keyEnvVar} or use --key`
+          `No API key found. Please set ${keyEnvVar} or use --key`,
         );
       }
       this.client = new ApolloEngineClient(
         engine.apiKey,
         engine.endpoint,
-        this.clientIdentity
+        this.clientIdentity,
       );
     }
 
@@ -61,7 +61,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
 
     if (!(data && data.service && data.service.__typename === "Service")) {
       throw new Error(
-        `Unable to get schema from the Apollo registry for graph ${this.config.graph}`
+        `Unable to get schema from the Apollo registry for graph ${this.config.graph}`,
       );
     }
 
@@ -72,7 +72,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
   }
 
   onSchemaChange(
-    _handler: NotificationHandler<GraphQLSchema>
+    _handler: NotificationHandler<GraphQLSchema>,
   ): SchemaChangeUnsubscribeHandler {
     throw new Error("Polling of Apollo not implemented yet");
     return () => {};
@@ -80,7 +80,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
 
   async resolveFederatedServiceSDL() {
     Debug.error(
-      "Cannot resolve a federated service's SDL from Apollo. Use an endpoint or a file instead"
+      "Cannot resolve a federated service's SDL from Apollo. Use an endpoint or a file instead",
     );
     return;
   }

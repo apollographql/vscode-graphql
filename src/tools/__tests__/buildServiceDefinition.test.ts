@@ -169,11 +169,11 @@ Array [
       const schema = service.schema!;
 
       expect(schema.getDirective("something")).toMatchInlineSnapshot(
-        `"@something"`
+        `"@something"`,
       );
 
       expect(schema.getDirective("another")).toMatchInlineSnapshot(
-        `"@another"`
+        `"@another"`,
       );
     });
 

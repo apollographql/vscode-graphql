@@ -19,7 +19,7 @@ import {
   composeServices,
   printSchema as printFederatedSchema,
 } from "@apollo/federation";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 // import federationDirectives from "@apollo/federation/src/directives";
 
 export interface FileSchemaProviderConfig {
@@ -48,7 +48,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
       throw new Error(
         `Schema could not be loaded for [${
           path ? path : paths ? paths.join(", ") : "undefined"
-        }]`
+        }]`,
       );
 
     this.schema = buildSchemaFromSDL(documents);
@@ -87,12 +87,12 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
       return parse(new Source(result, uri));
     }
     throw new Error(
-      "File Type not supported for schema loading. Must be a .json, .graphql, .gql, or .graphqls file"
+      "File Type not supported for schema loading. Must be a .json, .graphql, .gql, or .graphqls file",
     );
   }
 
   onSchemaChange(
-    _handler: NotificationHandler<GraphQLSchema>
+    _handler: NotificationHandler<GraphQLSchema>,
   ): SchemaChangeUnsubscribeHandler {
     throw new Error("File watching not implemented yet");
     return () => {};
@@ -116,11 +116,11 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
       return Debug.error(
         `SDL could not be loaded for one of more files: [${
           path ? path : paths ? paths.join(", ") : "undefined"
-        }]`
+        }]`,
       );
 
     const federatedSchema = buildFederatedSchema(
-      SDLs.map((sdl) => ({ typeDefs: parse(sdl as string) }))
+      SDLs.map((sdl) => ({ typeDefs: parse(sdl as string) })),
     );
 
     // call the `Query._service` resolver to get the actual printed sdl
@@ -135,7 +135,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
 
     if (!serviceResults || !serviceResults.sdl)
       return Debug.error(
-        "No SDL resolver or result from federated schema after building"
+        "No SDL resolver or result from federated schema after building",
       );
 
     this.federatedServiceSDL = serviceResults.sdl;
@@ -160,7 +160,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
       return result as string;
     } else {
       return Debug.error(
-        "When using localSchemaFile to check or push a federated service, you can only use .graphql, .gql, and .graphqls files"
+        "When using localSchemaFile to check or push a federated service, you can only use .graphql, .gql, and .graphqls files",
       );
     }
   }

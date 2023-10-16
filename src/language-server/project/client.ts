@@ -53,7 +53,7 @@ import {
   DiagnosticSet,
   diagnosticsFromError,
 } from "../diagnostics";
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 import type { EngineDecoration } from "src/messages";
 import { join } from "path";
 
@@ -65,7 +65,7 @@ function schemaHasASTNodes(schema: GraphQLSchema): boolean {
 }
 
 function augmentSchemaWithGeneratedSDLIfNeeded(
-  schema: GraphQLSchema
+  schema: GraphQLSchema,
 ): GraphQLSchema {
   if (schemaHasASTNodes(schema)) return schema;
 
@@ -74,12 +74,15 @@ function augmentSchemaWithGeneratedSDLIfNeeded(
   return buildSchema(
     // Rebuild the schema from a generated source file and attach the source to a `graphql-schema:/`
     // URI that can be loaded as an in-memory file by VS Code.
-    new Source(sdl, `graphql-schema:/schema.graphql?${encodeURIComponent(sdl)}`)
+    new Source(
+      sdl,
+      `graphql-schema:/schema.graphql?${encodeURIComponent(sdl)}`,
+    ),
   );
 }
 
 export function isClientProject(
-  project: GraphQLProject
+  project: GraphQLProject,
 ): project is GraphQLClientProject {
   return project instanceof GraphQLClientProject;
 }
@@ -133,7 +136,7 @@ export class GraphQLClientProject extends GraphQLProject {
         "⚠️  It looks like there are 0 files associated with this Apollo Project. " +
           "This may be because you don't have any files yet, or your includes/excludes " +
           "fields are configured incorrectly, and Apollo can't find your files. " +
-          "For help configuring Apollo projects, see this guide: https://go.apollo.dev/t/config"
+          "For help configuring Apollo projects, see this guide: https://go.apollo.dev/t/config",
       );
     }
 
@@ -203,11 +206,11 @@ export class GraphQLClientProject extends GraphQLProject {
           await this.schemaProvider.resolveSchema({
             tag: tag || this.config.variant,
             force: true,
-          })
+          }),
         );
 
         this.schema = extendSchema(this.serviceSchema, this.clientSchema);
-      })()
+      })(),
     );
   }
 
@@ -265,7 +268,7 @@ export class GraphQLClientProject extends GraphQLProject {
     visit(this.clientSchema, {
       ObjectTypeExtension(node) {
         const type = schema.getType(
-          node.name.value
+          node.name.value,
         ) as Maybe<GraphQLObjectType>;
         const { fields } = node;
         if (!fields || !type) return;
@@ -297,7 +300,7 @@ export class GraphQLClientProject extends GraphQLProject {
         if (uri) {
           diagnosticSet.addDiagnostics(
             uri,
-            diagnosticsFromError(error, DiagnosticSeverity.Error, "Validation")
+            diagnosticsFromError(error, DiagnosticSeverity.Error, "Validation"),
           );
         }
       } else {
@@ -316,8 +319,8 @@ export class GraphQLClientProject extends GraphQLProject {
             this.schema,
             document,
             fragments,
-            this._validationRules
-          )
+            this._validationRules,
+          ),
         );
       }
     }
@@ -354,7 +357,7 @@ export class GraphQLClientProject extends GraphQLProject {
         } catch (e) {
           console.error(e);
         }
-      })()
+      })(),
     );
   }
 
@@ -399,7 +402,7 @@ export class GraphQLClientProject extends GraphQLProject {
                     .join("\n\n");
                   const explorerURLState =
                     LZString.compressToEncodedURIComponent(
-                      JSON.stringify({ document })
+                      JSON.stringify({ document }),
                     );
 
                   const frontendUrlRoot =
@@ -435,7 +438,7 @@ export class GraphQLClientProject extends GraphQLProject {
                       });
                   const runInExplorerLink = join(
                     frontendUrlRoot,
-                    runInExplorerPath
+                    runInExplorerPath,
                   );
 
                   decorations.push({
@@ -446,7 +449,7 @@ export class GraphQLClientProject extends GraphQLProject {
                   });
                 }
               },
-            })
+            }),
           );
         }
       }
@@ -477,7 +480,7 @@ export class GraphQLClientProject extends GraphQLProject {
           if (!definition.name) {
             throw new GraphQLError(
               "Apollo does not support anonymous operations",
-              [definition]
+              [definition],
             );
           }
           operations[definition.name.value] = definition;
@@ -517,7 +520,7 @@ export class GraphQLClientProject extends GraphQLProject {
 
       let serviceOnly = removeDirectiveAnnotatedFields(
         removeDirectives(document, clientOnlyDirectives as string[]),
-        clientSchemaDirectives as string[]
+        clientSchemaDirectives as string[],
       );
 
       if (addTypename)
@@ -534,7 +537,7 @@ export class GraphQLClientProject extends GraphQLProject {
 
   getOperationFieldsFromFieldDefinition(
     fieldName: string,
-    parent: ObjectTypeDefinitionNode | null
+    parent: ObjectTypeDefinitionNode | null,
   ): FieldNode[] {
     if (!this.schema || !parent) return [];
     const fields: FieldNode[] = [];
@@ -552,7 +555,7 @@ export class GraphQLClientProject extends GraphQLProject {
             }
             return;
           },
-        })
+        }),
       );
     }
     return fields;
@@ -573,7 +576,7 @@ export class GraphQLClientProject extends GraphQLProject {
     return fragmentSpreads;
   }
   getOperationWithFragments(
-    operationDefinition: OperationDefinitionNode
+    operationDefinition: OperationDefinitionNode,
   ): ExecutableDefinitionNode[] {
     const fragments = this.fragments;
     const seenFragmentNames = new Set<string>([]);

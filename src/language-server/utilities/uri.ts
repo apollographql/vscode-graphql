@@ -1,4 +1,4 @@
-import URI from "vscode-uri";
+import { URI } from "vscode-uri";
 
 const withUnixSeparator = (uriString: string) =>
   uriString.split(/[\/\\]/).join("/");
@@ -10,7 +10,7 @@ export const normalizeURI = (uriString: string) => {
   } else if (uriString.match(/^[a-zA-Z]:[\/\\].*/)) {
     // uri with a drive prefix but not file:///
     parsed = URI.file(
-      URI.parse("file:///" + withUnixSeparator(uriString)).fsPath
+      URI.parse("file:///" + withUnixSeparator(uriString)).fsPath,
     );
   } else {
     parsed = URI.parse(withUnixSeparator(uriString));

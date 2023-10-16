@@ -93,6 +93,33 @@ describe("extractGraphQLDocuments", () => {
       expect(documents?.[0].syntaxErrors.length).toBe(0);
       expect(documents?.[0].ast?.definitions.length).toBe(2);
     });
+
+    it("works with parens", () => {
+      const textDocument = mockTextDocument(`
+      gql(\`
+        {
+          hero {
+            ...Hero_character
+          }
+        }
+
+        \${Hero.fragments.character}
+
+        {
+          reviews(episode: NEWHOPE) {
+            ...ReviewList_reviews
+          }
+        }
+
+      \${ReviewList.fragments.reviews}
+    \`)
+    `);
+      const documents = extractGraphQLDocuments(textDocument);
+
+      expect(documents?.length).toEqual(1);
+      expect(documents?.[0].syntaxErrors.length).toBe(0);
+      expect(documents?.[0].ast?.definitions.length).toBe(2);
+    });
   });
 
   describe("extracting documents from ReasonML extension nodes", () => {

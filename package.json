@@ -19,7 +19,7 @@
     "build:clean": "npm run build -- --clean",
     "watch": "npm run build -- --watch",
     "postinstall": "npx vscode-install",
-    "changeset-version": "changeset version && npm ci --ignore-scripts",
+    "changeset-version": "changeset version && npm i",
     "changeset-publish": "npm run build && changeset publish",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",

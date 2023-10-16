@@ -11,7 +11,7 @@ jobs:
   release:
     name: Changesets Release
     # Prevents action from creating a PR on forks
-    if: github.repository == 'apollographql/vscode-apollo'
+    if: github.repository == 'apollographql/vscode-graphql'
     runs-on: ubuntu-latest
     # Permissions necessary for Changesets to push a new branch and open PRs
     # (for automated Version Packages PRs), and request the JWT for provenance.

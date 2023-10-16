@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 1.20.0
+
+### Minor Changes
+
+- [#105](https://github.com/apollographql/vscode-graphql/pull/105) [`43879da4`](https://github.com/apollographql/vscode-graphql/commit/43879da40f3a3b7c6327cf165fca9980e04b4bc7) Thanks [@zovits](https://github.com/zovits)! - Add inline syntax highlighting support for Lua
+
+### Patch Changes
+
+- [#99](https://github.com/apollographql/vscode-graphql/pull/99) [`2a3fc1bb`](https://github.com/apollographql/vscode-graphql/commit/2a3fc1bb3c38245f09a5e5e0a19900ea0cfc58b3) Thanks [@pvinis](https://github.com/pvinis)! - Support tagging inside of parentheses
+
+- [#73](https://github.com/apollographql/vscode-graphql/pull/73) [`d07b303d`](https://github.com/apollographql/vscode-graphql/commit/d07b303d31fdf0810f8be163bb3973c564cf0754) Thanks [@rachsmithcodes](https://github.com/rachsmithcodes)! - Return early instead of erroring on missing fields
+
+- [#97](https://github.com/apollographql/vscode-graphql/pull/97) [`2b57a1af`](https://github.com/apollographql/vscode-graphql/commit/2b57a1afd9882a139a47af9b55496b7aa62fde2b) Thanks [@clf17222592](https://github.com/clf17222592)! - Support configuration files with .cjs file extension
+
+- [#78](https://github.com/apollographql/vscode-graphql/pull/78) [`8b02374a`](https://github.com/apollographql/vscode-graphql/commit/8b02374a355ef9304e1fe9b0d89bcf559e618428) Thanks [@jtgrenz](https://github.com/jtgrenz)! - Fix regex for ruby heredoc
+
 ### 1.19.11
 
 - Fix directive highlighting on enums and arguments [#6716](https://github.com/apollographql/vscode-graphql/pull/71)

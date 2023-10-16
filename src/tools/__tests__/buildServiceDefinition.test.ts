@@ -395,13 +395,13 @@ Array [
         },
         {
           typeDefs: gql`
-          extend schema {
-            mutation: MutationRoot
-          }
-          extend type MutationRoot {
-            rootField: String
-          }
-        `,
+            extend schema {
+              mutation: MutationRoot
+            }
+            extend type MutationRoot {
+              rootField: String
+            }
+          `,
         },
       ]);
 

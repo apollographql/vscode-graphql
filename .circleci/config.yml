@@ -32,13 +32,8 @@ jobs:
       - checkout
       - npm-install
       - run:
-          name: Ensure test reports output dir exists
-          command: mkdir -p /tmp/test-reports/lint
-      - run:
           name: Run lint (currenty prettier)
-          command: npm run lint -- --format junit --output-file /tmp/test-reports/lint/results.xml
-      - store_test_results:
-          path: /tmp/test-reports
+          command: npm run lint
 
   typescript:
     executor: node
@@ -55,15 +50,8 @@ jobs:
       - checkout
       - npm-install
       - run:
-          name: Ensure test reports output dir exists
-          command: mkdir -p /tmp/test-reports/test-unit
-      - run:
           name: Test
-          command: npm run test -- --ci --reporters=jest-junit
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: "/tmp/test-reports/test-unit"
-      - store_test_results:
-          path: /tmp/test-reports
+          command: npm run test
 
 workflows:
   build-test-deploy:

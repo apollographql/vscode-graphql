@@ -3,7 +3,7 @@ import {
   NotificationHandler,
   PublishDiagnosticsParams,
 } from "vscode-languageserver";
-import { QuickPickItem } from "vscode";
+import { QuickPickItem, workspace } from "vscode";
 import { GraphQLProject, DocumentUri } from "./project/base";
 import { dirname } from "path";
 import fg from "glob";
@@ -12,6 +12,7 @@ import {
   ApolloConfig,
   isClientConfig,
   ServiceConfig,
+  getFileNameFromUri,
 } from "./config";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { ServiceID, SchemaTag, ClientIdentity } from "./engine";
@@ -242,6 +243,25 @@ export class GraphQLWorkspace {
 
   get projects(): GraphQLProject[] {
     return Array.from(this.projectsByFolderUri.values()).flat();
+  }
+
+  private getLocalSchemaFileNames(): string[] {
+    const localSchemaUris: string[] = [];
+    this.projects.forEach((p) => {
+      if (p.config.service?.localSchemaFile) {
+        if (typeof p.config.service.localSchemaFile === "string") {
+          localSchemaUris.push(p.config.service.localSchemaFile);
+        } else {
+          localSchemaUris.push(...p.config.service.localSchemaFile);
+        }
+      }
+    });
+    return localSchemaUris.map((uri) => getFileNameFromUri(uri));
+  }
+
+  localSchemaChanged(uri: string): boolean {
+    const fileNames = this.getLocalSchemaFileNames();
+    return fileNames.some((fileName) => uri.endsWith(fileName)) ? true : false;
   }
 
   projectForFile(uri: DocumentUri): GraphQLProject | undefined {

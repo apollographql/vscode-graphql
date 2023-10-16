@@ -54,3 +54,7 @@ export function parseServiceSpecifier(specifier: ServiceSpecifier) {
   const [id, tag] = specifier.split("@").map((x) => x.trim());
   return [id, tag] as ServiceIDAndTag;
 }
+
+export function getFileNameFromUri(uri: string) {
+  return uri.substring(uri.lastIndexOf("/") + 1);
+}

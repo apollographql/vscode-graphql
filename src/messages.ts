@@ -47,6 +47,7 @@ type Messages = {
   "apollographql/loadingComplete": number;
   "apollographql/loading": { message: string; token: number };
   "apollographql/engineDecorations": { decorations: EngineDecoration[] };
+  "apollographql/localSchemaChanged": undefined;
   serverDebugMessage: {
     type: "info" | "warning" | "error" | "errorTelemetry";
     message: string;

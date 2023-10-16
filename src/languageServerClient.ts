@@ -54,12 +54,13 @@ export function getLanguageServerClient(
       "dart",
       "reason",
       "elixir",
+      "json",
     ],
     synchronize: {
       fileEvents: [
         workspace.createFileSystemWatcher("**/.env?(.local)"),
         workspace.createFileSystemWatcher(
-          "**/*.{graphql,js,ts,jsx,tsx,vue,svelte,py,rb,dart,re,ex,exs}"
+          "**/*.{graphql,js,ts,jsx,tsx,vue,svelte,py,rb,dart,re,ex,exs,json}"
         ),
       ],
     },

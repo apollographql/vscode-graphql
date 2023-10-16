@@ -175,7 +175,7 @@ export function NoMissingClientDirectives(context: ValidationContext) {
     const fieldDef = context.getFieldDef();
 
     // if we don't have a type to check then we can early return
-    if (!parentType || !fieldDef) return;
+    if (!parentType) return;
 
     // here we collect all of the fields on a type that are marked "local"
     const clientFields =
@@ -194,7 +194,7 @@ export function NoMissingClientDirectives(context: ValidationContext) {
         // fields are simple because we can just see if the name exists in the local fields
         // array on the parent type
         selectsClientFieldSet = Boolean(
-          clientFields && clientFields.includes(fieldDef!.name)
+          clientFields && clientFields.includes(fieldDef?.name || "")
         );
         message += `local field "${node.name.value}"`;
         break;

@@ -31,6 +31,7 @@ const a = /* GraphQL */ `
     isOnline
     me {
       name
+      foo # added field missing in service schema to ensure it doesn't throw, see https://github.com/apollographql/vscode-graphql/pull/73
       localUser @client {
         friends {
           isLiked

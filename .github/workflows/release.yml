@@ -62,6 +62,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to Visual Studio Marketplace
+        if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}

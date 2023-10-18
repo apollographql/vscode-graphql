@@ -10,6 +10,7 @@ const config: Config.InitialOptions = {
   transform: {
     "^.+\\.(ts)$": "ts-jest",
   },
+  prettierPath: null,
 };
 
 export default config;

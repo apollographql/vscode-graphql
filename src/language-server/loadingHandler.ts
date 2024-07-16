@@ -1,4 +1,4 @@
-import { IConnection, NotificationType } from "vscode-languageserver";
+import { Connection, NotificationType } from "vscode-languageserver/node";
 
 // XXX I think we want to combine this into an interface
 // with the errors tooling as well

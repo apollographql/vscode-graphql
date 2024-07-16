@@ -1,5 +1,5 @@
 // IntrospectionSchemaProvider (http => IntrospectionResult => schema)
-import { NotificationHandler } from "vscode-languageserver";
+import { NotificationHandler } from "vscode-languageserver/node";
 import { execute as linkExecute, toPromise } from "apollo-link";
 import { createHttpLink, HttpLink } from "apollo-link-http";
 import {

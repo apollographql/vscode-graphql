@@ -6,8 +6,8 @@ import type {
   NotificationType,
   NotificationType0,
   Range,
-} from "vscode-languageclient";
-import type { IConnection as GenericConnection } from "vscode-languageserver";
+} from "vscode-languageclient/node";
+import type { Connection as GenericConnection } from "vscode-languageserver/node";
 
 export interface TypeStats {
   service?: number;

@@ -16,7 +16,7 @@ import {
   CodeActionKind,
   MarkupKind,
   CompletionItemKind,
-} from "vscode-languageserver";
+} from "vscode-languageserver/node";
 
 // should eventually be moved into this package, since we're overriding a lot of the existing behavior here
 import { getAutocompleteSuggestions } from "graphql-language-service-interface";

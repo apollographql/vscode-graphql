@@ -1,5 +1,5 @@
 import { GraphQLSchema } from "graphql";
-import { NotificationHandler } from "vscode-languageserver";
+import { NotificationHandler } from "vscode-languageserver/node";
 
 export interface SchemaResolveConfig {
   tag?: string;

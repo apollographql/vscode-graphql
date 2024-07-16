@@ -2,7 +2,7 @@ import {
   WorkspaceFolder,
   NotificationHandler,
   PublishDiagnosticsParams,
-} from "vscode-languageserver";
+} from "vscode-languageserver/node";
 import { QuickPickItem } from "vscode";
 import { GraphQLProject, DocumentUri } from "./project/base";
 import { dirname } from "path";

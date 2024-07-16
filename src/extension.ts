@@ -15,7 +15,7 @@ import {
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
-import { NotificationType } from "vscode-languageclient";
+import { NotificationType } from "vscode-languageclient/node";
 import type { EngineDecoration, LanguageClient } from "./messages";
 import {
   printNoFileOpenMessage,

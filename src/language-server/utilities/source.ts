@@ -12,7 +12,7 @@ import {
 } from "graphql";
 import { SourceLocation, getLocation } from "graphql/language/location";
 
-import { Position, Range } from "vscode-languageserver";
+import { Position, Range } from "vscode-languageserver/node";
 
 import { isNode } from "./graphql";
 

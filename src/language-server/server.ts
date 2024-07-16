@@ -7,7 +7,8 @@ import {
   TextDocuments,
   FileChangeType,
   ServerCapabilities,
-} from "vscode-languageserver";
+  TextDocumentSyncKind,
+} from "vscode-languageserver/node";
 import type { QuickPickItem } from "vscode";
 import { GraphQLWorkspace } from "./workspace";
 import { GraphQLLanguageProvider } from "./languageProvider";

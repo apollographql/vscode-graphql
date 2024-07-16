@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./lib",
-    "target": "es2017",
+    "target": "es2020",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -17,7 +17,7 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2017", "esnext.asynciterable"],
+    "lib": ["es2020", "esnext.asynciterable"],
     "types": ["node", "jest"],
     "baseUrl": "."
   },

@@ -62,11 +62,11 @@ export type LanguageClient = Omit<GenericLanguageClient, "onNotification"> & {
   ): void;
   // Allow other notification types
   onNotification<RO>(
-    type: NotificationType0<RO>,
+    type: NotificationType0,
     handler: NotificationHandler0,
   ): void;
   onNotification<P, RO>(
-    type: NotificationType<P, RO>,
+    type: NotificationType<P>,
     handler: NotificationHandler<P>,
   ): void;
 };
@@ -79,6 +79,6 @@ export type Connection = Omit<GenericConnection, "sendNotification"> & {
     value: Messages[MessageType],
   ): void;
   // Allow other notification types
-  sendNotification<RO>(type: NotificationType0<RO>): void;
-  sendNotification<P, RO>(type: NotificationType<P, RO>, params: P): void;
+  sendNotification<RO>(type: NotificationType0): void;
+  sendNotification<P, RO>(type: NotificationType<P>, params: P): void;
 };

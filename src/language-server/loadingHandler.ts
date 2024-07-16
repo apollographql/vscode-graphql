@@ -10,25 +10,25 @@ export interface LoadingHandler {
 }
 
 export class LanguageServerLoadingHandler implements LoadingHandler {
-  constructor(private connection: IConnection) {}
+  constructor(private connection: Connection) {}
   private latestLoadingToken = 0;
   async handle<T>(message: string, value: Promise<T>): Promise<T> {
     const token = this.latestLoadingToken;
     this.latestLoadingToken += 1;
     this.connection.sendNotification(
-      new NotificationType<any, void>("apollographql/loading"),
+      new NotificationType<any>("apollographql/loading"),
       { message, token },
     );
     try {
       const ret = await value;
       this.connection.sendNotification(
-        new NotificationType<any, void>("apollographql/loadingComplete"),
+        new NotificationType<any>("apollographql/loadingComplete"),
         token,
       );
       return ret;
     } catch (e) {
       this.connection.sendNotification(
-        new NotificationType<any, void>("apollographql/loadingComplete"),
+        new NotificationType<any>("apollographql/loadingComplete"),
         token,
       );
       this.showError(`Error in "${message}": ${e}`);
@@ -39,19 +39,19 @@ export class LanguageServerLoadingHandler implements LoadingHandler {
     const token = this.latestLoadingToken;
     this.latestLoadingToken += 1;
     this.connection.sendNotification(
-      new NotificationType<any, void>("apollographql/loading"),
+      new NotificationType<any>("apollographql/loading"),
       { message, token },
     );
     try {
       const ret = value();
       this.connection.sendNotification(
-        new NotificationType<any, void>("apollographql/loadingComplete"),
+        new NotificationType<any>("apollographql/loadingComplete"),
         token,
       );
       return ret;
     } catch (e) {
       this.connection.sendNotification(
-        new NotificationType<any, void>("apollographql/loadingComplete"),
+        new NotificationType<any>("apollographql/loadingComplete"),
         token,
       );
       this.showError(`Error in "${message}": ${e}`);

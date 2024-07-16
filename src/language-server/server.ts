@@ -9,15 +9,15 @@ import {
   ServerCapabilities,
   TextDocumentSyncKind,
 } from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import type { QuickPickItem } from "vscode";
 import { GraphQLWorkspace } from "./workspace";
 import { GraphQLLanguageProvider } from "./languageProvider";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
-import type { Connection } from "src/messages";
 import { URI } from "vscode-uri";
 
-const connection: Connection = createConnection(ProposedFeatures.all);
+const connection = createConnection(ProposedFeatures.all);
 Debug.SetConnection(connection);
 
 let hasWorkspaceFolderCapability = false;
@@ -100,7 +100,7 @@ connection.onInitialize(async ({ capabilities, workspaceFolders }) => {
       executeCommandProvider: {
         commands: [],
       },
-      textDocumentSync: documents.syncKind,
+      textDocumentSync: TextDocumentSyncKind.Full,
     } as ServerCapabilities,
   };
 });
@@ -119,7 +119,7 @@ connection.onInitialized(async () => {
   }
 });
 
-const documents: TextDocuments = new TextDocuments();
+const documents = new TextDocuments(TextDocument);
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events

@@ -50,6 +50,7 @@ export function activate(context: ExtensionContext) {
 
   // Initialize language client
   const client = getLanguageServerClient(serverModule, outputChannel);
+  globalClient = client;
   client.registerProposedFeatures();
 
   // Initialize disposables
@@ -58,7 +59,6 @@ export function activate(context: ExtensionContext) {
   });
   outputChannel = window.createOutputChannel("Apollo GraphQL");
   Debug.SetOutputConsole(outputChannel);
-  const clientPromise = client.start();
   // Handoff disposables for cleanup
   context.subscriptions.push(statusBar, outputChannel);
 
@@ -68,24 +68,21 @@ export function activate(context: ExtensionContext) {
     stack?: string;
   }> = new NotificationType("serverDebugMessage");
 
-  // Once client is ready, we can send messages and add listeners for various notifications
-  clientPromise.then(() => {
-    client.onNotification(serverDebugMessage, (message) => {
-      switch (message.type) {
-        case "info":
-          Debug.info(message.message, message.stack);
-          break;
-        case "error":
-          Debug.error(message.message, message.stack);
-          break;
-        case "warning":
-          Debug.warning(message.message, message.stack);
-          break;
-        default:
-          Debug.info(message.message, message.stack);
-          break;
-      }
-    });
+  client.onNotification(serverDebugMessage, (message) => {
+    switch (message.type) {
+      case "info":
+        Debug.info(message.message, message.stack);
+        break;
+      case "error":
+        Debug.error(message.message, message.stack);
+        break;
+      case "warning":
+        Debug.warning(message.message, message.stack);
+        break;
+      default:
+        Debug.info(message.message, message.stack);
+        break;
+    }
 
     commands.registerCommand("apollographql/showStats", () => {
       const fileUri = window.activeTextEditor
@@ -314,6 +311,8 @@ export function activate(context: ExtensionContext) {
       },
     });
   });
+
+  return client.start();
 }
 
 export function deactivate(): Thenable<void> | void {

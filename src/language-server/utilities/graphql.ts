@@ -19,6 +19,7 @@ import {
   isUnionType,
   FragmentDefinitionNode,
   InlineFragmentNode,
+  DocumentNode,
 } from "graphql";
 
 import { ExecutionContext } from "graphql/execution/execute";
@@ -307,16 +308,16 @@ const typenameField = {
   name: { kind: Kind.NAME, value: "__typename" },
 };
 
-export function withTypenameFieldAddedWhereNeeded(ast: ASTNode) {
+export function withTypenameFieldAddedWhereNeeded(ast: DocumentNode) {
   return visit(ast, {
-    enter: {
-      SelectionSet(node: SelectionSetNode) {
+    SelectionSet: {
+      enter(node: SelectionSetNode) {
         return {
           ...node,
           selections: node.selections.filter(
             (selection) =>
               !(
-                selection.kind === "Field" &&
+                selection.kind === Kind.FIELD &&
                 selection.name.value === "__typename"
               ),
           ),

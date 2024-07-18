@@ -5,13 +5,14 @@ import {
   Source,
   printSchema,
   parse,
+  buildASTSchema,
 } from "graphql";
+import { mergeTypeDefs } from "@graphql-tools/merge";
 import { readFileSync } from "fs";
 import { extname, resolve } from "path";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
 import { NotificationHandler } from "vscode-languageserver/node";
 import { Debug } from "../../utilities";
-import { buildSchemaFromSDL } from "apollo-graphql";
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { URI } from "vscode-uri";
 // import federationDirectives from "@apollo/federation/src/directives";
@@ -45,7 +46,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
         }]`,
       );
 
-    this.schema = buildSchemaFromSDL(documents);
+    this.schema = buildASTSchema(mergeTypeDefs(documents));
 
     if (!this.schema) throw new Error(`Schema could not be loaded for ${path}`);
     return this.schema;
@@ -122,10 +123,12 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
     if (!queryType)
       return Debug.error("No query type found for federated schema");
     const serviceField = queryType.getFields()["_service"];
-    const serviceResults =
-      serviceField &&
-      serviceField.resolve &&
-      serviceField.resolve(null, {}, null, {} as any);
+    const serviceResults = serviceField?.resolve?.(
+      null,
+      {},
+      null,
+      {} as any,
+    ) as { sdl?: string };
 
     if (!serviceResults || !serviceResults.sdl)
       return Debug.error(

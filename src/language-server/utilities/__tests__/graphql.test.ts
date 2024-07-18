@@ -32,8 +32,7 @@ describe("withTypenameFieldAddedWhereNeeded", () => {
             value
           }
         }
-      }
-      "
+      }"
     `);
   });
 
@@ -71,8 +70,7 @@ describe("withTypenameFieldAddedWhereNeeded", () => {
             }
           }
         }
-      }
-      "
+      }"
     `);
   });
 });
@@ -89,8 +87,7 @@ describe("removeDirectiveAnnotatedFields", () => {
     ).toMatchInlineSnapshot(`
             "query Query {
               fieldToKeep
-            }
-            "
+            }"
         `);
   });
 
@@ -112,8 +109,7 @@ describe("removeDirectiveAnnotatedFields", () => {
     ).toMatchInlineSnapshot(`
       "query Query {
         fieldToKeep
-      }
-      "
+      }"
     `);
   });
 
@@ -138,8 +134,7 @@ describe("removeDirectiveAnnotatedFields", () => {
           me {
             name
           }
-        }
-        "
+        }"
     `);
   });
 
@@ -163,8 +158,7 @@ describe("removeDirectiveAnnotatedFields", () => {
               me {
                 name
               }
-            }
-            "
+            }"
         `);
   });
 
@@ -189,8 +183,7 @@ describe("removeDirectiveAnnotatedFields", () => {
         me {
           name
         }
-      }
-      "
+      }"
     `);
   });
 
@@ -258,8 +251,7 @@ describe("removeDirectiveAnnotatedFields", () => {
           }
           ...LaunchTile
         }
-      }
-      "
+      }"
     `);
   });
 
@@ -308,8 +300,7 @@ describe("removeDirectiveAnnotatedFields", () => {
         me {
           ...One
         }
-      }
-      "
+      }"
     `);
   });
 
@@ -341,8 +332,7 @@ describe("removeDirectiveAnnotatedFields", () => {
         me {
           name
         }
-      }
-      "
+      }"
     `);
   });
 
@@ -372,8 +362,7 @@ describe("removeDirectiveAnnotatedFields", () => {
     ).toMatchInlineSnapshot(`
       "{
         name
-      }
-      "
+      }"
     `);
   });
 
@@ -404,8 +393,7 @@ describe("removeDirectiveAnnotatedFields", () => {
         me {
           name
         }
-      }
-      "
+      }"
     `);
   });
 });

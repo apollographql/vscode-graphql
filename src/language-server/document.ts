@@ -8,7 +8,7 @@ import {
   DiagnosticSeverity,
 } from "vscode-languageserver/node";
 
-import { getRange as rangeOfTokenAtLocation } from "graphql-language-service-interface/dist/getDiagnostics";
+import { getRange as rangeOfTokenAtLocation } from "graphql-language-service";
 
 import {
   positionFromSourceLocation,

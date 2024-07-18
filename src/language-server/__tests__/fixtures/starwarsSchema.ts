@@ -1,6 +1,6 @@
 import { IntrospectionQuery } from "graphql";
 
-export const starwarsSchema: IntrospectionQuery = {
+export const starwarsSchema = {
   __schema: {
     queryType: {
       name: "Query",
@@ -1914,4 +1914,4 @@ export const starwarsSchema: IntrospectionQuery = {
       },
     ],
   },
-};
+} as IntrospectionQuery;

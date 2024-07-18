@@ -40,7 +40,6 @@
     "apollo-server-errors": "^2.0.2",
     "await-to-js": "^3.0.0",
     "codemirror": "^5.63.3",
-    "core-js": "^3.0.1",
     "cosmiconfig": "^5.0.6",
     "dotenv": "^16.0.0",
     "glob": "^7.1.3",

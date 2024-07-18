@@ -1,8 +1,9 @@
 import { DataSourceConfig } from "apollo-datasource";
-import { ApolloLink, execute, GraphQLRequest, makePromise } from "apollo-link";
-import { setContext } from "apollo-link-context";
-import { onError } from "apollo-link-error";
-import { createHttpLink } from "apollo-link-http";
+import { ApolloLink, execute, GraphQLRequest } from "@apollo/client/link/core";
+import { toPromise as makePromise } from "@apollo/client/link/utils";
+import { onError } from "@apollo/client/link/error";
+import { setContext } from "@apollo/client/link/context";
+import { createHttpLink } from "@apollo/client/link/http";
 import {
   ApolloError,
   AuthenticationError,

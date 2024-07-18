@@ -18,7 +18,7 @@ import {
   isObjectType,
 } from "graphql";
 
-import { TextEdit } from "vscode-languageserver";
+import { TextEdit } from "vscode-languageserver/node";
 
 import { ToolError, logError } from "./logger";
 import { ValidationRule } from "graphql/validation/ValidationContext";

@@ -6,7 +6,7 @@ import {
   isExecutableDefinitionNode,
 } from "graphql";
 
-import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
+import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver/node";
 
 import { GraphQLDocument } from "./document";
 import { highlightNodeForNode } from "./utilities/graphql";

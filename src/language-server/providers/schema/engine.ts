@@ -1,5 +1,5 @@
 // EngineSchemaProvider (engine schema reg => schema)
-import { NotificationHandler } from "vscode-languageserver";
+import { NotificationHandler } from "vscode-languageserver/node";
 import gql from "graphql-tag";
 import { GraphQLSchema, buildClientSchema } from "graphql";
 import { ApolloEngineClient, ClientIdentity } from "../../engine";

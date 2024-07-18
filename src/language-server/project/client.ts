@@ -23,7 +23,10 @@ import {
   print,
 } from "graphql";
 import { ValidationRule } from "graphql/validation/ValidationContext";
-import { NotificationHandler, DiagnosticSeverity } from "vscode-languageserver";
+import {
+  NotificationHandler,
+  DiagnosticSeverity,
+} from "vscode-languageserver/node";
 import LZString from "lz-string";
 import { stringifyUrl } from "query-string";
 

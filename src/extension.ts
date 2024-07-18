@@ -15,7 +15,7 @@ import {
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
-import { NotificationType } from "vscode-languageclient";
+import { NotificationType } from "vscode-languageclient/node";
 import type { EngineDecoration, LanguageClient } from "./messages";
 import {
   printNoFileOpenMessage,
@@ -25,8 +25,7 @@ import { Debug } from "./debug";
 
 const { version } = require("../package.json");
 
-let client: LanguageClient;
-let clientDisposable: Disposable;
+let globalClient: LanguageClient | null = null;
 let statusBar: StatusBar;
 let outputChannel: OutputChannel;
 let schemaTagItems: QuickPickItem[] = [];
@@ -50,7 +49,8 @@ export function activate(context: ExtensionContext) {
   );
 
   // Initialize language client
-  client = getLanguageServerClient(serverModule, outputChannel);
+  const client = getLanguageServerClient(serverModule, outputChannel);
+  globalClient = client;
   client.registerProposedFeatures();
 
   // Initialize disposables
@@ -59,34 +59,30 @@ export function activate(context: ExtensionContext) {
   });
   outputChannel = window.createOutputChannel("Apollo GraphQL");
   Debug.SetOutputConsole(outputChannel);
-  clientDisposable = client.start();
-
   // Handoff disposables for cleanup
-  context.subscriptions.push(statusBar, outputChannel, clientDisposable);
+  context.subscriptions.push(statusBar, outputChannel);
 
-  var serverDebugMessage: NotificationType<
-    { type: string; message: string; stack?: string },
-    any
-  > = new NotificationType("serverDebugMessage");
+  var serverDebugMessage: NotificationType<{
+    type: string;
+    message: string;
+    stack?: string;
+  }> = new NotificationType("serverDebugMessage");
 
-  // Once client is ready, we can send messages and add listeners for various notifications
-  client.onReady().then(() => {
-    client.onNotification(serverDebugMessage, (message) => {
-      switch (message.type) {
-        case "info":
-          Debug.info(message.message, message.stack);
-          break;
-        case "error":
-          Debug.error(message.message, message.stack);
-          break;
-        case "warning":
-          Debug.warning(message.message, message.stack);
-          break;
-        default:
-          Debug.info(message.message, message.stack);
-          break;
-      }
-    });
+  client.onNotification(serverDebugMessage, (message) => {
+    switch (message.type) {
+      case "info":
+        Debug.info(message.message, message.stack);
+        break;
+      case "error":
+        Debug.error(message.message, message.stack);
+        break;
+      case "warning":
+        Debug.warning(message.message, message.stack);
+        break;
+      default:
+        Debug.info(message.message, message.stack);
+        break;
+    }
 
     commands.registerCommand("apollographql/showStats", () => {
       const fileUri = window.activeTextEditor
@@ -315,10 +311,16 @@ export function activate(context: ExtensionContext) {
       },
     });
   });
+
+  return client.start();
 }
 
 export function deactivate(): Thenable<void> | void {
-  if (client) {
-    return client.stop();
+  if (globalClient) {
+    try {
+      return globalClient.stop();
+    } finally {
+      globalClient = null;
+    }
   }
 }

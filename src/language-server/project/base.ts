@@ -17,7 +17,7 @@ import {
   NotificationHandler,
   PublishDiagnosticsParams,
   Position,
-} from "vscode-languageserver";
+} from "vscode-languageserver/node";
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
 

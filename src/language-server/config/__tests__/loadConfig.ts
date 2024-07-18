@@ -13,7 +13,7 @@ const makeNestedDir = (dir: string) => {
 
   try {
     fs.mkdirSync(dir);
-  } catch (err) {
+  } catch (err: any) {
     if (err.code == "ENOENT") {
       makeNestedDir(path.dirname(dir)); //create parent dir
       makeNestedDir(dir); //create dir

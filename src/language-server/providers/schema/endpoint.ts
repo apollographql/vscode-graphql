@@ -1,5 +1,5 @@
 // IntrospectionSchemaProvider (http => IntrospectionResult => schema)
-import { NotificationHandler } from "vscode-languageserver";
+import { NotificationHandler } from "vscode-languageserver/node";
 import { execute as linkExecute, toPromise } from "apollo-link";
 import { createHttpLink, HttpLink } from "apollo-link-http";
 import {
@@ -11,7 +11,6 @@ import {
   parse,
 } from "graphql";
 import { Agent as HTTPSAgent } from "https";
-import { fetch } from "../../../env";
 import { RemoteServiceConfig, DefaultServiceConfig } from "../../config";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
 import { Debug } from "../../utilities";
@@ -27,7 +26,6 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
     const { skipSSLValidation, url, headers } = this.config;
     const options: HttpLink.Options = {
       uri: url,
-      fetch,
     };
     if (url.startsWith("https:") && skipSSLValidation) {
       options.fetchOptions = {

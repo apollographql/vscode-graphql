@@ -11,7 +11,7 @@ import {
 import { readFileSync } from "fs";
 import { extname, resolve } from "path";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
-import { NotificationHandler } from "vscode-languageserver";
+import { NotificationHandler } from "vscode-languageserver/node";
 import { Debug } from "../../utilities";
 import { buildSchemaFromSDL } from "apollo-graphql";
 import {

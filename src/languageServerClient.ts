@@ -4,7 +4,7 @@ import {
   LanguageClientOptions,
   LanguageClient,
   RevealOutputChannelOn,
-} from "vscode-languageclient";
+} from "vscode-languageclient/node";
 import { workspace, OutputChannel } from "vscode";
 
 const { version, referenceID } = require("../package.json");

@@ -11,3 +11,4 @@ Modernization:
 - update internally-used `@graphql-codegen`
 - update `graphql` to v16
 - replace `graphql-language-service-*` packages with `graphql-language-service` package
+- remove `apollo-server-errors` dependency

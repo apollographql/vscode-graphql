@@ -4,13 +4,34 @@ import { toPromise as makePromise } from "@apollo/client/link/utils";
 import { onError } from "@apollo/client/link/error";
 import { setContext } from "@apollo/client/link/context";
 import { createHttpLink } from "@apollo/client/link/http";
-import {
-  ApolloError,
-  AuthenticationError,
-  ForbiddenError,
-} from "apollo-server-errors";
 import to from "await-to-js";
 import { GraphQLError } from "graphql";
+class ApolloError extends Error {
+  public extensions?: Record<string, any>;
+
+  constructor(message: string, code?: string) {
+    super(message);
+    if (code) {
+      this.extensions = { code };
+    }
+    Object.defineProperty(this, "name", { value: "ApolloError" });
+  }
+}
+export class AuthenticationError extends ApolloError {
+  constructor(message: string) {
+    super(message, "UNAUTHENTICATED");
+
+    Object.defineProperty(this, "name", { value: "AuthenticationError" });
+  }
+}
+
+export class ForbiddenError extends ApolloError {
+  constructor(message: string) {
+    super(message, "FORBIDDEN");
+
+    Object.defineProperty(this, "name", { value: "ForbiddenError" });
+  }
+}
 
 export interface GraphQLResponse<T> {
   data?: T;

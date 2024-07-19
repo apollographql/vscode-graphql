@@ -1,6 +1,4 @@
-import cosmiconfig from "cosmiconfig";
-import { LoaderEntry } from "cosmiconfig";
-import TypeScriptLoader from "@endemolshinegroup/cosmiconfig-typescript-loader";
+import { cosmiconfig } from "cosmiconfig";
 import { resolve } from "path";
 import { readFileSync, existsSync, lstatSync } from "fs";
 import merge from "lodash.merge";
@@ -22,19 +20,10 @@ const defaultFileNames = [
   "package.json",
   `${MODULE_NAME}.config.js`,
   `${MODULE_NAME}.config.ts`,
+  `${MODULE_NAME}.config.mjs`,
   `${MODULE_NAME}.config.cjs`,
 ];
 const envFileNames = [".env", ".env.local"];
-
-const loaders = {
-  // XXX improve types for config
-  ".json": (cosmiconfig as any).loadJson as LoaderEntry,
-  ".js": (cosmiconfig as any).loadJs as LoaderEntry,
-  ".cjs": (cosmiconfig as any).loadJs as LoaderEntry,
-  ".ts": {
-    async: TypeScriptLoader,
-  },
-};
 
 export const legacyKeyEnvVar = "ENGINE_API_KEY";
 export const keyEnvVar = "APOLLO_KEY";
@@ -77,7 +66,6 @@ export async function loadConfig({
 }: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
     searchPlaces: configFileName ? [configFileName] : defaultFileNames,
-    loaders,
   });
 
   // search can fail if a file can't be parsed (ex: a nonsense js file) so we wrap in a try/catch

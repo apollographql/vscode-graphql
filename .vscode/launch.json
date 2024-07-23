@@ -28,7 +28,9 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}"
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionTestsPath=${workspaceFolder}/src/__e2e__/run.js",
+        "${workspaceFolder}/sampleWorkspace/sampleWorkspace.code-workspace"
       ],
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
       "preLaunchTask": "npm: watch"

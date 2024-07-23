@@ -1,5 +1,5 @@
 import minimatch from "minimatch";
-import glob from "glob";
+import { globSync } from "glob";
 import { invariant } from "../tools";
 import { URI } from "vscode-uri";
 import { normalizeURI } from "./utilities";
@@ -54,12 +54,10 @@ export class FileSet {
     // `includes` globs into a single pattern and pass to glob.sync. The `ignore` option does, however, allow
     // an array of globs to ignore, so we can pass it in directly
     const joinedIncludes = `{${this.includes.join(",")}}`;
-    return glob
-      .sync(joinedIncludes, {
-        cwd: this.rootURI.fsPath,
-        absolute: true,
-        ignore: this.excludes,
-      })
-      .map(normalizeURI);
+    return globSync(joinedIncludes, {
+      cwd: this.rootURI.fsPath,
+      absolute: true,
+      ignore: this.excludes,
+    }).map(normalizeURI);
   }
 }

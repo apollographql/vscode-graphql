@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "localSchema"
+		},
+		{
+			"path": "clientSchema"
+		}
+	],
+	"settings": {}
+}

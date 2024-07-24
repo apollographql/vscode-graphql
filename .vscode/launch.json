@@ -6,7 +6,7 @@
       "name": "Launch VS Code Extension",
       "type": "extensionHost",
       "request": "launch",
-      "preLaunchTask": "npm: watch",
+      "preLaunchTask": "BuildAndStartWorkspace",
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceRoot}",
@@ -36,7 +36,7 @@
         "${workspaceFolder}/sampleWorkspace/sampleWorkspace.code-workspace"
       ],
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
-      "preLaunchTask": "npm: watch"
+      "preLaunchTask": "BuildAndStartWorkspace"
     },
     {
       "name": "Attach to Test Debugger",

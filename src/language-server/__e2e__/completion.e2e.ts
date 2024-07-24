@@ -36,3 +36,13 @@ describe("studio graph", () => {
     );
   });
 });
+
+describe("http schema", () => {
+  test("property", async () => {
+    await testCompletion(
+      "httpSchema/src/test.js",
+      [5, 9],
+      [["author", "String"]],
+    );
+  });
+});

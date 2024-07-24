@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "spotifyGraph"
+		},
+		{
+			"path": "httpSchema"
 		}
 	],
 	"settings": {}

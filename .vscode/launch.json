@@ -8,8 +8,11 @@
       "request": "launch",
       "preLaunchTask": "npm: watch",
       "runtimeExecutable": "${execPath}",
-      "args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-      "stopOnEntry": false,
+      "args": [
+        "--extensionDevelopmentPath=${workspaceRoot}",
+        "--disable-extensions",
+        "${workspaceFolder}/sampleWorkspace/sampleWorkspace.code-workspace"
+      ],
       "sourceMaps": true,
       "outFiles": ["${workspaceRoot}/lib/**/*.js"]
     },

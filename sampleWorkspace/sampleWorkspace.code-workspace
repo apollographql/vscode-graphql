@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "clientSchema"
+		},
+		{
+			"path": "spotifyGraph"
 		}
 	],
 	"settings": {}

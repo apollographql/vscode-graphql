@@ -1,28 +1,38 @@
-import { testCompletion } from "./utils";
+import { closeAllEditors, testCompletion } from "./utils";
+
+beforeEach(closeAllEditors);
+
 describe("local schema", () => {
   test("property", async () => {
-    testCompletion(
+    await testCompletion(
       "localSchema/src/test.js",
       [4, 8],
-      [["name", " String!"]],
-      true,
+      [["name", "String!"]],
     );
   });
 });
 
 describe("local schema with extensions", () => {
   test("property", async () => {
-    testCompletion(
+    await testCompletion(
       "clientSchema/src/test.js",
       [4, 8],
-      [["name", " String!"]],
-      true,
+      [["name", "String!"]],
     );
-    testCompletion(
+    await testCompletion(
       "clientSchema/src/test.js",
       [5, 8],
-      [["model", " String!"]],
-      true,
+      [["model", "String"]],
+    );
+  });
+});
+
+describe("studio graph", () => {
+  test("property", async () => {
+    await testCompletion(
+      "spotifyGraph/src/test.js",
+      [6, 15],
+      [["displayName", "String"]],
     );
   });
 });

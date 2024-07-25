@@ -78,3 +78,22 @@ export async function testCompletion(
     );
   });
 }
+
+export async function getHover(
+  editor: vscode.TextEditor,
+  [line, character]: [number, number],
+) {
+  editor.selection = new vscode.Selection(line, character, line, character);
+  // without this, the completion list is not updated
+  await scheduler.wait(300);
+  const hovers = await vscode.commands.executeCommand<vscode.Hover[]>(
+    "vscode.executeHoverProvider",
+    editor.document.uri,
+    new vscode.Position(line, character),
+  );
+
+  const item = hovers[0];
+  const content = item.contents[0];
+  const label = typeof content === "string" ? content : content.value;
+  return label;
+}

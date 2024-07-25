@@ -5,6 +5,7 @@
     "**/__tests__/*",
     "**/__e2e__/*",
     "**/__mocks__/*",
+    "./sampleWorkspace",
     "jest.config.ts"
   ]
 }

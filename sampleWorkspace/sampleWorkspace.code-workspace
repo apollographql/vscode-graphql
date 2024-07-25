@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "httpSchema"
+		},
+		{
+			"path": "localSchemaArray"
 		}
 	],
 	"settings": {}

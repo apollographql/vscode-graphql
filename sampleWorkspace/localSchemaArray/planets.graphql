@@ -1,0 +1,20 @@
+"""
+The query type, represents all of the entry points into our object graph
+"""
+type Query {
+  planets: [Planet]
+}
+"""
+The planets mentioned in the Star Wars trilogy
+"""
+type Planet {
+  """
+  Id of the planet
+  """
+  id: ID!
+
+  """
+  Name of the planet
+  """
+  name: String!
+}

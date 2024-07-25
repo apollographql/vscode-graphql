@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   client: {
     service: {
       name: "httpSchema",

@@ -1,3 +1,4 @@
+import { LanguageServerNotifications as Notifications } from "src/messages";
 import { Connection, NotificationType } from "vscode-languageserver/node";
 
 // XXX I think we want to combine this into an interface
@@ -15,22 +16,13 @@ export class LanguageServerLoadingHandler implements LoadingHandler {
   async handle<T>(message: string, value: Promise<T>): Promise<T> {
     const token = this.latestLoadingToken;
     this.latestLoadingToken += 1;
-    this.connection.sendNotification(
-      new NotificationType<any>("apollographql/loading"),
-      { message, token },
-    );
+    this.connection.sendNotification(Notifications.Loading, { message, token });
     try {
       const ret = await value;
-      this.connection.sendNotification(
-        new NotificationType<any>("apollographql/loadingComplete"),
-        token,
-      );
+      this.connection.sendNotification(Notifications.LoadingComplete, token);
       return ret;
     } catch (e) {
-      this.connection.sendNotification(
-        new NotificationType<any>("apollographql/loadingComplete"),
-        token,
-      );
+      this.connection.sendNotification(Notifications.LoadingComplete, token);
       this.showError(`Error in "${message}": ${e}`);
       throw e;
     }
@@ -38,23 +30,14 @@ export class LanguageServerLoadingHandler implements LoadingHandler {
   handleSync<T>(message: string, value: () => T): T {
     const token = this.latestLoadingToken;
     this.latestLoadingToken += 1;
-    this.connection.sendNotification(
-      new NotificationType<any>("apollographql/loading"),
-      { message, token },
-    );
+    this.connection.sendNotification(Notifications.Loading, { message, token });
     try {
       const ret = value();
-      this.connection.sendNotification(
-        new NotificationType<any>("apollographql/loadingComplete"),
-        token,
-      );
+      this.connection.sendNotification(Notifications.LoadingComplete, token);
       return ret;
     } catch (e) {
-      this.connection.sendNotification(
-        new NotificationType<any>("apollographql/loadingComplete"),
-        token,
-      );
-      this.showError(`Error in "${message}": ${e}`);
+      Notifications.LoadingComplete,
+        this.showError(`Error in "${message}": ${e}`);
       throw e;
     }
   }

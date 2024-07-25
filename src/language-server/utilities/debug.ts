@@ -1,4 +1,5 @@
-import { Connection } from "src/messages";
+import { LanguageServerNotifications as Notifications } from "src/messages";
+import { Connection } from "vscode-languageserver/node";
 
 /**
  * for errors (and other logs in debug mode) we want to print
@@ -32,17 +33,17 @@ export class Debug {
   public static SetConnection(conn: Connection) {
     Debug.connection = conn;
     Debug.infoLogger = (message) =>
-      Debug.connection!.sendNotification("serverDebugMessage", {
+      Debug.connection!.sendNotification(Notifications.ServerDebugMessage, {
         type: "info",
         message: message,
       });
     Debug.warningLogger = (message) =>
-      Debug.connection!.sendNotification("serverDebugMessage", {
+      Debug.connection!.sendNotification(Notifications.ServerDebugMessage, {
         type: "warning",
         message: message,
       });
     Debug.errorLogger = (message) =>
-      Debug.connection!.sendNotification("serverDebugMessage", {
+      Debug.connection!.sendNotification(Notifications.ServerDebugMessage, {
         type: "error",
         message: message,
       });
@@ -81,7 +82,7 @@ export class Debug {
 
   public static sendErrorTelemetry(message: string) {
     Debug.connection &&
-      Debug.connection.sendNotification("serverDebugMessage", {
+      Debug.connection.sendNotification(Notifications.ServerDebugMessage, {
         type: "errorTelemetry",
         message: message,
       });

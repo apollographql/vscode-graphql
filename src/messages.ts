@@ -1,13 +1,6 @@
-import { MarkdownString } from "vscode";
-import type {
-  LanguageClient as GenericLanguageClient,
-  NotificationHandler,
-  NotificationHandler0,
-  NotificationType,
-  NotificationType0,
-  Range,
-} from "vscode-languageclient/node";
-import type { Connection as GenericConnection } from "vscode-languageserver/node";
+import { QuickPickItem } from "vscode";
+import { NotificationType, RequestType } from "vscode-jsonrpc";
+import { Range } from "vscode-languageclient/node";
 
 export interface TypeStats {
   service?: number;
@@ -40,45 +33,43 @@ export type EngineDecoration =
       hoverMessage: string;
     };
 
-type Messages = {
-  "apollographql/statsLoaded": ProjectStats;
-  "apollographql/configFilesFound": string;
-  "apollographql/tagsLoaded": string;
-  "apollographql/loadingComplete": number;
-  "apollographql/loading": { message: string; token: number };
-  "apollographql/engineDecorations": { decorations: EngineDecoration[] };
-  serverDebugMessage: {
+export const LanguageServerRequests = {
+  FileStats: new RequestType<{ uri: string }, ProjectStats, unknown>(
+    "apollographql/fileStats",
+  ),
+};
+
+/**
+ * Notifications sent to the language server
+ */
+export const LanguageServerCommands = {
+  GetStats: new NotificationType<{ uri: string }>("apollographql/getStats"),
+  ReloadService: new NotificationType<void>("apollographql/reloadService"),
+  TagSelected: new NotificationType<QuickPickItem>("apollographql/tagSelected"),
+};
+
+/**
+ * Notifications sent from the language server
+ */
+export const LanguageServerNotifications = {
+  StatsLoaded: new NotificationType<ProjectStats>("apollographql/statsLoaded"),
+  ConfigFilesFound: new NotificationType<string>(
+    "apollographql/configFilesFound",
+  ),
+  TagsLoaded: new NotificationType<string>("apollographql/tagsLoaded"),
+  LoadingComplete: new NotificationType<number>(
+    "apollographql/loadingComplete",
+  ),
+  Loading: new NotificationType<{
+    message: string;
+    token: number;
+  }>("apollographql/loading"),
+  EngineDecorations: new NotificationType<{
+    decorations: EngineDecoration[];
+  }>("apollographql/engineDecorations"),
+  ServerDebugMessage: new NotificationType<{
     type: "info" | "warning" | "error" | "errorTelemetry";
     message: string;
-  };
-};
-
-export type LanguageClient = Omit<GenericLanguageClient, "onNotification"> & {
-  // Don't allow passing of generic string messages, restrict to only those
-  // listed in the Message type
-  onNotification<MessageType extends keyof Messages>(
-    messageType: MessageType,
-    handler: (value: Messages[MessageType]) => void,
-  ): void;
-  // Allow other notification types
-  onNotification<RO>(
-    type: NotificationType0,
-    handler: NotificationHandler0,
-  ): void;
-  onNotification<P, RO>(
-    type: NotificationType<P>,
-    handler: NotificationHandler<P>,
-  ): void;
-};
-
-export type Connection = Omit<GenericConnection, "sendNotification"> & {
-  // Don't allow passing of generic string messages, restrict to only those
-  // listed in the Message type
-  sendNotification<MessageType extends keyof Messages>(
-    messageType: MessageType,
-    value: Messages[MessageType],
-  ): void;
-  // Allow other notification types
-  sendNotification<RO>(type: NotificationType0): void;
-  sendNotification<P, RO>(type: NotificationType<P>, params: P): void;
+    stack?: string;
+  }>("serverDebugMessage"),
 };

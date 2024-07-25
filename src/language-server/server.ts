@@ -14,6 +14,10 @@ import { GraphQLLanguageProvider } from "./languageProvider";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
 import { URI } from "vscode-uri";
+import {
+  LanguageServerNotifications as Notifications,
+  LanguageServerCommands as Commands,
+} from "src/messages";
 
 const connection = createConnection(ProposedFeatures.all);
 Debug.SetConnection(connection);
@@ -42,23 +46,20 @@ workspace.onDiagnostics((params) => {
 });
 
 workspace.onDecorations((params) => {
-  connection.sendNotification("apollographql/engineDecorations", {
+  connection.sendNotification(Notifications.EngineDecorations, {
     decorations: params,
   });
 });
 
 workspace.onSchemaTags((params) => {
-  connection.sendNotification(
-    "apollographql/tagsLoaded",
-    JSON.stringify(params),
-  );
+  connection.sendNotification(Notifications.TagsLoaded, JSON.stringify(params));
 });
 
 workspace.onConfigFilesFound(async (params) => {
   await whenConnectionInitialized;
 
   connection.sendNotification(
-    "apollographql/configFilesFound",
+    Notifications.ConfigFilesFound,
     params instanceof Error
       ? // Can't stringify Errors, just results in "{}"
         JSON.stringify({ message: params.message, stack: params.stack })
@@ -237,18 +238,17 @@ connection.onCodeAction(
   ),
 );
 
-connection.onNotification("apollographql/reloadService", () =>
+connection.onNotification(Commands.ReloadService, () =>
   workspace.reloadService(),
 );
 
-connection.onNotification(
-  "apollographql/tagSelected",
-  (selection: QuickPickItem) => workspace.updateSchemaTag(selection),
+connection.onNotification(Commands.TagSelected, (selection: QuickPickItem) =>
+  workspace.updateSchemaTag(selection),
 );
 
-connection.onNotification("apollographql/getStats", async ({ uri }) => {
+connection.onNotification(Commands.GetStats, async ({ uri }) => {
   const status = await languageProvider.provideStats(uri);
-  connection.sendNotification("apollographql/statsLoaded", status);
+  connection.sendNotification(Notifications.StatsLoaded, status);
 });
 
 // Listen on the connection

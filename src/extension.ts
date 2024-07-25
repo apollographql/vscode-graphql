@@ -15,8 +15,13 @@ import {
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
-import { NotificationType } from "vscode-languageclient/node";
-import type { EngineDecoration, LanguageClient } from "./messages";
+import { LanguageClient, NotificationType } from "vscode-languageclient/node";
+import {
+  type EngineDecoration,
+  LanguageServerCommands as LSCommands,
+  LanguageServerNotifications as LSNotifications,
+  LanguageServerRequests as LSRequests,
+} from "./messages";
 import {
   printNoFileOpenMessage,
   printStatsToClientOutputChannel,
@@ -62,13 +67,7 @@ export function activate(context: ExtensionContext) {
   // Handoff disposables for cleanup
   context.subscriptions.push(statusBar, outputChannel);
 
-  var serverDebugMessage: NotificationType<{
-    type: string;
-    message: string;
-    stack?: string;
-  }> = new NotificationType("serverDebugMessage");
-
-  client.onNotification(serverDebugMessage, (message) => {
+  client.onNotification(LSNotifications.ServerDebugMessage, (message) => {
     switch (message.type) {
       case "info":
         Debug.info(message.message, message.stack);
@@ -96,20 +95,23 @@ export function activate(context: ExtensionContext) {
     const fileOpen = fileUri && /[\/\\]/.test(fileUri);
 
     if (fileOpen) {
-      client.sendNotification("apollographql/getStats", { uri: fileUri });
+      client.sendNotification(LSCommands.GetStats, {
+        uri: fileUri,
+      });
       return;
     }
     printNoFileOpenMessage(client, version);
     client.outputChannel.show();
   });
 
-  client.onNotification("apollographql/statsLoaded", (params) => {
+  client.onNotification(LSNotifications.StatsLoaded, (params) => {
     printStatsToClientOutputChannel(client, params, version);
     client.outputChannel.show();
   });
+
   // For some reason, non-strings can only be sent in one direction. For now, messages
   // coming from the language server just need to be stringified and parsed.
-  client.onNotification("apollographql/configFilesFound", (params: string) => {
+  client.onNotification(LSNotifications.ConfigFilesFound, (params: string) => {
     const response = JSON.parse(params) as Array<any> | ErrorShape;
 
     const hasActiveTextEditor = Boolean(window.activeTextEditor);
@@ -150,12 +152,12 @@ export function activate(context: ExtensionContext) {
     // wipe out tags when reloading
     // XXX we should clean up this handling
     schemaTagItems = [];
-    client.sendNotification("apollographql/reloadService");
+    client.sendNotification(LSCommands.ReloadService);
   });
 
   // For some reason, non-strings can only be sent in one direction. For now, messages
   // coming from the language server just need to be stringified and parsed.
-  client.onNotification("apollographql/tagsLoaded", (params) => {
+  client.onNotification(LSNotifications.TagsLoaded, (params) => {
     const [serviceID, tags]: [string, string[]] = JSON.parse(params);
     const items = tags.map((tag) => ({
       label: tag,
@@ -169,13 +171,13 @@ export function activate(context: ExtensionContext) {
   commands.registerCommand("apollographql/selectSchemaTag", async () => {
     const selection = await window.showQuickPick(schemaTagItems);
     if (selection) {
-      client.sendNotification("apollographql/tagSelected", selection);
+      client.sendNotification(LSCommands.TagSelected, selection);
     }
   });
 
   let currentLoadingResolve: Map<number, () => void> = new Map();
 
-  client.onNotification("apollographql/loadingComplete", (token) => {
+  client.onNotification(LSNotifications.LoadingComplete, (token) => {
     statusBar.showLoadedState({
       hasActiveTextEditor: Boolean(window.activeTextEditor),
     });
@@ -186,7 +188,7 @@ export function activate(context: ExtensionContext) {
     }
   });
 
-  client.onNotification("apollographql/loading", ({ message, token }) => {
+  client.onNotification(LSNotifications.Loading, ({ message, token }) => {
     window.withProgress(
       {
         location: ProgressLocation.Notification,
@@ -291,7 +293,7 @@ export function activate(context: ExtensionContext) {
   };
 
   client.onNotification(
-    "apollographql/engineDecorations",
+    LSNotifications.EngineDecorations,
     ({ decorations }) => {
       latestDecorations = decorations;
       updateDecorations();

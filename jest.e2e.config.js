@@ -5,6 +5,7 @@ module.exports = {
   moduleFileExtensions: ["js"],
   testMatch: ["<rootDir>/lib/**/*.e2e.js"],
   testEnvironment: "./src/__e2e__/vscode-environment.js",
+  setupFiles: ["./src/__e2e__/setup.js"],
   verbose: true,
   moduleNameMapper: {
     vscode: path.join(__dirname, "src", "__e2e__", "vscode.js"),

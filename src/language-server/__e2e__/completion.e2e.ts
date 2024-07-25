@@ -1,48 +1,32 @@
-import { closeAllEditors, testCompletion } from "./utils";
+import { closeAllEditors, openEditor, testCompletion } from "./utils";
 
 beforeEach(closeAllEditors);
 
 describe("local schema", () => {
   test("property", async () => {
-    await testCompletion(
-      "localSchema/src/test.js",
-      [4, 8],
-      [["name", "String!"]],
-    );
+    const editor = await openEditor("localSchema/src/test.js");
+    await testCompletion(editor, [4, 8], [["name", "String!"]]);
   });
 });
 
 describe("local schema with extensions", () => {
   test("property", async () => {
-    await testCompletion(
-      "clientSchema/src/test.js",
-      [4, 8],
-      [["name", "String!"]],
-    );
-    await testCompletion(
-      "clientSchema/src/test.js",
-      [5, 8],
-      [["model", "String"]],
-    );
+    const editor = await openEditor("clientSchema/src/test.js");
+    await testCompletion(editor, [4, 8], [["name", "String!"]]);
+    await testCompletion(editor, [5, 8], [["model", "String"]]);
   });
 });
 
 describe("studio graph", () => {
   test("property", async () => {
-    await testCompletion(
-      "spotifyGraph/src/test.js",
-      [6, 15],
-      [["displayName", "String"]],
-    );
+    const editor = await openEditor("spotifyGraph/src/test.js");
+    await testCompletion(editor, [6, 15], [["displayName", "String"]]);
   });
 });
 
 describe("http schema", () => {
   test("property", async () => {
-    await testCompletion(
-      "httpSchema/src/test.js",
-      [5, 9],
-      [["author", "String"]],
-    );
+    const editor = await openEditor("httpSchema/src/test.js");
+    await testCompletion(editor, [5, 9], [["author", "String"]]);
   });
 });

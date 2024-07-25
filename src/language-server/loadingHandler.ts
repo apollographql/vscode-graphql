@@ -1,4 +1,4 @@
-import { LanguageServerNotifications as Notifications } from "src/messages";
+import { LanguageServerNotifications as Notifications } from "../messages";
 import { Connection, NotificationType } from "vscode-languageserver/node";
 
 // XXX I think we want to combine this into an interface

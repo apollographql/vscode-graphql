@@ -17,7 +17,7 @@ import { URI } from "vscode-uri";
 import {
   LanguageServerNotifications as Notifications,
   LanguageServerCommands as Commands,
-} from "src/messages";
+} from "../messages";
 
 const connection = createConnection(ProposedFeatures.all);
 Debug.SetConnection(connection);

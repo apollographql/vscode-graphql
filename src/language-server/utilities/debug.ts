@@ -1,4 +1,4 @@
-import { LanguageServerNotifications as Notifications } from "src/messages";
+import { LanguageServerNotifications as Notifications } from "../../messages";
 import { Connection } from "vscode-languageserver/node";
 
 /**

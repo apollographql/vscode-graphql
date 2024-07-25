@@ -19,7 +19,7 @@ import { GraphQLClientProject, isClientProject } from "./project/client";
 import { GraphQLServiceProject } from "./project/service";
 import { URI } from "vscode-uri";
 import { Debug } from "./utilities";
-import type { EngineDecoration } from "src/messages";
+import type { EngineDecoration } from "../messages";
 
 export interface WorkspaceConfig {
   clientIdentity?: ClientIdentity;

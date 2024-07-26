@@ -51,7 +51,18 @@ This directive enables your queries to receive data for specific fields incremen
 This is helpful whenever some fields in a query take much longer to resolve than others.
 https://www.apollographql.com/docs/react/data/directives#defer
 """
-directive @defer on FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @defer(
+  """
+  When true fragment may be deferred, if omitted defaults to true.
+  """
+  if: Boolean
+  """
+  A unique label across all @defer and @stream directives in an operation.
+  This label should be used by GraphQL clients to identify the data from patch responses and associate it with the correct fragment.
+  If provided, the GraphQL Server must add it to the payload.
+  """
+  label: String
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
 `;
 
 export const apolloClientSchemaDocument = new GraphQLDocument(

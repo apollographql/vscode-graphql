@@ -7,7 +7,7 @@ import {
   TypeInfo,
   GraphQLSchema,
   getVisitFn,
-  Visitor,
+  ASTVisitor,
   ASTKindToNode,
 } from "graphql";
 import { SourceLocation, getLocation } from "graphql/language/location";
@@ -31,8 +31,8 @@ type applyArg = [
  */
 export function visitWithTypeInfo(
   typeInfo: TypeInfo,
-  visitor: Visitor<ASTKindToNode>,
-): Visitor<ASTKindToNode> {
+  visitor: ASTVisitor,
+): ASTVisitor {
   return {
     enter(node: ASTNode) {
       typeInfo.enter(node);

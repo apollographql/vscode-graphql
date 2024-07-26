@@ -19,12 +19,9 @@ import {
 } from "vscode-languageserver/node";
 
 // should eventually be moved into this package, since we're overriding a lot of the existing behavior here
-import { getAutocompleteSuggestions } from "graphql-language-service-interface";
-import { Position as GraphQlPosition } from "graphql-language-service-utils";
-import {
-  getTokenAtPosition,
-  getTypeInfo,
-} from "graphql-language-service-interface/dist/getAutocompleteSuggestions";
+import { getAutocompleteSuggestions } from "graphql-language-service";
+import { Position as GraphQlPosition } from "graphql-language-service";
+import { getTokenAtPosition, getTypeInfo } from "graphql-language-service";
 import type { GraphQLWorkspace } from "./workspace";
 import type { DocumentUri } from "./project/base";
 
@@ -782,7 +779,7 @@ export class GraphQLLanguageProvider {
       const { extensions } = error;
       if (!extensions || !extensions.codeAction) continue;
 
-      const { message, edits }: CodeActionInfo = extensions.codeAction;
+      const { message, edits }: CodeActionInfo = extensions.codeAction as any;
 
       const codeAction = CodeAction.create(
         message,

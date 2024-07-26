@@ -60,9 +60,6 @@ export interface ClientConfigFormat extends ConfigBase {
   referenceID?: string;
   version?: string;
   // client schemas
-  clientOnlyDirectives?: string[];
-  clientSchemaDirectives?: string[];
-  addTypename?: boolean;
   tagName?: string;
   // stats window config
   statsWindow?: EngineStatsWindow;
@@ -97,9 +94,6 @@ export interface ClientConfigFormat extends ConfigBase {
 export const DefaultClientConfig = {
   ...DefaultConfigBase,
   tagName: "gql",
-  clientOnlyDirectives: ["connection", "type"],
-  clientSchemaDirectives: ["client", "rest"],
-  addTypename: true,
   statsWindow: DefaultEngineStatsWindow,
 };
 

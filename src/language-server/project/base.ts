@@ -38,7 +38,7 @@ import {
   SchemaResolveConfig,
 } from "../providers/schema";
 import { ApolloEngineClient, ClientIdentity } from "../engine";
-import type { ProjectStats } from "src/messages";
+import type { ProjectStats } from "../../messages";
 
 export type DocumentUri = string;
 

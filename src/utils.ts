@@ -1,4 +1,5 @@
-import type { LanguageClient, ProjectStats } from "./messages";
+import { LanguageClient } from "vscode-languageclient/node";
+import type { ProjectStats } from "./messages";
 
 export const timeSince = (date: number) => {
   const seconds = Math.floor((+new Date() - date) / 1000);

@@ -62,7 +62,7 @@ import { GraphQLClientProject, isClientProject } from "./project/client";
 import { isNotNullOrUndefined } from "../tools";
 import type { CodeActionInfo } from "./errors/validation";
 import { GraphQLDiagnostic } from "./diagnostics";
-import type { ProjectStats } from "src/messages";
+import type { ProjectStats } from "../messages";
 import { isInterfaceType } from "graphql";
 
 const DirectiveLocations = Object.keys(DirectiveLocation);

@@ -35,7 +35,7 @@ export interface CodeActionInfo {
   edits: TextEdit[];
 }
 
-const specifiedRulesToBeRemoved = [NoUnusedFragmentsRule];
+const specifiedRulesToBeRemoved: ValidationRule[] = [NoUnusedFragmentsRule];
 
 export const defaultValidationRules: ValidationRule[] = [
   NoAnonymousQueries,
@@ -152,15 +152,12 @@ export function NoMissingClientDirectives(context: ValidationContext) {
   // together correctly
   // XXX we have a simplified version of this in @apollo/gateway that we could probably use
   // intead of this
-  const executionContext = buildExecutionContext(
+  const executionContext = buildExecutionContext({
     schema,
-    root,
-    Object.create(null),
-    Object.create(null),
-    undefined,
-    undefined,
-    undefined,
-  );
+    document: root,
+    rootValue: Object.create(null),
+    contextValue: Object.create(null),
+  });
   function visitor(
     node: FieldNode | InlineFragmentNode | FragmentDefinitionNode,
   ) {

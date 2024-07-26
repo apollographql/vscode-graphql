@@ -19,7 +19,7 @@ import { GraphQLClientProject, isClientProject } from "./project/client";
 import { GraphQLServiceProject } from "./project/service";
 import { URI } from "vscode-uri";
 import { Debug } from "./utilities";
-import type { EngineDecoration } from "src/messages";
+import type { EngineDecoration } from "../messages";
 
 export interface WorkspaceConfig {
   clientIdentity?: ClientIdentity;
@@ -116,7 +116,7 @@ export class GraphQLWorkspace {
 
     */
     const apolloConfigFiles: string[] = fg.sync(
-      "**/apollo.config.@(js|ts|cjs)",
+      "**/apollo.config.@(js|ts|cjs|mjs)",
       {
         cwd: URI.parse(folder.uri).fsPath,
         absolute: true,
@@ -180,7 +180,6 @@ export class GraphQLWorkspace {
 
   async reloadProjectForConfig(configUri: DocumentUri) {
     const configPath = dirname(URI.parse(configUri).fsPath);
-
     let config: ApolloConfig | null;
     let error;
     try {

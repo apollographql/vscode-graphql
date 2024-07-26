@@ -57,7 +57,7 @@ import {
   diagnosticsFromError,
 } from "../diagnostics";
 import { URI } from "vscode-uri";
-import type { EngineDecoration } from "src/messages";
+import type { EngineDecoration } from "../../messages";
 import { join } from "path";
 
 type Maybe<T> = null | undefined | T;

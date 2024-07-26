@@ -1,7 +1,9 @@
 // IntrospectionSchemaProvider (http => IntrospectionResult => schema)
 import { NotificationHandler } from "vscode-languageserver/node";
-import { execute as linkExecute, toPromise } from "apollo-link";
-import { createHttpLink, HttpLink } from "apollo-link-http";
+
+import { execute as linkExecute } from "@apollo/client/link/core";
+import { toPromise } from "@apollo/client/link/utils";
+import { createHttpLink, HttpOptions } from "@apollo/client/link/http";
 import {
   GraphQLSchema,
   buildClientSchema,
@@ -24,7 +26,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
   async resolveSchema() {
     if (this.schema) return this.schema;
     const { skipSSLValidation, url, headers } = this.config;
-    const options: HttpLink.Options = {
+    const options: HttpOptions = {
       uri: url,
     };
     if (url.startsWith("https:") && skipSSLValidation) {
@@ -107,7 +109,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
     if (this.federatedServiceSDL) return this.federatedServiceSDL;
 
     const { skipSSLValidation, url, headers } = this.config;
-    const options: HttpLink.Options = {
+    const options: HttpOptions = {
       uri: url,
       fetch,
     };

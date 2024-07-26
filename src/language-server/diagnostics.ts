@@ -2,9 +2,18 @@ import {
   GraphQLSchema,
   GraphQLError,
   FragmentDefinitionNode,
-  findDeprecatedUsages,
   isExecutableDefinitionNode,
+  DocumentNode,
+  validate,
+  NoDeprecatedCustomRule,
 } from "graphql";
+
+function findDeprecatedUsages(
+  schema: GraphQLSchema,
+  ast: DocumentNode,
+): ReadonlyArray<GraphQLError> {
+  return validate(schema, ast, [NoDeprecatedCustomRule]);
+}
 
 import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver/node";
 

@@ -19,8 +19,7 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2020", "esnext.asynciterable"],
     "types": ["node", "jest"],
-    "baseUrl": ".",
-    "skipLibCheck": true
+    "baseUrl": "."
   },
   "exclude": ["./lib", "jest.config.ts"]
 }

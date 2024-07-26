@@ -180,7 +180,6 @@ export class GraphQLWorkspace {
 
   async reloadProjectForConfig(configUri: DocumentUri) {
     const configPath = dirname(URI.parse(configUri).fsPath);
-    console.log("reloadProjectForConfig");
     let config: ApolloConfig | null;
     let error;
     try {

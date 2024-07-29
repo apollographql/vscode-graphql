@@ -103,7 +103,14 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
       : config.service;
     const fileSet = new FileSet({
       rootURI: this.rootURI,
-      includes: [...includes, ".env", "apollo.config.js", "apollo.config.cjs"],
+      includes: [
+        ...includes,
+        ".env",
+        "apollo.config.js",
+        "apollo.config.cjs",
+        "apollo.config.mjs",
+        "apollo.config.ts",
+      ],
       // We do not want to include the local schema file in our list of documents
       excludes: [...excludes, ...this.getRelativeLocalSchemaFilePaths()],
       configURI: config.configURI,

@@ -148,6 +148,8 @@ connection.onDidChangeWatchedFiles((params) => {
     if (
       uri.endsWith("apollo.config.js") ||
       uri.endsWith("apollo.config.cjs") ||
+      uri.endsWith("apollo.config.mjs") ||
+      uri.endsWith("apollo.config.ts") ||
       uri.endsWith(".env")
     ) {
       workspace.reloadProjectForConfig(uri);

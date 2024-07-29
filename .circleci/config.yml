@@ -6,7 +6,7 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:21.6.2
+      - image: cimg/node:21.7.3
     working_directory: ~/vscode-graphql
 
 commands:

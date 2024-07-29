@@ -9,6 +9,7 @@ async function main() {
     // The path to the extension test runner script
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, "./run.js");
+    process.env.TEST_ARGV = JSON.stringify(process.argv);
     // Download VS Code, unzip it and run the integration test
     await runTests({
       extensionDevelopmentPath,

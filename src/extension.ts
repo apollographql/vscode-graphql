@@ -15,7 +15,7 @@ import {
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
-import { LanguageClient, NotificationType } from "vscode-languageclient/node";
+import { LanguageClient } from "vscode-languageclient/node";
 import {
   type EngineDecoration,
   LanguageServerCommands as LSCommands,
@@ -92,6 +92,7 @@ export function activate(context: ExtensionContext) {
     // if no editor is open, but an output channel is, vscode returns something like
     // output:extension-output-%234. If an editor IS open, this is something like file://Users/...
     // This check is just for either a / or a \ anywhere in a fileUri
+    // TODO: this should probably be `registerTextEditorCommand` instead of `registerCommand`
     const fileOpen = fileUri && /[\/\\]/.test(fileUri);
 
     if (fileOpen) {
@@ -107,6 +108,12 @@ export function activate(context: ExtensionContext) {
   client.onNotification(LSNotifications.StatsLoaded, (params) => {
     printStatsToClientOutputChannel(client, params, version);
     client.outputChannel.show();
+  });
+
+  commands.registerCommand("apollographql/fileStats", (uri: string) => {
+    // this has been introduced to check the LSP loading status in tests right now
+    // TODO: "apollographql/showStats" should use this request as well instead of notifications
+    return client.sendRequest(LSRequests.FileStats, { uri });
   });
 
   // For some reason, non-strings can only be sent in one direction. For now, messages

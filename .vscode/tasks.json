@@ -2,6 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "npm: watch",
       "type": "npm",
       "script": "watch",
       "problemMatcher": "$tsc-watch",
@@ -13,6 +14,32 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "sampleWorkspace",
+      "type": "npm",
+      "script": "sampleWorkspace:run",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": [
+          {
+            "regexp": "never match this please",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^\\s*Starting server.*",
+          "endsPattern": "^\\s*Server ready at.*"
+        }
+      }
+    },
+    {
+      "label": "BuildAndStartWorkspace",
+      "dependsOn": ["npm: watch", "sampleWorkspace"]
     }
   ]
 }

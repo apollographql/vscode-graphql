@@ -1,4 +1,11 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["./lib", "**/__tests__/*", "**/__mocks__/*", "jest.config.ts"]
+  "exclude": [
+    "./lib",
+    "**/__tests__/*",
+    "**/__e2e__/*",
+    "**/__mocks__/*",
+    "./sampleWorkspace",
+    "jest.config.ts"
+  ]
 }

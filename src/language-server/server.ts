@@ -17,6 +17,7 @@ import { URI } from "vscode-uri";
 import {
   LanguageServerNotifications as Notifications,
   LanguageServerCommands as Commands,
+  LanguageServerRequests as Requests,
 } from "../messages";
 
 const connection = createConnection(ProposedFeatures.all);
@@ -251,6 +252,9 @@ connection.onNotification(Commands.TagSelected, (selection: QuickPickItem) =>
 connection.onNotification(Commands.GetStats, async ({ uri }) => {
   const status = await languageProvider.provideStats(uri);
   connection.sendNotification(Notifications.StatsLoaded, status);
+});
+connection.onRequest(Requests.FileStats, async ({ uri }) => {
+  return languageProvider.provideStats(uri);
 });
 
 // Listen on the connection

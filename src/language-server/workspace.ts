@@ -6,7 +6,7 @@ import {
 import { QuickPickItem } from "vscode";
 import { GraphQLProject, DocumentUri } from "./project/base";
 import { dirname } from "path";
-import fg from "glob";
+import { globSync } from "glob";
 import {
   loadConfig,
   ApolloConfig,
@@ -115,7 +115,7 @@ export class GraphQLWorkspace {
         -- ~/:user/server (GraphQLProject) as WorkspaceFolder
 
     */
-    const apolloConfigFiles: string[] = fg.sync(
+    const apolloConfigFiles: string[] = globSync(
       "**/apollo.config.@(js|ts|cjs|mjs)",
       {
         cwd: URI.parse(folder.uri).fsPath,

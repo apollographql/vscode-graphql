@@ -1,18 +1,21 @@
 // EngineSchemaProvider (engine schema reg => schema)
 import { NotificationHandler } from "vscode-languageserver/node";
 import gql from "graphql-tag";
-import { GraphQLSchema, buildClientSchema } from "graphql";
+import { GraphQLSchema, IntrospectionQuery, buildClientSchema } from "graphql";
 import { ApolloEngineClient, ClientIdentity } from "../../engine";
-import { ClientConfig, keyEnvVar, parseServiceSpecifier } from "../../config";
-import { getServiceFromKey, isServiceKey } from "../../config";
+import { ClientConfig, keyEnvVar } from "../../config";
 import {
   GraphQLSchemaProvider,
   SchemaChangeUnsubscribeHandler,
   SchemaResolveConfig,
 } from "./base";
 
-import { GetSchemaByTagQuery } from "../../graphqlTypes";
+import {
+  GetSchemaByTagQuery,
+  GetSchemaByTagQueryVariables,
+} from "../../graphqlTypes";
 import { Debug } from "../../utilities";
+import { TypedDocumentNode } from "@apollo/client/core";
 
 export class EngineSchemaProvider implements GraphQLSchemaProvider {
   private schema?: GraphQLSchema;
@@ -47,12 +50,13 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
       );
     }
 
-    const { data, errors } = await this.client.execute<GetSchemaByTagQuery>({
+    const { data, errors } = await this.client.client.query({
       query: SCHEMA_QUERY,
       variables: {
         id: this.config.graph,
         tag: override && override.tag ? override.tag : this.config.variant,
       },
+      fetchPolicy: "no-cache",
     });
     if (errors) {
       // XXX better error handling of GraphQL errors
@@ -65,9 +69,9 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
       );
     }
 
-    // @ts-ignore
-    // XXX Types of `data.service.schema` won't match closely enough with `IntrospectionQuery`
-    this.schema = buildClientSchema(data.service.schema);
+    this.schema = buildClientSchema(
+      data.service.schema as unknown as IntrospectionQuery,
+    );
     return this.schema;
   }
 
@@ -86,7 +90,10 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
   }
 }
 
-export const SCHEMA_QUERY = gql`
+export const SCHEMA_QUERY: TypedDocumentNode<
+  GetSchemaByTagQuery,
+  GetSchemaByTagQueryVariables
+> = gql`
   query GetSchemaByTag($tag: String!, $id: ID!) {
     service(id: $id) {
       ... on Service {

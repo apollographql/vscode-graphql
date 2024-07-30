@@ -1,11 +1,14 @@
-import { GraphQLDataSource } from "./GraphQLDataSource";
 import { DefaultEngineConfig } from "../config";
 import { SCHEMA_TAGS_AND_FIELD_STATS } from "./operations/schemaTagsAndFieldStats";
-import {
-  FrontendUrlRootQuery,
-  SchemaTagsAndFieldStatsQuery,
-} from "../graphqlTypes";
 import { FRONTEND_URL_ROOT } from "./operations/frontendUrlRoot";
+import {
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  InMemoryCache,
+} from "@apollo/client/core";
+import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 
 export interface ClientIdentity {
   name?: string;
@@ -27,42 +30,66 @@ export function noServiceError(service: string | undefined, endpoint?: string) {
   } from Apollo at ${endpoint}. Please check your API key and graph ID`;
 }
 
-export class ApolloEngineClient extends GraphQLDataSource {
+export class ApolloEngineClient {
+  public readonly client: ApolloClient<any>;
+
   constructor(
-    private engineKey: string,
-    engineEndpoint: string = DefaultEngineConfig.endpoint,
-    private clientIdentity?: ClientIdentity,
+    private readonly engineKey: string,
+    baseURL: string = DefaultEngineConfig.endpoint,
+    private readonly clientIdentity?: ClientIdentity,
   ) {
-    super();
-    this.baseURL = engineEndpoint;
-  }
+    const link = ApolloLink.from([
+      onError(({ graphQLErrors, networkError, operation }) => {
+        const { result, response } = operation.getContext();
+        if (graphQLErrors) {
+          graphQLErrors.map((graphqlError) =>
+            console.error(`[GraphQL error]: ${graphqlError.message}`),
+          );
+        }
 
-  // XXX fix typings on base package
-  willSendRequest(request: any) {
-    if (!request.headers) request.headers = {};
-    request.headers["x-api-key"] = this.engineKey;
-    if (this.clientIdentity && this.clientIdentity.name) {
-      request.headers["apollo-client-name"] = this.clientIdentity.name;
-      request.headers["apollo-client-reference-id"] =
-        this.clientIdentity.referenceID;
-      request.headers["apollo-client-version"] = this.clientIdentity.version;
-      return;
-    }
+        if (networkError) {
+          console.log(`[Network Error]: ${networkError}`);
+        }
 
-    // default values
-    request.headers["apollo-client-name"] = "Apollo Language Server";
-    request.headers["apollo-client-reference-id"] =
-      "146d29c0-912c-46d3-b686-920e52586be6";
-    request.headers["apollo-client-version"] =
-      require("../../package.json").version;
+        if (response && response.status >= 400) {
+          console.log(`[Network Error] ${response.bodyText}`);
+        }
+      }),
+      setContext((_, request) => {
+        if (!request.headers) request.headers = {};
+        request.headers["x-api-key"] = this.engineKey;
+        if (this.clientIdentity && this.clientIdentity.name) {
+          request.headers["apollo-client-name"] = this.clientIdentity.name;
+          request.headers["apollo-client-reference-id"] =
+            this.clientIdentity.referenceID;
+          request.headers["apollo-client-version"] =
+            this.clientIdentity.version;
+        } else {
+          // default values
+          request.headers["apollo-client-name"] = "Apollo Language Server";
+          request.headers["apollo-client-reference-id"] =
+            "146d29c0-912c-46d3-b686-920e52586be6";
+          request.headers["apollo-client-version"] =
+            require("../../package.json").version;
+        }
+        return request;
+      }),
+      createHttpLink({ uri: baseURL }),
+    ]);
+
+    this.client = new ApolloClient({
+      link,
+      cache: new InMemoryCache(),
+    });
   }
 
   async loadSchemaTagsAndFieldLatencies(serviceID: string) {
-    const { data, errors } = await this.execute<SchemaTagsAndFieldStatsQuery>({
+    const { data, errors } = await this.client.query({
       query: SCHEMA_TAGS_AND_FIELD_STATS,
       variables: {
         id: serviceID,
       },
+      fetchPolicy: "no-cache",
     });
 
     if (!(data && data.service && data.service.schemaTags) || errors) {
@@ -96,8 +123,9 @@ export class ApolloEngineClient extends GraphQLDataSource {
   }
 
   async loadFrontendUrlRoot() {
-    const { data } = await this.execute<FrontendUrlRootQuery>({
+    const { data } = await this.client.query({
       query: FRONTEND_URL_ROOT,
+      fetchPolicy: "cache-first",
     });
 
     return data?.frontendUrlRoot;

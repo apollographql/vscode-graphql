@@ -1,6 +1,14 @@
+import { TypedDocumentNode } from "@apollo/client/core";
 import gql from "graphql-tag";
+import type {
+  SchemaTagsAndFieldStatsQuery,
+  SchemaTagsAndFieldStatsQueryVariables,
+} from "src/language-server/graphqlTypes";
 
-export const SCHEMA_TAGS_AND_FIELD_STATS = gql`
+export const SCHEMA_TAGS_AND_FIELD_STATS: TypedDocumentNode<
+  SchemaTagsAndFieldStatsQuery,
+  SchemaTagsAndFieldStatsQueryVariables
+> = gql`
   query SchemaTagsAndFieldStats($id: ID!) {
     service(id: $id) {
       schemaTags {

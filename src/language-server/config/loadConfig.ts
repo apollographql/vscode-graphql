@@ -206,11 +206,13 @@ export async function loadConfig({
   // selectively apply defaults when loading the config
   // this is just the includes/excludes defaults.
   // These need to go on _all_ configs. That's why this is last.
-  if (config.client) config = merge({ client: DefaultClientConfig }, config);
-  if (config.service) config = merge({ service: DefaultServiceConfig }, config);
-  if (engineConfig) config = merge(engineConfig, config);
+  if (config.client)
+    config = merge({}, { client: DefaultClientConfig }, config);
+  if (config.service)
+    config = merge({}, { service: DefaultServiceConfig }, config);
+  if (engineConfig) config = merge({}, engineConfig, config);
 
-  config = merge({ engine: DefaultEngineConfig }, config);
+  config = merge({}, { engine: DefaultEngineConfig }, config);
 
   return new ApolloConfig(config, URI.file(resolve(filepath)));
 }

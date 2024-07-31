@@ -20,6 +20,7 @@ import { GraphQLServiceProject } from "./project/service";
 import { URI } from "vscode-uri";
 import { Debug } from "./utilities";
 import type { EngineDecoration } from "../messages";
+import { equal } from "@wry/equality";
 
 export interface WorkspaceConfig {
   clientIdentity?: ClientIdentity;
@@ -196,6 +197,9 @@ export class GraphQLWorkspace {
     }
     // If project exists, update the config
     if (project && config) {
+      if (equal(project.config.rawConfig, config.rawConfig)) {
+        return;
+      }
       await Promise.all(project.updateConfig(config));
       this.reloadService();
     }

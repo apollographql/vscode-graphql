@@ -65,7 +65,6 @@
     "@changesets/cli": "2.26.2",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/typescript-operations": "^4.2.3",
-    "@types/cosmiconfig": "5.0.3",
     "@types/jest": "29.5.12",
     "@types/lodash.debounce": "4.0.9",
     "@types/lodash.merge": "4.6.9",

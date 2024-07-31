@@ -1,5 +1,6 @@
 async function loadDefaultMocks(port) {
-  await sendMock(port, SchemaTagsAndFieldStats_NOT_ALLOWED_BY_USER_ROLE);
+  await sendMock(port, FrontendUrlRoot);
+  await sendMock(port, SchemaTagsAndFieldStats_NONE);
   await sendMock(port, GetSchemaByTag);
 }
 
@@ -14,6 +15,28 @@ function sendMock(port, { operationName, variables, response }) {
   });
 }
 
+const FrontendUrlRoot = {
+  operationName: "FrontendUrlRoot",
+  variables: {},
+  response: { data: { frontendUrlRoot: "https://studio.apollographql.com" } },
+};
+
+const SchemaTagsAndFieldStats_NONE = {
+  operationName: "SchemaTagsAndFieldStats",
+  variables: { id: "spotify-demo-graph-519427f5" },
+  response: {
+    data: {
+      service: {
+        schemaTags: [
+          { tag: "main", __typename: "SchemaTag" },
+          { tag: "public", __typename: "SchemaTag" },
+        ],
+        stats: { fieldLatencies: [], __typename: "ServiceStatsWindow" },
+        __typename: "Service",
+      },
+    },
+  },
+};
 const SchemaTagsAndFieldStats_NOT_ALLOWED_BY_USER_ROLE = {
   operationName: "SchemaTagsAndFieldStats",
   variables: { id: "spotify-demo-graph-519427f5" },
@@ -12950,6 +12973,8 @@ const GetSchemaByTag = {
 
 module.exports = {
   loadDefaultMocks,
+  FrontendUrlRoot,
   SchemaTagsAndFieldStats_NOT_ALLOWED_BY_USER_ROLE,
+  SchemaTagsAndFieldStats_NONE,
   GetSchemaByTag,
 };

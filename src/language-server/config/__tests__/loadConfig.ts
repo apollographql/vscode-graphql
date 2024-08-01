@@ -85,15 +85,6 @@ describe("loadConfig", () => {
       expect(config?.rawConfig).toMatchInlineSnapshot(`
         Object {
           "client": Object {
-            "addTypename": true,
-            "clientOnlyDirectives": Array [
-              "connection",
-              "type",
-            ],
-            "clientSchemaDirectives": Array [
-              "client",
-              "rest",
-            ],
             "excludes": Array [
               "**/node_modules",
               "**/__tests__",

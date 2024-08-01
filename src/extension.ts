@@ -52,8 +52,7 @@ export function activate(context: ExtensionContext) {
   const serverModule = context.asAbsolutePath(
     join("lib/language-server", "server.js"),
   );
-
-  // Initialize language client
+  outputChannel ||= window.createOutputChannel("Apollo GraphQL");
   const client = getLanguageServerClient(serverModule, outputChannel);
   globalClient = client;
   client.registerProposedFeatures();
@@ -62,7 +61,6 @@ export function activate(context: ExtensionContext) {
   statusBar = new StatusBar({
     hasActiveTextEditor: Boolean(window.activeTextEditor),
   });
-  outputChannel = window.createOutputChannel("Apollo GraphQL");
   Debug.SetOutputConsole(outputChannel);
   // Handoff disposables for cleanup
   context.subscriptions.push(statusBar, outputChannel);

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { join } from "node:path";
 import { scheduler } from "node:timers/promises";
 import { ProjectStats } from "src/messages";
+import { VSCodeGraphQLExtension } from "src/extension";
 
 function resolve(file: string) {
   return join(__dirname, "..", "..", "..", "sampleWorkspace", file);
@@ -96,4 +97,55 @@ export async function getHover(
   const content = item.contents[0];
   const label = typeof content === "string" ? content : content.value;
   return label;
+}
+
+export function getExtension(): VSCodeGraphQLExtension {
+  return vscode.extensions.getExtension("apollographql.vscode-apollo")!.exports;
+}
+
+export async function getOutputChannelDocument() {
+  const ext = getExtension();
+  ext.outputChannel.show();
+  await scheduler.wait(300);
+  const doc = vscode.workspace.textDocuments.find((d) =>
+    d.uri.path.startsWith("extension-output-apollographql.vscode-apollo"),
+  );
+  if (!doc) {
+    throw new Error("Output channel document not found");
+  }
+  return doc;
+}
+
+export function getReloadPromise() {
+  const disposables: vscode.Disposable[] = [];
+  const ext = getExtension();
+  const waitingTokens = new Set<number>();
+  disposables.push(
+    ext.client.onNotification(
+      ext.LanguageServerNotifications.Loading,
+      ({ token }) => {
+        waitingTokens.add(token);
+      },
+    ),
+  );
+  return new Promise<void>((resolve) => {
+    disposables.push(
+      ext.client.onNotification(
+        ext.LanguageServerNotifications.LoadingComplete,
+        (token) => {
+          waitingTokens.delete(token);
+          if (waitingTokens.size === 0) resolve();
+        },
+      ),
+    );
+  }).finally(() => disposables.forEach((d) => d.dispose()));
+}
+
+export async function reloadService() {
+  const reloaded = getReloadPromise();
+
+  vscode.commands.executeCommand("apollographql/reloadService");
+
+  await reloaded;
+  await scheduler.wait(100);
 }

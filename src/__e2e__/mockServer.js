@@ -7,14 +7,16 @@ const {
 const { buildSchema } = require("graphql");
 const { Trie } = require("@wry/trie");
 
-function runMockServer(port, onStart = (port) => {}) {
+function runMockServer(
+  /** @type {number}  */ port,
+  onStart = (/** @type {number}  */ port) => {},
+) {
   const mocks = new Trie(false);
 
   const server = http.createServer(async (req, res) => {
     if (req.url === "/apollo") {
       if (req.method === "POST") {
-        const { operationName, variables, extensions } =
-          await parseRequestParams(req, res);
+        const { operationName, variables } = await parseRequestParams(req, res);
 
         const mock = mocks.peek(operationName, JSON.stringify(variables));
         if (mock) {

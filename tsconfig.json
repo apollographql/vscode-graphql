@@ -10,6 +10,7 @@
     "declaration": true,
     "declarationMap": true,
     "removeComments": true,
+    "allowJs": true,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -21,5 +22,6 @@
     "types": ["node", "jest"],
     "baseUrl": "."
   },
+  "include": ["./src"],
   "exclude": ["./lib", "jest.config.ts", "./sampleWorkspace"]
 }

@@ -48,7 +48,17 @@ function isError(response: any): response is ErrorShape {
   );
 }
 
-export function activate(context: ExtensionContext) {
+export interface VSCodeGraphQLExtension {
+  outputChannel: OutputChannel;
+  client: LanguageClient;
+  LanguageServerCommands: typeof LSCommands;
+  LanguageServerNotifications: typeof LSNotifications;
+  LanguageServerRequests: typeof LSRequests;
+}
+
+export async function activate(
+  context: ExtensionContext,
+): Promise<VSCodeGraphQLExtension> {
   const serverModule = context.asAbsolutePath(
     join("lib/language-server", "server.js"),
   );
@@ -316,7 +326,14 @@ export function activate(context: ExtensionContext) {
     },
   });
 
-  return client.start();
+  await client.start();
+  return {
+    outputChannel,
+    client,
+    LanguageServerCommands: LSCommands,
+    LanguageServerNotifications: LSNotifications,
+    LanguageServerRequests: LSRequests,
+  };
 }
 
 export function deactivate(): Thenable<void> | void {

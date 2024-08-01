@@ -17,6 +17,7 @@ async function main() {
 
     const TEST_PORT = 7096;
     process.env.APOLLO_ENGINE_ENDPOINT = "http://localhost:7096/apollo";
+    process.env.MOCK_SERVER_PORT = String(TEST_PORT);
     disposable = runMockServer(TEST_PORT);
     await loadDefaultMocks(TEST_PORT);
     // Download VS Code, unzip it and run the integration test

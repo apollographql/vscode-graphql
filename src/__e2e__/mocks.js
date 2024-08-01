@@ -1,10 +1,19 @@
-async function loadDefaultMocks(port) {
+// @ts-check
+
+async function loadDefaultMocks(/** @type {number} */ port) {
   await sendMock(port, FrontendUrlRoot);
-  await sendMock(port, SchemaTagsAndFieldStats_NONE);
+  await sendMock(port, SchemaTagsAndFieldStats);
   await sendMock(port, GetSchemaByTag);
 }
 
-function sendMock(port, { operationName, variables, response }) {
+function sendMock(
+  /** @type {number} */ port,
+  /** @type { { operationName: string, variables: Record<string, string>, response: unknown }} */ {
+    operationName,
+    variables,
+    response,
+  },
+) {
   return fetch(`http://localhost:${port}/apollo`, {
     method: "PUT",
     body: JSON.stringify({
@@ -21,7 +30,7 @@ const FrontendUrlRoot = {
   response: { data: { frontendUrlRoot: "https://studio.apollographql.com" } },
 };
 
-const SchemaTagsAndFieldStats_NONE = {
+const SchemaTagsAndFieldStats = {
   operationName: "SchemaTagsAndFieldStats",
   variables: { id: "spotify-demo-graph-519427f5" },
   response: {
@@ -31,10 +40,93 @@ const SchemaTagsAndFieldStats_NONE = {
           { tag: "main", __typename: "SchemaTag" },
           { tag: "public", __typename: "SchemaTag" },
         ],
-        stats: { fieldLatencies: [], __typename: "ServiceStatsWindow" },
+        stats: {
+          fieldLatencies: [
+            {
+              __typename: "ServiceFieldLatenciesRecord",
+              groupBy: {
+                __typename: "ServiceFieldLatenciesDimensions",
+                parentType: "CurrentUserProfile",
+                fieldName: "id",
+              },
+              metrics: {
+                __typename: "ServiceFieldLatenciesMetrics",
+                fieldHistogram: {
+                  __typename: "DurationHistogram",
+                  durationMs: 1.2,
+                },
+              },
+            },
+            {
+              __typename: "ServiceFieldLatenciesRecord",
+              groupBy: {
+                __typename: "ServiceFieldLatenciesDimensions",
+                parentType: "CurrentUserProfile",
+                fieldName: "displayName",
+              },
+              metrics: {
+                __typename: "ServiceFieldLatenciesMetrics",
+                fieldHistogram: {
+                  __typename: "DurationHistogram",
+                  durationMs: 12.8,
+                },
+              },
+            },
+            {
+              __typename: "ServiceFieldLatenciesRecord",
+              groupBy: {
+                __typename: "ServiceFieldLatenciesDimensions",
+                parentType: "CurrentUser",
+                fieldName: "profile",
+              },
+              metrics: {
+                __typename: "ServiceFieldLatenciesMetrics",
+                fieldHistogram: {
+                  __typename: "DurationHistogram",
+                  durationMs: 14.5,
+                },
+              },
+            },
+            {
+              __typename: "ServiceFieldLatenciesRecord",
+              groupBy: {
+                __typename: "ServiceFieldLatenciesDimensions",
+                parentType: "Query",
+                fieldName: "me",
+              },
+              metrics: {
+                __typename: "ServiceFieldLatenciesMetrics",
+                fieldHistogram: {
+                  __typename: "DurationHistogram",
+                  durationMs: 15.5,
+                },
+              },
+            },
+          ],
+          __typename: "ServiceStatsWindow",
+        },
         __typename: "Service",
       },
     },
+  },
+};
+const SchemaTagsAndFieldStats_WRONG_TOKEN = {
+  operationName: "SchemaTagsAndFieldStats",
+  variables: { id: "spotify-demo-graph-519427f5" },
+  response: {
+    data: { service: null },
+    errors: [
+      {
+        message: "HTTP fetch failed from 'kotlin': 406: Not Acceptable",
+        extensions: {
+          code: "SUBREQUEST_HTTP_ERROR",
+          service: "kotlin",
+          reason: "406: Not Acceptable",
+          http: { status: 406 },
+        },
+      },
+      { message: "Invalid credentials provided" },
+    ],
   },
 };
 const SchemaTagsAndFieldStats_NOT_ALLOWED_BY_USER_ROLE = {
@@ -12970,11 +13062,33 @@ const GetSchemaByTag = {
     },
   },
 };
+const GetSchemaByTag_WRONG_TOKEN = {
+  operationName: "GetSchemaByTag",
+  variables: { id: "spotify-demo-graph-519427f5", tag: "main" },
+  response: {
+    data: { service: null },
+    errors: [
+      {
+        message: "HTTP fetch failed from 'kotlin': 406: Not Acceptable",
+        extensions: {
+          code: "SUBREQUEST_HTTP_ERROR",
+          service: "kotlin",
+          reason: "406: Not Acceptable",
+          http: { status: 406 },
+        },
+      },
+      { message: "Invalid credentials provided" },
+    ],
+  },
+};
 
 module.exports = {
   loadDefaultMocks,
+  sendMock,
   FrontendUrlRoot,
   SchemaTagsAndFieldStats_NOT_ALLOWED_BY_USER_ROLE,
-  SchemaTagsAndFieldStats_NONE,
+  SchemaTagsAndFieldStats,
+  SchemaTagsAndFieldStats_WRONG_TOKEN,
   GetSchemaByTag,
+  GetSchemaByTag_WRONG_TOKEN,
 };

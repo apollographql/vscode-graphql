@@ -88,19 +88,19 @@ const SchemaTagsAndFieldStats = {
               },
             },
             {
-              __typename: "ServiceFieldLatenciesRecord",
               groupBy: {
-                __typename: "ServiceFieldLatenciesDimensions",
                 parentType: "Query",
                 fieldName: "me",
+                __typename: "ServiceFieldLatenciesDimensions",
               },
               metrics: {
-                __typename: "ServiceFieldLatenciesMetrics",
                 fieldHistogram: {
+                  durationMs: 83.89787623554304,
                   __typename: "DurationHistogram",
-                  durationMs: 15.5,
                 },
+                __typename: "ServiceFieldLatenciesMetrics",
               },
+              __typename: "ServiceFieldLatenciesRecord",
             },
           ],
           __typename: "ServiceStatsWindow",

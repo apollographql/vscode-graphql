@@ -16,7 +16,10 @@ function runMockServer(
   const server = http.createServer(async (req, res) => {
     if (req.url === "/apollo") {
       if (req.method === "POST") {
-        const { operationName, variables } = await parseRequestParams(req, res);
+        const { operationName, variables } =
+          /** @type{import("graphql-http/lib/common").RequestParams} */ (
+            await parseRequestParams(req, res)
+          );
 
         const mock = mocks.peek(operationName, JSON.stringify(variables));
         if (mock) {

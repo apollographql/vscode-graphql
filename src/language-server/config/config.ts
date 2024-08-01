@@ -194,7 +194,7 @@ export class ApolloConfig {
     client?: ClientConfigFormat;
     service?: ServiceConfigFormat;
   }): void {
-    const config = merge(this.rawConfig, { client, engine, service });
+    const config = merge({}, this.rawConfig, { client, engine, service });
     this.rawConfig = config;
     this.client = config.client;
     this.service = config.service;

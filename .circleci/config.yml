@@ -65,8 +65,6 @@ jobs:
       - run:
           name: E2E tests
           command: xvfb-run -a npm run test:extension
-          environment:
-            APOLLO_KEY: "service:bob-123:489fhseo4"
 
 workflows:
   build-test-deploy:

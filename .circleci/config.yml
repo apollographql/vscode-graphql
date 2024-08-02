@@ -53,6 +53,18 @@ jobs:
           name: Test
           command: npm run test
 
+  E2E tests:
+    executor: node
+    steps:
+      - checkout
+      - npm-install
+      - run:
+          name: Build
+          command: npm run build:clean
+      - run:
+          name: E2E tests
+          command: npm run test:extension
+
 workflows:
   build-test-deploy:
     jobs:

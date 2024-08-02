@@ -58,7 +58,7 @@ jobs:
     steps:
       - checkout
       - npm-install
-      - run: apt update &&  apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
+      - run: sudo apt update &&  sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
       - run:
           name: Build
           command: npm run build:clean

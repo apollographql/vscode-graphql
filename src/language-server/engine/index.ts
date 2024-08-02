@@ -32,6 +32,7 @@ export function noServiceError(service: string | undefined, endpoint?: string) {
 
 export class ApolloEngineClient {
   public readonly client: ApolloClient<any>;
+  public readonly query: ApolloClient<any>["query"];
 
   constructor(
     private readonly engineKey: string,
@@ -81,6 +82,7 @@ export class ApolloEngineClient {
       link,
       cache: new InMemoryCache(),
     });
+    this.query = this.client.query.bind(this.client);
   }
 
   async loadSchemaTagsAndFieldLatencies(serviceID: string) {

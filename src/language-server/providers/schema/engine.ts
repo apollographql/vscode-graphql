@@ -50,7 +50,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
       );
     }
 
-    const { data, errors } = await this.client.client.query({
+    const { data, errors } = await this.client.query({
       query: SCHEMA_QUERY,
       variables: {
         id: this.config.graph,

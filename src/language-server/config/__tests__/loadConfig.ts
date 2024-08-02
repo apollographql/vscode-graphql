@@ -3,8 +3,8 @@ import * as path from "path";
 import * as fs from "fs";
 import {
   DefaultClientConfig,
-  DefaultServiceConfig,
   DefaultEngineConfig,
+  ClientConfig,
 } from "../config";
 import { Debug } from "../../utilities";
 
@@ -374,7 +374,7 @@ describe("loadConfig", () => {
         type: "client",
       });
 
-      expect(config?.isClient).toEqual(true);
+      expect(config).toBeInstanceOf(ClientConfig);
     });
 
     it("infers client projects from config", async () => {
@@ -387,7 +387,7 @@ describe("loadConfig", () => {
         configFileName: "my.config.js",
       });
 
-      expect(config?.isClient).toEqual(true);
+      expect(config).toBeInstanceOf(ClientConfig);
     });
 
     it("infers service projects from config", async () => {
@@ -463,21 +463,6 @@ describe("loadConfig", () => {
 
       expect(config?.rawConfig?.client?.includes).toEqual(
         DefaultClientConfig.includes,
-      );
-    });
-
-    it("merges service name and default config for service projects", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { service: { name: 'wow' } }`,
-      });
-
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-      });
-
-      expect(config?.rawConfig?.service?.includes).toEqual(
-        DefaultServiceConfig.includes,
       );
     });
 

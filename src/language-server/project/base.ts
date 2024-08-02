@@ -28,9 +28,8 @@ import {
   ClientConfig,
   isClientConfig,
   isLocalServiceConfig,
-  isServiceConfig,
   keyEnvVar,
-  ServiceConfig,
+  RoverConfig,
 } from "../config";
 import {
   schemaProviderFromConfig,
@@ -61,7 +60,7 @@ const fileAssociations: { [extension: string]: string } = {
 
 interface GraphQLProjectConfig {
   clientIdentity?: ClientIdentity;
-  config: ClientConfig | ServiceConfig;
+  config: ClientConfig | RoverConfig;
   configFolderURI: URI;
   loadingHandler: LoadingHandler;
 }
@@ -98,9 +97,11 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
     this.rootURI = config.configDirURI || configFolderURI;
 
-    const { includes, excludes } = config.isClient
+    const { includes = [], excludes = [] } = isClientConfig(config)
       ? config.client
-      : config.service;
+      : {
+          /** TODO */
+        };
     const fileSet = new FileSet({
       rootURI: this.rootURI,
       includes: [
@@ -305,13 +306,12 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
   }
 
   private getRelativeLocalSchemaFilePaths(): string[] {
-    const serviceConfig = isServiceConfig(this.config)
-      ? this.config.service
-      : isClientConfig(this.config) &&
-        typeof this.config.client.service === "object" &&
-        isLocalServiceConfig(this.config.client.service)
-      ? this.config.client.service
-      : undefined;
+    const serviceConfig =
+      isClientConfig(this.config) &&
+      typeof this.config.client.service === "object" &&
+      isLocalServiceConfig(this.config.client.service)
+        ? this.config.client.service
+        : undefined;
     const localSchemaFile = serviceConfig?.localSchemaFile;
     return (
       localSchemaFile === undefined

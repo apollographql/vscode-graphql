@@ -21,7 +21,7 @@ async function main() {
     disposable = runMockServer(TEST_PORT);
     await loadDefaultMocks(TEST_PORT);
     // Download VS Code, unzip it and run the integration test
-    await runTests({
+    const exitCode = await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
       launchArgs: [
@@ -29,6 +29,7 @@ async function main() {
         `${extensionDevelopmentPath}/sampleWorkspace/sampleWorkspace.code-workspace`,
       ],
     });
+    process.exit(exitCode);
   } catch (err) {
     console.error(err);
     console.error("Failed to run tests");

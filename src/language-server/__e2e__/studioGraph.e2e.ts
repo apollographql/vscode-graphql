@@ -13,18 +13,18 @@ import vscode from "vscode";
 import { scheduler } from "node:timers/promises";
 
 const mockPort = Number(process.env.MOCK_SERVER_PORT);
-let editor: TextEditor;
 beforeAll(async () => {
   closeAllEditors();
-  editor = await openEditor("spotifyGraph/src/test.js");
 });
 
 test("completion", async () => {
+  const editor = await openEditor("spotifyGraph/src/test.js");
   await testCompletion(editor, [4, 9], [["profile", "CurrentUserProfile!"]]);
   await testCompletion(editor, [6, 15], [["displayName", "String"]]);
 });
 
 test("hover", async () => {
+  const editor = await openEditor("spotifyGraph/src/test.js");
   expect(await getHover(editor, [4, 9])).toMatchInlineSnapshot(`
 "\`\`\`graphql
 CurrentUser.profile: CurrentUserProfile!

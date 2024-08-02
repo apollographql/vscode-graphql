@@ -5,11 +5,11 @@ const { yargsOptions } = require("jest-cli");
 
 async function run() {
   const root = path.join(__dirname, "..", "..");
-  const argv = await yargs(JSON.parse(process.env.TEST_ARGV).slice(2))
+  const argv = await yargs(JSON.parse(process.env.TEST_ARGV || "[]").slice(2))
     .alias("help", "h")
     .options(yargsOptions).argv;
 
-  await runCLI(
+  const results = await runCLI(
     {
       ...argv,
       config: path.join(root, "jest.e2e.config.js"),
@@ -17,6 +17,7 @@ async function run() {
     },
     [root],
   );
+  process.exit(results.results.numFailedTests);
 }
 
 module.exports.run = run;

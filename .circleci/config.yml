@@ -63,6 +63,8 @@ jobs:
           name: Build
           command: npm run build:clean
       - run:
+          command: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
+      - run:
           name: E2E tests
           command: xvfb-run -a npm run test:extension
 

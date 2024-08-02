@@ -18,8 +18,6 @@ async function main() {
     const TEST_PORT = 7096;
     process.env.APOLLO_ENGINE_ENDPOINT = "http://localhost:7096/apollo";
     process.env.MOCK_SERVER_PORT = String(TEST_PORT);
-    // This key is fake and only there to prevent the `Error: No API key found.` warning.
-    process.env.APOLLO_KEY ||= "service:bob-123:489fhseo4";
     disposable = runMockServer(TEST_PORT);
     await loadDefaultMocks(TEST_PORT);
     // Download VS Code, unzip it and run the integration test

@@ -550,15 +550,13 @@ function buildExplorerURL({
   graphId: string | undefined;
 }) {
   const url = new URL(
-    graphId
-      ? `/graph/${graphId}/variant/${variant}/explorer`
-      : "/sandbox/explorer",
+    graphId ? `/graph/${graphId}/explorer` : "/sandbox/explorer",
     frontendUrlRoot,
   );
   url.searchParams.set("explorerURLState", explorerURLState);
   url.searchParams.set("referrer", "vscode");
   if (graphId) {
-    // nothing to add for now
+    url.searchParams.set("variant", variant);
   } else if (endpoint) {
     url.searchParams.set("endpoint", endpoint);
   } else {

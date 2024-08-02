@@ -14,6 +14,7 @@
         "${workspaceFolder}/sampleWorkspace/sampleWorkspace.code-workspace"
       ],
       "sourceMaps": true,
+      "env": { "APOLLO_ENGINE_ENDPOINT": "http://localhost:7096/apollo" },
       "outFiles": ["${workspaceRoot}/lib/**/*.js"]
     },
     {
@@ -36,7 +37,8 @@
         "${workspaceFolder}/sampleWorkspace/sampleWorkspace.code-workspace"
       ],
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
-      "preLaunchTask": "BuildAndStartWorkspace"
+      "preLaunchTask": "BuildAndStartWorkspace",
+      "env": { "APOLLO_ENGINE_ENDPOINT": "http://localhost:7096/apollo" }
     },
     {
       "name": "Attach to Test Debugger",

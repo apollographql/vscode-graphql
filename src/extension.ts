@@ -48,12 +48,21 @@ function isError(response: any): response is ErrorShape {
   );
 }
 
-export function activate(context: ExtensionContext) {
+export interface VSCodeGraphQLExtension {
+  outputChannel: OutputChannel;
+  client: LanguageClient;
+  LanguageServerCommands: typeof LSCommands;
+  LanguageServerNotifications: typeof LSNotifications;
+  LanguageServerRequests: typeof LSRequests;
+}
+
+export async function activate(
+  context: ExtensionContext,
+): Promise<VSCodeGraphQLExtension> {
   const serverModule = context.asAbsolutePath(
     join("lib/language-server", "server.js"),
   );
-
-  // Initialize language client
+  outputChannel ||= window.createOutputChannel("Apollo GraphQL");
   const client = getLanguageServerClient(serverModule, outputChannel);
   globalClient = client;
   client.registerProposedFeatures();
@@ -62,7 +71,6 @@ export function activate(context: ExtensionContext) {
   statusBar = new StatusBar({
     hasActiveTextEditor: Boolean(window.activeTextEditor),
   });
-  outputChannel = window.createOutputChannel("Apollo GraphQL");
   Debug.SetOutputConsole(outputChannel);
   // Handoff disposables for cleanup
   context.subscriptions.push(statusBar, outputChannel);
@@ -318,7 +326,14 @@ export function activate(context: ExtensionContext) {
     },
   });
 
-  return client.start();
+  await client.start();
+  return {
+    outputChannel,
+    client,
+    LanguageServerCommands: LSCommands,
+    LanguageServerNotifications: LSNotifications,
+    LanguageServerRequests: LSRequests,
+  };
 }
 
 export function deactivate(): Thenable<void> | void {

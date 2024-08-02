@@ -1,7 +1,11 @@
+// @ts-check
 const path = require("path");
 const { runTests } = require("@vscode/test-electron");
+const { runMockServer } = require("./mockServer.js");
+const { loadDefaultMocks } = require("./mocks.js");
 
 async function main() {
+  let disposable;
   try {
     // The folder containing the Extension Manifest package.json
     // Passed to `--extensionDevelopmentPath`
@@ -10,6 +14,12 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, "./run.js");
     process.env.TEST_ARGV = JSON.stringify(process.argv);
+
+    const TEST_PORT = 7096;
+    process.env.APOLLO_ENGINE_ENDPOINT = "http://localhost:7096/apollo";
+    process.env.MOCK_SERVER_PORT = String(TEST_PORT);
+    disposable = runMockServer(TEST_PORT);
+    await loadDefaultMocks(TEST_PORT);
     // Download VS Code, unzip it and run the integration test
     await runTests({
       extensionDevelopmentPath,
@@ -23,6 +33,10 @@ async function main() {
     console.error(err);
     console.error("Failed to run tests");
     process.exit(1);
+  } finally {
+    if (disposable) {
+      disposable[Symbol.dispose]();
+    }
   }
 }
 

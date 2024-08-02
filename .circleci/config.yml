@@ -58,12 +58,13 @@ jobs:
     steps:
       - checkout
       - npm-install
+      - run: apt update &&  apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
       - run:
           name: Build
           command: npm run build:clean
       - run:
           name: E2E tests
-          command: npm run test:extension
+          command: xvfb-run -a npm run test:extension
 
 workflows:
   build-test-deploy:

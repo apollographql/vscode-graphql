@@ -7,8 +7,8 @@ import {
   ApolloConfigFormat,
   DefaultConfigBase,
   DefaultClientConfig,
-  DefaultServiceConfig,
   DefaultEngineConfig,
+  parseApolloConfig,
 } from "./config";
 import { getServiceFromKey } from "./utils";
 import { URI } from "vscode-uri";
@@ -144,61 +144,14 @@ export async function loadConfig({
   // The CLI passes in a type when loading config. The editor extension
   // does not. So we determine the type of the config here, and use it if
   // the type wasn't explicitly passed in.
-  let projectType: "client" | "service";
-  if (type) {
-    projectType = type;
-  } else if (loadedConfig && loadedConfig.config.client) {
+  let projectType: "client";
+  if (loadedConfig && loadedConfig.config.client) {
     projectType = "client";
-  } else if (loadedConfig && loadedConfig.config.service) {
-    projectType = "service";
   } else {
     Debug.error(
       "Unable to resolve project type. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config",
     );
     return null;
-  }
-
-  // DETERMINE SERVICE NAME
-  // precedence: 1. (highest) config.js (client only) 2. name passed into loadConfig 3. name from api key
-  let serviceName = name || nameFromKey;
-  if (
-    projectType === "client" &&
-    loadedConfig &&
-    loadedConfig.config.client &&
-    typeof loadedConfig.config.client.service === "string"
-  ) {
-    serviceName = loadedConfig.config.client.service;
-  }
-
-  // if there wasn't a config loaded from a file, build one.
-  // if there was a service name found in the env, merge it with the new/existing config object.
-  // if the config loaded doesn't have a client/service key, add one based on projectType
-  if (
-    !loadedConfig ||
-    serviceName ||
-    !(loadedConfig.config.client || loadedConfig.config.service)
-  ) {
-    loadedConfig = {
-      filepath: configPath || process.cwd(),
-      config: {
-        ...(loadedConfig && loadedConfig.config),
-        ...(projectType === "client"
-          ? {
-              client: {
-                ...DefaultConfigBase,
-                ...(loadedConfig && loadedConfig.config.client),
-                service: serviceName,
-              },
-            }
-          : {
-              service: {
-                ...DefaultConfigBase,
-                ...(loadedConfig && loadedConfig.config.service),
-                name: serviceName,
-              },
-            }),
-      },
-    };
   }
 
   let { config, filepath } = loadedConfig;
@@ -208,11 +161,9 @@ export async function loadConfig({
   // These need to go on _all_ configs. That's why this is last.
   if (config.client)
     config = merge({}, { client: DefaultClientConfig }, config);
-  if (config.service)
-    config = merge({}, { service: DefaultServiceConfig }, config);
   if (engineConfig) config = merge({}, engineConfig, config);
 
   config = merge({}, { engine: DefaultEngineConfig }, config);
 
-  return new ApolloConfig(config, URI.file(resolve(filepath)));
+  return parseApolloConfig(config, URI.file(resolve(filepath)));
 }

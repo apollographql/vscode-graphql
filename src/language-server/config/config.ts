@@ -5,6 +5,7 @@ import { URI } from "vscode-uri";
 import { WithRequired } from "../../env";
 import { getGraphIdFromConfig, parseServiceSpecifier } from "./utils";
 import { ValidationRule } from "graphql/validation/ValidationContext";
+import { Debug } from "../utilities";
 
 export interface EngineStatsWindow {
   to: number;
@@ -98,49 +99,58 @@ export const DefaultClientConfig = {
   tagName: "gql",
   statsWindow: DefaultEngineStatsWindow,
 };
-
-export interface ServiceConfigFormat extends ConfigBase {
-  name?: string;
-  endpoint?: Exclude<RemoteServiceConfig, "name">;
-  localSchemaFile?: string | string[];
+export interface RoverConfigFormat {
+  bin?: string;
+  profile?: string;
 }
-
-export const DefaultServiceConfig = {
-  ...DefaultConfigBase,
-  endpoint: {
-    url: "http://localhost:4000/graphql",
-  },
-};
 
 export interface ConfigBaseFormat {
   client?: ClientConfigFormat;
-  service?: ServiceConfigFormat;
+  rover?: RoverConfigFormat;
   engine?: EngineConfig;
 }
 
 export type ApolloConfigFormat =
   | WithRequired<ConfigBaseFormat, "client">
-  | WithRequired<ConfigBaseFormat, "service">;
+  | WithRequired<ConfigBaseFormat, "rover">;
 
-export class ApolloConfig {
-  public isClient: boolean;
-  public isService: boolean;
+export function parseApolloConfig(
+  rawConfig: ApolloConfigFormat,
+  configURI?: URI,
+) {
+  if ("client" in rawConfig) {
+    return new ClientConfig(rawConfig as any, configURI);
+  } else if ("rover" in rawConfig) {
+    return new RoverConfig(rawConfig as any, configURI);
+  } else if ("service" in rawConfig) {
+    Debug.warning(
+      "Service-type projects are no longer supported, please use a 'client' or 'rover' type project instead.",
+    );
+    return null;
+  } else {
+    Debug.warning("Invalid config file format!");
+    return null;
+  }
+}
+
+export abstract class ApolloConfig {
   public engine: EngineConfig;
-  public service?: ServiceConfigFormat;
   public client?: ClientConfigFormat;
+  public rover?: RoverConfigFormat;
   private _variant?: string;
   private _graphId?: string;
 
-  constructor(
+  /** @deprecated */
+  public isClient = false;
+  /** @deprecated */
+  public isService = false;
+
+  protected constructor(
     public rawConfig: ApolloConfigFormat,
     public configURI?: URI,
   ) {
-    this.isService = !!rawConfig.service;
-    this.isClient = !!rawConfig.client;
     this.engine = rawConfig.engine!;
     this._graphId = getGraphIdFromConfig(rawConfig);
-    this.client = rawConfig.client;
-    this.service = rawConfig.service;
   }
 
   get configDirURI() {
@@ -149,15 +159,6 @@ export class ApolloConfig {
       this.configURI.fsPath.match(/\.(ts|js|cjs|mjs|json)$/i)
       ? URI.parse(dirname(this.configURI.fsPath))
       : this.configURI;
-  }
-
-  get projects(): (ClientConfig | ServiceConfig)[] {
-    const configs = [];
-    const { client, service } = this.rawConfig;
-    if (client) configs.push(new ClientConfig(this.rawConfig, this.configURI));
-    if (service)
-      configs.push(new ServiceConfig(this.rawConfig, this.configURI));
-    return configs;
   }
 
   set variant(variant: string) {
@@ -169,9 +170,6 @@ export class ApolloConfig {
     let tag: string = "current";
     if (this.client && typeof this.client.service === "string") {
       const parsedVariant = parseServiceSpecifier(this.client.service)[1];
-      if (parsedVariant) tag = parsedVariant;
-    } else if (this.service && typeof this.service.name === "string") {
-      const parsedVariant = parseServiceSpecifier(this.service.name)[1];
       if (parsedVariant) tag = parsedVariant;
     }
     return tag;
@@ -185,35 +183,30 @@ export class ApolloConfig {
     if (this._graphId) return this._graphId;
     return getGraphIdFromConfig(this.rawConfig);
   }
-
-  // this type needs to be an "EveryKeyIsOptionalApolloConfig"
-  public setDefaults({
-    engine,
-    client,
-    service,
-  }: {
-    engine?: EngineConfig;
-    client?: ClientConfigFormat;
-    service?: ServiceConfigFormat;
-  }): void {
-    const config = merge({}, this.rawConfig, { client, engine, service });
-    this.rawConfig = config;
-    this.client = config.client;
-    this.service = config.service;
-    if (config.engine) {
-      this.engine = config.engine;
-    }
-  }
 }
 
 export class ClientConfig extends ApolloConfig {
   public client!: ClientConfigFormat;
-  public isClient!: true;
-  public isService!: false;
+  /** @deprecated */
+  public isClient = true as const;
+
+  constructor(
+    public rawConfig: WithRequired<ConfigBaseFormat, "client">,
+    public configURI?: URI,
+  ) {
+    super(rawConfig, configURI);
+    this.client = rawConfig.client;
+  }
 }
 
-export class ServiceConfig extends ApolloConfig {
-  public service!: ServiceConfigFormat;
-  public isClient!: false;
-  public isService!: true;
+export class RoverConfig extends ApolloConfig {
+  public rover!: RoverConfigFormat;
+
+  constructor(
+    public rawConfig: WithRequired<ConfigBaseFormat, "rover">,
+    public configURI?: URI,
+  ) {
+    super(rawConfig, configURI);
+    this.rover = rawConfig.rover;
+  }
 }

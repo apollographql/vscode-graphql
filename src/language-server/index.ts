@@ -7,7 +7,6 @@ export { LoadingHandler } from "./loadingHandler";
 // projects
 export { GraphQLProject } from "./project/base";
 export { isClientProject, GraphQLClientProject } from "./project/client";
-export { isServiceProject, GraphQLServiceProject } from "./project/service";
 
 // GraphQLSchemaProvider
 export {

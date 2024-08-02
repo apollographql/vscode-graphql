@@ -4,7 +4,7 @@ import { basename } from "path";
 
 import { vol } from "memfs";
 import { LoadingHandler } from "../../loadingHandler";
-import { ApolloConfig, ClientConfig } from "../../config";
+import { ClientConfig } from "../../config";
 import { URI } from "vscode-uri";
 
 const serviceSchema = /* GraphQL */ `
@@ -130,7 +130,7 @@ const f = /* GraphQL */ `
 
 const rootURI = URI.file(process.cwd());
 
-const config = new ApolloConfig({
+const config = new ClientConfig({
   client: {
     service: {
       name: "server",
@@ -141,7 +141,7 @@ const config = new ApolloConfig({
     validationRules: [NoMissingClientDirectives],
   },
   engine: {},
-}) as ClientConfig;
+});
 
 class MockLoadingHandler implements LoadingHandler {
   handle<T>(_message: string, value: Promise<T>): Promise<T> {

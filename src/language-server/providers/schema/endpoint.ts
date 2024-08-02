@@ -13,7 +13,7 @@ import {
   parse,
 } from "graphql";
 import { Agent as HTTPSAgent } from "https";
-import { RemoteServiceConfig, DefaultServiceConfig } from "../../config";
+import { RemoteServiceConfig } from "../../config";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
 import { Debug } from "../../utilities";
 import { isString } from "util";
@@ -55,25 +55,6 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
         );
       }
 
-      // 404 encountered with the default url
-      if (
-        url === DefaultServiceConfig.endpoint.url &&
-        isString(e.message) &&
-        e.message.includes("ECONNREFUSED")
-      ) {
-        throw new Error(
-          "Failed to connect to a running GraphQL endpoint at " +
-            url +
-            "\nThis may be because you didn't start your service.\n" +
-            "By default, when an endpoint, Apollo API key, or localSchemaFile isn't provided, Apollo tries to fetch a schema from " +
-            DefaultServiceConfig.endpoint.url +
-            "\n-----------------------------\n" +
-            "\nFor more information, please refer to: https://go.apollo.dev/t/config \n\n" +
-            "The following error occurred: \n" +
-            "-----------------------------\n" +
-            e.message,
-        );
-      }
       // 404 with a non-default url
       if (isString(e.message) && e.message.includes("ECONNREFUSED")) {
         throw new Error(

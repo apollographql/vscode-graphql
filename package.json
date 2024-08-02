@@ -47,7 +47,6 @@
     "lz-string": "^1.5.0",
     "minimatch": "^10.0.1",
     "moment": "^2.29.1",
-    "query-string": "^7.0.1",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11",

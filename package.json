@@ -50,7 +50,7 @@
     "lz-string": "^1.4.4",
     "minimatch": "^3.0.4",
     "moment": "^2.29.1",
-    "query-string": "^7.0.1",
+    "query-string": "^9.0.0",
     "resolve-from": "^5.0.0",
     "sha.js": "^2.4.11",
     "vscode-languageclient": "^9.0.1",

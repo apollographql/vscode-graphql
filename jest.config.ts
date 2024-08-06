@@ -6,10 +6,11 @@ const config: Config.InitialOptions = {
     escapeString: true,
     printBasicPrototype: true,
   },
-  testMatch: ["**/__tests__/**/*.test.ts"],
+  testMatch: ["**/__tests__/**/*.ts"],
   transform: {
     "^.+\\.(ts)$": "ts-jest",
   },
+  prettierPath: null,
 };
 
 export default config;

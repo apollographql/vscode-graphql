@@ -23,7 +23,7 @@ export {
 
 export function schemaProviderFromConfig(
   config: ApolloConfig,
-  clientIdentity?: ClientIdentity, // engine provider needs this
+  clientIdentity: ClientIdentity, // engine provider needs this
 ): GraphQLSchemaProvider {
   if (isClientConfig(config)) {
     if (typeof config.client.service === "string") {

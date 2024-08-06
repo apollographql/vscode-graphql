@@ -3,7 +3,7 @@ import {
   ClientConfig,
   ClientServiceConfig,
   LocalServiceConfig,
-  ApolloConfigFormat,
+  ParsedApolloConfigFormat,
 } from "./config";
 import { ServiceSpecifier, ServiceIDAndTag } from "../engine";
 
@@ -26,8 +26,8 @@ export function getServiceFromKey(key?: string) {
   return;
 }
 
-export function getGraphIdFromConfig(config: ApolloConfigFormat) {
-  if (config.client) {
+export function getGraphIdFromConfig(config: ParsedApolloConfigFormat) {
+  if ("client" in config) {
     if (typeof config.client.service === "string") {
       return parseServiceSpecifier(
         config.client.service as ServiceSpecifier,

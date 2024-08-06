@@ -1,14 +1,11 @@
-import { ClientConfig, DefaultConfigBase, parseApolloConfig } from "../";
+import { ClientConfig, parseApolloConfig } from "../";
 import { URI } from "vscode-uri";
 
 describe("ApolloConfig", () => {
   describe("confifDirURI", () => {
     it("properly parses dir paths for configDirURI", () => {
       const uri = URI.parse("/test/dir/name");
-      const config = parseApolloConfig(
-        { client: { name: "hai", ...DefaultConfigBase } },
-        uri,
-      );
+      const config = parseApolloConfig({ client: { service: "hai" } }, uri);
       // can be either /test/dir/name or \\test\\dir\\name depending on platform
       // this difference is fine :)
       expect(config?.configDirURI?.fsPath).toMatch(
@@ -17,9 +14,9 @@ describe("ApolloConfig", () => {
     });
     it("properly parses filepaths for configDirURI", () => {
       const uri = URI.parse("/test/dir/name/apollo.config.js");
-      const config = new ClientConfig(
+      const config = parseApolloConfig(
         {
-          client: { service: "hai", ...DefaultConfigBase },
+          client: { service: "hai" },
         },
         uri,
       );
@@ -33,22 +30,22 @@ describe("ApolloConfig", () => {
 
   describe("variant", () => {
     it("gets default variant when none is set", () => {
-      const config = new ClientConfig({
-        client: { service: "hai", ...DefaultConfigBase },
+      const config = parseApolloConfig({
+        client: { service: "hai" },
       });
       expect(config?.variant).toEqual("current");
     });
 
     it("gets variant from service specifier", () => {
-      const config = new ClientConfig({
-        client: { service: "hai@master", ...DefaultConfigBase },
+      const config = parseApolloConfig({
+        client: { service: "hai@master" },
       });
       expect(config?.variant).toEqual("master");
     });
 
     it("can set and override variants", () => {
-      const config = new ClientConfig({
-        client: { service: "hai@master", ...DefaultConfigBase },
+      const config = parseApolloConfig({
+        client: { service: "hai@master" },
       });
       config!.variant = "new";
       expect(config?.variant).toEqual("new");

@@ -4,7 +4,11 @@ import { basename } from "path";
 
 import { vol } from "memfs";
 import { LoadingHandler } from "../../loadingHandler";
-import { ClientConfig } from "../../config";
+import {
+  ClientConfig,
+  defaultClientIdentity,
+  parseApolloConfig,
+} from "../../config";
 import { URI } from "vscode-uri";
 
 const serviceSchema = /* GraphQL */ `
@@ -130,7 +134,7 @@ const f = /* GraphQL */ `
 
 const rootURI = URI.file(process.cwd());
 
-const config = new ClientConfig({
+const config = parseApolloConfig({
   client: {
     service: {
       name: "server",
@@ -179,9 +183,10 @@ describe("client state", () => {
 
   it("should report validation errors for missing @client directives", async () => {
     const project = new GraphQLClientProject({
-      config,
+      config: config as ClientConfig,
       loadingHandler: new MockLoadingHandler(),
       configFolderURI: rootURI,
+      clientIdentity: defaultClientIdentity,
     });
 
     const errors = Object.create(null);

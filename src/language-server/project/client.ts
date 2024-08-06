@@ -91,7 +91,7 @@ export function isClientProject(
 }
 
 export interface GraphQLClientProjectConfig {
-  clientIdentity?: ClientIdentity;
+  clientIdentity: ClientIdentity;
   config: ClientConfig;
   configFolderURI: URI;
   loadingHandler: LoadingHandler;

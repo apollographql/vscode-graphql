@@ -59,7 +59,7 @@ const fileAssociations: { [extension: string]: string } = {
 };
 
 interface GraphQLProjectConfig {
-  clientIdentity?: ClientIdentity;
+  clientIdentity: ClientIdentity;
   config: ClientConfig | RoverConfig;
   configFolderURI: URI;
   loadingHandler: LoadingHandler;

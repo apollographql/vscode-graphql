@@ -17,7 +17,7 @@ import type { EngineDecoration } from "../messages";
 import { equal } from "@wry/equality";
 
 export interface WorkspaceConfig {
-  clientIdentity?: ClientIdentity;
+  clientIdentity: ClientIdentity;
 }
 
 export class GraphQLWorkspace {

@@ -1,127 +1,133 @@
 import { dirname } from "path";
-import merge from "lodash.merge";
-import { ClientID, ServiceID, ServiceSpecifier } from "../engine";
 import { URI } from "vscode-uri";
-import { WithRequired } from "../../env";
 import { getGraphIdFromConfig, parseServiceSpecifier } from "./utils";
-import { ValidationRule } from "graphql/validation/ValidationContext";
 import { Debug } from "../utilities";
+import z from "zod";
+import { ValidationRule } from "graphql/validation/ValidationContext";
+import { Slot } from "@wry/context";
 
-export interface EngineStatsWindow {
-  to: number;
-  from: number;
+export interface Context {
+  apiKey?: string;
+  serviceName?: string;
 }
+const context = new Slot<Context>();
 
-export const DefaultEngineStatsWindow = {
-  to: -0,
-  from: -86400, // one day
-};
+const clientIdentitySchema = z.object({
+  name: z.string().default("Apollo Language Server"),
+  referenceID: z.string().default("146d29c0-912c-46d3-b686-920e52586be6"),
+  version: z.string().default(require("../../../package.json").version),
+});
 
-export interface HistoricalEngineStatsWindow extends EngineStatsWindow {}
+export const defaultClientIdentity = clientIdentitySchema.parse({});
 
-export type EndpointURI = string;
-export interface RemoteServiceConfig {
-  name: ServiceID;
-  url: EndpointURI;
-  headers?: { [key: string]: string };
-  skipSSLValidation?: boolean;
-}
+const defaultConfigBase = clientIdentitySchema.merge(
+  z.object({
+    includes: z
+      .array(z.string())
+      .default(["src/**/*.{ts,tsx,js,jsx,graphql,gql}"]),
+    excludes: z.array(z.string()).default(["**/node_modules", "**/__tests__"]),
+    validationRules: z
+      .union([
+        z.array(z.custom<ValidationRule>()),
+        z.function().args(z.custom<ValidationRule>()).returns(z.boolean()),
+      ])
+      .optional(),
+    tagName: z.string().default("gql"),
+  }),
+);
+const studioServiceConfig = z.string();
 
-export interface LocalServiceConfig {
-  name: ServiceID;
-  localSchemaFile: string | string[];
-}
+const remoteServiceConfig = z.object({
+  name: z.string().optional(),
+  url: z.string(),
+  headers: z.record(z.string()).default({}),
+  skipSSLValidation: z.boolean().default(false),
+});
+export type RemoteServiceConfig = z.infer<typeof remoteServiceConfig>;
 
-export interface EngineConfig {
-  endpoint?: EndpointURI;
-  readonly apiKey?: string;
-}
+const localServiceConfig = z.object({
+  name: z.string().optional(),
+  localSchemaFile: z.union([z.string(), z.array(z.string())]),
+});
+export type LocalServiceConfig = z.infer<typeof localServiceConfig>;
 
-export const DefaultEngineConfig = {
-  endpoint:
-    process.env.APOLLO_ENGINE_ENDPOINT ||
-    "https://graphql.api.apollographql.com/api/graphql",
-};
+const clientServiceConfig = z.preprocess(
+  (value) => value || context.getValue()?.serviceName,
+  z.union([studioServiceConfig, remoteServiceConfig, localServiceConfig]),
+);
+export type ClientServiceConfig = z.infer<typeof clientServiceConfig>;
 
-export const DefaultConfigBase = {
-  includes: ["src/**/*.{ts,tsx,js,jsx,graphql,gql}"],
-  excludes: ["**/node_modules", "**/__tests__"],
-};
+const clientConfig = defaultConfigBase.merge(
+  z.object({
+    service: clientServiceConfig,
+  }),
+);
+export type ClientConfigFormat = z.infer<typeof clientConfig>;
 
-export interface ConfigBase {
-  includes: string[];
-  excludes: string[];
-}
+const roverConfig = defaultConfigBase.merge(
+  z.object({
+    bin: z.string().optional(),
+    profile: z.string().optional(),
+  }),
+);
+type RoverConfigFormat = z.infer<typeof roverConfig>;
 
-export type ClientServiceConfig = RemoteServiceConfig | LocalServiceConfig;
+const engineConfig = z.object({
+  endpoint: z
+    .string()
+    .default(
+      process.env.APOLLO_ENGINE_ENDPOINT ||
+        "https://graphql.api.apollographql.com/api/graphql",
+    ),
+  apiKey: z.preprocess(
+    (val) => val || context.getValue()?.apiKey,
+    z.string().optional(),
+  ),
+});
+export type EngineConfig = z.infer<typeof engineConfig>;
 
-export interface ClientConfigFormat extends ConfigBase {
-  // service linking
-  service?: ServiceSpecifier | ClientServiceConfig;
-  // client identity
-  name?: ClientID;
-  referenceID?: string;
-  version?: string;
-  // client schemas
-  tagName?: string;
-  // stats window config
-  statsWindow?: EngineStatsWindow;
+const baseConfig = z.object({
+  engine: engineConfig.default({}),
+});
 
-  /**
-   * Rules that will be applied when validating GraphQL documents.
-   *
-   * If you wish to modify the default list of validation rules, import them from the apollo package and
-   * assign your custom list:
-   *
-   * ```js
-   * const { defaultValidationRules } = require("apollo/lib/defaultValidationRules");
-   *
-   * module.exports = {
-   *   // ...
-   *   validationRules: [...defaultValidationRules, ...customRules]
-   * }
-   * ```
-   *
-   * Or, if you simply wish to filter out some rules from the default list, you can specify a filter function:
-   *
-   * ```js
-   * module.exports = {
-   *   // ...
-   *   validationRules: rule => rule.name !== "NoAnonymousQueries"
-   * }
-   * ```
-   */
-  validationRules?: ValidationRule[] | ((rule: ValidationRule) => boolean);
-}
+const fullClientConfig = baseConfig.merge(z.object({ client: clientConfig }));
+export type FullClientConfigFormat = z.infer<typeof fullClientConfig>;
 
-export const DefaultClientConfig = {
-  ...DefaultConfigBase,
-  tagName: "gql",
-  statsWindow: DefaultEngineStatsWindow,
-};
-export interface RoverConfigFormat {
-  bin?: string;
-  profile?: string;
-}
+const roverDefaults = roverConfig.parse({});
+const fullRoverConfig = baseConfig.merge(
+  z.object({
+    rover: z
+      .union([
+        z.boolean().refine((b) => b === true, {
+          message: "Rover config must be an object or true to use defaults.",
+        }),
+        roverConfig,
+      ])
+      .transform((val) => (typeof val === "boolean" ? roverDefaults : val)),
+  }),
+);
+export type FullRoverConfigFormat = z.infer<typeof fullRoverConfig>;
 
-export interface ConfigBaseFormat {
-  client?: ClientConfigFormat;
-  rover?: RoverConfigFormat;
-  engine?: EngineConfig;
-}
-
-export type ApolloConfigFormat =
-  | WithRequired<ConfigBaseFormat, "client">
-  | WithRequired<ConfigBaseFormat, "rover">;
+export const configSchema = z.union([fullClientConfig, fullRoverConfig]);
+export type RawApolloConfigFormat = z.input<typeof configSchema>;
+export type ParsedApolloConfigFormat = z.output<typeof configSchema>;
 
 export function parseApolloConfig(
-  rawConfig: ApolloConfigFormat,
+  rawConfig: RawApolloConfigFormat,
   configURI?: URI,
+  ctx: Context = {},
 ) {
-  if ("client" in rawConfig) {
-    return new ClientConfig(rawConfig as any, configURI);
-  } else if ("rover" in rawConfig) {
-    return new RoverConfig(rawConfig as any, configURI);
+  const parsed = context.withValue(ctx, () =>
+    configSchema.safeParse(rawConfig),
+  );
+  if (!parsed.success) {
+    Debug.error("Error parsing config file:"); // TODO parsed.error
+    return null;
+  }
+  if ("client" in parsed.data) {
+    return new ClientConfig(parsed.data, configURI);
+  } else if ("rover" in parsed.data) {
+    return new RoverConfig(parsed.data, configURI);
   } else if ("service" in rawConfig) {
     Debug.warning(
       "Service-type projects are no longer supported, please use a 'client' or 'rover' type project instead.",
@@ -146,7 +152,7 @@ export abstract class ApolloConfig {
   public isService = false;
 
   protected constructor(
-    public rawConfig: ApolloConfigFormat,
+    public rawConfig: ParsedApolloConfigFormat,
     public configURI?: URI,
   ) {
     this.engine = rawConfig.engine!;
@@ -191,7 +197,7 @@ export class ClientConfig extends ApolloConfig {
   public isClient = true as const;
 
   constructor(
-    public rawConfig: WithRequired<ConfigBaseFormat, "client">,
+    public rawConfig: FullClientConfigFormat,
     public configURI?: URI,
   ) {
     super(rawConfig, configURI);
@@ -203,7 +209,7 @@ export class RoverConfig extends ApolloConfig {
   public rover!: RoverConfigFormat;
 
   constructor(
-    public rawConfig: WithRequired<ConfigBaseFormat, "rover">,
+    public rawConfig: FullRoverConfigFormat,
     public configURI?: URI,
   ) {
     super(rawConfig, configURI);

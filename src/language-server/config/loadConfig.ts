@@ -4,10 +4,7 @@ import { readFileSync, existsSync, lstatSync } from "fs";
 import merge from "lodash.merge";
 import {
   ApolloConfig,
-  ApolloConfigFormat,
-  DefaultConfigBase,
-  DefaultClientConfig,
-  DefaultEngineConfig,
+  RawApolloConfigFormat,
   parseApolloConfig,
 } from "./config";
 import { getServiceFromKey } from "./utils";
@@ -34,21 +31,12 @@ export interface LoadConfigSettings {
   // process.cwd()
 
   // configPath and fileName are used in conjunction with one another.
-  // i.e. /User/myProj/my.config.js
-  //    => { configPath: '/User/myProj/', configFileName: 'my.config.js' }
+  // i.e. /User/myProj/apollo.config.js
+  //    => { configPath: '/User/myProj/' }
   configPath?: string;
-
-  // if a configFileName is passed in, loadConfig won't accept any other
-  // configs as a fallback.
-  configFileName?: string;
 
   // used when run by a `Workspace` where we _know_ a config file should be present.
   requireConfig?: boolean;
-
-  // for CLI usage, we don't _require_ a config file for everything. This allows us to pass in
-  // options to build one at runtime
-  name?: string;
-  type?: "service" | "client";
 }
 
 export type ConfigResult<T> = {
@@ -59,13 +47,10 @@ export type ConfigResult<T> = {
 // XXX load .env files automatically
 export async function loadConfig({
   configPath,
-  configFileName,
   requireConfig = false,
-  name,
-  type,
 }: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
-    searchPlaces: configFileName ? [configFileName] : defaultFileNames,
+    searchPlaces: defaultFileNames,
   });
 
   // search can fail if a file can't be parsed (ex: a nonsense js file) so we wrap in a try/catch
@@ -73,7 +58,7 @@ export async function loadConfig({
   try {
     loadedConfig = (await explorer.search(
       configPath,
-    )) as ConfigResult<ApolloConfigFormat>;
+    )) as ConfigResult<RawApolloConfigFormat>;
   } catch (error) {
     Debug.error(`A config file failed to load with options: ${JSON.stringify(
       arguments[0],
@@ -103,9 +88,7 @@ export async function loadConfig({
   }
 
   // add API key from the env
-  let engineConfig = {},
-    apiKey,
-    nameFromKey;
+  let apiKey, nameFromKey;
 
   // loop over the list of possible .env files and try to parse for key
   // and service name. Files are scanned and found values are preferred
@@ -136,18 +119,10 @@ export async function loadConfig({
   });
 
   if (apiKey) {
-    engineConfig = { engine: { apiKey } };
     nameFromKey = getServiceFromKey(apiKey);
   }
 
-  // DETERMINE PROJECT TYPE
-  // The CLI passes in a type when loading config. The editor extension
-  // does not. So we determine the type of the config here, and use it if
-  // the type wasn't explicitly passed in.
-  let projectType: "client";
-  if (loadedConfig && loadedConfig.config.client) {
-    projectType = "client";
-  } else {
+  if (!loadedConfig) {
     Debug.error(
       "Unable to resolve project type. Please add either a client or service config. For more information, please refer to https://go.apollo.dev/t/config",
     );
@@ -156,14 +131,8 @@ export async function loadConfig({
 
   let { config, filepath } = loadedConfig;
 
-  // selectively apply defaults when loading the config
-  // this is just the includes/excludes defaults.
-  // These need to go on _all_ configs. That's why this is last.
-  if (config.client)
-    config = merge({}, { client: DefaultClientConfig }, config);
-  if (engineConfig) config = merge({}, engineConfig, config);
-
-  config = merge({}, { engine: DefaultEngineConfig }, config);
-
-  return parseApolloConfig(config, URI.file(resolve(filepath)));
+  return parseApolloConfig(config, URI.file(resolve(filepath)), {
+    apiKey,
+    serviceName: nameFromKey,
+  });
 }

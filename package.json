@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write .",
-    "test": "jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:extension": "node src/__e2e__/runTests.js",
     "codegen": "graphql-codegen"
   },
@@ -37,6 +37,7 @@
     "@graphql-tools/schema": "^10.0.4",
     "@types/lz-string": "^1.3.34",
     "@types/node-fetch": "2.6.11",
+    "@wry/context": "^0.7.4",
     "@wry/equality": "^0.5.7",
     "await-to-js": "^3.0.0",
     "cosmiconfig": "^9.0.0",
@@ -56,7 +57,8 @@
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11",
-    "vscode-uri": "3.0.8"
+    "vscode-uri": "3.0.8",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@apollo/server": "^4.10.5",

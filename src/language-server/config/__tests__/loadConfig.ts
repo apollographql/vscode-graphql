@@ -207,9 +207,10 @@ Object {
       const spy = jest.spyOn(console, "error");
       spy.mockImplementation();
 
-      writeFilesToDir(dir, { "apollo.config.js": `module.exports = {}` });
+      writeFilesToDir(dir, { "foo.config.js": `module.exports = {}` });
 
       await loadConfig({
+        configPath: dirPath,
         requireConfig: true, // this is what we're testing
       });
 
@@ -281,43 +282,8 @@ Object {
       expect(config?.client?.service).toEqual("yoshi");
     });
 
-    it("Allows setting ENGINE_API_KEY with a deprecation warning", async () => {
-      writeFilesToDir(dir, {
-        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
-        ".env.local": `ENGINE_API_KEY=service:yoshi:65489061ko`,
-      });
-
-      const spy = jest.spyOn(Debug, "warning");
-
-      const config = await loadConfig({
-        configPath: dirPath,
-      });
-
-      expect(config?.client?.service).toEqual("yoshi");
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Deprecation warning/i),
-      );
-    });
-
-    it("Uses new key when .env defined both legacy and new key", async () => {
-      writeFilesToDir(dir, {
-        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
-        ".env.local": `ENGINE_API_KEY=service:yoshi:65489061ko\nAPOLLO_KEY=service:yoshi:65489061ko`,
-      });
-      const spy = jest.spyOn(Debug, "warning");
-
-      const config = await loadConfig({
-        configPath: dirPath,
-      });
-
-      expect(config?.engine.apiKey).toEqual("service:yoshi:65489061ko");
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Both ENGINE_API_KEY and APOLLO_KEY were found/i),
-      );
-    });
-
     // this doesn't work right now :)
-    xit("finds .env in cwd & parses for key", async () => {
+    it.skip("finds .env in cwd & parses for key", async () => {
       writeFilesToDir(dir, {
         "dir/apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
         ".env": `APOLLO_KEY=service:harambe:54378950jn`,

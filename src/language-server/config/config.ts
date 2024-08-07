@@ -2,10 +2,26 @@ import { dirname } from "path";
 import { URI } from "vscode-uri";
 import { getGraphIdFromConfig, parseServiceSpecifier } from "./utils";
 import { Debug } from "../utilities";
-import z from "zod";
+import z, { ZodError } from "zod";
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import { Slot } from "@wry/context";
+import { fromZodError } from "zod-validation-error";
 
+function ignoredFieldWarning(
+  getMessage = (path: string) =>
+    `The option ${path} is no longer supported, please remove it from your configuration file.`,
+) {
+  return z
+    .custom(() => true)
+    .superRefine((val, ctx) => {
+      if (val) {
+        Debug.warning(getMessage(ctx.path.join(".")));
+      }
+    })
+    .transform((val) => {
+      return undefined;
+    });
+}
 export interface Context {
   apiKey?: string;
   serviceName?: string;
@@ -20,21 +36,6 @@ const clientIdentitySchema = z.object({
 
 export const defaultClientIdentity = clientIdentitySchema.parse({});
 
-const defaultConfigBase = clientIdentitySchema.merge(
-  z.object({
-    includes: z
-      .array(z.string())
-      .default(["src/**/*.{ts,tsx,js,jsx,graphql,gql}"]),
-    excludes: z.array(z.string()).default(["**/node_modules", "**/__tests__"]),
-    validationRules: z
-      .union([
-        z.array(z.custom<ValidationRule>()),
-        z.function().args(z.custom<ValidationRule>()).returns(z.boolean()),
-      ])
-      .optional(),
-    tagName: z.string().default("gql"),
-  }),
-);
 const studioServiceConfig = z.string();
 
 const remoteServiceConfig = z.object({
@@ -57,19 +58,35 @@ const clientServiceConfig = z.preprocess(
 );
 export type ClientServiceConfig = z.infer<typeof clientServiceConfig>;
 
-const clientConfig = defaultConfigBase.merge(
+const clientConfig = clientIdentitySchema.merge(
   z.object({
     service: clientServiceConfig,
+    validationRules: z
+      .union([
+        z.array(z.custom<ValidationRule>()),
+        z.function().args(z.custom<ValidationRule>()).returns(z.boolean()),
+      ])
+      .optional(),
+    // maybe shared with rover?
+    includes: z
+      .array(z.string())
+      .default(["src/**/*.{ts,tsx,js,jsx,graphql,gql}"]),
+    // maybe shared with rover?
+    excludes: z.array(z.string()).default(["**/node_modules", "**/__tests__"]),
+    // maybe shared with rover?
+    tagName: z.string().default("gql"),
+    // removed:
+    clientOnlyDirectives: ignoredFieldWarning(),
+    clientSchemaDirectives: ignoredFieldWarning(),
+    statsWindow: ignoredFieldWarning(),
   }),
 );
 export type ClientConfigFormat = z.infer<typeof clientConfig>;
 
-const roverConfig = defaultConfigBase.merge(
-  z.object({
-    bin: z.string().optional(),
-    profile: z.string().optional(),
-  }),
-);
+const roverConfig = z.object({
+  bin: z.string().optional(),
+  profile: z.string().optional(),
+});
 type RoverConfigFormat = z.infer<typeof roverConfig>;
 
 const engineConfig = z.object({
@@ -88,27 +105,55 @@ export type EngineConfig = z.infer<typeof engineConfig>;
 
 const baseConfig = z.object({
   engine: engineConfig.default({}),
+  client: z.unknown().optional(),
+  rover: z.unknown().optional(),
+  service: ignoredFieldWarning(
+    (path) =>
+      `Service-type projects are no longer supported. Please remove the "${path}" field from your configuration file.`,
+  ),
 });
 
-const fullClientConfig = baseConfig.merge(z.object({ client: clientConfig }));
-export type FullClientConfigFormat = z.infer<typeof fullClientConfig>;
+export type FullClientConfigFormat = Extract<
+  ParsedApolloConfigFormat,
+  { client: {} }
+>;
 
-const roverDefaults = roverConfig.parse({});
-const fullRoverConfig = baseConfig.merge(
-  z.object({
-    rover: z
-      .union([
-        z.boolean().refine((b) => b === true, {
-          message: "Rover config must be an object or true to use defaults.",
-        }),
-        roverConfig,
-      ])
-      .transform((val) => (typeof val === "boolean" ? roverDefaults : val)),
-  }),
-);
-export type FullRoverConfigFormat = z.infer<typeof fullRoverConfig>;
+export type FullRoverConfigFormat = Extract<
+  ParsedApolloConfigFormat,
+  { rover: {} }
+>;
 
-export const configSchema = z.union([fullClientConfig, fullRoverConfig]);
+export const configSchema = baseConfig
+  .superRefine((val, ctx) => {
+    if ("client" in val && "rover" in val) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Config cannot contain both 'client' and 'rover' fields",
+        fatal: true,
+      });
+    }
+    if (!("client" in val) && !("rover" in val)) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Config needs to contain either 'client' or 'rover' fields",
+        fatal: true,
+      });
+    }
+  })
+  .and(
+    z.union([
+      z
+        .object({
+          client: clientConfig,
+        })
+        .transform((val): typeof val & { rover?: never } => val),
+      z
+        .object({
+          rover: roverConfig,
+        })
+        .transform((val): typeof val & { client?: never } => val),
+    ]),
+  );
 export type RawApolloConfigFormat = z.input<typeof configSchema>;
 export type ParsedApolloConfigFormat = z.output<typeof configSchema>;
 
@@ -121,19 +166,36 @@ export function parseApolloConfig(
     configSchema.safeParse(rawConfig),
   );
   if (!parsed.success) {
-    Debug.error("Error parsing config file:"); // TODO parsed.error
-    return null;
-  }
-  if ("client" in parsed.data) {
-    return new ClientConfig(parsed.data, configURI);
-  } else if ("rover" in parsed.data) {
-    return new RoverConfig(parsed.data, configURI);
-  } else if ("service" in rawConfig) {
-    Debug.warning(
-      "Service-type projects are no longer supported, please use a 'client' or 'rover' type project instead.",
+    // Remove "or Required at rover" errors when a client config is provided
+    // Remove "or Required at client" errors when a rover config is provided
+    for (const [index, error] of parsed.error.errors.entries()) {
+      if (error.code === z.ZodIssueCode.invalid_union) {
+        error.unionErrors = error.unionErrors.filter((e) => {
+          return !(
+            e instanceof ZodError &&
+            e.errors.length === 1 &&
+            e.errors[0].message === "Required" &&
+            e.errors[0].path.length === 1
+          );
+        });
+      }
+    }
+    Debug.error(
+      fromZodError(parsed.error, {
+        prefix: "Error parsing config file:",
+        prefixSeparator: "\n",
+        issueSeparator: ";\n",
+        unionSeparator: "\n  or\n",
+      }).toString(),
     );
     return null;
+  }
+  if (parsed.data.client) {
+    return new ClientConfig(parsed.data, configURI);
+  } else if (parsed.data.rover) {
+    return new RoverConfig(parsed.data, configURI);
   } else {
+    // should never happen
     Debug.warning("Invalid config file format!");
     return null;
   }

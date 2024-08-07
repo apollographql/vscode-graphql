@@ -118,19 +118,7 @@ Object {
   "engine": Object {
     "endpoint": "https://graphql.api.apollographql.com/api/graphql",
   },
-  "rover": Object {
-    "excludes": Array [
-      "**/node_modules",
-      "**/__tests__",
-    ],
-    "includes": Array [
-      "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
-    ],
-    "name": "Apollo Language Server",
-    "referenceID": "146d29c0-912c-46d3-b686-920e52586be6",
-    "tagName": "gql",
-    "version": "1.20.0",
-  },
+  "rover": Object {},
 }
 `);
     });
@@ -155,7 +143,6 @@ Object {
         "apollo.config.ts": `export default {"client": {"service": "hello"} }`,
       });
       const config = await loadConfig({ configPath: dirPath });
-      console.log(config);
       expect(config?.client?.service).toEqual("hello");
     });
   });
@@ -245,7 +232,9 @@ Object {
       });
 
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/unable to resolve/i),
+        expect.stringMatching(
+          /Config needs to contain either 'client' or 'rover'/i,
+        ),
       );
       spy.mockRestore();
     });
@@ -358,7 +347,7 @@ Object {
 
     it("infers rover projects from config", async () => {
       writeFilesToDir(dir, {
-        "apollo.config.js": `module.exports = { rover: true}`,
+        "apollo.config.js": `module.exports = { rover: {} }`,
       });
 
       const config = await loadConfig({

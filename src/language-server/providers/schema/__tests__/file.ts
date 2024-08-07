@@ -107,18 +107,49 @@ describe("FileSchemaProvider", () => {
       });
       const sdl = await provider.resolveFederatedServiceSDL();
       expect(sdl).toMatchInlineSnapshot(`
-        "type Product @key(fields: \\"id\\") {
-          id: ID
-          sku: ID
-          name: String
-          weight: Float
-        }
+"directive @key(fields: _FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
 
-        extend type Query {
-          myProduct: Product
-        }
-        "
-      `);
+directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
+
+directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+
+directive @external(reason: String) on OBJECT | FIELD_DEFINITION
+
+directive @tag(name: String!) repeatable on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+directive @extends on OBJECT | INTERFACE
+
+type Query {
+  _entities(representations: [_Any!]!): [_Entity]!
+  _service: _Service!
+}
+
+extend type Query {
+  myProduct: Product
+}
+
+type Product
+  @key(fields: \\"id\\")
+{
+  id: ID
+  sku: ID
+  name: String
+}
+
+extend type Product {
+  weight: Float
+}
+
+scalar _FieldSet
+
+scalar _Any
+
+type _Service {
+  sdl: String
+}
+
+union _Entity = Product"
+`);
     });
 
     it("errors when sdl file is not a graphql file", async () => {

@@ -7,6 +7,11 @@ const config: Config.InitialOptions = {
     printBasicPrototype: true,
   },
   testMatch: ["**/__tests__/**/*.ts"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/fixtures/",
+    "/snapshotSerializers/",
+  ],
   transform: {
     "^.+\\.(ts)$": "ts-jest",
   },

@@ -27,7 +27,7 @@ export function getServiceFromKey(key?: string) {
 }
 
 export function getGraphIdFromConfig(config: ParsedApolloConfigFormat) {
-  if ("client" in config) {
+  if (config.client) {
     if (typeof config.client.service === "string") {
       return parseServiceSpecifier(
         config.client.service as ServiceSpecifier,

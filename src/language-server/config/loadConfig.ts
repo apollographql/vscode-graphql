@@ -1,7 +1,6 @@
 import { cosmiconfig } from "cosmiconfig";
 import { resolve } from "path";
 import { readFileSync, existsSync, lstatSync } from "fs";
-import merge from "lodash.merge";
 import {
   ApolloConfig,
   RawApolloConfigFormat,
@@ -22,7 +21,6 @@ const defaultFileNames = [
 ];
 const envFileNames = [".env", ".env.local"];
 
-export const legacyKeyEnvVar = "ENGINE_API_KEY";
 export const keyEnvVar = "APOLLO_KEY";
 
 export interface LoadConfigSettings {
@@ -33,7 +31,7 @@ export interface LoadConfigSettings {
   // configPath and fileName are used in conjunction with one another.
   // i.e. /User/myProj/apollo.config.js
   //    => { configPath: '/User/myProj/' }
-  configPath?: string;
+  configPath: string;
 
   // used when run by a `Workspace` where we _know_ a config file should be present.
   requireConfig?: boolean;
@@ -67,7 +65,7 @@ export async function loadConfig({
     return null;
   }
 
-  if (configPath && !loadedConfig) {
+  if (!loadedConfig) {
     Debug.error(
       `A config file failed to load at '${configPath}'. This is likely because this file is empty or malformed. For more information, please refer to: https://go.apollo.dev/t/config`,
     );
@@ -94,27 +92,13 @@ export async function loadConfig({
   // and service name. Files are scanned and found values are preferred
   // in order of appearance in `envFileNames`.
   envFileNames.forEach((envFile) => {
-    const dotEnvPath = configPath
-      ? resolve(configPath, envFile)
-      : resolve(process.cwd(), envFile);
+    const dotEnvPath = resolve(configPath, envFile);
 
     if (existsSync(dotEnvPath) && lstatSync(dotEnvPath).isFile()) {
       const env: { [key: string]: string } = require("dotenv").parse(
         readFileSync(dotEnvPath),
       );
-      const legacyKey = env[legacyKeyEnvVar];
-      const key = env[keyEnvVar];
-      if (legacyKey && key) {
-        Debug.warning(
-          `Both ${legacyKeyEnvVar} and ${keyEnvVar} were found. ${keyEnvVar} will take precedence.`,
-        );
-      }
-      if (legacyKey) {
-        Debug.warning(
-          `[Deprecation warning] Setting the key via ${legacyKeyEnvVar} is deprecated and will not be supported in future versions. Please use ${keyEnvVar} instead.`,
-        );
-      }
-      apiKey = key || legacyKey;
+      apiKey = env[keyEnvVar];
     }
   });
 

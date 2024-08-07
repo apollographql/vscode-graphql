@@ -7,6 +7,10 @@ import { ValidationRule } from "graphql/validation/ValidationContext";
 import { Slot } from "@wry/context";
 import { fromZodError } from "zod-validation-error";
 
+const ROVER_AVAILABLE = (process.env.APOLLO_FEATURE_FLAGS || "")
+  .split(",")
+  .includes("rover");
+
 function ignoredFieldWarning(
   getMessage = (path: string) =>
     `The option ${path} is no longer supported, please remove it from your configuration file.`,
@@ -125,19 +129,29 @@ export type FullRoverConfigFormat = Extract<
 
 export const configSchema = baseConfig
   .superRefine((val, ctx) => {
-    if ("client" in val && "rover" in val) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Config cannot contain both 'client' and 'rover' fields",
-        fatal: true,
-      });
-    }
-    if (!("client" in val) && !("rover" in val)) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Config needs to contain either 'client' or 'rover' fields",
-        fatal: true,
-      });
+    if (ROVER_AVAILABLE) {
+      if ("client" in val && "rover" in val) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Config cannot contain both 'client' and 'rover' fields",
+          fatal: true,
+        });
+      }
+      if (!("client" in val) && !("rover" in val)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Config needs to contain either 'client' or 'rover' fields",
+          fatal: true,
+        });
+      }
+    } else {
+      if (!("client" in val)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Config needs to contain a 'client' field.",
+          fatal: true,
+        });
+      }
     }
   })
   .and(
@@ -147,11 +161,13 @@ export const configSchema = baseConfig
           client: clientConfig,
         })
         .transform((val): typeof val & { rover?: never } => val),
-      z
-        .object({
-          rover: roverConfig,
-        })
-        .transform((val): typeof val & { client?: never } => val),
+      ROVER_AVAILABLE
+        ? z
+            .object({
+              rover: roverConfig,
+            })
+            .transform((val): typeof val & { client?: never } => val)
+        : z.never(),
     ]),
   );
 export type RawApolloConfigFormat = z.input<typeof configSchema>;

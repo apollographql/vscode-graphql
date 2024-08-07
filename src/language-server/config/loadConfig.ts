@@ -65,7 +65,7 @@ export async function loadConfig({
     return null;
   }
 
-  if (!loadedConfig) {
+  if (!requireConfig && !loadedConfig) {
     Debug.error(
       `A config file failed to load at '${configPath}'. This is likely because this file is empty or malformed. For more information, please refer to: https://go.apollo.dev/t/config`,
     );

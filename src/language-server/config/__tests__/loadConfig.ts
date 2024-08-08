@@ -271,7 +271,7 @@ Object {
 
     it("finds .env.local in config path & parses for key", async () => {
       writeFilesToDir(dir, {
-        "apollo.config.js": `module.exports = { client: { } }`,
+        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
         ".env.local": `APOLLO_KEY=service:harambe:54378950jn`,
       });
 

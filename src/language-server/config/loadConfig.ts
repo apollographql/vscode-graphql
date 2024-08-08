@@ -51,17 +51,17 @@ export async function loadConfig({
       configPath,
     )) as ConfigResult<RawApolloConfigFormat>;
   } catch (error) {
-    Debug.error(`A config file failed to load with options: ${JSON.stringify(
+    throw new Error(`A config file failed to load with options: ${JSON.stringify(
       arguments[0],
     )}.
     The error was: ${error}`);
-    return null;
   }
 
   if (!loadedConfig || loadedConfig.isEmpty) {
     Debug.error(
       `No Apollo config found for project or config file failed to load. For more information, please refer to: https://go.apollo.dev/t/config`,
     );
+    // deliberately returning `null` here, but not throwing an error - the user may not have a config file and that's okay, it might just be a project without a graph
     return null;
   }
 

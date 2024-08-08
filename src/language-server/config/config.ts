@@ -74,6 +74,9 @@ const clientConfig = z.object({
   clientOnlyDirectives: ignoredFieldWarning(),
   clientSchemaDirectives: ignoredFieldWarning(),
   statsWindow: ignoredFieldWarning(),
+  name: ignoredFieldWarning(),
+  referenceId: ignoredFieldWarning(),
+  version: ignoredFieldWarning(),
 });
 export type ClientConfigFormat = z.infer<typeof clientConfig>;
 

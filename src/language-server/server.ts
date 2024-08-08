@@ -19,7 +19,6 @@ import {
   LanguageServerCommands as Commands,
   LanguageServerRequests as Requests,
 } from "../messages";
-import { defaultClientIdentity } from "./config";
 
 const connection = createConnection(ProposedFeatures.all);
 Debug.SetConnection(connection);
@@ -35,7 +34,15 @@ const whenConnectionInitialized: Promise<void> = new Promise(
 const workspace = new GraphQLWorkspace(
   new LanguageServerLoadingHandler(connection),
   {
-    clientIdentity: defaultClientIdentity,
+    clientIdentity: {
+      name: process.env["APOLLO_CLIENT_NAME"] || "Apollo Language Server",
+      version:
+        process.env["APOLLO_CLIENT_VERSION"] ||
+        "146d29c0-912c-46d3-b686-920e52586be6",
+      referenceID:
+        process.env["APOLLO_CLIENT_REFERENCE_ID"] ||
+        require("../../../package.json").version,
+    },
   },
 );
 

@@ -102,11 +102,8 @@ Object {
     "includes": Array [
       "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
     ],
-    "name": "Apollo Language Server",
-    "referenceID": "146d29c0-912c-46d3-b686-920e52586be6",
     "service": "hello",
     "tagName": "gql",
-    "version": "1.20.0",
   },
   "engine": Object {
     "endpoint": "https://graphql.api.apollographql.com/api/graphql",

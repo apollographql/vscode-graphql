@@ -32,14 +32,6 @@ export interface Context {
 }
 const context = new Slot<Context>();
 
-const clientIdentitySchema = z.object({
-  name: z.string().default("Apollo Language Server"),
-  referenceID: z.string().default("146d29c0-912c-46d3-b686-920e52586be6"),
-  version: z.string().default(require("../../../package.json").version),
-});
-
-export const defaultClientIdentity = clientIdentitySchema.parse({});
-
 const studioServiceConfig = z.string();
 
 const remoteServiceConfig = z.object({
@@ -62,29 +54,27 @@ const clientServiceConfig = z.preprocess(
 );
 export type ClientServiceConfig = z.infer<typeof clientServiceConfig>;
 
-const clientConfig = clientIdentitySchema.merge(
-  z.object({
-    service: clientServiceConfig,
-    validationRules: z
-      .union([
-        z.array(z.custom<ValidationRule>()),
-        z.function().args(z.custom<ValidationRule>()).returns(z.boolean()),
-      ])
-      .optional(),
-    // maybe shared with rover?
-    includes: z
-      .array(z.string())
-      .default(["src/**/*.{ts,tsx,js,jsx,graphql,gql}"]),
-    // maybe shared with rover?
-    excludes: z.array(z.string()).default(["**/node_modules", "**/__tests__"]),
-    // maybe shared with rover?
-    tagName: z.string().default("gql"),
-    // removed:
-    clientOnlyDirectives: ignoredFieldWarning(),
-    clientSchemaDirectives: ignoredFieldWarning(),
-    statsWindow: ignoredFieldWarning(),
-  }),
-);
+const clientConfig = z.object({
+  service: clientServiceConfig,
+  validationRules: z
+    .union([
+      z.array(z.custom<ValidationRule>()),
+      z.function().args(z.custom<ValidationRule>()).returns(z.boolean()),
+    ])
+    .optional(),
+  // maybe shared with rover?
+  includes: z
+    .array(z.string())
+    .default(["src/**/*.{ts,tsx,js,jsx,graphql,gql}"]),
+  // maybe shared with rover?
+  excludes: z.array(z.string()).default(["**/node_modules", "**/__tests__"]),
+  // maybe shared with rover?
+  tagName: z.string().default("gql"),
+  // removed:
+  clientOnlyDirectives: ignoredFieldWarning(),
+  clientSchemaDirectives: ignoredFieldWarning(),
+  statsWindow: ignoredFieldWarning(),
+});
 export type ClientConfigFormat = z.infer<typeof clientConfig>;
 
 const roverConfig = z.object({

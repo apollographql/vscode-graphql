@@ -4,11 +4,7 @@ import { basename } from "path";
 
 import { vol } from "memfs";
 import { LoadingHandler } from "../../loadingHandler";
-import {
-  ClientConfig,
-  defaultClientIdentity,
-  parseApolloConfig,
-} from "../../config";
+import { ClientConfig, parseApolloConfig } from "../../config";
 import { URI } from "vscode-uri";
 
 const serviceSchema = /* GraphQL */ `
@@ -186,7 +182,11 @@ describe("client state", () => {
       config: config as ClientConfig,
       loadingHandler: new MockLoadingHandler(),
       configFolderURI: rootURI,
-      clientIdentity: defaultClientIdentity,
+      clientIdentity: {
+        name: "",
+        version: "",
+        referenceID: "",
+      },
     });
 
     const errors = Object.create(null);

@@ -120,6 +120,11 @@ export type FullRoverConfigFormat = Extract<
   { rover: {} }
 >;
 
+/** Helper function for TypeScript - we just want the first type to make it into the types, not the "no feature flag" fallback */
+function ifRoverAvailable<T>(yes: T, no: any): T {
+  return ROVER_AVAILABLE ? yes : no;
+}
+
 export const configSchema = baseConfig
   .superRefine((val, ctx) => {
     if (ROVER_AVAILABLE) {
@@ -148,20 +153,23 @@ export const configSchema = baseConfig
     }
   })
   .and(
-    z.union([
-      z
-        .object({
-          client: clientConfig,
-        })
-        .transform((val): typeof val & { rover?: never } => val),
-      ROVER_AVAILABLE
-        ? z
-            .object({
-              rover: roverConfig,
-            })
-            .transform((val): typeof val & { client?: never } => val)
-        : z.never(),
-    ]),
+    ifRoverAvailable(
+      z.union([
+        z
+          .object({
+            client: clientConfig,
+          })
+          .transform((val): typeof val & { rover?: never } => val),
+        z
+          .object({
+            rover: roverConfig,
+          })
+          .transform((val): typeof val & { client?: never } => val),
+      ]),
+      z.object({
+        client: clientConfig,
+      }),
+    ),
   );
 export type RawApolloConfigFormat = z.input<typeof configSchema>;
 export type ParsedApolloConfigFormat = z.output<typeof configSchema>;

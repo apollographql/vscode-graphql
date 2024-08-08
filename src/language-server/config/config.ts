@@ -224,11 +224,6 @@ export abstract class ApolloConfig {
   private _variant?: string;
   private _graphId?: string;
 
-  /** @deprecated */
-  public isClient = false;
-  /** @deprecated */
-  public isService = false;
-
   protected constructor(
     public rawConfig: ParsedApolloConfigFormat,
     public configURI?: URI,
@@ -271,8 +266,6 @@ export abstract class ApolloConfig {
 
 export class ClientConfig extends ApolloConfig {
   public client!: ClientConfigFormat;
-  /** @deprecated */
-  public isClient = true as const;
 
   constructor(
     public rawConfig: FullClientConfigFormat,

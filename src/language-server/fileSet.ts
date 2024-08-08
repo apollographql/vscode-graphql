@@ -1,4 +1,4 @@
-import minimatch from "minimatch";
+import { minimatch } from "minimatch";
 import { globSync } from "glob";
 import { invariant } from "../tools";
 import { URI } from "vscode-uri";

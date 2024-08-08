@@ -28,7 +28,7 @@ import {
   DiagnosticSeverity,
 } from "vscode-languageserver/node";
 import LZString from "lz-string";
-import { stringifyUrl } from "query-string";
+import { URL } from "node:url";
 
 import { rangeForASTNode } from "../utilities/source";
 import { formatMS } from "../format";
@@ -412,7 +412,7 @@ export class GraphQLClientProject extends GraphQLProject {
                     this.frontendUrlRoot ?? "https://studio.apollographql.com";
 
                   const variant = this.config.variant;
-                  const graphId = this.config.graph;
+                  const graphId = this.studioGraphId;
 
                   const { client, service } = this.config;
                   const remoteServiceConfig =
@@ -422,34 +422,22 @@ export class GraphQLClientProject extends GraphQLProject {
                       : service?.endpoint;
                   const endpoint = remoteServiceConfig?.url;
 
-                  const runInExplorerPath = graphId
-                    ? stringifyUrl({
-                        url: `/graph/${graphId}/explorer`,
-                        query: {
-                          variant,
-                          explorerURLState,
-                          referrer: "vscode",
-                        },
-                      })
-                    : stringifyUrl({
-                        url: "/sandbox/explorer",
-                        query: {
-                          endpoint,
-                          explorerURLState,
-                          referrer: "vscode",
-                        },
-                      });
-                  const runInExplorerLink = join(
+                  const runInExplorerLink = buildExplorerURL({
                     frontendUrlRoot,
-                    runInExplorerPath,
-                  );
-
-                  decorations.push({
-                    type: "runGlyph",
-                    document: uri,
-                    range: rangeForASTNode(node),
-                    hoverMessage: `[Run in Studio](${runInExplorerLink})`,
+                    variant,
+                    explorerURLState,
+                    endpoint,
+                    graphId,
                   });
+
+                  if (runInExplorerLink) {
+                    decorations.push({
+                      type: "runGlyph",
+                      document: uri,
+                      range: rangeForASTNode(node),
+                      hoverMessage: `[Run in Studio](${runInExplorerLink})`,
+                    });
+                  }
                 }
               },
             }),
@@ -541,4 +529,40 @@ export class GraphQLClientProject extends GraphQLProject {
 
     return allDefinitions;
   }
+
+  private get studioGraphId() {
+    // if we don't have an `engineClient`, we are not in a studio project and `this.config.graph` could be just about anything
+    return this.engineClient ? this.config.graph : undefined;
+  }
+}
+
+function buildExplorerURL({
+  frontendUrlRoot,
+  variant,
+  explorerURLState,
+  endpoint,
+  graphId,
+}: {
+  frontendUrlRoot: string;
+  variant: string;
+  explorerURLState: string;
+  endpoint: string | undefined;
+  graphId: string | undefined;
+}) {
+  const url = new URL(
+    graphId ? `/graph/${graphId}/explorer` : "/sandbox/explorer",
+    frontendUrlRoot,
+  );
+  url.searchParams.set("explorerURLState", explorerURLState);
+  url.searchParams.set("referrer", "vscode");
+  if (graphId) {
+    url.searchParams.set("variant", variant);
+  } else if (endpoint) {
+    url.searchParams.set("endpoint", endpoint);
+  } else {
+    // we don't know a graphId or endpoint, so we can't build a URL
+    // in that case, we don't want to show a broken 'Run in explorer' gutter link
+    return null;
+  }
+  return url.toString();
 }

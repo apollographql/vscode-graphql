@@ -195,15 +195,12 @@ export function parseApolloConfig(
         });
       }
     }
-    Debug.error(
-      fromZodError(parsed.error, {
-        prefix: "Error parsing config file:",
-        prefixSeparator: "\n",
-        issueSeparator: ";\n",
-        unionSeparator: "\n  or\n",
-      }).toString(),
-    );
-    return null;
+    throw fromZodError(parsed.error, {
+      prefix: `Error parsing config file ${configURI?.fsPath}:`,
+      prefixSeparator: "\n",
+      issueSeparator: ";\n",
+      unionSeparator: "\n  or\n",
+    });
   }
   if (parsed.data.client) {
     return new ClientConfig(parsed.data, configURI);
@@ -211,8 +208,7 @@ export function parseApolloConfig(
     return new RoverConfig(parsed.data, configURI);
   } else {
     // should never happen
-    Debug.warning("Invalid config file format!");
-    return null;
+    throw new Error("Invalid config file format!");
   }
 }
 

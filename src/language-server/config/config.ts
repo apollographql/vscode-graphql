@@ -16,15 +16,13 @@ function ignoredFieldWarning(
     `The option ${path} is no longer supported, please remove it from your configuration file.`,
 ) {
   return z
-    .custom(() => true)
+    .custom<unknown>(() => true)
     .superRefine((val, ctx) => {
       if (val) {
         Debug.warning(getMessage(ctx.path.join(".")));
       }
     })
-    .transform((val) => {
-      return undefined;
-    });
+    .optional();
 }
 export interface Context {
   apiKey?: string;

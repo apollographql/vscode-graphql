@@ -123,7 +123,7 @@ export class GraphQLWorkspace {
     let foundConfigs: ApolloConfig[] = [];
 
     const projectConfigs = Array.from(apolloConfigFolders).map((configFolder) =>
-      loadConfig({ configPath: configFolder, requireConfig: true })
+      loadConfig({ configPath: configFolder })
         .then((config) => {
           if (config) {
             foundConfigs.push(config);
@@ -173,7 +173,7 @@ export class GraphQLWorkspace {
     let config: ApolloConfig | null;
     let error;
     try {
-      config = await loadConfig({ configPath, requireConfig: true });
+      config = await loadConfig({ configPath });
     } catch (e: any) {
       config = null;
       error = e;

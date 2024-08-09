@@ -22,6 +22,7 @@
   ],
   "ignoreDeps": [
     "@types/node",
+    "@types/vscode",
     "@typescript-eslint/eslint-plugin",
     "@typescript-eslint/parser",
     "eslint"

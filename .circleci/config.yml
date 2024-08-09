@@ -51,7 +51,7 @@ jobs:
       - npm-install
       - run:
           name: Test
-          command: npm run test
+          command: npm run test --  --runInBand
 
   E2E tests:
     executor: node

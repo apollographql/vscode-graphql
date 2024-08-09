@@ -1,7 +1,7 @@
 <div align="center">
 
 <p>
-	<a href="https://www.apollographql.com/"><img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/eaf10f9ed1ea8b10d47073527c0fd65732d72428/images/marketplace/apollo-wordmark.png" height="100" alt=""></a>
+	<a href="https://www.apollographql.com/"><img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/apollo-wordmark.png" height="100" alt=""></a>
 </p>
 <h1>Apollo GraphQL for VS Code</h1>
 

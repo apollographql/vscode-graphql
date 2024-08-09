@@ -185,7 +185,7 @@ Sometimes errors will show up as a notification at the bottom of your editor. Ot
 
 If problems persist or the error messages are unhelpful, open an [issue](https://github.com/apollographql/vscode-graphql/issues) in the `vscode-graphql` repository.
 
-<h2 id="additional-apollo-config-options">Additional Apollo config optionsg</h2>
+<h2 id="additional-apollo-config-options">Additional Apollo config options</h2>
 
 You can add these configurations to your [Apollo config file](#setting-up-an-apollo-config).
 

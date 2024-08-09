@@ -130,23 +130,26 @@ export async function activate(
     const response = JSON.parse(params) as Array<any> | ErrorShape;
 
     const hasActiveTextEditor = Boolean(window.activeTextEditor);
-    if (isError(response)) {
-      statusBar.showWarningState({
-        hasActiveTextEditor,
-        tooltip: "Configuration Error",
-      });
-      outputChannel.append(response.stack);
+    if (Array.isArray(response)) {
+      const errors = response.filter((item) => isError(item));
+      if (errors.length) {
+        errors.forEach((response) => {
+          statusBar.showWarningState({
+            hasActiveTextEditor,
+            tooltip: "Configuration Error",
+          });
+          outputChannel.appendLine("---\n" + response.stack + "\n---");
 
-      const infoButtonText = "More Info";
-      window
-        .showInformationMessage(response.message, infoButtonText)
-        .then((clicked) => {
-          if (clicked === infoButtonText) {
-            outputChannel.show();
-          }
+          const infoButtonText = "More Info";
+          window
+            .showInformationMessage(response.message, infoButtonText)
+            .then((clicked) => {
+              if (clicked === infoButtonText) {
+                outputChannel.show();
+              }
+            });
         });
-    } else if (Array.isArray(response)) {
-      if (response.length === 0) {
+      } else if (response.length === 0) {
         statusBar.showWarningState({
           hasActiveTextEditor,
           tooltip: "No apollo.config.js file found",

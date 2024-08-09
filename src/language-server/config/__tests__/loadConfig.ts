@@ -182,19 +182,11 @@ Object {
     it("throws when explorer.search fails", async () => {
       writeFilesToDir(dir, { "apollo.config.js": `* 98375^%*&^ its lit` });
 
-      const spy = jest.spyOn(console, "error");
-      // use this to keep the log quiet
-      spy.mockImplementation();
-
-      await loadConfig({
+      const error = await loadConfig({
         configPath: dirPath,
-      });
+      }).catch((e: any) => e);
 
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/config file failed to load/i),
-      );
-
-      spy.mockRestore();
+      expect(error.message).toMatch(/config file failed to load/i);
     });
 
     it("issues a deprecation warning when loading config from package.json", async () => {
@@ -234,21 +226,17 @@ Object {
     });
 
     it("throws if project type cant be resolved", async () => {
-      const spy = jest.spyOn(console, "error");
-      spy.mockImplementation();
-
       writeFilesToDir(dir, {
         "apollo.config.js": `module.exports = {}`,
       });
 
-      await loadConfig({
+      const error = await loadConfig({
         configPath: dirPath,
-      });
+      }).catch((e: any) => e);
 
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Config needs to contain a 'client' field./i),
+      expect(error.message).toMatch(
+        /Config needs to contain a 'client' field./i,
       );
-      spy.mockRestore();
     });
   });
 

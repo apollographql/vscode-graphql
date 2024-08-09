@@ -60,7 +60,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
     });
     if (errors) {
       // XXX better error handling of GraphQL errors
-      throw new Error(errors.map(({ message }: Error) => message).join("\n"));
+      throw new Error(errors.map(({ message }) => message).join("\n"));
     }
 
     if (!(data && data.service && data.service.__typename === "Service")) {

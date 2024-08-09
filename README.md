@@ -153,7 +153,7 @@ GraphQL's flexibility can make it difficult to predict the cost of an operation.
 The VS Code extension will show inline performance diagnostics when connected to a service with reported metrics in GraphOS Studio. As operations are typed, any fields that take longer than 1 ms to respond will be annotated to the right of the field inline! This gives team members a picture of how long the operation will take as more and more fields are added to operations or fragments.
 
 <img
-  src="../img/editors/perf-annotation.png"
+  src="https://raw.githubusercontent.com/apollographql/vscode-graphql/80a6ca4ae59173b8cef25020345e4ebe202eec41/images/marketplace/perf-annotation.png"
   width="80%"
   style="margin: 5%"
   alt="Performance annotation next to a field"

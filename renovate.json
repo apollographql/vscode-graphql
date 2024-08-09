@@ -20,5 +20,10 @@
       "matchUpdateTypes": ["patch"]
     }
   ],
-  "ignoreDeps": ["@types/node"]
+  "ignoreDeps": [
+    "@types/node",
+    "@typescript-eslint/eslint-plugin",
+    "@typescript-eslint/parser",
+    "eslint"
+  ]
 }

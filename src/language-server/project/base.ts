@@ -17,6 +17,17 @@ import {
   NotificationHandler,
   PublishDiagnosticsParams,
   Position,
+  CancellationToken,
+  CompletionItem,
+  Hover,
+  Definition,
+  ReferenceContext,
+  Location,
+  DocumentSymbol,
+  SymbolInformation,
+  Range,
+  CodeAction,
+  CodeLens,
 } from "vscode-languageserver/node";
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
@@ -403,4 +414,50 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     }
     return definitionsAndExtensions;
   }
+
+  abstract provideCompletionItems?(
+    uri: DocumentUri,
+    position: Position,
+    token: CancellationToken,
+  ): Promise<CompletionItem[]>;
+
+  abstract provideHover?(
+    uri: DocumentUri,
+    position: Position,
+    token: CancellationToken,
+  ): Promise<Hover | null>;
+
+  abstract provideDefinition?(
+    uri: DocumentUri,
+    position: Position,
+    token: CancellationToken,
+  ): Promise<Definition | null>;
+
+  abstract provideReferences?(
+    uri: DocumentUri,
+    position: Position,
+    context: ReferenceContext,
+    token: CancellationToken,
+  ): Promise<Location[] | null>;
+
+  abstract provideDocumentSymbol?(
+    uri: DocumentUri,
+    token: CancellationToken,
+  ): Promise<DocumentSymbol[]>;
+
+  abstract provideSymbol?(
+    query: string,
+    token: CancellationToken,
+  ): Promise<SymbolInformation[]>;
+
+  abstract provideCodeLenses?(
+    uri: DocumentUri,
+    token: CancellationToken,
+  ): Promise<CodeLens[]>;
+
+  abstract provideCodeAction?(
+    uri: DocumentUri,
+    range: Range,
+    token: CancellationToken,
+  ): Promise<CodeAction[]>;
 }

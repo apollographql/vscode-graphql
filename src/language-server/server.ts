@@ -6,11 +6,11 @@ import {
   FileChangeType,
   ServerCapabilities,
   TextDocumentSyncKind,
+  SymbolInformation,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import type { QuickPickItem } from "vscode";
 import { GraphQLWorkspace } from "./workspace";
-import { GraphQLLanguageProvider } from "./languageProvider";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
 import { URI } from "vscode-uri";
@@ -193,64 +193,81 @@ connection.onDidChangeWatchedFiles((params) => {
   }
 });
 
-const languageProvider = new GraphQLLanguageProvider(workspace);
-
-connection.onHover((params, token) =>
-  languageProvider.provideHover(
-    params.textDocument.uri,
-    params.position,
-    token,
-  ),
+connection.onHover(
+  (params, token) =>
+    workspace
+      .projectForFile(params.textDocument.uri)
+      ?.provideHover?.(params.textDocument.uri, params.position, token) ?? null,
 );
 
-connection.onDefinition((params, token) =>
-  languageProvider.provideDefinition(
-    params.textDocument.uri,
-    params.position,
-    token,
-  ),
+connection.onDefinition(
+  (params, token) =>
+    workspace
+      .projectForFile(params.textDocument.uri)
+      ?.provideDefinition?.(params.textDocument.uri, params.position, token) ??
+    null,
 );
 
-connection.onReferences((params, token) =>
-  languageProvider.provideReferences(
-    params.textDocument.uri,
-    params.position,
-    params.context,
-    token,
-  ),
+connection.onReferences(
+  (params, token) =>
+    workspace
+      .projectForFile(params.textDocument.uri)
+      ?.provideReferences?.(
+        params.textDocument.uri,
+        params.position,
+        params.context,
+        token,
+      ) ?? null,
 );
 
-connection.onDocumentSymbol((params, token) =>
-  languageProvider.provideDocumentSymbol(params.textDocument.uri, token),
+connection.onDocumentSymbol(
+  (params, token) =>
+    workspace
+      .projectForFile(params.textDocument.uri)
+      ?.provideDocumentSymbol?.(params.textDocument.uri, token) ?? [],
 );
 
-connection.onWorkspaceSymbol((params, token) =>
-  languageProvider.provideWorkspaceSymbol(params.query, token),
-);
+connection.onWorkspaceSymbol(async (params, token) => {
+  const symbols: SymbolInformation[] = [];
+  const symbolPromises = workspace.projects.map(
+    (project) =>
+      project.provideSymbol?.(params.query, token) || Promise.resolve([]),
+  );
+  for (const projectSymbols of await Promise.all(symbolPromises)) {
+    symbols.push(...projectSymbols);
+  }
+  return symbols;
+});
 
 connection.onCompletion(
-  debounceHandler((params, token) =>
-    languageProvider.provideCompletionItems(
-      params.textDocument.uri,
-      params.position,
-      token,
-    ),
+  debounceHandler(
+    (params, token) =>
+      workspace
+        .projectForFile(params.textDocument.uri)
+        ?.provideCompletionItems?.(
+          params.textDocument.uri,
+          params.position,
+          token,
+        ) ?? [],
   ),
 );
 
 connection.onCodeLens(
-  debounceHandler((params, token) =>
-    languageProvider.provideCodeLenses(params.textDocument.uri, token),
+  debounceHandler(
+    (params, token) =>
+      workspace
+        .projectForFile(params.textDocument.uri)
+        ?.provideCodeLenses?.(params.textDocument.uri, token) ?? [],
   ),
 );
 
 connection.onCodeAction(
-  debounceHandler((params, token) =>
-    languageProvider.provideCodeAction(
-      params.textDocument.uri,
-      params.range,
-      token,
-    ),
+  debounceHandler(
+    (params, token) =>
+      workspace
+        .projectForFile(params.textDocument.uri)
+        ?.provideCodeAction?.(params.textDocument.uri, params.range, token) ??
+      [],
   ),
 );
 
@@ -263,11 +280,16 @@ connection.onNotification(Commands.TagSelected, (selection: QuickPickItem) =>
 );
 
 connection.onNotification(Commands.GetStats, async ({ uri }) => {
-  const status = await languageProvider.provideStats(uri);
-  connection.sendNotification(Notifications.StatsLoaded, status);
+  const status = await workspace.projectForFile(uri)?.getProjectStats();
+  connection.sendNotification(
+    Notifications.StatsLoaded,
+    status ?? {
+      loaded: false,
+    },
+  );
 });
 connection.onRequest(Requests.FileStats, async ({ uri }) => {
-  return languageProvider.provideStats(uri);
+  return workspace.projectForFile(uri)?.getProjectStats() ?? { loaded: false };
 });
 
 // Listen on the connection

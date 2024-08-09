@@ -13,7 +13,6 @@ import {
 } from "graphql";
 
 import {
-  TextDocument,
   NotificationHandler,
   PublishDiagnosticsParams,
   Position,
@@ -29,6 +28,7 @@ import {
   CodeAction,
   CodeLens,
 } from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
 
@@ -76,25 +76,16 @@ interface GraphQLProjectConfig {
   loadingHandler: LoadingHandler;
 }
 
-export abstract class GraphQLProject implements GraphQLSchemaProvider {
+export abstract class GraphQLInternalProject
+  extends GraphQLProject
+  implements GraphQLSchemaProvider
+{
   public schemaProvider: GraphQLSchemaProvider;
-  protected _onDiagnostics?: NotificationHandler<PublishDiagnosticsParams>;
-
-  private _isReady: boolean;
-  private readyPromise: Promise<void>;
   protected engineClient?: ApolloEngineClient;
 
   private needsValidation = false;
 
   protected documentsByFile: Map<DocumentUri, GraphQLDocument[]> = new Map();
-
-  public config: ApolloConfig;
-  public schema?: GraphQLSchema;
-  private fileSet: FileSet;
-  private rootURI: URI;
-  protected loadingHandler: LoadingHandler;
-
-  protected lastLoadDate?: number;
 
   constructor({
     config,
@@ -102,33 +93,18 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     loadingHandler,
     clientIdentity,
   }: GraphQLProjectConfig) {
-    this.config = config;
-    this.loadingHandler = loadingHandler;
-    // the URI of the folder _containing_ the apollo.config.js is the true project's root.
-    // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
-    this.rootURI = config.configDirURI || configFolderURI;
-
+    super({ config, configFolderURI, loadingHandler, clientIdentity });
     const { includes = [], excludes = [] } = isClientConfig(config)
       ? config.client
-      : {
-          /** TODO */
-        };
-    const fileSet = new FileSet({
-      rootURI: this.rootURI,
-      includes: [
-        ...includes,
-        ".env",
-        "apollo.config.js",
-        "apollo.config.cjs",
-        "apollo.config.mjs",
-        "apollo.config.ts",
-      ],
-      // We do not want to include the local schema file in our list of documents
-      excludes: [...excludes, ...this.getRelativeLocalSchemaFilePaths()],
-      configURI: config.configURI,
-    });
+      : {};
 
-    this.fileSet = fileSet;
+    this.fileSet.pushIncludes(includes);
+    // We do not want to include the local schema file in our list of documents
+    this.fileSet.pushExcludes([
+      ...excludes,
+      ...this.getRelativeLocalSchemaFilePaths(),
+    ]);
+
     this.schemaProvider = schemaProviderFromConfig(config, clientIdentity);
     const { engine } = config;
     if (engine.apiKey) {
@@ -138,48 +114,6 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
         clientIdentity,
       );
     }
-
-    this._isReady = false;
-    // FIXME: Instead of `Promise.all`, we should catch individual promise rejections
-    // so we can show multiple errors.
-    this.readyPromise = Promise.all(this.initialize())
-      .then(() => {
-        this._isReady = true;
-      })
-      .catch((error) => {
-        console.error(error);
-        this.loadingHandler.showError(
-          `Error initializing Apollo GraphQL project "${this.displayName}": ${error}`,
-        );
-      });
-  }
-
-  abstract get displayName(): string;
-
-  protected abstract initialize(): Promise<void>[];
-
-  abstract getProjectStats(): ProjectStats;
-
-  get isReady(): boolean {
-    return this._isReady;
-  }
-
-  get engine(): ApolloEngineClient {
-    // handle error states for missing engine config
-    // all in the same place :tada:
-    if (!this.engineClient) {
-      throw new Error(`Unable to find ${keyEnvVar}`);
-    }
-    return this.engineClient!;
-  }
-
-  get whenReady(): Promise<void> {
-    return this.readyPromise;
-  }
-
-  public updateConfig(config: ApolloConfig) {
-    this.config = config;
-    return this.initialize();
   }
 
   public resolveSchema(config: SchemaResolveConfig): Promise<GraphQLSchema> {
@@ -194,10 +128,6 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
   public onSchemaChange(handler: NotificationHandler<GraphQLSchema>) {
     this.lastLoadDate = +new Date();
     return this.schemaProvider.onSchemaChange(handler);
-  }
-
-  onDiagnostics(handler: NotificationHandler<PublishDiagnosticsParams>) {
-    this._onDiagnostics = handler;
   }
 
   includesFile(uri: DocumentUri) {
@@ -414,6 +344,91 @@ export abstract class GraphQLProject implements GraphQLSchemaProvider {
     }
     return definitionsAndExtensions;
   }
+}
+
+export abstract class GraphQLProject {
+  protected _onDiagnostics?: NotificationHandler<PublishDiagnosticsParams>;
+
+  private _isReady: boolean;
+  private readyPromise: Promise<void>;
+  public config: ApolloConfig;
+  protected schema?: GraphQLSchema;
+  protected fileSet: FileSet;
+  protected rootURI: URI;
+  protected loadingHandler: LoadingHandler;
+
+  protected lastLoadDate?: number;
+
+  constructor({
+    config,
+    configFolderURI,
+    loadingHandler,
+    clientIdentity,
+  }: GraphQLProjectConfig) {
+    this.config = config;
+    this.loadingHandler = loadingHandler;
+    // the URI of the folder _containing_ the apollo.config.js is the true project's root.
+    // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
+    this.rootURI = config.configDirURI || configFolderURI;
+
+    this.fileSet = new FileSet({
+      rootURI: this.rootURI,
+      includes: [
+        ".env",
+        "apollo.config.js",
+        "apollo.config.cjs",
+        "apollo.config.mjs",
+        "apollo.config.ts",
+      ],
+
+      excludes: [],
+      configURI: config.configURI,
+    });
+
+    this._isReady = false;
+    // FIXME: Instead of `Promise.all`, we should catch individual promise rejections
+    // so we can show multiple errors.
+    this.readyPromise = Promise.all(this.initialize())
+      .then(() => {
+        this._isReady = true;
+      })
+      .catch((error) => {
+        console.error(error);
+        this.loadingHandler.showError(
+          `Error initializing Apollo GraphQL project "${this.displayName}": ${error}`,
+        );
+      });
+  }
+
+  abstract get displayName(): string;
+
+  abstract initialize(): Promise<void>[];
+
+  abstract getProjectStats(): ProjectStats;
+
+  get isReady(): boolean {
+    return this._isReady;
+  }
+
+  get whenReady(): Promise<void> {
+    return this.readyPromise;
+  }
+
+  public updateConfig(config: ApolloConfig) {
+    this.config = config;
+    return this.initialize();
+  }
+
+  onDiagnostics(handler: NotificationHandler<PublishDiagnosticsParams>) {
+    this._onDiagnostics = handler;
+  }
+
+  abstract includesFile(uri: DocumentUri): boolean;
+
+  abstract fileDidChange(uri: DocumentUri): void;
+  abstract fileWasDeleted(uri: DocumentUri): void;
+  abstract documentDidChange(document: TextDocument): void;
+  abstract clearAllDiagnostics(): void;
 
   abstract provideCompletionItems?(
     uri: DocumentUri,

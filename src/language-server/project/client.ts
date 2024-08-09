@@ -1,4 +1,4 @@
-import { GraphQLProject } from "./base";
+import { GraphQLInternalProject, GraphQLProject } from "./base";
 import {
   GraphQLSchema,
   GraphQLError,
@@ -180,7 +180,7 @@ export interface GraphQLClientProjectConfig {
   configFolderURI: URI;
   loadingHandler: LoadingHandler;
 }
-export class GraphQLClientProject extends GraphQLProject {
+export class GraphQLClientProject extends GraphQLInternalProject {
   public serviceID?: string;
   public config!: ClientConfig;
 

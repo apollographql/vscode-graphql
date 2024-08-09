@@ -30,6 +30,13 @@ export class FileSet {
     this.excludes = excludes;
   }
 
+  pushIncludes(files: string[]) {
+    this.includes.push(...files);
+  }
+  pushExcludes(files: string[]) {
+    this.excludes.push(...files);
+  }
+
   includesFile(filePath: string): boolean {
     const normalizedFilePath = normalizeURI(filePath);
 

@@ -3,13 +3,12 @@ import {
   ClientConfig,
   ClientServiceConfig,
   LocalServiceConfig,
-  ServiceConfig,
-  ApolloConfigFormat,
+  ParsedApolloConfigFormat,
 } from "./config";
 import { ServiceSpecifier, ServiceIDAndTag } from "../engine";
 
 export function isClientConfig(config: ApolloConfig): config is ClientConfig {
-  return config.isClient;
+  return config instanceof ClientConfig;
 }
 
 // checks the `config.client.service` object for a localSchemaFile
@@ -17,14 +16,6 @@ export function isLocalServiceConfig(
   config: ClientServiceConfig,
 ): config is LocalServiceConfig {
   return !!(config as LocalServiceConfig).localSchemaFile;
-}
-
-export function isServiceConfig(config: ApolloConfig): config is ServiceConfig {
-  return config.isService;
-}
-
-export function isServiceKey(key?: string) {
-  return key && /service:.*:.*/.test(key);
 }
 
 export function getServiceFromKey(key?: string) {
@@ -35,9 +26,7 @@ export function getServiceFromKey(key?: string) {
   return;
 }
 
-export function getGraphIdFromConfig(config: ApolloConfigFormat) {
-  if (config.service && config.service.name)
-    return parseServiceSpecifier(config.service.name)[0];
+export function getGraphIdFromConfig(config: ParsedApolloConfigFormat) {
   if (config.client) {
     if (typeof config.client.service === "string") {
       return parseServiceSpecifier(

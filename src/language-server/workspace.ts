@@ -7,23 +7,17 @@ import { QuickPickItem } from "vscode";
 import { GraphQLProject, DocumentUri } from "./project/base";
 import { dirname } from "path";
 import { globSync } from "glob";
-import {
-  loadConfig,
-  ApolloConfig,
-  isClientConfig,
-  ServiceConfig,
-} from "./config";
+import { loadConfig, ApolloConfig, isClientConfig } from "./config";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { ServiceID, SchemaTag, ClientIdentity } from "./engine";
 import { GraphQLClientProject, isClientProject } from "./project/client";
-import { GraphQLServiceProject } from "./project/service";
 import { URI } from "vscode-uri";
 import { Debug } from "./utilities";
 import type { EngineDecoration } from "../messages";
 import { equal } from "@wry/equality";
 
 export interface WorkspaceConfig {
-  clientIdentity?: ClientIdentity;
+  clientIdentity: ClientIdentity;
 }
 
 export class GraphQLWorkspace {
@@ -71,12 +65,9 @@ export class GraphQLWorkspace {
           configFolderURI: URI.parse(folder.uri),
           clientIdentity,
         })
-      : new GraphQLServiceProject({
-          config: config as ServiceConfig,
-          loadingHandler: this.LanguageServerLoadingHandler,
-          configFolderURI: URI.parse(folder.uri),
-          clientIdentity,
-        });
+      : (() => {
+          throw new Error("TODO rover project");
+        })();
 
     project.onDiagnostics((params) => {
       this._onDiagnostics && this._onDiagnostics(params);
@@ -132,20 +123,18 @@ export class GraphQLWorkspace {
     let foundConfigs: ApolloConfig[] = [];
 
     const projectConfigs = Array.from(apolloConfigFolders).map((configFolder) =>
-      loadConfig({ configPath: configFolder, requireConfig: true })
+      loadConfig({ configPath: configFolder })
         .then((config) => {
           if (config) {
             foundConfigs.push(config);
-            const projectsForConfig = config.projects.map((projectConfig) =>
-              this.createProject({ config, folder }),
-            );
+            const projectForConfig = this.createProject({ config, folder });
 
             const existingProjects =
               this.projectsByFolderUri.get(folder.uri) || [];
 
             this.projectsByFolderUri.set(folder.uri, [
               ...existingProjects,
-              ...projectsForConfig,
+              projectForConfig,
             ]);
           } else {
             Debug.error(
@@ -184,7 +173,7 @@ export class GraphQLWorkspace {
     let config: ApolloConfig | null;
     let error;
     try {
-      config = await loadConfig({ configPath, requireConfig: true });
+      config = await loadConfig({ configPath });
     } catch (e: any) {
       config = null;
       error = e;

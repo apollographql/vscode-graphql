@@ -35,9 +35,13 @@ const workspace = new GraphQLWorkspace(
   new LanguageServerLoadingHandler(connection),
   {
     clientIdentity: {
-      name: process.env["APOLLO_CLIENT_NAME"],
-      version: process.env["APOLLO_CLIENT_VERSION"],
-      referenceID: process.env["APOLLO_CLIENT_REFERENCE_ID"],
+      name: process.env["APOLLO_CLIENT_NAME"] || "Apollo Language Server",
+      version:
+        process.env["APOLLO_CLIENT_VERSION"] ||
+        "146d29c0-912c-46d3-b686-920e52586be6",
+      referenceID:
+        process.env["APOLLO_CLIENT_REFERENCE_ID"] ||
+        require("../../../package.json").version,
     },
   },
 );

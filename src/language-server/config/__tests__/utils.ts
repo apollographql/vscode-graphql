@@ -1,13 +1,11 @@
 import {
-  ApolloConfig,
-  ApolloConfigFormat,
   getServiceFromKey,
   getGraphIdFromConfig,
   isClientConfig,
   isLocalServiceConfig,
-  isServiceConfig,
   parseServiceSpecifier,
-  DefaultConfigBase,
+  parseApolloConfig,
+  configSchema,
 } from "../";
 
 describe("getServiceFromKey", () => {
@@ -34,36 +32,38 @@ describe("getServiceFromKey", () => {
 describe("getServiceName", () => {
   describe("client config", () => {
     it("finds service name when client.service is a string", () => {
-      const rawConfig: ApolloConfigFormat = {
-        client: { service: "my-service", ...DefaultConfigBase },
-      };
+      const rawConfig = configSchema.parse({
+        client: { service: "my-service" },
+      });
       expect(getGraphIdFromConfig(rawConfig)).toEqual("my-service");
 
-      const rawConfigWithTag: ApolloConfigFormat = {
-        client: { service: "my-service@master", ...DefaultConfigBase },
-      };
+      const rawConfigWithTag = configSchema.parse({
+        client: { service: "my-service@master" },
+      });
       expect(getGraphIdFromConfig(rawConfigWithTag)).toEqual("my-service");
     });
 
     it("finds service name when client.service is an object", () => {
-      const rawConfig: ApolloConfigFormat = {
+      const rawConfig = configSchema.parse({
         client: {
           service: { name: "my-service", localSchemaFile: "./someFile" },
-          ...DefaultConfigBase,
         },
-      };
+      });
       expect(getGraphIdFromConfig(rawConfig)).toEqual("my-service");
     });
   });
   describe("service config", () => {
     it("finds service name from raw service config", () => {
-      const rawConfig: ApolloConfigFormat = {
-        service: {
-          name: "my-service",
-          localSchemaFile: "./someFile",
-          ...DefaultConfigBase,
+      const rawConfig = configSchema.parse({
+        client: {
+          service: {
+            name: "my-service",
+            localSchemaFile: "./someFile",
+          },
+          includes: [],
+          excludes: [],
         },
-      };
+      });
       expect(getGraphIdFromConfig(rawConfig)).toEqual("my-service");
     });
   });
@@ -71,10 +71,10 @@ describe("getServiceName", () => {
 
 describe("isClientConfig", () => {
   it("identifies client config properly", () => {
-    const config = new ApolloConfig({
-      client: { service: "hello", ...DefaultConfigBase },
+    const config = parseApolloConfig({
+      client: { service: "hello" },
     });
-    expect(isClientConfig(config)).toBeTruthy();
+    expect(isClientConfig(config!)).toBeTruthy();
   });
 });
 
@@ -82,13 +82,6 @@ describe("isLocalServiceConfig", () => {
   it("properly identifies a client config that uses localSchemaFiles", () => {
     const clientServiceConfig = { name: "my-service", localSchemaFile: "okay" };
     expect(isLocalServiceConfig(clientServiceConfig)).toBeTruthy();
-  });
-});
-
-describe("isServiceConfig", () => {
-  it("identifies service config properly", () => {
-    const config = new ApolloConfig({ service: { ...DefaultConfigBase } });
-    expect(isServiceConfig(config)).toBeTruthy();
   });
 });
 

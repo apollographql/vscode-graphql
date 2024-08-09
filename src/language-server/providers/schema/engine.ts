@@ -23,7 +23,7 @@ export class EngineSchemaProvider implements GraphQLSchemaProvider {
 
   constructor(
     private config: ClientConfig,
-    private clientIdentity?: ClientIdentity,
+    private clientIdentity: ClientIdentity,
   ) {}
 
   async resolveSchema(override: SchemaResolveConfig) {

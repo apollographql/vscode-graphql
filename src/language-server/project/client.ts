@@ -91,7 +91,7 @@ export function isClientProject(
 }
 
 export interface GraphQLClientProjectConfig {
-  clientIdentity?: ClientIdentity;
+  clientIdentity: ClientIdentity;
   config: ClientConfig;
   configFolderURI: URI;
   loadingHandler: LoadingHandler;
@@ -414,12 +414,12 @@ export class GraphQLClientProject extends GraphQLProject {
                   const variant = this.config.variant;
                   const graphId = this.studioGraphId;
 
-                  const { client, service } = this.config;
+                  const { client } = this.config;
                   const remoteServiceConfig =
                     typeof client.service === "object" &&
                     "url" in client.service
                       ? client.service
-                      : service?.endpoint;
+                      : undefined;
                   const endpoint = remoteServiceConfig?.url;
 
                   const runInExplorerLink = buildExplorerURL({

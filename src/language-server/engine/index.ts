@@ -1,4 +1,3 @@
-import { DefaultEngineConfig } from "../config";
 import { SCHEMA_TAGS_AND_FIELD_STATS } from "./operations/schemaTagsAndFieldStats";
 import { FRONTEND_URL_ROOT } from "./operations/frontendUrlRoot";
 import {
@@ -11,9 +10,9 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 
 export interface ClientIdentity {
-  name?: string;
-  version?: string;
-  referenceID?: string;
+  name: string;
+  version: string;
+  referenceID: string;
 }
 
 export type ServiceID = string;
@@ -36,8 +35,8 @@ export class ApolloEngineClient {
 
   constructor(
     private readonly engineKey: string,
-    baseURL: string = DefaultEngineConfig.endpoint,
-    private readonly clientIdentity?: ClientIdentity,
+    baseURL: string,
+    private readonly clientIdentity: ClientIdentity,
   ) {
     const link = ApolloLink.from([
       onError(({ graphQLErrors, networkError, operation }) => {
@@ -56,26 +55,15 @@ export class ApolloEngineClient {
           console.log(`[Network Error] ${response.bodyText}`);
         }
       }),
-      setContext((_, request) => {
-        if (!request.headers) request.headers = {};
-        request.headers["x-api-key"] = this.engineKey;
-        if (this.clientIdentity && this.clientIdentity.name) {
-          request.headers["apollo-client-name"] = this.clientIdentity.name;
-          request.headers["apollo-client-reference-id"] =
-            this.clientIdentity.referenceID;
-          request.headers["apollo-client-version"] =
-            this.clientIdentity.version;
-        } else {
-          // default values
-          request.headers["apollo-client-name"] = "Apollo Language Server";
-          request.headers["apollo-client-reference-id"] =
-            "146d29c0-912c-46d3-b686-920e52586be6";
-          request.headers["apollo-client-version"] =
-            require("../../package.json").version;
-        }
-        return request;
+      createHttpLink({
+        uri: baseURL,
+        headers: {
+          ["x-api-key"]: this.engineKey,
+          ["apollo-client-name"]: this.clientIdentity.name,
+          ["apollo-client-reference-id"]: this.clientIdentity.referenceID,
+          ["apollo-client-version"]: this.clientIdentity.version,
+        },
       }),
-      createHttpLink({ uri: baseURL }),
     ]);
 
     this.client = new ApolloClient({

@@ -1,12 +1,23 @@
-import { loadConfig } from "../";
+let { loadConfig } = require("../");
+let { ClientConfig, RoverConfig } = require("../config");
 import * as path from "path";
 import * as fs from "fs";
-import {
-  DefaultClientConfig,
-  DefaultServiceConfig,
-  DefaultEngineConfig,
-} from "../config";
-import { Debug } from "../../utilities";
+
+async function withFeatureFlags(flags: string, fn: () => void) {
+  const FF = process.env.APOLLO_FEATURE_FLAGS;
+  try {
+    process.env.APOLLO_FEATURE_FLAGS = flags;
+    jest.resetModules();
+    ({ loadConfig } = require("../"));
+    ({ ClientConfig, RoverConfig } = require("../config"));
+    return await fn();
+  } finally {
+    process.env.APOLLO_FEATURE_FLAGS = FF;
+    jest.resetModules();
+    ({ loadConfig } = require("../"));
+    ({ ClientConfig, RoverConfig } = require("../config"));
+  }
+}
 
 const makeNestedDir = (dir: string) => {
   if (fs.existsSync(dir)) return;
@@ -69,7 +80,7 @@ describe("loadConfig", () => {
   describe("finding files", () => {
     it("loads with client defaults from different dir", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `
+        "apollo.config.js": `
           module.exports = {
             client: {
               service: 'hello'
@@ -80,68 +91,50 @@ describe("loadConfig", () => {
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
       expect(config?.rawConfig).toMatchInlineSnapshot(`
-        Object {
-          "client": Object {
-            "excludes": Array [
-              "**/node_modules",
-              "**/__tests__",
-            ],
-            "includes": Array [
-              "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
-            ],
-            "service": "hello",
-            "statsWindow": Object {
-              "from": -86400,
-              "to": -0,
-            },
-            "tagName": "gql",
-          },
-          "engine": Object {
-            "endpoint": "https://graphql.api.apollographql.com/api/graphql",
-          },
-        }
-      `);
+Object {
+  "client": Object {
+    "excludes": Array [
+      "**/node_modules",
+      "**/__tests__",
+    ],
+    "includes": Array [
+      "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
+    ],
+    "service": "hello",
+    "tagName": "gql",
+  },
+  "engine": Object {
+    "endpoint": "https://graphql.api.apollographql.com/api/graphql",
+  },
+}
+`);
     });
 
-    it("loads with service defaults from different dir", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `
+    it("loads with rover defaults from different dir", () =>
+      withFeatureFlags("rover", async () => {
+        writeFilesToDir(dir, {
+          "apollo.config.js": `
           module.exports = {
-            service: {
-              name: 'hello'
+            rover: {
             }
           }
         `,
-      });
+        });
 
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-      });
-      expect(config?.rawConfig).toMatchInlineSnapshot(`
-        Object {
-          "engine": Object {
-            "endpoint": "https://graphql.api.apollographql.com/api/graphql",
-          },
-          "service": Object {
-            "endpoint": Object {
-              "url": "http://localhost:4000/graphql",
-            },
-            "excludes": Array [
-              "**/node_modules",
-              "**/__tests__",
-            ],
-            "includes": Array [
-              "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
-            ],
-            "name": "hello",
-          },
-        }
-      `);
-    });
+        const config = await loadConfig({
+          configPath: dirPath,
+        });
+        expect(config?.rawConfig).toMatchInlineSnapshot(`
+Object {
+  "engine": Object {
+    "endpoint": "https://graphql.api.apollographql.com/api/graphql",
+  },
+  "rover": Object {},
+}
+`);
+      }));
 
     it("[deprecated] loads config from package.json", async () => {
       writeFilesToDir(dir, {
@@ -160,17 +153,16 @@ describe("loadConfig", () => {
 
     it("loads config from a ts file", async () => {
       writeFilesToDir(dir, {
-        "apollo.config.ts": `module.exports = {"client": {"service": "hello"}`,
+        "apollo.config.ts": `export default {"client": {"service": "hello"} }`,
       });
       const config = await loadConfig({ configPath: dirPath });
-
       expect(config?.client?.service).toEqual("hello");
     });
   });
 
   describe("errors", () => {
     it("throws when config file is empty", async () => {
-      writeFilesToDir(dir, { "my.config.js": `` });
+      writeFilesToDir(dir, { "apollo.config.js": `` });
 
       const spy = jest.spyOn(console, "error");
       // use this to keep the log quiet
@@ -178,7 +170,6 @@ describe("loadConfig", () => {
 
       await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(spy).toHaveBeenCalledWith(
@@ -189,7 +180,7 @@ describe("loadConfig", () => {
     });
 
     it("throws when explorer.search fails", async () => {
-      writeFilesToDir(dir, { "my.config.js": `* 98375^%*&^ its lit` });
+      writeFilesToDir(dir, { "apollo.config.js": `* 98375^%*&^ its lit` });
 
       const spy = jest.spyOn(console, "error");
       // use this to keep the log quiet
@@ -197,7 +188,6 @@ describe("loadConfig", () => {
 
       await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(spy).toHaveBeenCalledWith(
@@ -217,7 +207,6 @@ describe("loadConfig", () => {
 
       await loadConfig({
         configPath: dirPath,
-        configFileName: "package.json",
       });
 
       expect(spy).toHaveBeenCalledWith(
@@ -231,10 +220,10 @@ describe("loadConfig", () => {
       const spy = jest.spyOn(console, "error");
       spy.mockImplementation();
 
-      writeFilesToDir(dir, { "my.config.js": `module.exports = {}` });
+      writeFilesToDir(dir, { "foo.config.js": `module.exports = {}` });
 
       await loadConfig({
-        configFileName: "my.TYPO.js",
+        configPath: dirPath,
         requireConfig: true, // this is what we're testing
       });
 
@@ -249,16 +238,15 @@ describe("loadConfig", () => {
       spy.mockImplementation();
 
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = {}`,
+        "apollo.config.js": `module.exports = {}`,
       });
 
       await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/unable to resolve/i),
+        expect.stringMatching(/Config needs to contain a 'client' field./i),
       );
       spy.mockRestore();
     });
@@ -267,13 +255,12 @@ describe("loadConfig", () => {
   describe("env loading", () => {
     it("finds .env in config path & parses for key", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { name: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
         ".env": `APOLLO_KEY=service:harambe:54378950jn`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(config?.client?.service).toEqual("harambe");
@@ -281,13 +268,12 @@ describe("loadConfig", () => {
 
     it("finds .env.local in config path & parses for key", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { name: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
         ".env.local": `APOLLO_KEY=service:harambe:54378950jn`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(config?.client?.service).toEqual("harambe");
@@ -295,66 +281,27 @@ describe("loadConfig", () => {
 
     it("finds .env and .env.local in config path & parses for key, preferring .env.local", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { name: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
         ".env": `APOLLO_KEY=service:hamato:54378950jn`,
         ".env.local": `APOLLO_KEY=service:yoshi:65489061ko`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(config?.client?.service).toEqual("yoshi");
-    });
-
-    it("Allows setting ENGINE_API_KEY with a deprecation warning", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { name: 'hello' } }`,
-        ".env.local": `ENGINE_API_KEY=service:yoshi:65489061ko`,
-      });
-
-      const spy = jest.spyOn(Debug, "warning");
-
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-      });
-
-      expect(config?.client?.service).toEqual("yoshi");
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Deprecation warning/i),
-      );
-    });
-
-    it("Uses new key when .env defined both legacy and new key", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { name: 'hello' } }`,
-        ".env.local": `ENGINE_API_KEY=service:yoshi:65489061ko\nAPOLLO_KEY=service:yoshi:65489061ko`,
-      });
-      const spy = jest.spyOn(Debug, "warning");
-
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-      });
-
-      expect(config?.engine.apiKey).toEqual("service:yoshi:65489061ko");
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Both ENGINE_API_KEY and APOLLO_KEY were found/i),
-      );
     });
 
     // this doesn't work right now :)
-    xit("finds .env in cwd & parses for key", async () => {
+    it.skip("finds .env in cwd & parses for key", async () => {
       writeFilesToDir(dir, {
-        "dir/my.config.js": `module.exports = { client: { name: 'hello' } }`,
+        "dir/apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
         ".env": `APOLLO_KEY=service:harambe:54378950jn`,
       });
       process.chdir(dir);
       const config = await loadConfig({
         configPath: "dir/",
-        configFileName: "my.config.js",
       });
 
       process.chdir("../");
@@ -363,73 +310,41 @@ describe("loadConfig", () => {
   });
 
   describe("project type", () => {
-    it("uses passed in type when config doesnt have client/service", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { engine: { endpoint: 'http://a.a' } }`,
-      });
-
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-        type: "client",
-      });
-
-      expect(config?.isClient).toEqual(true);
-    });
-
     it("infers client projects from config", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { service: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: { service: 'hello' } }`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
-      expect(config?.isClient).toEqual(true);
+      expect(config).toBeInstanceOf(ClientConfig);
     });
 
-    it("infers service projects from config", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { service: 'wow' }`,
-      });
+    it("infers rover projects from config", () =>
+      withFeatureFlags("rover", async () => {
+        writeFilesToDir(dir, {
+          "apollo.config.js": `module.exports = { rover: {} }`,
+        });
 
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-      });
+        const config = await loadConfig({
+          configPath: dirPath,
+        });
 
-      expect(config?.isService).toEqual(true);
-    });
+        expect(config).toBeInstanceOf(RoverConfig);
+      }));
   });
 
   describe("service name", () => {
     it("lets config service name take precedence for client project", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { service: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: { service: 'hello' } }`,
         ".env": `APOLLO_KEY=service:harambe:54378950jn`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
-        name: "not-it",
-      });
-
-      expect(config?.client?.service).toEqual("hello");
-    });
-
-    it("lets name passed in take precedence over env var", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: {  } }`,
-        ".env": `APOLLO_KEY=service:harambe:54378950jn`,
-      });
-
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-        name: "hello",
       });
 
       expect(config?.client?.service).toEqual("hello");
@@ -437,13 +352,12 @@ describe("loadConfig", () => {
 
     it("uses env var to determine service name when no other options", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: {  } }`,
+        "apollo.config.js": `module.exports = { client: {  } }`,
         ".env": `APOLLO_KEY=service:harambe:54378950jn`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(config?.client?.service).toEqual("harambe");
@@ -453,46 +367,29 @@ describe("loadConfig", () => {
   describe("default merging", () => {
     it("merges service name and default config for client projects", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { service: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: { service: 'hello' } }`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
-      expect(config?.rawConfig?.client?.includes).toEqual(
-        DefaultClientConfig.includes,
-      );
-    });
-
-    it("merges service name and default config for service projects", async () => {
-      writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { service: { name: 'wow' } }`,
-      });
-
-      const config = await loadConfig({
-        configPath: dirPath,
-        configFileName: "my.config.js",
-      });
-
-      expect(config?.rawConfig?.service?.includes).toEqual(
-        DefaultServiceConfig.includes,
-      );
+      expect((config?.rawConfig as any).client.includes).toEqual([
+        "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
+      ]);
     });
 
     it("merges engine config defaults", async () => {
       writeFilesToDir(dir, {
-        "my.config.js": `module.exports = { client: { service: 'wow' } }`,
+        "apollo.config.js": `module.exports = { client: { service: 'wow' } }`,
       });
 
       const config = await loadConfig({
         configPath: dirPath,
-        configFileName: "my.config.js",
       });
 
       expect(config?.rawConfig?.engine?.endpoint).toEqual(
-        DefaultEngineConfig.endpoint,
+        "https://graphql.api.apollographql.com/api/graphql",
       );
     });
   });

@@ -11,7 +11,6 @@ import {
   FragmentDefinitionNode,
   Kind,
   FragmentSpreadNode,
-  separateOperations,
   OperationDefinitionNode,
   extendSchema,
   DocumentNode,
@@ -21,16 +20,57 @@ import {
   DefinitionNode,
   ExecutableDefinitionNode,
   print,
+  GraphQLNamedType,
+  GraphQLField,
+  GraphQLNonNull,
+  isAbstractType,
+  TypeNameMetaFieldDef,
+  SchemaMetaFieldDef,
+  TypeMetaFieldDef,
+  typeFromAST,
+  GraphQLType,
+  isObjectType,
+  isListType,
+  GraphQLList,
+  isNonNullType,
+  ASTNode,
+  FieldDefinitionNode,
+  isExecutableDefinitionNode,
+  isTypeSystemDefinitionNode,
+  isTypeSystemExtensionNode,
+  DirectiveLocation,
 } from "graphql";
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import {
   NotificationHandler,
   DiagnosticSeverity,
+  CancellationToken,
+  Position,
+  Location,
+  Range,
+  CompletionItem,
+  Hover,
+  Definition,
+  CodeLens,
+  ReferenceContext,
+  InsertTextFormat,
+  DocumentSymbol,
+  SymbolKind,
+  SymbolInformation,
+  CodeAction,
+  CodeActionKind,
+  MarkupKind,
+  CompletionItemKind,
 } from "vscode-languageserver/node";
 import LZString from "lz-string";
 import { URL } from "node:url";
 
-import { rangeForASTNode } from "../utilities/source";
+import {
+  positionFromPositionInContainingDocument,
+  rangeForASTNode,
+  getASTNodeAndTypeInfoAtPosition,
+  positionToOffset,
+} from "../utilities/source";
 import { formatMS } from "../format";
 import { LoadingHandler } from "../loadingHandler";
 import { apolloClientSchemaDocument } from "./defaultClientSchema";
@@ -43,9 +83,6 @@ import {
 } from "../engine";
 import { ClientConfig } from "../config";
 import {
-  removeDirectives,
-  removeDirectiveAnnotatedFields,
-  withTypenameFieldAddedWhereNeeded,
   ClientSchemaInfo,
   isDirectiveDefinitionNode,
 } from "../utilities/graphql";
@@ -58,7 +95,19 @@ import {
 } from "../diagnostics";
 import { URI } from "vscode-uri";
 import type { EngineDecoration } from "../../messages";
-import { join } from "path";
+
+// should eventually be moved into this package, since we're overriding a lot of the existing behavior here
+import { getAutocompleteSuggestions } from "graphql-language-service";
+import { Position as GraphQlPosition } from "graphql-language-service";
+import { getTokenAtPosition, getTypeInfo } from "graphql-language-service";
+import type { DocumentUri } from "../project/base";
+
+import { highlightNodeForNode } from "../utilities/graphql";
+
+import { isNotNullOrUndefined } from "../../tools";
+import type { CodeActionInfo } from "../errors/validation";
+import { GraphQLDiagnostic } from "../diagnostics";
+import { isInterfaceType } from "graphql";
 
 type Maybe<T> = null | undefined | T;
 
@@ -82,6 +131,41 @@ function augmentSchemaWithGeneratedSDLIfNeeded(
       `graphql-schema:/schema.graphql?${encodeURIComponent(sdl)}`,
     ),
   );
+}
+
+const DirectiveLocations = Object.keys(DirectiveLocation);
+
+function hasFields(type: GraphQLType): boolean {
+  return (
+    isObjectType(type) ||
+    (isListType(type) && hasFields((type as GraphQLList<any>).ofType)) ||
+    (isNonNullType(type) && hasFields((type as GraphQLNonNull<any>).ofType))
+  );
+}
+
+function uriForASTNode(node: ASTNode): DocumentUri | null {
+  const uri = node.loc && node.loc.source && node.loc.source.name;
+  if (!uri || uri === "GraphQL") {
+    return null;
+  }
+  return uri;
+}
+
+function locationForASTNode(node: ASTNode): Location | null {
+  const uri = uriForASTNode(node);
+  if (!uri) return null;
+  return Location.create(uri, rangeForASTNode(node));
+}
+
+function symbolForFieldDefinition(
+  definition: FieldDefinitionNode,
+): DocumentSymbol {
+  return {
+    name: definition.name.value,
+    kind: SymbolKind.Field,
+    range: rangeForASTNode(definition),
+    selectionRange: rangeForASTNode(definition),
+  };
 }
 
 export function isClientProject(
@@ -533,6 +617,657 @@ export class GraphQLClientProject extends GraphQLProject {
   private get studioGraphId() {
     // if we don't have an `engineClient`, we are not in a studio project and `this.config.graph` could be just about anything
     return this.engineClient ? this.config.graph : undefined;
+  }
+
+  async provideCompletionItems(
+    uri: DocumentUri,
+    position: Position,
+    _token: CancellationToken,
+  ): Promise<CompletionItem[]> {
+    const document = this.documentAt(uri, position);
+    if (!document) return [];
+
+    if (!this.schema) return [];
+
+    const rawPositionInDocument = positionFromPositionInContainingDocument(
+      document.source,
+      position,
+    );
+    const positionInDocument = new GraphQlPosition(
+      rawPositionInDocument.line,
+      rawPositionInDocument.character,
+    );
+
+    const token = getTokenAtPosition(document.source.body, positionInDocument);
+    const state =
+      token.state.kind === "Invalid" ? token.state.prevState : token.state;
+    const typeInfo = getTypeInfo(this.schema, token.state);
+
+    if (state?.kind === "DirectiveDef") {
+      return DirectiveLocations.map((location) => ({
+        label: location,
+        kind: CompletionItemKind.Constant,
+      }));
+    }
+
+    const suggestions = getAutocompleteSuggestions(
+      this.schema,
+      document.source.body,
+      positionInDocument,
+    );
+
+    if (
+      state?.kind === "SelectionSet" ||
+      state?.kind === "Field" ||
+      state?.kind === "AliasedField"
+    ) {
+      const parentType = typeInfo.parentType;
+      const parentFields =
+        isInterfaceType(parentType) || isObjectType(parentType)
+          ? parentType.getFields()
+          : {};
+
+      if (isAbstractType(parentType)) {
+        parentFields[TypeNameMetaFieldDef.name] = TypeNameMetaFieldDef;
+      }
+
+      if (parentType === this.schema.getQueryType()) {
+        parentFields[SchemaMetaFieldDef.name] = SchemaMetaFieldDef;
+        parentFields[TypeMetaFieldDef.name] = TypeMetaFieldDef;
+      }
+
+      return suggestions.map((suggest) => {
+        // when code completing fields, expand out required variables and open braces
+        const suggestedField = parentFields[suggest.label] as GraphQLField<
+          void,
+          void
+        >;
+        if (!suggestedField) {
+          return suggest;
+        } else {
+          const requiredArgs = suggestedField.args.filter((a) =>
+            isNonNullType(a.type),
+          );
+          const paramsSection =
+            requiredArgs.length > 0
+              ? `(${requiredArgs
+                  .map((a, i) => `${a.name}: $${i + 1}`)
+                  .join(", ")})`
+              : ``;
+
+          const isClientType =
+            parentType &&
+            "clientSchema" in parentType &&
+            parentType.clientSchema?.localFields?.includes(suggestedField.name);
+          const directives = isClientType ? " @client" : "";
+
+          const snippet = hasFields(suggestedField.type)
+            ? `${suggest.label}${paramsSection}${directives} {\n\t$0\n}`
+            : `${suggest.label}${paramsSection}${directives}`;
+
+          return {
+            ...suggest,
+            insertText: snippet,
+            insertTextFormat: InsertTextFormat.Snippet,
+          };
+        }
+      });
+    }
+
+    if (state?.kind === "Directive") {
+      return suggestions.map((suggest) => {
+        const directive = this.schema!.getDirective(suggest.label);
+        if (!directive) {
+          return suggest;
+        }
+
+        const requiredArgs = directive.args.filter(isNonNullType);
+        const paramsSection =
+          requiredArgs.length > 0
+            ? `(${requiredArgs
+                .map((a, i) => `${a.name}: $${i + 1}`)
+                .join(", ")})`
+            : ``;
+
+        const snippet = `${suggest.label}${paramsSection}`;
+
+        const argsString =
+          directive.args.length > 0
+            ? `(${directive.args
+                .map((a) => `${a.name}: ${a.type}`)
+                .join(", ")})`
+            : "";
+
+        const content = [
+          [`\`\`\`graphql`, `@${suggest.label}${argsString}`, `\`\`\``].join(
+            "\n",
+          ),
+        ];
+
+        if (suggest.documentation) {
+          if (typeof suggest.documentation === "string") {
+            content.push(suggest.documentation);
+          } else {
+            // TODO (jason) `(string | MarkupContent) & (string | null)` is a weird type,
+            // leaving this for safety for now
+            content.push((suggest.documentation as any).value);
+          }
+        }
+
+        const doc = {
+          kind: MarkupKind.Markdown,
+          value: content.join("\n\n"),
+        };
+
+        return {
+          ...suggest,
+          documentation: doc,
+          insertText: snippet,
+          insertTextFormat: InsertTextFormat.Snippet,
+        };
+      });
+    }
+
+    return suggestions;
+  }
+
+  async provideHover(
+    uri: DocumentUri,
+    position: Position,
+    _token: CancellationToken,
+  ): Promise<Hover | null> {
+    const document = this.documentAt(uri, position);
+    if (!(document && document.ast)) return null;
+
+    if (!this.schema) return null;
+
+    const positionInDocument = positionFromPositionInContainingDocument(
+      document.source,
+      position,
+    );
+
+    const nodeAndTypeInfo = getASTNodeAndTypeInfoAtPosition(
+      document.source,
+      positionInDocument,
+      document.ast,
+      this.schema,
+    );
+
+    if (nodeAndTypeInfo) {
+      const [node, typeInfo] = nodeAndTypeInfo;
+
+      switch (node.kind) {
+        case Kind.FRAGMENT_SPREAD: {
+          const fragmentName = node.name.value;
+          const fragment = this.fragments[fragmentName];
+          if (fragment) {
+            return {
+              contents: {
+                language: "graphql",
+                value: `fragment ${fragmentName} on ${fragment.typeCondition.name.value}`,
+              },
+            };
+          }
+          break;
+        }
+
+        case Kind.FIELD: {
+          const parentType = typeInfo.getParentType();
+          const fieldDef = typeInfo.getFieldDef();
+
+          if (parentType && fieldDef) {
+            const argsString =
+              fieldDef.args.length > 0
+                ? `(${fieldDef.args
+                    .map((a) => `${a.name}: ${a.type}`)
+                    .join(", ")})`
+                : "";
+            const isClientType =
+              parentType.clientSchema &&
+              parentType.clientSchema.localFields &&
+              parentType.clientSchema.localFields.includes(fieldDef.name);
+
+            const isResolvedLocally =
+              node.directives &&
+              node.directives.some(
+                (directive) => directive.name.value === "client",
+              );
+
+            const content = [
+              [
+                `\`\`\`graphql`,
+                `${parentType}.${fieldDef.name}${argsString}: ${fieldDef.type}`,
+                `\`\`\``,
+              ].join("\n"),
+            ];
+
+            const info: string[] = [];
+            if (isClientType) {
+              info.push("`Client-Only Field`");
+            }
+            if (isResolvedLocally) {
+              info.push("`Resolved locally`");
+            }
+
+            if (info.length !== 0) {
+              content.push(info.join(" "));
+            }
+
+            if (fieldDef.description) {
+              content.push(fieldDef.description);
+            }
+
+            return {
+              contents: content.join("\n\n---\n\n"),
+              range: rangeForASTNode(highlightNodeForNode(node)),
+            };
+          }
+
+          break;
+        }
+
+        case Kind.NAMED_TYPE: {
+          const type = this.schema.getType(
+            node.name.value,
+          ) as GraphQLNamedType | void;
+          if (!type) break;
+
+          const content = [[`\`\`\`graphql`, `${type}`, `\`\`\``].join("\n")];
+
+          if (type.description) {
+            content.push(type.description);
+          }
+
+          return {
+            contents: content.join("\n\n---\n\n"),
+            range: rangeForASTNode(highlightNodeForNode(node)),
+          };
+        }
+
+        case Kind.ARGUMENT: {
+          const argumentNode = typeInfo.getArgument()!;
+          const content = [
+            [
+              `\`\`\`graphql`,
+              `${argumentNode.name}: ${argumentNode.type}`,
+              `\`\`\``,
+            ].join("\n"),
+          ];
+          if (argumentNode.description) {
+            content.push(argumentNode.description);
+          }
+          return {
+            contents: content.join("\n\n---\n\n"),
+            range: rangeForASTNode(highlightNodeForNode(node)),
+          };
+        }
+
+        case Kind.DIRECTIVE: {
+          const directiveNode = typeInfo.getDirective();
+          if (!directiveNode) break;
+          const argsString =
+            directiveNode.args.length > 0
+              ? `(${directiveNode.args
+                  .map((a) => `${a.name}: ${a.type}`)
+                  .join(", ")})`
+              : "";
+          const content = [
+            [
+              `\`\`\`graphql`,
+              `@${directiveNode.name}${argsString}`,
+              `\`\`\``,
+            ].join("\n"),
+          ];
+          if (directiveNode.description) {
+            content.push(directiveNode.description);
+          }
+          return {
+            contents: content.join("\n\n---\n\n"),
+            range: rangeForASTNode(highlightNodeForNode(node)),
+          };
+        }
+      }
+    }
+    return null;
+  }
+
+  async provideDefinition(
+    uri: DocumentUri,
+    position: Position,
+    _token: CancellationToken,
+  ): Promise<Definition | null> {
+    const document = this.documentAt(uri, position);
+    if (!(document && document.ast)) return null;
+
+    if (!this.schema) return null;
+
+    const positionInDocument = positionFromPositionInContainingDocument(
+      document.source,
+      position,
+    );
+
+    const nodeAndTypeInfo = getASTNodeAndTypeInfoAtPosition(
+      document.source,
+      positionInDocument,
+      document.ast,
+      this.schema,
+    );
+
+    if (nodeAndTypeInfo) {
+      const [node, typeInfo] = nodeAndTypeInfo;
+
+      switch (node.kind) {
+        case Kind.FRAGMENT_SPREAD: {
+          const fragmentName = node.name.value;
+          const fragment = this.fragments[fragmentName];
+          if (fragment && fragment.loc) {
+            return locationForASTNode(fragment);
+          }
+          break;
+        }
+        case Kind.FIELD: {
+          const fieldDef = typeInfo.getFieldDef();
+
+          if (!(fieldDef && fieldDef.astNode && fieldDef.astNode.loc)) break;
+
+          return locationForASTNode(fieldDef.astNode);
+        }
+        case Kind.NAMED_TYPE: {
+          const type = typeFromAST(this.schema, node);
+
+          if (!(type && type.astNode && type.astNode.loc)) break;
+
+          return locationForASTNode(type.astNode);
+        }
+        case Kind.DIRECTIVE: {
+          const directive = this.schema.getDirective(node.name.value);
+
+          if (!(directive && directive.astNode && directive.astNode.loc)) break;
+
+          return locationForASTNode(directive.astNode);
+        }
+      }
+    }
+    return null;
+  }
+
+  async provideReferences(
+    uri: DocumentUri,
+    position: Position,
+    _context: ReferenceContext,
+    _token: CancellationToken,
+  ): Promise<Location[] | null> {
+    const document = this.documentAt(uri, position);
+    if (!(document && document.ast)) return null;
+
+    if (!this.schema) return null;
+
+    const positionInDocument = positionFromPositionInContainingDocument(
+      document.source,
+      position,
+    );
+
+    const nodeAndTypeInfo = getASTNodeAndTypeInfoAtPosition(
+      document.source,
+      positionInDocument,
+      document.ast,
+      this.schema,
+    );
+
+    if (nodeAndTypeInfo) {
+      const [node, typeInfo] = nodeAndTypeInfo;
+
+      switch (node.kind) {
+        case Kind.FRAGMENT_DEFINITION: {
+          const fragmentName = node.name.value;
+          return this.fragmentSpreadsForFragment(fragmentName)
+            .map((fragmentSpread) => locationForASTNode(fragmentSpread))
+            .filter(isNotNullOrUndefined);
+        }
+        // TODO(jbaxleyiii): manage no parent type references (unions + scalars)
+        // TODO(jbaxleyiii): support more than fields
+        case Kind.FIELD_DEFINITION: {
+          // case Kind.ENUM_VALUE_DEFINITION:
+          // case Kind.INPUT_OBJECT_TYPE_DEFINITION:
+          // case Kind.INPUT_OBJECT_TYPE_EXTENSION: {
+          const offset = positionToOffset(document.source, positionInDocument);
+          // withWithTypeInfo doesn't suppport SDL so we instead
+          // write our own visitor methods here to collect the fields that we
+          // care about
+          let parent: ASTNode | null = null;
+          visit(document.ast, {
+            enter(node: ASTNode) {
+              // the parent types we care about
+              if (
+                node.loc &&
+                node.loc.start <= offset &&
+                offset <= node.loc.end &&
+                (node.kind === Kind.OBJECT_TYPE_DEFINITION ||
+                  node.kind === Kind.OBJECT_TYPE_EXTENSION ||
+                  node.kind === Kind.INTERFACE_TYPE_DEFINITION ||
+                  node.kind === Kind.INTERFACE_TYPE_EXTENSION ||
+                  node.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION ||
+                  node.kind === Kind.INPUT_OBJECT_TYPE_EXTENSION ||
+                  node.kind === Kind.ENUM_TYPE_DEFINITION ||
+                  node.kind === Kind.ENUM_TYPE_EXTENSION)
+              ) {
+                parent = node;
+              }
+              return;
+            },
+          });
+          return this.getOperationFieldsFromFieldDefinition(
+            node.name.value,
+            parent,
+          )
+            .map((fieldNode) => locationForASTNode(fieldNode))
+            .filter(isNotNullOrUndefined);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  async provideDocumentSymbol(
+    uri: DocumentUri,
+    _token: CancellationToken,
+  ): Promise<DocumentSymbol[]> {
+    const definitions = this.definitionsAt(uri);
+
+    const symbols: DocumentSymbol[] = [];
+
+    for (const definition of definitions) {
+      if (isExecutableDefinitionNode(definition)) {
+        if (!definition.name) continue;
+        const location = locationForASTNode(definition);
+        if (!location) continue;
+        symbols.push({
+          name: definition.name.value,
+          kind: SymbolKind.Function,
+          range: rangeForASTNode(definition),
+          selectionRange: rangeForASTNode(highlightNodeForNode(definition)),
+        });
+      } else if (
+        isTypeSystemDefinitionNode(definition) ||
+        isTypeSystemExtensionNode(definition)
+      ) {
+        if (
+          definition.kind === Kind.SCHEMA_DEFINITION ||
+          definition.kind === Kind.SCHEMA_EXTENSION
+        ) {
+          continue;
+        }
+        symbols.push({
+          name: definition.name.value,
+          kind: SymbolKind.Class,
+          range: rangeForASTNode(definition),
+          selectionRange: rangeForASTNode(highlightNodeForNode(definition)),
+          children:
+            definition.kind === Kind.OBJECT_TYPE_DEFINITION ||
+            definition.kind === Kind.OBJECT_TYPE_EXTENSION
+              ? (definition.fields || []).map(symbolForFieldDefinition)
+              : undefined,
+        });
+      }
+    }
+
+    return symbols;
+  }
+
+  async provideSymbol(
+    _query: string,
+    _token: CancellationToken,
+  ): Promise<SymbolInformation[]> {
+    const symbols: SymbolInformation[] = [];
+
+    for (const definition of this.definitions) {
+      if (isExecutableDefinitionNode(definition)) {
+        if (!definition.name) continue;
+        const location = locationForASTNode(definition);
+        if (!location) continue;
+        symbols.push({
+          name: definition.name.value,
+          kind: SymbolKind.Function,
+          location,
+        });
+      }
+    }
+    return symbols;
+  }
+
+  async provideCodeLenses(
+    uri: DocumentUri,
+    _token: CancellationToken,
+  ): Promise<CodeLens[]> {
+    // Wait for the project to be fully initialized, so we always provide code lenses for open files, even
+    // if we receive the request before the project is ready.
+    await this.whenReady;
+
+    const documents = this.documentsAt(uri);
+    if (!documents) return [];
+
+    let codeLenses: CodeLens[] = [];
+
+    for (const document of documents) {
+      if (!document.ast) continue;
+
+      for (const definition of document.ast.definitions) {
+        if (definition.kind === Kind.OPERATION_DEFINITION) {
+          /*
+          if (set.endpoint) {
+            const fragmentSpreads: Set<
+              graphql.FragmentDefinitionNode
+            > = new Set();
+            const searchForReferencedFragments = (node: graphql.ASTNode) => {
+              visit(node, {
+                FragmentSpread(node: FragmentSpreadNode) {
+                  const fragDefn = project.fragments[node.name.value];
+                  if (!fragDefn) return;
+
+                  if (!fragmentSpreads.has(fragDefn)) {
+                    fragmentSpreads.add(fragDefn);
+                    searchForReferencedFragments(fragDefn);
+                  }
+                }
+              });
+            };
+
+            searchForReferencedFragments(definition);
+
+            codeLenses.push({
+              range: rangeForASTNode(definition),
+              command: Command.create(
+                `Run ${definition.operation}`,
+                "apollographql.runQuery",
+                graphql.parse(
+                  [definition, ...fragmentSpreads]
+                    .map(n => graphql.print(n))
+                    .join("\n")
+                ),
+                definition.operation === "subscription"
+                  ? set.endpoint.subscriptions
+                  : set.endpoint.url,
+                set.endpoint.headers,
+                graphql.printSchema(set.schema!)
+              )
+            });
+          }
+          */
+        } else if (definition.kind === Kind.FRAGMENT_DEFINITION) {
+          // remove project references for fragment now
+          // const fragmentName = definition.name.value;
+          // const locations = project
+          //   .fragmentSpreadsForFragment(fragmentName)
+          //   .map(fragmentSpread => locationForASTNode(fragmentSpread))
+          //   .filter(isNotNullOrUndefined);
+          // const command = Command.create(
+          //   `${locations.length} references`,
+          //   "editor.action.showReferences",
+          //   uri,
+          //   rangeForASTNode(definition).start,
+          //   locations
+          // );
+          // codeLenses.push({
+          //   range: rangeForASTNode(definition),
+          //   command
+          // });
+        }
+      }
+    }
+    return codeLenses;
+  }
+
+  async provideCodeAction(
+    uri: DocumentUri,
+    range: Range,
+    _token: CancellationToken,
+  ): Promise<CodeAction[]> {
+    function isPositionLessThanOrEqual(a: Position, b: Position) {
+      return a.line !== b.line ? a.line < b.line : a.character <= b.character;
+    }
+
+    if (!this.diagnosticSet) return [];
+
+    await this.whenReady;
+
+    const documents = this.documentsAt(uri);
+    if (!documents) return [];
+
+    const errors: Set<GraphQLError> = new Set();
+
+    for (const [diagnosticUri, diagnostics] of this.diagnosticSet.entries()) {
+      if (diagnosticUri !== uri) continue;
+
+      for (const diagnostic of diagnostics) {
+        if (
+          GraphQLDiagnostic.is(diagnostic) &&
+          isPositionLessThanOrEqual(range.start, diagnostic.range.end) &&
+          isPositionLessThanOrEqual(diagnostic.range.start, range.end)
+        ) {
+          errors.add(diagnostic.error);
+        }
+      }
+    }
+
+    const result: CodeAction[] = [];
+
+    for (const error of errors) {
+      const { extensions } = error;
+      if (!extensions || !extensions.codeAction) continue;
+
+      const { message, edits }: CodeActionInfo = extensions.codeAction as any;
+
+      const codeAction = CodeAction.create(
+        message,
+        { changes: { [uri]: edits } },
+        CodeActionKind.QuickFix,
+      );
+
+      result.push(codeAction);
+    }
+
+    return result;
   }
 }
 

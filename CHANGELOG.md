@@ -1,5 +1,83 @@
 # CHANGELOG
 
+## 2.0.0
+
+### Major Changes
+
+- [#163](https://github.com/apollographql/vscode-graphql/pull/163) [`70f8895a`](https://github.com/apollographql/vscode-graphql/commit/70f8895a5f82fd6056cd47b95a0b93847bc767c6) Thanks [@phryneas](https://github.com/phryneas)! - Remove Service projects
+  "Service"-type projects had almost no functionality in the Extension, so they were removed
+
+- [#169](https://github.com/apollographql/vscode-graphql/pull/169) [`ff4f0de4`](https://github.com/apollographql/vscode-graphql/commit/ff4f0de4da4d80e8bd9ea9779a8c34678b47de0d) Thanks [@phryneas](https://github.com/phryneas)! - Bundle extension instead of just building it.
+
+- [#163](https://github.com/apollographql/vscode-graphql/pull/163) [`70f8895a`](https://github.com/apollographql/vscode-graphql/commit/70f8895a5f82fd6056cd47b95a0b93847bc767c6) Thanks [@phryneas](https://github.com/phryneas)! - Remove support for deprecated configuration environment variable `ENGINE_API_KEY`
+
+### Minor Changes
+
+- [#153](https://github.com/apollographql/vscode-graphql/pull/153) [`a37cfaa6`](https://github.com/apollographql/vscode-graphql/commit/a37cfaa6bf20a8aa6ffd937e4a113ef808baf980) Thanks [@phryneas](https://github.com/phryneas)! - Add `@nonreactive` and `@defer` directives to Apollo Client schema
+
+- [#149](https://github.com/apollographql/vscode-graphql/pull/149) [`a8fe79f6`](https://github.com/apollographql/vscode-graphql/commit/a8fe79f665f02f16e8df8d90e5134c7bc944a72e) Thanks [@phryneas](https://github.com/phryneas)! - Add support for `apollo.config.mjs`.
+
+- [#148](https://github.com/apollographql/vscode-graphql/pull/148) [`39430fdf`](https://github.com/apollographql/vscode-graphql/commit/39430fdfd46557eff7615b3fa8e9a90ff3d6071f) Thanks [@phryneas](https://github.com/phryneas)! - Modernization:
+
+  - move from `apollo-link-*` packages to `@apollo/client` dependency
+  - move from `@apollo/federation` to `@apollo/subgraph`
+  - replace `apollo-graphql` usage with `@graphql-tools/schema`
+  - drop `core-js` dependency
+  - update internally-used `@graphql-codegen`
+  - update `graphql` to v16
+  - replace `graphql-language-service-*` packages with `graphql-language-service` package
+  - remove `apollo-server-errors` dependency
+
+- [#164](https://github.com/apollographql/vscode-graphql/pull/164) [`54316f24`](https://github.com/apollographql/vscode-graphql/commit/54316f24dc598734da35d663c5a754060d40ee1c) Thanks [@phryneas](https://github.com/phryneas)! - Fix configuration error display
+
+- [`a6e6b7c1`](https://github.com/apollographql/vscode-graphql/commit/a6e6b7c1f02bbf79291cdd0d3c79224276e2eca2) Thanks [@phryneas](https://github.com/phryneas)! - Try schema path resolution relative to configuration path.
+
+- [#149](https://github.com/apollographql/vscode-graphql/pull/149) [`a8fe79f6`](https://github.com/apollographql/vscode-graphql/commit/a8fe79f665f02f16e8df8d90e5134c7bc944a72e) Thanks [@phryneas](https://github.com/phryneas)! - Modernization:
+
+  - update `cosmiconfig`
+  - drop now-obsolete `@endemolshinegroup/cosmiconfig-typescript-loader`
+
+- [#163](https://github.com/apollographql/vscode-graphql/pull/163) [`70f8895a`](https://github.com/apollographql/vscode-graphql/commit/70f8895a5f82fd6056cd47b95a0b93847bc767c6) Thanks [@phryneas](https://github.com/phryneas)! - Configuration parsing has been reworked based on `zod`.
+
+- [#153](https://github.com/apollographql/vscode-graphql/pull/153) [`a37cfaa6`](https://github.com/apollographql/vscode-graphql/commit/a37cfaa6bf20a8aa6ffd937e4a113ef808baf980) Thanks [@phryneas](https://github.com/phryneas)! - Remove unused `clientOnlyDirectives`, `clientSchemaDirectives` and `addTypename` client project config options.
+
+- [#146](https://github.com/apollographql/vscode-graphql/pull/146) [`0721afe9`](https://github.com/apollographql/vscode-graphql/commit/0721afe9108a7b8b540fd18e967b9b138aee58f5) Thanks [@phryneas](https://github.com/phryneas)! - Modernization:
+
+  - set minimum VSCode version to 1.90.0
+  - update build target to ES2020
+  - drop `node-fetch` and similar polyfills
+  - update `vscode-languageclient/-server` modules
+  - migrate from the deprecated `vscode` module to `@types/vscode`
+  - update `typescript` developement dependency to 5.5
+
+- [#163](https://github.com/apollographql/vscode-graphql/pull/163) [`70f8895a`](https://github.com/apollographql/vscode-graphql/commit/70f8895a5f82fd6056cd47b95a0b93847bc767c6) Thanks [@phryneas](https://github.com/phryneas)! - Remove support for unused configuration options
+  The configuration options `client.name`, `client.referenceId`, `client.version`, `client.statsWindow`, `client.clientOnlyDirectives`, and `client.clientSchemaDirectives` had no effect in the extension, so they have been removed.
+
+### Patch Changes
+
+- [#150](https://github.com/apollographql/vscode-graphql/pull/150) [`eeed0b8e`](https://github.com/apollographql/vscode-graphql/commit/eeed0b8e2bbb109c5796b3cda5516c5a6817059a) Thanks [@phryneas](https://github.com/phryneas)! - Modernization
+
+  - update `glob`
+  - add E2E tests
+
+- [#149](https://github.com/apollographql/vscode-graphql/pull/149) [`a8fe79f6`](https://github.com/apollographql/vscode-graphql/commit/a8fe79f665f02f16e8df8d90e5134c7bc944a72e) Thanks [@phryneas](https://github.com/phryneas)! - Fixed a bug where changes in `apollo.config.ts` or `apollo.config.cjs` would require a manual extension reload.
+
+- [#160](https://github.com/apollographql/vscode-graphql/pull/160) [`5312c6e8`](https://github.com/apollographql/vscode-graphql/commit/5312c6e8cd1cddb0ad762843c30e62caf5169f1d) Thanks [@phryneas](https://github.com/phryneas)! - Replace `graphql-datasource` usage with `@apollo/client`
+
+- [#161](https://github.com/apollographql/vscode-graphql/pull/161) [`7fd57310`](https://github.com/apollographql/vscode-graphql/commit/7fd57310e5483584068550b762d91491379b90a5) Thanks [@phryneas](https://github.com/phryneas)! - Only show "Run in Studio" gutter action for local graphs if an endpoint is configured.
+
+- [#159](https://github.com/apollographql/vscode-graphql/pull/159) [`952ef37d`](https://github.com/apollographql/vscode-graphql/commit/952ef37df0cf035a1af46918ef1f38868a7aa282) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug where unrelated project configurations could be merged into each other.
+
+- [#161](https://github.com/apollographql/vscode-graphql/pull/161) [`7fd57310`](https://github.com/apollographql/vscode-graphql/commit/7fd57310e5483584068550b762d91491379b90a5) Thanks [@phryneas](https://github.com/phryneas)! - Modernization
+
+  - update `minimatch` and `lz-string`
+  - drop `await-to-js`, `resolve-from`, `sha.js`
+  - drop `query-string`
+
+- [#161](https://github.com/apollographql/vscode-graphql/pull/161) [`7fd57310`](https://github.com/apollographql/vscode-graphql/commit/7fd57310e5483584068550b762d91491379b90a5) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug where the "Run in Studio" button would link to a Studio Graph instead of Explorer for local projects.
+
+- [#160](https://github.com/apollographql/vscode-graphql/pull/160) [`5312c6e8`](https://github.com/apollographql/vscode-graphql/commit/5312c6e8cd1cddb0ad762843c30e62caf5169f1d) Thanks [@phryneas](https://github.com/phryneas)! - Prevent accidental creation of multiple output channels
+
 ## 1.20.0
 
 ### Minor Changes

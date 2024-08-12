@@ -5,7 +5,22 @@
       "label": "npm: watch",
       "type": "npm",
       "script": "watch",
-      "problemMatcher": "$tsc-watch",
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": [
+          {
+            "regexp": "never match this please",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^\\s*\\[watch\\] build started.*",
+          "endsPattern": "^\\s*\\[watch\\] build finished.*"
+        }
+      },
       "isBackground": true,
       "presentation": {
         "reveal": "never"

@@ -2,6 +2,7 @@ import { FileSchemaProvider } from "../file";
 import * as path from "path";
 import * as fs from "fs";
 import { Debug } from "../../../utilities";
+import { URI } from "vscode-uri";
 
 const makeNestedDir = (dir: string) => {
   if (fs.existsSync(dir)) return;
@@ -77,9 +78,12 @@ describe("FileSchemaProvider", () => {
         `,
       });
 
-      const provider = new FileSchemaProvider({
-        path: dir + "/schema.graphql",
-      });
+      const provider = new FileSchemaProvider(
+        {
+          path: "./schema.graphql",
+        },
+        URI.from({ scheme: "file", path: dirPath }),
+      );
       const sdl = await provider.resolveFederatedServiceSDL();
       expect(sdl).toMatchInlineSnapshot;
     });
@@ -102,9 +106,12 @@ describe("FileSchemaProvider", () => {
           }`,
       });
 
-      const provider = new FileSchemaProvider({
-        paths: [dir + "/schema.graphql", dir + "/schema2.graphql"],
-      });
+      const provider = new FileSchemaProvider(
+        {
+          paths: ["schema.graphql", "schema2.graphql"],
+        },
+        URI.from({ scheme: "file", path: dirPath }),
+      );
       const sdl = await provider.resolveFederatedServiceSDL();
       expect(sdl).toMatchInlineSnapshot(`
 "directive @key(fields: _FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
@@ -173,7 +180,10 @@ union _Entity = Product"
       const errorSpy = jest.spyOn(Debug, "error");
       errorSpy.mockImplementation(() => {});
 
-      const provider = new FileSchemaProvider({ path: dir + "/schema.js" });
+      const provider = new FileSchemaProvider(
+        { path: "./schema.js" },
+        URI.from({ scheme: "file", path: dirPath }),
+      );
       const sdl = await provider.resolveFederatedServiceSDL();
       expect(errorSpy).toBeCalledTimes(2);
     });

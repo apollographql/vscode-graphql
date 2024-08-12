@@ -48,7 +48,7 @@ The `service` name is the name of the graph you've created in [GraphOS Studio](h
 
 See [additional configuration options](#additional-apollo-config-options).
 
-<h3 id="api-key">Setting up the `.env` file</h3>
+<h3 id="api-key">Setting up the <code>.env</code> file</h3>
 
 To authenticate with GraphOS Studio to pull down your schema, create a `.env` file in the same directory as the `apollo.config.js` file. This should be an untracked file (that is, don't commit it to Git).
 

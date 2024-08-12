@@ -19,9 +19,17 @@ import {
   LanguageServerCommands as Commands,
   LanguageServerRequests as Requests,
 } from "../messages";
+import { isValidationError } from "zod-validation-error";
 
 const connection = createConnection(ProposedFeatures.all);
+
 Debug.SetConnection(connection);
+const { sendNotification: originalSendNotification } = connection;
+connection.sendNotification = async (...args: [any, ...any[]]) => {
+  await whenConnectionInitialized;
+  connection.sendNotification = originalSendNotification;
+  connection.sendNotification(...args);
+};
 
 let hasWorkspaceFolderCapability = false;
 
@@ -61,14 +69,15 @@ workspace.onSchemaTags((params) => {
 });
 
 workspace.onConfigFilesFound(async (params) => {
-  await whenConnectionInitialized;
-
   connection.sendNotification(
     Notifications.ConfigFilesFound,
-    params instanceof Error
-      ? // Can't stringify Errors, just results in "{}"
-        JSON.stringify({ message: params.message, stack: params.stack })
-      : JSON.stringify(params),
+    JSON.stringify(params, (_key, value) =>
+      !value
+        ? value
+        : value instanceof Error || isValidationError(value)
+        ? { message: value.message, stack: value.stack }
+        : value,
+    ),
   );
 });
 

@@ -24,7 +24,7 @@ export class GraphQLWorkspace {
   private _onDiagnostics?: NotificationHandler<PublishDiagnosticsParams>;
   private _onDecorations?: NotificationHandler<EngineDecoration[]>;
   private _onSchemaTags?: NotificationHandler<[ServiceID, SchemaTag[]]>;
-  private _onConfigFilesFound?: NotificationHandler<ApolloConfig[]>;
+  private _onConfigFilesFound?: NotificationHandler<(ApolloConfig | Error)[]>;
   private _projectForFileCache: Map<string, GraphQLProject> = new Map();
 
   private projectsByFolderUri: Map<string, GraphQLProject[]> = new Map();
@@ -46,7 +46,7 @@ export class GraphQLWorkspace {
     this._onSchemaTags = handler;
   }
 
-  onConfigFilesFound(handler: NotificationHandler<ApolloConfig[]>) {
+  onConfigFilesFound(handler: NotificationHandler<(ApolloConfig | Error)[]>) {
     this._onConfigFilesFound = handler;
   }
 
@@ -120,7 +120,7 @@ export class GraphQLWorkspace {
     const apolloConfigFolders = new Set<string>(apolloConfigFiles.map(dirname));
 
     // go from possible folders to known array of configs
-    let foundConfigs: ApolloConfig[] = [];
+    let foundConfigs: (ApolloConfig | Error)[] = [];
 
     const projectConfigs = Array.from(apolloConfigFolders).map((configFolder) =>
       loadConfig({ configPath: configFolder })
@@ -142,7 +142,7 @@ export class GraphQLWorkspace {
             );
           }
         })
-        .catch((error) => Debug.error(error)),
+        .catch((error) => foundConfigs.push(error)),
     );
 
     await Promise.all(projectConfigs);
@@ -181,8 +181,8 @@ export class GraphQLWorkspace {
 
     const project = this.projectForFile(configUri);
 
-    if (!config && this._onConfigFilesFound) {
-      this._onConfigFilesFound(error);
+    if (this._onConfigFilesFound) {
+      this._onConfigFilesFound([config || error]);
     }
     // If project exists, update the config
     if (project && config) {

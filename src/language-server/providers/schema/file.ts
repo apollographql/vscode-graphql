@@ -8,8 +8,8 @@ import {
   buildASTSchema,
 } from "graphql";
 import { mergeTypeDefs } from "@graphql-tools/merge";
-import { readFileSync } from "fs";
-import { extname, resolve } from "path";
+import { existsSync, readFileSync } from "fs";
+import { extname, resolve, isAbsolute } from "path";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
 import { NotificationHandler } from "vscode-languageserver/node";
 import { Debug } from "../../utilities";
@@ -26,7 +26,10 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
   private schema?: GraphQLSchema;
   private federatedServiceSDL?: string;
 
-  constructor(private config: FileSchemaProviderConfig) {}
+  constructor(
+    private config: FileSchemaProviderConfig,
+    private configDir: URI | undefined,
+  ) {}
 
   async resolveSchema() {
     if (this.schema) return this.schema;
@@ -57,9 +60,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
   loadFileAndGetDocument(path: string) {
     let result;
     try {
-      result = readFileSync(path, {
-        encoding: "utf-8",
-      });
+      result = this.readFileSync(path);
     } catch (err: any) {
       throw new Error(`Unable to read file ${path}. ${err.message}`);
     }
@@ -143,9 +144,7 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
   loadFileAndGetSDL(path: string) {
     let result;
     try {
-      result = readFileSync(path, {
-        encoding: "utf-8",
-      });
+      result = this.readFileSync(path);
     } catch (err: any) {
       return Debug.error(`Unable to read file ${path}. ${err.message}`);
     }
@@ -160,5 +159,18 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
         "When using localSchemaFile to check or push a federated service, you can only use .graphql, .gql, and .graphqls files",
       );
     }
+  }
+
+  private readFileSync(path: string) {
+    let finalPath = path;
+    if (!isAbsolute(finalPath) && this.configDir) {
+      const resolvedPath = resolve(this.configDir?.fsPath, path);
+      if (existsSync(resolvedPath)) {
+        finalPath = resolvedPath;
+      }
+    }
+    return readFileSync(finalPath, {
+      encoding: "utf-8",
+    });
   }
 }

@@ -13,7 +13,7 @@
 
 ### Minor Changes
 
-- [#153](https://github.com/apollographql/vscode-graphql/pull/153) [`a37cfaa6`](https://github.com/apollographql/vscode-graphql/commit/a37cfaa6bf20a8aa6ffd937e4a113ef808baf980) Thanks [@phryneas](https://github.com/phryneas)! - Add @nonreactive and @defer directives to Apollo Client schema
+- [#153](https://github.com/apollographql/vscode-graphql/pull/153) [`a37cfaa6`](https://github.com/apollographql/vscode-graphql/commit/a37cfaa6bf20a8aa6ffd937e4a113ef808baf980) Thanks [@phryneas](https://github.com/phryneas)! - Add `@nonreactive` and `@defer` directives to Apollo Client schema
 
 - [#149](https://github.com/apollographql/vscode-graphql/pull/149) [`a8fe79f6`](https://github.com/apollographql/vscode-graphql/commit/a8fe79f665f02f16e8df8d90e5134c7bc944a72e) Thanks [@phryneas](https://github.com/phryneas)! - Add support for `apollo.config.mjs`.
 

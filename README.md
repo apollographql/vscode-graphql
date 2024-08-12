@@ -1,7 +1,7 @@
 <div align="center">
 
 <p>
-	<a href="https://www.apollographql.com/"><img src="https://raw.githubusercontent.com/apollographql/apollo-client-devtools/main/assets/apollo-wordmark.svg" height="100" alt=""></a>
+	<a href="https://www.apollographql.com/"><img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/apollo-wordmark.png" height="100" alt=""></a>
 </p>
 <h1>Apollo GraphQL for VS Code</h1>
 
@@ -15,25 +15,26 @@ GraphQL has the potential to create incredible developer experiences, thanks to 
 
 The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience for developing apps with Apollo.
 
-- Add [syntax highlighting](#syntax) for GraphQL files and gql templates inside JavaScript files
-- Get instant feedback and [intelligent autocomplete](#autocomplete) for fields, arguments, types, and variables as you write queries
-- Seamlessly manage your client-side schema alongside your remote one
-- [See performance information](#performance-insights) inline with your query definitions
+- Add [syntax highlighting](#syntax-highlighting) for GraphQL files and gql templates inside JavaScript files
+- Get instant feedback and [intelligent autocomplete](#intelligent-autocomplete) for fields, arguments, types, and variables as you write queries
+- Manage client side schema alongside remote schema
+- See [performance information](#performance-insights) inline with your query definitions
 - Validate field and argument usage in operations
-- [Navigate projects](#navigating-projects) easier with jump-to and peek-at definitions and more
+- [Navigate projects more easily](#navigating-projects) with jump-to and peek-at definitions
 - Manage [client-only](#client-only-schemas) schemas
-- [Switch schema tags](#commands) to work on upcoming features
+- [Switch graph variants](#graph-variant-switching) to work with schemas running on different environments
 
 <h2 id="getting-started">Getting started</h2>
 
-Some features of this extension (like syntax highlighting) will work without any configuration, but to get all of the benefits of the VS Code experience, it's best to link the schema that is being developed against **before** installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/) to the Apollo schema registry. Once that is done, two steps are needed:
+To get all the benefits of the VS Code experience, it's best to link the schema that is being developed against before installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/publishing-schemas/) to the Apollo schema registry. After that's done:
 
-1. Create an `apollo.config.js` at the root of the project
-2. Copy an API key from the Apollo Studio dashboard of the published graph
+1. Create an `apollo.config.js` file at the root of the project.
+   Alternatively, you can create a `cjs`, `mjs`, or `ts` file with the same configuration.
+2. Obtain a [Personal API key](https://www.apollographql.com/docs/graphos/api-keys) from GraphOS Studio.
 
 <h3 id="apollo-config">Setting up an Apollo config</h3>
 
-In order for the VS Code plugin to know how to find the schema, it needs to be linked to either a published schema or a local one. To link a project to a published schema, edit the `apollo.config.js` file to look like this:
+For the VS Code plugin to know how to find the schema, it needs to be linked to either a published schema or a local one. To link a project to a published schema, edit the `apollo.config.js` file to look like this:
 
 ```js
 module.exports = {
@@ -43,24 +44,25 @@ module.exports = {
 };
 ```
 
-The service name is the id of the graph created in Apollo and can be found in the graphs dashboard of [Apollo Studio](https://studio.apollographql.com)
+The `service` name is the name of the graph you've created in [GraphOS Studio](https://studio.apollographql.com).
 
-> Important note: If the display name of the graph in Studio is changed, this value should still remain the same graph **ID**. This can be found in the url when browsing the graph in Studio.
+See [additional configuration options](#additional-apollo-config-options).
 
-<h3 id="api-key">Setting up an API key</h3>
-To authenticate with Apollo to pull down the schema, create a file next to the `apollo.config.js` called `.env`. This should be an untracked file (i.e. don't push it to GitHub). Go to the settings page of the published service and create a new API key.
+<h3 id="api-key">Setting up the <code>.env</code> file</h3>
 
-> It is best practice to create a new API key for each member of the team and name the key so it's easy to find and revoke if needed
+To authenticate with GraphOS Studio to pull down your schema, create a `.env` file in the same directory as the `apollo.config.js` file. This should be an untracked file (that is, don't commit it to Git).
 
-> If you're working on a project that traces the `.env` file, you can optionally create an untrace `.env.local` file to store your API key
+Then go to your [User Settings page](https://studio.apollographql.com/user-settings/api-keys?referrer=docs-content) in GraphOS Studio to create a new Personal API key.
 
-After the key is found, add the following line to the `.env` or `.env.local` file:
+> It is best practice to create a new API key for each member of the team and name the key so its easy to find and revoke if needed. This will be easier to manage in the future.
 
-```bash
+After the key is found, add the following line to the `.env` file:
+
+```bash showLineNumbers=false
 APOLLO_KEY=<enter copied key here>
 ```
 
-After this is done, VS Code should automatically update and start providing autocomplete, validation, and more!
+After this is done, VS Code can be reloaded and the Apollo integration will connect to GraphOS Studio to provide autocomplete, validation, and more.
 
 <h3 id="local-schemas">Local schemas</h3>
 
@@ -77,29 +79,46 @@ module.exports = {
 };
 ```
 
-> Linking to the local schema won't provide all features such as switching schema tags and performance metrics.
+Linking to the local schema won't provide all features, such as switching graph variants and performance metrics.
 
-More information about configuring an Apollo project can be found [here](https://www.apollographql.com/docs/references/apollo-config.html)
+<h3 id="local-schema-files">Local schema files</h3>
 
-<h3 id="client-only-schemas">Client-only schemas</h3>
-
-One of the best features of the VS Code extension is the automatic merging of remote schemas and local ones when using integrated state management with Apollo Client. This happens automatically whenever schema definitions are found within a client project. By default, the VS Code extension will look for all files under `./src` to find both the operations and schema definitions for building a complete schema for the application.
-
-Client-side schema definitions can be spread throughout the client app project and will be merged together to create one single schema. If the default behavior isn't ideal, this can be controlled through the `apollo.config.js` at the root of the project:
+You might not always have a running server to link to, so the extension also supports linking to a local schema file.
+This is useful for working on a schema in isolation or for testing out new features.
+To link to a local schema file, add the following to the `apollo.config.js` file:
 
 ```js
 module.exports = {
   client: {
-    service: "my-graphql-app"
+    service: {
+      // can be a string pointing to a single file or an array of strings
+      localSchemaFile: "./path/to/schema.graphql",
+    },
+  },
+};
+```
+
+<h3 id="client-only-schemas">Client-only schemas</h3>
+
+One of the best features of the VS Code extension is the automatic merging of remote schemas and local ones when using integrated state management with Apollo Client. This happens automatically whenever schema definitions are found within a client project. By default, the VS Code extension will look for all JavaScript, TypeScript and GraphQL files under `./src` to find both the operations and schema definitions for building a complete schema for the application.
+
+Client side schema definitions can be spread throughout the client app project and will be merged together to create one single schema. The default behavior can be controlled by adding specifications to the `apollo.config.js`:
+
+```js
+module.exports = {
+  client: {
+    service: "my-graphql-app",
+    // array of glob patterns
     includes: ["./src/**/*.js"],
-    excludes: ["**/__tests__/**"]
-  }
-}
+    // array of glob patterns
+    excludes: ["**/__tests__/**"],
+  },
+};
 ```
 
 <h3 id="get-the-extension">Get the extension</h3>
 
-Once you have a config set up and a schema published, **install the Apollo GraphQL extension** by using this [link](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) or by searching `Apollo` in the VS Code extension marketplace. After installation, try opening a file containing a GraphQL operation.
+Once you have a config set up and a schema published, [install the Apollo GraphQL extension](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo), then try opening a file containing a GraphQL operation.
 
 When a file open, clicking the status bar icon will open the output window and print stats about the project associated with that file. This is helpful when confirming the project is setup properly.
 
@@ -109,7 +128,7 @@ When a file open, clicking the status bar icon will open the output window and p
 
 Apollo for VS Code brings many helpful features for working on a GraphQL project.
 
-<h3 id="autocomplete">Intelligent autocomplete</h3>
+<h3 id="intelligent-autocomplete">Intelligent autocomplete</h3>
 
 Once configured, VS Code has full knowledge of the schema clients are running operations against, including client-only schemas (for things like local state mutations). Because of this, it have the ability to autocomplete fields and arguments as you type.
 
@@ -131,35 +150,56 @@ Because of GraphQL's strongly-typed schema, VS Code not only know about which fi
 
 GraphQL's flexibility can make it difficult to predict the cost of an operation. Without insight into how expensive an operation is, developers can accidentally write queries that place strain on their graph API's underlying backends. Thanks to the Apollo platform's integration with VS Code and our trace warehouse, teams can avoid these performance issues altogether by instantly seeing the cost of a query right in their editor.
 
-To turn on tracing for your GraphQL server, please visit our [guide](https://www.apollographql.com/docs/platform/setup-analytics.html).
+The VS Code extension will show inline performance diagnostics when connected to a service with reported metrics in GraphOS Studio. As operations are typed, any fields that take longer than 1 ms to respond will be annotated to the right of the field inline! This gives team members a picture of how long the operation will take as more and more fields are added to operations or fragments.
 
-The VS Code extension will show inline performance diagnostics when connected to a service with reported metrics in Apollo Studio. As operations are typed, any fields that take longer than 1ms to respond will be annotated to the right of the field inline! This gives team members a picture of how long the operation will take as more and more fields are added to operations or fragments.
+<img
+  src="https://raw.githubusercontent.com/apollographql/vscode-graphql/80a6ca4ae59173b8cef25020345e4ebe202eec41/images/marketplace/perf-annotation.png"
+  width="80%"
+  style="margin: 5%"
+  alt="Performance annotation next to a field"
+/>
 
-<img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/perf-annotation.png"  style="max-width:800px;" alt="Performance annotation next to a field">
+<h3 id="syntax-highlighting">Syntax highlighting</h3>
 
-<h3 id="syntax">Syntax highlighting</h3>
-
-Apollo's editor extension provides syntax highlighting for all things GraphQL, including schema definitions in `.graphql` files, complex queries in TypeScript, and even client-only schema extensions. Syntax highlighting for GraphQL works out-of-the-box for `.graphql`, `.gql`, `.js` and `.ts` file types!
+Apollo's editor extension provides syntax highlighting for all things GraphQL, including schema definitions in `.graphql` files, complex queries in TypeScript, and even client-only schema extensions. Syntax highlighting for GraphQL works out-of-the-box for `.graphql`, `.gql`, `.js` and `.ts` file types.
 
 <h3 id="navigating-projects">Navigating projects</h3>
 
-Navigating large codebases can be difficult, but the Apollo GraphQL extension makes this easier than ever. Right-clicking on any field in operations or schemas gives you the ability to jump to (or peek at) definitions, as well as find any other references to that field in your project. Searching a project for any occurrence of a certain field is now a thing of the past!
+Navigating large codebases can be difficult, but the Apollo GraphQL extension makes this easier. Right-clicking on any field in operations or schemas gives you the ability to jump to (or peek at) definitions, as well as find any other references to that field in your project.
 
 <img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/jump-to-def.gif"  alt="Using jump to definition on a fragment">
 
-<h3 id="commands">Schema tag switching</h3>
+<h3 id="graph-variant-switching">Schema tag switching</h3>
 
-The Apollo GraphQL platform supports publishing multiple versions (tags) of a schema. This is useful for developing on a future development schema and preparing your clients to conform to that schema. To choose another schema tag, open the Command Palette (`cmd + shift + p` on mac), search "Apollo" and choose the "Apollo: Select Schema Tag" option.
+Apollo supports publishing multiple versions ([variants](https://www.apollographql.com/docs/graphos/graphs/#variants)) of a schema. This is useful for developing on a future development schema and preparing your clients to conform to that schema. To switch between graph variants, open the Command Palette (`cmd + shift + p` on mac), search "Apollo" and choose the "Apollo: Select Schema Tag" option.
 
 <h2 id="troubleshooting">Troubleshooting</h2>
 
-The most common errors are configuration errors, like a missing `.env` file, missing `.env.local` file, or incorrect service information in the `apollo.config.js` file.
-There is more information about configuring an Apollo projects [here](https://www.apollographql.com/docs/references/apollo-config.html).
+The most common errors are configuration errors, like a missing `.env` file or incorrect service information in the `apollo.config.js` file. Please see [the Apollo config docs](https://www.apollographql.com/docs/devtools/apollo-config/) for more configuration guidance.
 
 Other errors may be caused from an old version of a published schema. To reload a schema, open the Command Palette (`cmd + shift + p` on mac), search "Apollo" and choose the "Apollo: Reload Schema" option.
 
-Sometimes errors will show up as a notification at the bottom of your editor. Other, less critical messages may be shown in the output pane of the editor. To open the output pane and get diagnostic information about the extension and the current service loaded (if working with a client project), just click the "Apollo GraphQL" icon in the status bar at the bottom.
+Sometimes errors will show up as a notification at the bottom of your editor. Other, less critical, messages may be shown in the output pane of the editor. To open the output pane and get diagnostic information about the extension and the current service loaded (if working with a client project), just click the "Apollo GraphQL" icon in the status bar at the bottom.
 
 <img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/stats.gif"  alt="Clicking the status bar icon to open the output pane">
 
-If problems persist or the error messages are unhelpful, an [issue](https://github.com/apollographql/apollo-tooling/issues) can be opened on the `apollo-tooling` repository.
+If problems persist or the error messages are unhelpful, open an [issue](https://github.com/apollographql/vscode-graphql/issues) in the `vscode-graphql` repository.
+
+<h2 id="additional-apollo-config-options">Additional Apollo config options</h2>
+
+You can add these configurations to your [Apollo config file](#setting-up-an-apollo-config).
+
+<h3 id="option-client-tagName">client.tagName</h3>
+
+_Optional_ - custom tagged template literal.
+
+When using GraphQL with JavaScript or TypeScript projects, it is common to use the `gql` tagged template literal to write out operations. Apollo tools look through your files for the `gql` tag to extract your queries, so if you use a different template literal, you can configure it like so:
+
+```js
+module.exports = {
+  client: {
+    tagName: "graphql", // highlight-line
+    service: ...
+  }
+};
+```

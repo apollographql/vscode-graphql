@@ -61,7 +61,7 @@ jobs:
       - run: sudo apt update &&  sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
       - run:
           name: Build
-          command: npm run build:clean
+          command: npm run build:production
       - run:
           command: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
       - run:

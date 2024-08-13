@@ -1,4 +1,4 @@
-import { GraphQLInternalProject, GraphQLProject } from "./base";
+import { GraphQLProject } from "./base";
 import {
   GraphQLSchema,
   GraphQLError,
@@ -108,6 +108,7 @@ import { isNotNullOrUndefined } from "../../tools";
 import type { CodeActionInfo } from "../errors/validation";
 import { GraphQLDiagnostic } from "../diagnostics";
 import { isInterfaceType } from "graphql";
+import { GraphQLInternalProject } from "./internal";
 
 type Maybe<T> = null | undefined | T;
 

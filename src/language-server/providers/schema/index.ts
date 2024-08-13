@@ -41,6 +41,7 @@ export function schemaProviderFromConfig(
             : {
                 path: config.client.service.localSchemaFile as string,
               },
+          config.configDirURI,
         );
       }
 

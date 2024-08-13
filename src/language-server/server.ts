@@ -49,7 +49,7 @@ const workspace = new GraphQLWorkspace(
         "146d29c0-912c-46d3-b686-920e52586be6",
       referenceID:
         process.env["APOLLO_CLIENT_REFERENCE_ID"] ||
-        require("../../../package.json").version,
+        require("../../package.json").version,
     },
   },
 );

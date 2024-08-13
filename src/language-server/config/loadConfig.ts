@@ -1,4 +1,4 @@
-import { cosmiconfig } from "cosmiconfig";
+import { cosmiconfig, defaultLoaders } from "cosmiconfig";
 import { resolve } from "path";
 import { readFileSync, existsSync, lstatSync } from "fs";
 import {
@@ -9,6 +9,7 @@ import {
 import { getServiceFromKey } from "./utils";
 import { URI } from "vscode-uri";
 import { Debug } from "../utilities";
+import { loadTs } from "./loadTsConfig";
 
 // config settings
 const MODULE_NAME = "apollo";
@@ -37,11 +38,16 @@ export type ConfigResult<T> = {
 } | null;
 
 // XXX load .env files automatically
+
 export async function loadConfig({
   configPath,
 }: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
     searchPlaces: defaultFileNames,
+    loaders: {
+      ...defaultLoaders,
+      [".ts"]: loadTs,
+    },
   });
 
   // search can fail if a file can't be parsed (ex: a nonsense js file) so we wrap in a try/catch

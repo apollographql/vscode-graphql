@@ -122,18 +122,27 @@ Object {
           }
         `,
         });
-
-        const config = await loadConfig({
-          configPath: dirPath,
-        });
-        expect(config?.rawConfig).toMatchInlineSnapshot(`
+        fs.mkdirSync(`${dir}/bin`);
+        fs.writeFileSync(`${dir}/bin/rover`, "", { mode: 0o755 });
+        let oldPath = process.env.PATH;
+        process.env.PATH = `${dir}/bin:${oldPath}`;
+        try {
+          const config = await loadConfig({
+            configPath: dirPath,
+          });
+          expect(config?.rawConfig).toMatchInlineSnapshot(`
 Object {
   "engine": Object {
     "endpoint": "https://graphql.api.apollographql.com/api/graphql",
   },
-  "rover": Object {},
+  "rover": Object {
+    "bin": "${dir}/bin/rover",
+  },
 }
 `);
+        } finally {
+          process.env.PATH = oldPath;
+        }
       }));
 
     it("[deprecated] loads config from package.json", async () => {

@@ -47,12 +47,7 @@ import {
   CancellationToken,
   Position,
   Location,
-  Range,
-  CompletionItem,
-  Hover,
-  Definition,
   CodeLens,
-  ReferenceContext,
   InsertTextFormat,
   DocumentSymbol,
   SymbolKind,
@@ -61,10 +56,6 @@ import {
   CodeActionKind,
   MarkupKind,
   CompletionItemKind,
-  HoverParams,
-  CompletionList,
-  CompletionParams,
-  ServerRequestHandler,
 } from "vscode-languageserver/node";
 import LZString from "lz-string";
 import { URL } from "node:url";
@@ -934,11 +925,10 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     return null;
   };
 
-  async provideDefinition(
-    uri: DocumentUri,
-    position: Position,
-    _token: CancellationToken,
-  ): Promise<Definition | null> {
+  onDefinition: GraphQLProject["onDefinition"] = async ({
+    position,
+    textDocument: { uri },
+  }) => {
     const document = this.documentAt(uri, position);
     if (!(document && document.ast)) return null;
 
@@ -992,14 +982,12 @@ export class GraphQLClientProject extends GraphQLInternalProject {
       }
     }
     return null;
-  }
+  };
 
-  async provideReferences(
-    uri: DocumentUri,
-    position: Position,
-    _context: ReferenceContext,
-    _token: CancellationToken,
-  ): Promise<Location[] | null> {
+  onReferences: GraphQLProject["onReferences"] = async ({
+    position,
+    textDocument: { uri },
+  }) => {
     const document = this.documentAt(uri, position);
     if (!(document && document.ast)) return null;
 
@@ -1070,12 +1058,11 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     }
 
     return null;
-  }
+  };
 
-  async provideDocumentSymbol(
-    uri: DocumentUri,
-    _token: CancellationToken,
-  ): Promise<DocumentSymbol[]> {
+  onDocumentSymbol: GraphQLProject["onDocumentSymbol"] = async ({
+    textDocument: { uri },
+  }) => {
     const definitions = this.definitionsAt(uri);
 
     const symbols: DocumentSymbol[] = [];
@@ -1116,7 +1103,7 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     }
 
     return symbols;
-  }
+  };
 
   async provideSymbol(
     _query: string,
@@ -1139,10 +1126,9 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     return symbols;
   }
 
-  async provideCodeLenses(
-    uri: DocumentUri,
-    _token: CancellationToken,
-  ): Promise<CodeLens[]> {
+  onCodeLens: GraphQLProject["onCodeLens"] = async ({
+    textDocument: { uri },
+  }) => {
     // Wait for the project to be fully initialized, so we always provide code lenses for open files, even
     // if we receive the request before the project is ready.
     await this.whenReady;
@@ -1219,13 +1205,12 @@ export class GraphQLClientProject extends GraphQLInternalProject {
       }
     }
     return codeLenses;
-  }
+  };
 
-  async provideCodeAction(
-    uri: DocumentUri,
-    range: Range,
-    _token: CancellationToken,
-  ): Promise<CodeAction[]> {
+  onCodeAction: GraphQLProject["onCodeAction"] = async ({
+    textDocument: { uri },
+    range,
+  }) => {
     function isPositionLessThanOrEqual(a: Position, b: Position) {
       return a.line !== b.line ? a.line < b.line : a.character <= b.character;
     }
@@ -1271,7 +1256,7 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     }
 
     return result;
-  }
+  };
 }
 
 function buildExplorerURL({

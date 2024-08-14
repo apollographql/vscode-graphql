@@ -5,18 +5,8 @@ import { GraphQLSchema } from "graphql";
 import {
   NotificationHandler,
   PublishDiagnosticsParams,
-  Position,
   CancellationToken,
-  CompletionItem,
-  Hover,
-  Definition,
-  ReferenceContext,
-  Location,
-  DocumentSymbol,
   SymbolInformation,
-  Range,
-  CodeAction,
-  CodeLens,
   Connection,
   ServerRequestHandler,
 } from "vscode-languageserver/node";
@@ -126,45 +116,20 @@ export abstract class GraphQLProject {
 
   abstract includesFile(uri: DocumentUri): boolean;
 
-  abstract fileDidChange(uri: DocumentUri): void;
-  abstract fileWasDeleted(uri: DocumentUri): void;
+  abstract onDidChangeWatchedFiles: ConnectionHandler["onDidChangeWatchedFiles"];
   abstract documentDidChange(document: TextDocument): void;
   abstract clearAllDiagnostics(): void;
 
   abstract onCompletion?: ConnectionHandler["onCompletion"];
   abstract onHover?: ConnectionHandler["onHover"];
-
-  abstract provideDefinition?(
-    uri: DocumentUri,
-    position: Position,
-    token: CancellationToken,
-  ): Promise<Definition | null>;
-
-  abstract provideReferences?(
-    uri: DocumentUri,
-    position: Position,
-    context: ReferenceContext,
-    token: CancellationToken,
-  ): Promise<Location[] | null>;
-
-  abstract provideDocumentSymbol?(
-    uri: DocumentUri,
-    token: CancellationToken,
-  ): Promise<DocumentSymbol[]>;
+  abstract onDefinition?: ConnectionHandler["onDefinition"];
+  abstract onReferences?: ConnectionHandler["onReferences"];
+  abstract onDocumentSymbol?: ConnectionHandler["onDocumentSymbol"];
+  abstract onCodeLens?: ConnectionHandler["onCodeLens"];
+  abstract onCodeAction?: ConnectionHandler["onCodeAction"];
 
   abstract provideSymbol?(
     query: string,
     token: CancellationToken,
   ): Promise<SymbolInformation[]>;
-
-  abstract provideCodeLenses?(
-    uri: DocumentUri,
-    token: CancellationToken,
-  ): Promise<CodeLens[]>;
-
-  abstract provideCodeAction?(
-    uri: DocumentUri,
-    range: Range,
-    token: CancellationToken,
-  ): Promise<CodeAction[]>;
 }

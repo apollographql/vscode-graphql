@@ -2,19 +2,8 @@ import { ProjectStats } from "src/messages";
 import { DocumentUri, GraphQLProject } from "./base";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
-  Position,
   CancellationToken,
-  CompletionItem,
-  Hover,
-  Definition,
-  ReferenceContext,
-  Location,
-  DocumentSymbol,
   SymbolInformation,
-  Range,
-  CodeAction,
-  CodeLens,
-  HoverRequest,
   InitializeRequest,
   StreamMessageReader,
   StreamMessageWriter,
@@ -22,11 +11,10 @@ import {
   ProtocolConnection,
   ClientCapabilities,
   ProtocolRequestType,
-  HoverParams,
   CompletionRequest,
-  PublishDiagnosticsNotification,
   DidChangeTextDocumentNotification,
   ProtocolNotificationType,
+  DidChangeWatchedFilesNotification,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "./base";
@@ -151,9 +139,17 @@ export class RoverProject extends GraphQLProject {
 
   validate?: () => void;
 
-  fileDidChange(uri: DocumentUri) {}
-  fileWasDeleted(uri: DocumentUri) {}
+  onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
+    params,
+  ) => {
+    return this.sendNotification(
+      DidChangeWatchedFilesNotification.type,
+      params,
+    );
+  };
   async documentDidChange(document: TextDocument) {
+    // TODO: probably some scheduling so other calls like `onCompletion` will only be called after
+    // this has been processed by the upstream LSP
     return this.sendNotification(DidChangeTextDocumentNotification.type, {
       textDocument: {
         uri: document.uri,
@@ -166,46 +162,22 @@ export class RoverProject extends GraphQLProject {
       ],
     });
   }
+  // TODO: diagnostics handling in general
   clearAllDiagnostics() {}
 
   onCompletion: GraphQLProject["onCompletion"] = async (params, token) =>
     this.sendRequest(CompletionRequest.type, params, token);
 
-  onHover: GraphQLProject["onHover"] = undefined;
-  // async (params, token) =>
-  //   this.sendRequest(HoverRequest.type, params, token);
+  // these are not supported yet
+  onHover: GraphQLProject["onHover"];
+  onDefinition: GraphQLProject["onDefinition"];
+  onReferences: GraphQLProject["onReferences"];
+  onDocumentSymbol: GraphQLProject["onDocumentSymbol"];
+  onCodeLens: GraphQLProject["onCodeLens"];
+  onCodeAction: GraphQLProject["onCodeAction"];
 
-  async provideDefinition?(
-    uri: DocumentUri,
-    position: Position,
-    token: CancellationToken,
-  ): Promise<Definition | null>;
-
-  async provideReferences?(
-    uri: DocumentUri,
-    position: Position,
-    context: ReferenceContext,
-    token: CancellationToken,
-  ): Promise<Location[] | null>;
-
-  async provideDocumentSymbol?(
-    uri: DocumentUri,
-    token: CancellationToken,
-  ): Promise<DocumentSymbol[]>;
-
-  async provideSymbol?(
+  provideSymbol?(
     query: string,
     token: CancellationToken,
   ): Promise<SymbolInformation[]>;
-
-  async provideCodeLenses?(
-    uri: DocumentUri,
-    token: CancellationToken,
-  ): Promise<CodeLens[]>;
-
-  async provideCodeAction?(
-    uri: DocumentUri,
-    range: Range,
-    token: CancellationToken,
-  ): Promise<CodeAction[]>;
 }

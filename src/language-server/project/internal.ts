@@ -12,7 +12,11 @@ import {
   Kind,
 } from "graphql";
 
-import { NotificationHandler, Position } from "vscode-languageserver/node";
+import {
+  FileChangeType,
+  NotificationHandler,
+  Position,
+} from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
@@ -315,4 +319,19 @@ export abstract class GraphQLInternalProject
     }
     return definitionsAndExtensions;
   }
+
+  onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
+    params,
+  ) => {
+    for (const { uri, type } of params.changes) {
+      switch (type) {
+        case FileChangeType.Created:
+          this.fileDidChange(uri);
+          break;
+        case FileChangeType.Deleted:
+          this.fileWasDeleted(uri);
+          break;
+      }
+    }
+  };
 }

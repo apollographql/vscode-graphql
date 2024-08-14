@@ -61,6 +61,10 @@ import {
   CodeActionKind,
   MarkupKind,
   CompletionItemKind,
+  HoverParams,
+  CompletionList,
+  CompletionParams,
+  ServerRequestHandler,
 } from "vscode-languageserver/node";
 import LZString from "lz-string";
 import { URL } from "node:url";
@@ -620,11 +624,10 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     return this.engineClient ? this.config.graph : undefined;
   }
 
-  async provideCompletionItems(
-    uri: DocumentUri,
-    position: Position,
+  onCompletion: GraphQLProject["onCompletion"] = async (
+    { textDocument: { uri }, position },
     _token: CancellationToken,
-  ): Promise<CompletionItem[]> {
+  ) => {
     const document = this.documentAt(uri, position);
     if (!document) return [];
 
@@ -770,13 +773,12 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     }
 
     return suggestions;
-  }
+  };
 
-  async provideHover(
-    uri: DocumentUri,
-    position: Position,
-    _token: CancellationToken,
-  ): Promise<Hover | null> {
+  onHover: GraphQLProject["onHover"] = async (
+    { textDocument: { uri }, position },
+    _token,
+  ) => {
     const document = this.documentAt(uri, position);
     if (!(document && document.ast)) return null;
 
@@ -930,7 +932,7 @@ export class GraphQLClientProject extends GraphQLInternalProject {
       }
     }
     return null;
-  }
+  };
 
   async provideDefinition(
     uri: DocumentUri,

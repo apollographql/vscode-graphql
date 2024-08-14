@@ -85,6 +85,7 @@ connection.onInitialize(async ({ capabilities, workspaceFolders }) => {
   hasWorkspaceFolderCapability = !!(
     capabilities.workspace && capabilities.workspace.workspaceFolders
   );
+  workspace.capabilities = capabilities;
 
   if (workspaceFolders) {
     // We wait until all projects are added, because after `initialize` returns we can get additional requests
@@ -194,10 +195,10 @@ connection.onDidChangeWatchedFiles((params) => {
 });
 
 connection.onHover(
-  (params, token) =>
+  (params, token, workDoneProgress, resultProgress) =>
     workspace
       .projectForFile(params.textDocument.uri)
-      ?.provideHover?.(params.textDocument.uri, params.position, token) ?? null,
+      ?.onHover?.(params, token, workDoneProgress, resultProgress) ?? null,
 );
 
 connection.onDefinition(
@@ -241,14 +242,10 @@ connection.onWorkspaceSymbol(async (params, token) => {
 
 connection.onCompletion(
   debounceHandler(
-    (params, token) =>
+    (params, token, workDoneProgress, resultProgress) =>
       workspace
         .projectForFile(params.textDocument.uri)
-        ?.provideCompletionItems?.(
-          params.textDocument.uri,
-          params.position,
-          token,
-        ) ?? [],
+        ?.onCompletion?.(params, token, workDoneProgress, resultProgress) ?? [],
   ),
 );
 

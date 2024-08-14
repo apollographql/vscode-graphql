@@ -17,23 +17,34 @@ import {
   Range,
   CodeAction,
   CodeLens,
+  Connection,
+  ServerRequestHandler,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
 import type { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
 import { ApolloConfig, ClientConfig, RoverConfig } from "../config";
-import { ClientIdentity } from "../engine";
 import type { ProjectStats } from "../../messages";
 
 export type DocumentUri = string;
 
 export interface GraphQLProjectConfig {
-  clientIdentity: ClientIdentity;
   config: ClientConfig | RoverConfig;
   configFolderURI: URI;
   loadingHandler: LoadingHandler;
 }
+
+type ConnectionHandler = {
+  [K in keyof Connection as K extends `on${string}`
+    ? K
+    : never]: Connection[K] extends (
+    params: ServerRequestHandler<any, any, any, any> & infer P,
+    token: CancellationToken,
+  ) => any
+    ? P
+    : never;
+};
 
 export abstract class GraphQLProject {
   protected _onDiagnostics?: NotificationHandler<PublishDiagnosticsParams>;
@@ -120,17 +131,8 @@ export abstract class GraphQLProject {
   abstract documentDidChange(document: TextDocument): void;
   abstract clearAllDiagnostics(): void;
 
-  abstract provideCompletionItems?(
-    uri: DocumentUri,
-    position: Position,
-    token: CancellationToken,
-  ): Promise<CompletionItem[]>;
-
-  abstract provideHover?(
-    uri: DocumentUri,
-    position: Position,
-    token: CancellationToken,
-  ): Promise<Hover | null>;
+  abstract onCompletion?: ConnectionHandler["onCompletion"];
+  abstract onHover?: ConnectionHandler["onHover"];
 
   abstract provideDefinition?(
     uri: DocumentUri,

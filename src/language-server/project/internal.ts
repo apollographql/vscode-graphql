@@ -17,13 +17,13 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 
 import { GraphQLDocument, extractGraphQLDocuments } from "../document";
 
-import { isClientConfig, isLocalServiceConfig } from "../config";
+import { ClientConfig, isClientConfig, isLocalServiceConfig } from "../config";
 import {
   schemaProviderFromConfig,
   GraphQLSchemaProvider,
   SchemaResolveConfig,
 } from "../providers/schema";
-import { ApolloEngineClient } from "../engine";
+import { ApolloEngineClient, ClientIdentity } from "../engine";
 import { GraphQLProject, DocumentUri, GraphQLProjectConfig } from "./base";
 
 const fileAssociations: { [extension: string]: string } = {
@@ -42,6 +42,11 @@ const fileAssociations: { [extension: string]: string } = {
   ".ex": "elixir",
   ".exs": "elixir",
 };
+
+export interface GraphQLInternalProjectConfig extends GraphQLProjectConfig {
+  config: ClientConfig;
+  clientIdentity: ClientIdentity;
+}
 export abstract class GraphQLInternalProject
   extends GraphQLProject
   implements GraphQLSchemaProvider
@@ -58,11 +63,9 @@ export abstract class GraphQLInternalProject
     configFolderURI,
     loadingHandler,
     clientIdentity,
-  }: GraphQLProjectConfig) {
-    super({ config, configFolderURI, loadingHandler, clientIdentity });
-    const { includes = [], excludes = [] } = isClientConfig(config)
-      ? config.client
-      : {};
+  }: GraphQLInternalProjectConfig) {
+    super({ config, configFolderURI, loadingHandler });
+    const { includes = [], excludes = [] } = config.client;
 
     this.documentsByFile = new Map();
 

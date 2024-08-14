@@ -319,7 +319,8 @@ export abstract class GraphQLInternalProject
     }
     return definitionsAndExtensions;
   }
-
+  onDidCloseTextDocument: GraphQLProject["onDidCloseTextDocument"];
+  onDidOpenTextDocument: GraphQLProject["onDidOpenTextDocument"];
   onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
     params,
   ) => {

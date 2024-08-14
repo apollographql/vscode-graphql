@@ -15,6 +15,9 @@ import {
   DidChangeTextDocumentNotification,
   ProtocolNotificationType,
   DidChangeWatchedFilesNotification,
+  DidOpenTextDocumentNotification,
+  DidCloseTextDocumentNotification,
+  HoverRequest,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "./base";
@@ -58,7 +61,9 @@ export class RoverProject extends GraphQLProject {
     type: ProtocolNotificationType<P, RO>,
     params?: P,
   ): Promise<void> {
-    (await this.connection).sendNotification(type, params);
+    const connection = await this.connection;
+    console.log("sending notification", { type, params });
+    return connection.sendNotification(type, params);
   }
 
   private async sendRequest<P, R, PR, E, RO>(
@@ -66,8 +71,9 @@ export class RoverProject extends GraphQLProject {
     params: P,
     token?: CancellationToken,
   ): Promise<R> {
+    const connection = await this.connection;
     console.log("sending request", { type, params });
-    return (await this.connection)
+    return connection
       .sendRequest(type, params, token)
       .then((result) => {
         console.log({ result });
@@ -147,6 +153,13 @@ export class RoverProject extends GraphQLProject {
       params,
     );
   };
+
+  onDidOpenTextDocument: GraphQLProject["onDidOpenTextDocument"] = (params) =>
+    this.sendNotification(DidOpenTextDocumentNotification.type, params);
+
+  onDidCloseTextDocument: GraphQLProject["onDidCloseTextDocument"] = (params) =>
+    this.sendNotification(DidCloseTextDocumentNotification.type, params);
+
   async documentDidChange(document: TextDocument) {
     // TODO: probably some scheduling so other calls like `onCompletion` will only be called after
     // this has been processed by the upstream LSP
@@ -168,8 +181,10 @@ export class RoverProject extends GraphQLProject {
   onCompletion: GraphQLProject["onCompletion"] = async (params, token) =>
     this.sendRequest(CompletionRequest.type, params, token);
 
+  onHover: GraphQLProject["onHover"] = async (params, token) =>
+    this.sendRequest(HoverRequest.type, params, token);
+
   // these are not supported yet
-  onHover: GraphQLProject["onHover"];
   onDefinition: GraphQLProject["onDefinition"];
   onReferences: GraphQLProject["onReferences"];
   onDocumentSymbol: GraphQLProject["onDocumentSymbol"];
@@ -181,3 +196,14 @@ export class RoverProject extends GraphQLProject {
     token: CancellationToken,
   ): Promise<SymbolInformation[]>;
 }
+
+/*
+Connection initialized {
+  capabilities: {
+    textDocumentSync: { openClose: true, change: 1 },
+    hoverProvider: true,
+    completionProvider: { triggerCharacters: [Array] },
+    semanticTokensProvider: { legend: [Object], range: false, full: [Object] }
+  }
+}
+ */

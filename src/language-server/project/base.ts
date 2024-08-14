@@ -117,6 +117,8 @@ export abstract class GraphQLProject {
   abstract includesFile(uri: DocumentUri): boolean;
 
   abstract onDidChangeWatchedFiles: ConnectionHandler["onDidChangeWatchedFiles"];
+  abstract onDidOpenTextDocument?: ConnectionHandler["onDidOpenTextDocument"];
+  abstract onDidCloseTextDocument?: ConnectionHandler["onDidCloseTextDocument"];
   abstract documentDidChange(document: TextDocument): void;
   abstract clearAllDiagnostics(): void;
 

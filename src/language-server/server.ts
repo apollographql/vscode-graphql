@@ -195,6 +195,20 @@ connection.onDidChangeWatchedFiles((params) => {
   }
 });
 
+connection.onDidOpenTextDocument(
+  (params) =>
+    workspace
+      .projectForFile(params.textDocument.uri)
+      ?.onDidOpenTextDocument?.(params),
+);
+
+connection.onDidCloseTextDocument(
+  (params) =>
+    workspace
+      .projectForFile(params.textDocument.uri)
+      ?.onDidCloseTextDocument?.(params),
+);
+
 connection.onHover(
   (params, token, workDoneProgress, resultProgress) =>
     workspace

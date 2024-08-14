@@ -84,7 +84,7 @@ const roverConfig = z.object({
     (val) => val || which.sync("rover", { nothrow: true }) || undefined,
     z.string({
       message:
-        "Rover binary not found. Please either install it system-wide or provide the `bin` option.",
+        "Rover binary not found. Please either install it system-wide or provide the `bin` option. Please also ensure that the binary is executable.",
     }),
   ),
   profile: z.string().optional(),

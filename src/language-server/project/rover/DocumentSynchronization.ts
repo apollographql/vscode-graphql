@@ -4,6 +4,7 @@ import {
   DidChangeTextDocumentNotification,
   DidOpenTextDocumentNotification,
   DidCloseTextDocumentNotification,
+  TextDocumentPositionParams,
 } from "vscode-languageserver-protocol";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { DocumentUri, GraphQLProject } from "../base";
@@ -63,7 +64,7 @@ export function handleFilePartUpdates(
 }
 
 function getUri(part: FilePart) {
-  return part.source.name + "?" + part.fractionalIndex;
+  return part.source.name + "/" + part.fractionalIndex + ".graphql";
 }
 
 export class DocumentSynchronization {
@@ -204,5 +205,48 @@ export class DocumentSynchronization {
     if (document) {
       await this.sendDocumentChanges(document);
     }
+  }
+
+  async insideVirtualDocument<T>(
+    positionParams: TextDocumentPositionParams,
+    cb: (virtualPositionParams: TextDocumentPositionParams) => Promise<T>,
+  ): Promise<T | undefined> {
+    const document = this.pendingDocumentChanges.get(
+      positionParams.textDocument.uri,
+    );
+    if (document) {
+      await this.sendDocumentChanges(document);
+    }
+    const found = this.knownFiles.get(positionParams.textDocument.uri);
+    if (!found) {
+      return;
+    }
+    const part = found.parts.find((part) => {
+      const lines = part.source.body.split("\n");
+      const y = positionParams.position.line - part.source.locationOffset.line;
+      const x =
+        y === 0
+          ? positionParams.position.line - part.source.locationOffset.line
+          : positionParams.position.character;
+      return (
+        y >= 0 &&
+        y < lines.length &&
+        (y < lines.length - 1 || x <= lines[y].length)
+      );
+    });
+    if (!part) return;
+    return cb({
+      textDocument: {
+        uri: getUri(part),
+      },
+      position: {
+        line: positionParams.position.line - part.source.locationOffset.line,
+        character:
+          positionParams.position.line === part.source.locationOffset.line
+            ? positionParams.position.character -
+              part.source.locationOffset.column
+            : positionParams.position.character,
+      },
+    });
   }
 }

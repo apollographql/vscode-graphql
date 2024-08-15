@@ -167,14 +167,14 @@ export class RoverProject extends GraphQLProject {
   clearAllDiagnostics() {}
 
   onCompletion: GraphQLProject["onCompletion"] = async (params, token) =>
-    this.documents
-      .synchronizedWithDocument(params.textDocument.uri)
-      .then(() => this.sendRequest(CompletionRequest.type, params, token));
+    this.documents.insideVirtualDocument(params, (virtualParams) =>
+      this.sendRequest(CompletionRequest.type, virtualParams, token),
+    );
 
   onHover: GraphQLProject["onHover"] = async (params, token) =>
-    this.documents
-      .synchronizedWithDocument(params.textDocument.uri)
-      .then(() => this.sendRequest(HoverRequest.type, params, token));
+    this.documents.insideVirtualDocument(params, (virtualParams) =>
+      this.sendRequest(HoverRequest.type, virtualParams, token),
+    );
 
   // these are not supported yet
   onDefinition: GraphQLProject["onDefinition"];

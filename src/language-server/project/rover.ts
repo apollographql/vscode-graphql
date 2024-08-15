@@ -18,6 +18,7 @@ import {
   DidOpenTextDocumentNotification,
   DidCloseTextDocumentNotification,
   HoverRequest,
+  CancellationTokenSource,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "./base";
@@ -25,6 +26,76 @@ import { ApolloConfig, RoverConfig } from "../config";
 
 export function isRoverConfig(config: ApolloConfig): config is RoverConfig {
   return config instanceof RoverConfig;
+}
+
+class DocumentSynchronization {
+  private pendingDocumentChanges = new Map<DocumentUri, TextDocument>();
+
+  constructor(
+    private sendNotification: <P, RO>(
+      type: ProtocolNotificationType<P, RO>,
+      params?: P,
+    ) => Promise<void>,
+  ) {}
+
+  private documentSynchronizationScheduled = false;
+  /**
+   * Ensures that only one `syncNextDocumentChange` is queued with the connection at a time.
+   * As a result, other, more important, changes can be processed with higher priority.
+   */
+  private scheduleDocumentSync = async () => {
+    if (
+      this.pendingDocumentChanges.size === 0 ||
+      this.documentSynchronizationScheduled
+    ) {
+      return;
+    }
+
+    this.documentSynchronizationScheduled = true;
+    try {
+      const next = this.pendingDocumentChanges.values().next();
+      if (next.done) return;
+      await this.sendDocumentChanges(next.value);
+    } finally {
+      this.documentSynchronizationScheduled = false;
+      setImmediate(this.scheduleDocumentSync);
+    }
+  };
+
+  private sendDocumentChanges(document: TextDocument) {
+    this.pendingDocumentChanges.delete(document.uri);
+    return this.sendNotification(DidChangeTextDocumentNotification.type, {
+      textDocument: {
+        uri: document.uri,
+        version: document.version,
+      },
+      contentChanges: [
+        {
+          text: document.getText(),
+        },
+      ],
+    });
+  }
+
+  async documentDidChange(document: TextDocument) {
+    if (this.pendingDocumentChanges.has(document.uri)) {
+      // this will put the document at the end of the queue again
+      // in hopes that we can skip a bit of unnecessary work sometimes
+      // when many files change around a lot
+      // we will always ensure that a document is synchronized via `synchronizedWithDocument`
+      // before we do other operations on the document, so this is safe
+      this.pendingDocumentChanges.delete(document.uri);
+    }
+    this.pendingDocumentChanges.set(document.uri, document);
+    this.scheduleDocumentSync();
+  }
+
+  async synchronizedWithDocument(documentUri: DocumentUri): Promise<void> {
+    const document = this.pendingDocumentChanges.get(documentUri);
+    if (document) {
+      await this.sendDocumentChanges(document);
+    }
+  }
 }
 
 export interface RoverProjectConfig extends GraphQLProjectConfig {
@@ -39,6 +110,9 @@ export class RoverProject extends GraphQLProject {
   get displayName(): string {
     return "Rover Project";
   }
+  private documents = new DocumentSynchronization(
+    this.sendNotification.bind(this),
+  );
 
   constructor(options: RoverProjectConfig) {
     super(options);
@@ -91,18 +165,13 @@ export class RoverProject extends GraphQLProject {
     });
     const reader = new StreamMessageReader(child.stdout);
     const writer = new StreamMessageWriter(child.stdin);
-    child.stdin.on("data", (data) => {
-      console.log("stdin", data.toString());
-    });
-    child.stdout.on("data", (data) => {
-      console.log("stdout", data.toString());
-    });
     child.stderr.on("data", (data) => {
-      console.log("stderr", data.toString());
+      console.info("stderr", data.toString());
     });
     const connection = createProtocolConnection(reader, writer);
     connection.onClose(() => {
       console.log("Connection closed");
+      source.cancel();
       this._connection = undefined;
     });
 
@@ -113,6 +182,7 @@ export class RoverProject extends GraphQLProject {
     connection.listen();
     console.log("Initializing connection");
 
+    const source = new CancellationTokenSource();
     return connection
       .sendRequest(
         InitializeRequest.type,
@@ -121,7 +191,7 @@ export class RoverProject extends GraphQLProject {
           processId: process.pid,
           rootUri: this.rootURI.toString(),
         },
-        null as any as CancellationToken, // TODO,
+        source.token,
       )
       .then(
         (status) => {
@@ -156,33 +226,24 @@ export class RoverProject extends GraphQLProject {
 
   onDidOpenTextDocument: GraphQLProject["onDidOpenTextDocument"] = (params) =>
     this.sendNotification(DidOpenTextDocumentNotification.type, params);
-
   onDidCloseTextDocument: GraphQLProject["onDidCloseTextDocument"] = (params) =>
     this.sendNotification(DidCloseTextDocumentNotification.type, params);
-
   async documentDidChange(document: TextDocument) {
-    // TODO: probably some scheduling so other calls like `onCompletion` will only be called after
-    // this has been processed by the upstream LSP
-    return this.sendNotification(DidChangeTextDocumentNotification.type, {
-      textDocument: {
-        uri: document.uri,
-        version: document.version,
-      },
-      contentChanges: [
-        {
-          text: document.getText(),
-        },
-      ],
-    });
+    return this.documents.documentDidChange(document);
   }
+
   // TODO: diagnostics handling in general
   clearAllDiagnostics() {}
 
   onCompletion: GraphQLProject["onCompletion"] = async (params, token) =>
-    this.sendRequest(CompletionRequest.type, params, token);
+    this.documents
+      .synchronizedWithDocument(params.textDocument.uri)
+      .then(() => this.sendRequest(CompletionRequest.type, params, token));
 
   onHover: GraphQLProject["onHover"] = async (params, token) =>
-    this.sendRequest(HoverRequest.type, params, token);
+    this.documents
+      .synchronizedWithDocument(params.textDocument.uri)
+      .then(() => this.sendRequest(HoverRequest.type, params, token));
 
   // these are not supported yet
   onDefinition: GraphQLProject["onDefinition"];

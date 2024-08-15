@@ -43,6 +43,7 @@
     "@wry/equality": "0.5.7",
     "cosmiconfig": "9.0.0",
     "dotenv": "16.4.5",
+    "fractional-indexing": "2.1.0",
     "glob": "11.0.0",
     "graphql": "16.9.0",
     "graphql-language-service": "5.2.2",

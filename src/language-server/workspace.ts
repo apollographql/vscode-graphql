@@ -16,7 +16,7 @@ import { URI } from "vscode-uri";
 import { Debug } from "./utilities";
 import type { EngineDecoration } from "../messages";
 import { equal } from "@wry/equality";
-import { isRoverConfig, RoverProject } from "./project/rover";
+import { isRoverConfig, RoverProject } from "./project/rover/project";
 
 export interface WorkspaceConfig {
   clientIdentity: ClientIdentity;

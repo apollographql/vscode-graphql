@@ -154,10 +154,11 @@ export class RoverProject extends GraphQLProject {
     );
   };
 
-  onDidOpenTextDocument: GraphQLProject["onDidOpenTextDocument"] = (params) =>
+  onDidOpen: GraphQLProject["onDidOpen"] = (params) =>
     this.documents.onDidOpenTextDocument(params);
-  onDidCloseTextDocument: GraphQLProject["onDidCloseTextDocument"] = (params) =>
+  onDidClose: GraphQLProject["onDidClose"] = (params) =>
     this.documents.onDidCloseTextDocument(params);
+
   async documentDidChange(document: TextDocument) {
     return this.documents.documentDidChange(document);
   }

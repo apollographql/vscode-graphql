@@ -9,6 +9,7 @@ import {
   SymbolInformation,
   Connection,
   ServerRequestHandler,
+  TextDocumentChangeEvent,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
@@ -117,8 +118,8 @@ export abstract class GraphQLProject {
   abstract includesFile(uri: DocumentUri): boolean;
 
   abstract onDidChangeWatchedFiles: ConnectionHandler["onDidChangeWatchedFiles"];
-  abstract onDidOpenTextDocument?: ConnectionHandler["onDidOpenTextDocument"];
-  abstract onDidCloseTextDocument?: ConnectionHandler["onDidCloseTextDocument"];
+  abstract onDidOpen?: (event: TextDocumentChangeEvent<TextDocument>) => void;
+  abstract onDidClose?: (event: TextDocumentChangeEvent<TextDocument>) => void;
   abstract documentDidChange(document: TextDocument): void;
   abstract clearAllDiagnostics(): void;
 

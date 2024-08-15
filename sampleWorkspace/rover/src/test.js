@@ -15,3 +15,11 @@ type User {
   name: String!
 }
 `
+
+console.log("foobar!")
+
+gql`
+type User {
+  lastName: String!
+}
+`

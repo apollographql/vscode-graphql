@@ -121,7 +121,8 @@ export class DocumentSynchronization {
     const newObj = Object.fromEntries(
       newParts.map((p) => [p.fractionalIndex, p]),
     );
-    console.log("sendDocumentChanges", { newObj, previousObj });
+    this.knownFiles.set(document.uri, { full: document, parts: newParts });
+
     for (const newPart of newParts) {
       const previousPart = previousObj[newPart.fractionalIndex];
       if (!previousPart) {
@@ -158,26 +159,20 @@ export class DocumentSynchronization {
     }
   }
 
-  onDidOpenTextDocument: NonNullable<GraphQLProject["onDidOpenTextDocument"]> =
-    async (params) => {
-      this.documentDidChange(
-        TextDocument.create(
-          params.textDocument.uri,
-          params.textDocument.languageId,
-          params.textDocument.version,
-          params.textDocument.text,
-        ),
-      );
-    };
+  onDidOpenTextDocument: NonNullable<GraphQLProject["onDidOpen"]> = async (
+    params,
+  ) => {
+    this.documentDidChange(params.document);
+  };
 
-  onDidCloseTextDocument: NonNullable<
-    GraphQLProject["onDidCloseTextDocument"]
-  > = (params) => {
-    const known = this.knownFiles.get(params.textDocument.uri);
+  onDidCloseTextDocument: NonNullable<GraphQLProject["onDidClose"]> = (
+    params,
+  ) => {
+    const known = this.knownFiles.get(params.document.uri);
     if (!known) {
       return;
     }
-    this.knownFiles.delete(params.textDocument.uri);
+    this.knownFiles.delete(params.document.uri);
     return Promise.all(
       known.parts.map((part) =>
         this.sendNotification(DidCloseTextDocumentNotification.type, {

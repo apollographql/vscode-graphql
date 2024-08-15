@@ -160,6 +160,16 @@ documents.onDidChangeContent(
   }),
 );
 
+documents.onDidOpen(
+  (params) =>
+    workspace.projectForFile(params.document.uri)?.onDidOpen?.(params),
+);
+
+documents.onDidClose(
+  (params) =>
+    workspace.projectForFile(params.document.uri)?.onDidClose?.(params),
+);
+
 connection.onDidChangeWatchedFiles((params) => {
   const handledByProject = new Map<GraphQLProject, FileEvent[]>();
   for (const { uri, type } of params.changes) {
@@ -194,20 +204,6 @@ connection.onDidChangeWatchedFiles((params) => {
     project.onDidChangeWatchedFiles({ changes });
   }
 });
-
-connection.onDidOpenTextDocument(
-  (params) =>
-    workspace
-      .projectForFile(params.textDocument.uri)
-      ?.onDidOpenTextDocument?.(params),
-);
-
-connection.onDidCloseTextDocument(
-  (params) =>
-    workspace
-      .projectForFile(params.textDocument.uri)
-      ?.onDidCloseTextDocument?.(params),
-);
 
 connection.onHover(
   (params, token, workDoneProgress, resultProgress) =>

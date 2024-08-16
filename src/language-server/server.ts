@@ -146,19 +146,17 @@ function isFile(uri: string) {
   return URI.parse(uri).scheme === "file";
 }
 
-documents.onDidChangeContent(
-  debounceHandler((params) => {
-    const project = workspace.projectForFile(params.document.uri);
-    if (!project) return;
+documents.onDidChangeContent((params) => {
+  const project = workspace.projectForFile(params.document.uri);
+  if (!project) return;
 
-    // Only watch changes to files
-    if (!isFile(params.document.uri)) {
-      return;
-    }
+  // Only watch changes to files
+  if (!isFile(params.document.uri)) {
+    return;
+  }
 
-    project.documentDidChange(params.document);
-  }),
-);
+  project.documentDidChange(params.document);
+});
 
 documents.onDidOpen(
   (params) =>

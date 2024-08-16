@@ -188,14 +188,3 @@ export class RoverProject extends GraphQLProject {
     token: CancellationToken,
   ): Promise<SymbolInformation[]>;
 }
-
-/*
-Connection initialized {
-  capabilities: {
-    textDocumentSync: { openClose: true, change: 1 },
-    hoverProvider: true,
-    completionProvider: { triggerCharacters: [Array] },
-    semanticTokensProvider: { legend: [Object], range: false, full: [Object] }
-  }
-}
- */

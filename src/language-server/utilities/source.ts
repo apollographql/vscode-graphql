@@ -70,9 +70,12 @@ export function positionFromPositionInContainingDocument(
   position: Position,
 ) {
   if (!source.locationOffset) return position;
+  const line = position.line - (source.locationOffset.line - 1);
   return Position.create(
-    position.line - (source.locationOffset.line - 1),
-    position.character,
+    line,
+    line === 0
+      ? position.character - (source.locationOffset.column - 1)
+      : position.character,
   );
 }
 

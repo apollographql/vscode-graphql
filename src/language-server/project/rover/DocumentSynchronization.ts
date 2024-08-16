@@ -10,6 +10,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { DocumentUri, GraphQLProject } from "../base";
 import { generateKeyBetween } from "fractional-indexing";
 import { Source } from "graphql";
+import { positionFromPositionInContainingDocument } from "src/language-server/utilities/source";
 
 export interface FilePart {
   fractionalIndex: string;
@@ -223,15 +224,15 @@ export class DocumentSynchronization {
     }
     const part = found.parts.find((part) => {
       const lines = part.source.body.split("\n");
-      const y = positionParams.position.line - part.source.locationOffset.line;
-      const x =
-        y === 0
-          ? positionParams.position.line - part.source.locationOffset.line
-          : positionParams.position.character;
+      const position = positionFromPositionInContainingDocument(
+        part.source,
+        positionParams.position,
+      );
       return (
-        y >= 0 &&
-        y < lines.length &&
-        (y < lines.length - 1 || x <= lines[y].length)
+        position.line >= 0 &&
+        position.line < lines.length &&
+        (position.line < lines.length - 1 ||
+          position.character < lines[position.line].length)
       );
     });
     if (!part) return;
@@ -239,14 +240,10 @@ export class DocumentSynchronization {
       textDocument: {
         uri: getUri(part),
       },
-      position: {
-        line: positionParams.position.line - part.source.locationOffset.line,
-        character:
-          positionParams.position.line === part.source.locationOffset.line
-            ? positionParams.position.character -
-              part.source.locationOffset.column
-            : positionParams.position.character,
-      },
+      position: positionFromPositionInContainingDocument(
+        part.source,
+        positionParams.position,
+      ),
     });
   }
 }

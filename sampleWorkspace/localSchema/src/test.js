@@ -6,3 +6,6 @@ gql`
     }
   }
 `;
+
+// prettier-ignore
+const verylonglala = gql`type Foo { baaaaaar: String }`

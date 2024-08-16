@@ -153,7 +153,7 @@ export abstract class GraphQLInternalProject
     this.checkForDuplicateOperations();
   }
 
-  documentDidChange = debounceHandler((document: TextDocument) => {
+  documentDidChange = (document: TextDocument) => {
     const documents = extractGraphQLDocuments(
       document,
       this.config.client && this.config.client.tagName,
@@ -165,7 +165,7 @@ export abstract class GraphQLInternalProject
       this.removeGraphQLDocumentsFor(document.uri);
     }
     this.checkForDuplicateOperations();
-  });
+  };
 
   checkForDuplicateOperations(): void {
     const filePathForOperationName: Record<string, string> = {};

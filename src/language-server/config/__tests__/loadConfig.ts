@@ -158,6 +158,30 @@ Object {
       const config = await loadConfig({ configPath: dirPath });
       expect(config?.client?.service).toEqual("hello");
     });
+
+    it("loads config from a ts file with CommonJs", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.ts": `module.exports = {"client": {"service": "hello"} }`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
+
+    it("loads config from a cjs file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.cjs": `module.exports = {"client": {"service": "hello"} }`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
+
+    it("loads config from a mjs file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.mjs": `export default {"client": {"service": "hello"} }`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
   });
 
   describe("errors", () => {

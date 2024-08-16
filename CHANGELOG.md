@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.0.1
+
+### Patch Changes
+
+- [#171](https://github.com/apollographql/vscode-graphql/pull/171) [`37a2b292`](https://github.com/apollographql/vscode-graphql/commit/37a2b292c0de22ee76645fc2dcde03b8f4843051) Thanks [@phryneas](https://github.com/phryneas)! - Also try parsing `.ts` files as CommonJS, not only ESM.
+
 ## 2.0.0
 
 ### Major Changes

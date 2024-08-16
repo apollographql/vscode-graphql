@@ -10,7 +10,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { DocumentUri, GraphQLProject } from "../base";
 import { generateKeyBetween } from "fractional-indexing";
 import { Source } from "graphql";
-import { positionFromPositionInContainingDocument } from "src/language-server/utilities/source";
+import { findContainedSourceAndPosition } from "../../utilities/source";
 
 export interface FilePart {
   fractionalIndex: string;
@@ -187,7 +187,6 @@ export class DocumentSynchronization {
   };
 
   async documentDidChange(document: TextDocument) {
-    console.log(`documentDidChange ${document.uri}`);
     if (this.pendingDocumentChanges.has(document.uri)) {
       // this will put the document at the end of the queue again
       // in hopes that we can skip a bit of unnecessary work sometimes
@@ -212,38 +211,23 @@ export class DocumentSynchronization {
     positionParams: TextDocumentPositionParams,
     cb: (virtualPositionParams: TextDocumentPositionParams) => Promise<T>,
   ): Promise<T | undefined> {
-    const document = this.pendingDocumentChanges.get(
-      positionParams.textDocument.uri,
-    );
-    if (document) {
-      await this.sendDocumentChanges(document);
-    }
+    await this.synchronizedWithDocument(positionParams.textDocument.uri);
     const found = this.knownFiles.get(positionParams.textDocument.uri);
     if (!found) {
       return;
     }
-    const part = found.parts.find((part) => {
-      const lines = part.source.body.split("\n");
-      const position = positionFromPositionInContainingDocument(
-        part.source,
-        positionParams.position,
-      );
-      return (
-        position.line >= 0 &&
-        position.line < lines.length &&
-        (position.line < lines.length - 1 ||
-          position.character < lines[position.line].length)
-      );
-    });
-    if (!part) return;
+    const match = findContainedSourceAndPosition(
+      found.parts,
+      positionParams.position,
+    );
+
+    if (!match) return;
+    console.log(positionParams.position, match.position);
     return cb({
       textDocument: {
-        uri: getUri(part),
+        uri: getUri(match),
       },
-      position: positionFromPositionInContainingDocument(
-        part.source,
-        positionParams.position,
-      ),
+      position: match.position,
     });
   }
 }

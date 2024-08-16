@@ -65,6 +65,37 @@ export function visitWithTypeInfo(
   };
 }
 
+export function findContainedSourceAndPosition<T extends { source: Source }>(
+  parts: T[],
+  absolutePosition: Position,
+) {
+  for (const part of parts) {
+    const lines = part.source.body.split("\n");
+    const position = positionFromPositionInContainingDocument(
+      part.source,
+      absolutePosition,
+    );
+
+    // we are in a sub-document that's beyond the position we're looking for
+    // exit early to save on computing time
+    if (position.line < 0) return null;
+
+    if (
+      position.line >= 0 &&
+      position.line < lines.length &&
+      position.character >= 0 &&
+      (position.line < lines.length - 1 ||
+        position.character < lines[position.line].length)
+    ) {
+      return {
+        ...part,
+        position,
+      };
+    }
+  }
+  return null;
+}
+
 export function positionFromPositionInContainingDocument(
   source: Source,
   position: Position,

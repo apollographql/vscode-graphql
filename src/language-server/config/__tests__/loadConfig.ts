@@ -276,7 +276,7 @@ Object {
   describe("env loading", () => {
     it("finds .env in config path & parses for key", async () => {
       writeFilesToDir(dir, {
-        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: { } }`,
         ".env": `APOLLO_KEY=service:harambe:54378950jn`,
       });
 
@@ -289,7 +289,7 @@ Object {
 
     it("finds .env.local in config path & parses for key", async () => {
       writeFilesToDir(dir, {
-        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: {  } }`,
         ".env.local": `APOLLO_KEY=service:harambe:54378950jn`,
       });
 
@@ -302,7 +302,7 @@ Object {
 
     it("finds .env and .env.local in config path & parses for key, preferring .env.local", async () => {
       writeFilesToDir(dir, {
-        "apollo.config.js": `module.exports = { client: { name: 'hello' } }`,
+        "apollo.config.js": `module.exports = { client: {  } }`,
         ".env": `APOLLO_KEY=service:hamato:54378950jn`,
         ".env.local": `APOLLO_KEY=service:yoshi:65489061ko`,
       });
@@ -346,7 +346,7 @@ Object {
     it("infers rover projects from config", () =>
       withFeatureFlags("rover", async () => {
         writeFilesToDir(dir, {
-          "apollo.config.js": `module.exports = { rover: {} }`,
+          "apollo.config.js": `module.exports = { rover: { bin: "/usr/bin/env" } }`,
         });
 
         const config = await loadConfig({

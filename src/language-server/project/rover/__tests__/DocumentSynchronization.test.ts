@@ -140,7 +140,6 @@ describe("handleFilePartUpdates", () => {
   );
 
   test("newly parsed file", () => {
-    console.log(initialFile);
     expect(initialUpdates).toEqual([
       {
         fractionalIndex: "a0",

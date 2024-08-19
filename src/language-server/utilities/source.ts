@@ -117,7 +117,8 @@ export function positionInContainingDocument(
   if (!source.locationOffset) return position;
   return Position.create(
     source.locationOffset.line - 1 + position.line,
-    position.character,
+    (position.line === 0 ? source.locationOffset.column - 1 : 0) +
+      position.character,
   );
 }
 

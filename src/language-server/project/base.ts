@@ -10,6 +10,8 @@ import {
   Connection,
   ServerRequestHandler,
   TextDocumentChangeEvent,
+  StarRequestHandler,
+  StarNotificationHandler,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
@@ -130,6 +132,12 @@ export abstract class GraphQLProject {
   abstract onDocumentSymbol?: ConnectionHandler["onDocumentSymbol"];
   abstract onCodeLens?: ConnectionHandler["onCodeLens"];
   abstract onCodeAction?: ConnectionHandler["onCodeAction"];
+
+  abstract onUnhandledRequest?: StarRequestHandler;
+  abstract onUnhandledNotification?: (
+    connection: Connection,
+    ...rest: Parameters<StarNotificationHandler>
+  ) => ReturnType<StarNotificationHandler>;
 
   abstract provideSymbol?(
     query: string,

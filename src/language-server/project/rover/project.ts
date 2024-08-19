@@ -1,7 +1,6 @@
 import { ProjectStats } from "src/messages";
 import { DocumentUri, GraphQLProject } from "../base";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { generateKeyBetween } from "fractional-indexing";
 import {
   CancellationToken,
   SymbolInformation,
@@ -17,6 +16,7 @@ import {
   DidChangeWatchedFilesNotification,
   HoverRequest,
   CancellationTokenSource,
+  PublishDiagnosticsNotification,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
@@ -41,6 +41,7 @@ export class RoverProject extends GraphQLProject {
   }
   private documents = new DocumentSynchronization(
     this.sendNotification.bind(this),
+    (diagnostics) => this._onDiagnostics?.(diagnostics),
   );
 
   constructor(options: RoverProjectConfig) {
@@ -106,6 +107,15 @@ export class RoverProject extends GraphQLProject {
 
     connection.onError((err) => {
       console.error({ err });
+    });
+
+    connection.onNotification(
+      PublishDiagnosticsNotification.type,
+      this.documents.handlePartDiagnostics.bind(this.documents),
+    );
+
+    connection.onUnhandledNotification((notification) => {
+      console.info("unhandled notification from LSP", notification);
     });
 
     connection.listen();
@@ -175,6 +185,17 @@ export class RoverProject extends GraphQLProject {
     this.documents.insideVirtualDocument(params, (virtualParams) =>
       this.sendRequest(HoverRequest.type, virtualParams, token),
     );
+
+  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = (type, params) => {
+    console.info("unhandled request from VSCode", { type, params });
+  };
+  onUnhandledNotification: GraphQLProject["onUnhandledNotification"] = (
+    _connection,
+    type,
+    params,
+  ) => {
+    console.info("unhandled notification from VSCode", { type, params });
+  };
 
   // these are not supported yet
   onDefinition: GraphQLProject["onDefinition"];

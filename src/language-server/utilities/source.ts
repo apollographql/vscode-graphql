@@ -66,7 +66,7 @@ export function visitWithTypeInfo(
 }
 
 export function findContainedSourceAndPosition<T extends { source: Source }>(
-  parts: T[],
+  parts: ReadonlyArray<T>,
   absolutePosition: Position,
 ) {
   for (const part of parts) {

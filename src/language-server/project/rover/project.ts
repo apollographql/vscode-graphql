@@ -22,6 +22,7 @@ import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
 import { ApolloConfig, RoverConfig } from "../../config";
 import { DocumentSynchronization } from "./DocumentSynchronization";
+import { AsyncLocalStorage } from "node:async_hooks";
 
 export function isRoverConfig(config: ApolloConfig): config is RoverConfig {
   return config instanceof RoverConfig;
@@ -34,6 +35,12 @@ export interface RoverProjectConfig extends GraphQLProjectConfig {
 
 export class RoverProject extends GraphQLProject {
   config: RoverConfig;
+  /**
+   * Allows overriding the connection for a certain async code path, so inside of initialization,
+   * calls to `this.connection` can immediately resolve without having to wait for initialization
+   * to complete (like every other call to `this.connection` would).
+   */
+  private connectionStorage = new AsyncLocalStorage<ProtocolConnection>();
   _connection?: Promise<ProtocolConnection>;
   capabilities: ClientCapabilities;
   get displayName(): string {
@@ -55,6 +62,11 @@ export class RoverProject extends GraphQLProject {
   }
 
   get connection(): Promise<ProtocolConnection> {
+    const connectionFromStorage = this.connectionStorage.getStore();
+    if (connectionFromStorage) {
+      return Promise.resolve(connectionFromStorage);
+    }
+
     if (this._connection instanceof Promise) {
       return this._connection;
     }
@@ -66,7 +78,14 @@ export class RoverProject extends GraphQLProject {
     params?: P,
   ): Promise<void> {
     const connection = await this.connection;
-    console.log("sending notification", { type, params });
+    console.log(
+      "%c sending notification %o",
+      "background: #222; color: #bada55",
+      {
+        type: type.method,
+        params,
+      },
+    );
     return connection.sendNotification(type, params);
   }
 
@@ -76,7 +95,7 @@ export class RoverProject extends GraphQLProject {
     token?: CancellationToken,
   ): Promise<R> {
     const connection = await this.connection;
-    console.log("sending request", { type, params });
+    console.log("sending request", { type: type.method, params });
     return connection
       .sendRequest(type, params, token)
       .then((result) => {
@@ -89,7 +108,7 @@ export class RoverProject extends GraphQLProject {
       });
   }
 
-  initializeConnection() {
+  async initializeConnection() {
     const child = cp.spawn(this.config.rover.bin, ["lsp"], {
       env: { RUST_BACKTRACE: "1" },
     });
@@ -122,8 +141,8 @@ export class RoverProject extends GraphQLProject {
     console.log("Initializing connection");
 
     const source = new CancellationTokenSource();
-    return connection
-      .sendRequest(
+    try {
+      const status = await connection.sendRequest(
         InitializeRequest.type,
         {
           capabilities: this.capabilities,
@@ -131,17 +150,18 @@ export class RoverProject extends GraphQLProject {
           rootUri: this.rootURI.toString(),
         },
         source.token,
-      )
-      .then(
-        (status) => {
-          console.log("Connection initialized", status);
-          return connection;
-        },
-        (error) => {
-          console.error("Connection failed to initialize", error);
-          throw error;
-        },
       );
+      console.log("Connection initialized", status);
+
+      await this.connectionStorage.run(connection, () =>
+        this.documents.resendAllDocuments(),
+      );
+
+      return connection;
+    } catch (error) {
+      console.error("Connection failed to initialize", error);
+      throw error;
+    }
   }
 
   getProjectStats(): ProjectStats {

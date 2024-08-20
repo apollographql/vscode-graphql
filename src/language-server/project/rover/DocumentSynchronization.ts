@@ -25,9 +25,9 @@ export interface FilePart {
 }
 
 export function handleFilePartUpdates(
-  parsed: Source[],
-  previousParts: FilePart[],
-): FilePart[] {
+  parsed: ReadonlyArray<Source>,
+  previousParts: ReadonlyArray<FilePart>,
+): ReadonlyArray<FilePart> {
   const newParts: FilePart[] = [];
   let newIdx = 0;
   let oldIdx = 0;
@@ -87,7 +87,7 @@ export class DocumentSynchronization {
     DocumentUri,
     {
       full: TextDocument;
-      parts: FilePart[];
+      parts: ReadonlyArray<FilePart>;
     }
   >();
 
@@ -123,10 +123,12 @@ export class DocumentSynchronization {
     }
   };
 
-  private async sendDocumentChanges(document: TextDocument) {
+  private async sendDocumentChanges(
+    document: TextDocument,
+    previousParts = this.knownFiles.get(document.uri)?.parts || [],
+  ) {
     this.pendingDocumentChanges.delete(document.uri);
 
-    const previousParts = this.knownFiles.get(document.uri)?.parts || [];
     const previousObj = Object.fromEntries(
       previousParts.map((p) => [p.fractionalIndex, p]),
     );
@@ -172,6 +174,12 @@ export class DocumentSynchronization {
           },
         });
       }
+    }
+  }
+
+  async resendAllDocuments() {
+    for (const file of this.knownFiles.values()) {
+      await this.sendDocumentChanges(file.full, []);
     }
   }
 

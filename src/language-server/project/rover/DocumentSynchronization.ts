@@ -283,5 +283,16 @@ export class DocumentSynchronization {
     this.sendDiagnostics(fullDocumentParams);
   }
 
-  // TODO: reset on Config reload
+  get openDocuments() {
+    return [...this.knownFiles.values()].map((f) => f.full);
+  }
+
+  clearAllDiagnostics() {
+    for (const file of this.knownFiles.values()) {
+      for (const part of file.parts) {
+        part.diagnostics = [];
+      }
+      this.sendDiagnostics({ uri: file.full.uri, diagnostics: [] });
+    }
+  }
 }

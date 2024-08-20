@@ -139,6 +139,8 @@ export abstract class GraphQLProject {
     ...rest: Parameters<StarNotificationHandler>
   ) => ReturnType<StarNotificationHandler>;
 
+  abstract dispose?(): void;
+
   abstract provideSymbol?(
     query: string,
     token: CancellationToken,

@@ -1,0 +1,77 @@
+>`#graphql
+#^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.begin.js
+# ^^^^^^^^ inline.graphql apollo.templateWithComment comment.line.graphql.js
+>query {test}`;
+#^^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql keyword.operation.graphql
+#     ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql
+#      ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#       ^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#           ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#            ^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.end.js
+#             ^^ inline.graphql
+>
+>` # graphql
+#^^^^^^^^^^^^ inline.graphql
+>query {test}`;
+#^^^^^^^^^^^^^^^ inline.graphql
+>
+>`
+#^^ inline.graphql
+>
+># graphql
+#^^^^^^^^^^ inline.graphql
+>
+>query {
+#^^^^^^^^ inline.graphql
+>  test
+#^^^^^^^ inline.graphql
+>}
+#^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>
+>`# GraphQL
+#^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.begin.js
+# ^^^^^^^^^ inline.graphql apollo.templateWithComment comment.line.graphql.js
+>query {
+#^^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql keyword.operation.graphql
+#     ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql
+#      ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>  test
+#^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql
+#  ^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+>}`;
+#^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+# ^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.end.js
+#  ^^ inline.graphql
+>
+>`#gql
+#^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.begin.js
+# ^^^^ inline.graphql apollo.templateWithComment comment.line.graphql.js
+>query {
+#^^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql keyword.operation.graphql
+#     ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql
+#      ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>  test
+#^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql
+#  ^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+>}`;
+#^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+# ^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.end.js
+#  ^^ inline.graphql
+>
+>`#graphql
+#^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.begin.js
+# ^^^^^^^^ inline.graphql apollo.templateWithComment comment.line.graphql.js
+>query {
+#^^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql keyword.operation.graphql
+#     ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql
+#      ^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>  test
+#^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql
+#  ^^^^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+>}`;
+#^ inline.graphql apollo.templateWithComment meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+# ^ inline.graphql apollo.templateWithComment punctuation.definition.string.template.end.js
+#  ^^ inline.graphql
+>

@@ -1,0 +1,351 @@
+>import gql from "graphql-tag";
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>
+>let lorem = `
+#^^^^^^^^^^^^^^ inline.graphql
+>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit orci. Nullam et gravida purus, eget commodo sapien. Donec erat sem, egestas at consectetur in, vestibulum non arcu. Aliquam laoreet, sapien vitae auctor efficitur, metus leo lobortis tellus, eu efficitur ante purus et nisl. In vestibulum sapien vitae finibus mattis.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>gql`
+#^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#   ^ inline.graphql taggedTemplates
+>  """
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql
+#  ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js punctuation.whitespace.comment.leading.graphql
+>  The query type, represents all of the entry points into our object graph
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js
+>  """
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js
+#  ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js
+>  type Query {
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql
+#  ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql keyword.type.graphql
+#      ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql
+#       ^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql support.type.graphql
+#            ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#             ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+>    me: User!
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#    ^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql variable.graphql
+#      ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.colon.graphql
+#       ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#        ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql support.type.graphql
+#            ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql keyword.operator.nulltype.graphql
+>  }
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+>
+>  """
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql
+#  ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js punctuation.whitespace.comment.leading.graphql
+>  Test
+#^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js
+>  """
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js
+#  ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql comment.line.graphql.js
+>  type User {
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql
+#  ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql keyword.type.graphql
+#      ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql
+#       ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql support.type.graphql
+#           ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#            ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+>    id: ID!
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#    ^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql variable.graphql
+#      ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.colon.graphql
+#       ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#        ^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql support.type.builtin.graphql
+#          ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql keyword.operator.nulltype.graphql
+>    name: String!
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#    ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql variable.graphql
+#        ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.colon.graphql
+#         ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#          ^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql support.type.builtin.graphql
+#                ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql keyword.operator.nulltype.graphql
+>  }
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+>`;
+#^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+# ^^ inline.graphql
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Praesent suscipit ut sapien ut pellentesque. Curabitur lacinia eget felis et accumsan. Sed condimentum fermentum tellus, vel facilisis risus scelerisque egestas.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>gql``;
+#^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#   ^ inline.graphql taggedTemplates
+#    ^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+#     ^^ inline.graphql
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Pellentesque egestas ante sed eleifend egestas. Nullam sit amet neque tempus ligula tempus porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nibh lacus, fermentum nec velit et, condimentum efficitur orci. Donec faucibus nunc ex, at posuere mauris feugiat eu. Pellentesque convallis ornare lacus sit amet efficitur.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>gql`
+#^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#   ^ inline.graphql taggedTemplates
+>  type User {
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql
+#  ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql keyword.type.graphql
+#      ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql
+#       ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql support.type.graphql
+#           ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#            ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+>    lastName: String!
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#    ^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql variable.graphql
+#            ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.colon.graphql
+#             ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#              ^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql support.type.builtin.graphql
+#                    ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql keyword.operator.nulltype.graphql
+>  }
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+>`;
+#^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+# ^^ inline.graphql
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Integer rhoncus leo eros, at facilisis est finibus ac. Fusce semper purus eget orci blandit, non fringilla justo vestibulum. Ut et semper velit. Aenean sit amet pharetra ex, sed sollicitudin justo. Sed sed dui felis. Quisque pretium risus eu interdum pellentesque. Pellentesque in vestibulum massa. Duis aliquam, augue id mattis tempor, mauris leo gravida dui, a dignissim justo tortor vel ligula. Donec quis aliquet sapien, congue iaculis arcu. Maecenas vel congue urna, at pellentesque ex.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>gql`
+#^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#   ^ inline.graphql taggedTemplates
+>  query {
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql
+#  ^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql keyword.operation.graphql
+#       ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#        ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>    name
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#    ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+>  }
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>`;
+#^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+# ^^ inline.graphql
+>
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Nunc vitae urna magna. Fusce porttitor nibh consequat risus pharetra mattis. Ut finibus eleifend erat id porta. In eu tellus posuere elit rutrum mollis non ac lectus. Nullam est nisl, hendrerit in hendrerit consectetur, fringilla et ligula. Integer ullamcorper nunc sem, ullamcorper dapibus ante semper nec. Nulla scelerisque ut mauris ut egestas.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>//prettier-ignore
+#^^^^^^^^^^^^^^^^^^ inline.graphql
+>const veryLongVariableName = gql`type Foo { baaaaaar: String }`;
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+#                             ^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#                                ^ inline.graphql taggedTemplates
+#                                 ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql keyword.type.graphql
+#                                     ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql
+#                                      ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql support.type.graphql
+#                                         ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#                                          ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+#                                           ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#                                            ^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql variable.graphql
+#                                                    ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.colon.graphql
+#                                                     ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#                                                      ^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql support.type.builtin.graphql
+#                                                            ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql
+#                                                             ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.type.interface.graphql meta.type.object.graphql punctuation.operation.graphql
+#                                                              ^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+#                                                               ^^ inline.graphql
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Vestibulum arcu felis, sollicitudin eu massa et, vulputate mollis velit. Nulla condimentum quam ut justo sodales rhoncus. Sed posuere sem eget nunc tempor blandit. Vestibulum in ante eget elit eleifend porta. Curabitur lobortis nisi nec augue dapibus feugiat. Duis pharetra a mauris vitae auctor.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>
+>`#
+#^^^ inline.graphql
+>foo
+#^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Aliquam erat volutpat. Sed consequat nisi vel tincidunt vulputate. Proin condimentum, urna sit amet tincidunt elementum, ipsum odio tincidunt nisl, nec euismod neque turpis id massa. Mauris ultrices volutpat quam, at fringilla ante sodales vel. Suspendisse vitae rutrum mauris, ac auctor erat. Sed efficitur nulla quis risus consequat consequat.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>
+>foo(/*gql*/ `query {
+#^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>  foo
+#^^^^^^ inline.graphql
+>  bar
+#^^^^^^ inline.graphql
+>}
+#^^ inline.graphql
+>`);
+#^^^^ inline.graphql
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Pellentesque tempus ante velit, vitae rutrum mi vehicula ac. Cras quis fringilla risus, eu hendrerit nisl. In hac habitasse platea dictumst. Etiam et nulla nisl. Phasellus eu finibus mi. Cras tempor bibendum tortor at interdum.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>gql<"Vehicle">`
+#^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#   ^^^^^^^^^^^^ inline.graphql taggedTemplates
+>  fragment VehicleMake on Vehicle {
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#  ^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql keyword.fragment.graphql
+#          ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#           ^^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql entity.name.fragment.graphql
+#                      ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#                       ^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql keyword.on.graphql
+#                         ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#                          ^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql support.type.graphql
+#                                 ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql
+#                                  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql punctuation.operation.graphql
+>    name
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql
+#    ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql variable.graphql
+>  }
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql punctuation.operation.graphql
+>`;
+#^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+# ^^ inline.graphql
+>
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Donec nisl dolor, elementum faucibus lacus et, tempor euismod libero. Sed nibh nulla, sollicitudin facilisis sem sed, mattis porta turpis.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>gql<"Vehicle">(`
+#^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#   ^^^^^^^^^^^^^ inline.graphql taggedTemplates
+>  fragment VehicleMake on Vehicle {
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#  ^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql keyword.fragment.graphql
+#          ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#           ^^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql entity.name.fragment.graphql
+#                      ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#                       ^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql keyword.on.graphql
+#                         ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql
+#                          ^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql support.type.graphql
+#                                 ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql
+#                                  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql punctuation.operation.graphql
+>    name
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql
+#    ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql variable.graphql
+>  }
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.fragment.graphql meta.selectionset.graphql punctuation.operation.graphql
+>`);
+#^^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+#  ^^ inline.graphql
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Vivamus aliquam quis diam non mattis. Proin eget ligula fermentum, tincidunt lorem ut, ultrices turpis. Donec fringilla feugiat dictum.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>const query = /* GraphQL */ `
+#^^^^^^^^^^^^^^ inline.graphql
+#              ^^^^^^^^^^^^^^ inline.graphql taggedTemplates
+#                            ^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+>  {
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>    foo
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#    ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+>  }
+#^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>`;
+#^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+# ^^ inline.graphql
+>lorem += `
+#^^^^^^^^^^^ inline.graphql
+>Vestibulum cursus mi sed tellus pellentesque, in rutrum elit egestas. Integer viverra eget ipsum ut consequat. Sed mattis feugiat arcu sit amet pellentesque.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>`;
+#^^^ inline.graphql
+>gql(`
+#^^^ inline.graphql taggedTemplates entity.name.function.tagged-template.js
+#   ^^ inline.graphql taggedTemplates
+>        {
+#^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#        ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>          hero {
+#^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#          ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#              ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql
+#               ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql punctuation.operation.graphql
+>            ...Hero_character
+#^^^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql
+#            ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql keyword.operator.spread.graphql
+#               ^^^^^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql variable.fragment.graphql
+>          }
+#^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql
+#          ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql punctuation.operation.graphql
+>        }
+#^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#        ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>
+>        ${Hero.fragments.character}
+#^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql
+#         ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#          ^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#              ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#               ^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                        ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#                         ^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                                  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>
+>        {
+#^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#        ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>          reviews(episode: NEWHOPE) {
+#^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#          ^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                 ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.arguments.graphql meta.brace.round.directive.graphql
+#                  ^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.arguments.graphql variable.parameter.graphql
+#                         ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.arguments.graphql punctuation.colon.graphql
+#                          ^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.arguments.graphql constant.character.enum.graphql
+#                                  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.arguments.graphql meta.brace.round.directive.graphql
+#                                   ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql
+#                                    ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql punctuation.operation.graphql
+>            ...ReviewList_reviews
+#^^^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql
+#            ^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql keyword.operator.spread.graphql
+#               ^^^^^^^^^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql variable.fragment.graphql
+>          }
+#^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql
+#          ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql meta.selectionset.graphql punctuation.operation.graphql
+>        }
+#^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#        ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>
+>      ${ReviewList.fragments.reviews}
+#^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql
+#       ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#        ^^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                  ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#                   ^^^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                            ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql
+#                             ^^^^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                                    ^ inline.graphql taggedTemplates meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>    `);
+#^^^^ inline.graphql taggedTemplates meta.embedded.block.graphql
+#    ^^ inline.graphql taggedTemplates punctuation.definition.string.template.end.js
+#      ^^ inline.graphql
+>

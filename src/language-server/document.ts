@@ -15,6 +15,11 @@ import {
 } from "./utilities/source";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
+declare global {
+  interface RegExpExecArray {
+    indices?: Array<[number, number]>;
+  }
+}
 export class GraphQLDocument {
   ast?: DocumentNode;
   syntaxErrors: Diagnostic[] = [];
@@ -89,6 +94,17 @@ export function extractGraphQLDocuments(
   return sources.map((source) => new GraphQLDocument(source));
 }
 
+const parts = [
+  // normal tagged template literals
+  /TAG_NAME(?:\s?<.*?>)?\s*`(.*?)`/,
+  // template string preceeded by a /* TAG_NAME */, /* graphql */ or /* GraphQL */ comment
+  /\/\*\s*(?:TAG_NAME|graphql|GraphQL)\s*\*\/\s?`(.*?)`/,
+  // template string starting with a #TAG_NAME, #graphql or #GraphQL comment
+  /`(\s*#[ ]*(?:TAG_NAME|graphql|GraphQL).*?)`/,
+  // function call to TAG_NAME with a single template string argument
+  /TAG_NAME(?:\s?<.*?>)?\s*\(`(.*?)`\)/,
+].map((r) => r.source);
+
 function extractGraphQLSourcesFromJSTemplateLiterals(
   document: TextDocument,
   tagName: string,
@@ -98,14 +114,22 @@ function extractGraphQLSourcesFromJSTemplateLiterals(
   const sources: Source[] = [];
 
   const regExp = new RegExp(
-    `(?:${tagName}(?:\\s|\\()*\`|\`#graphql)([\\s\\S]+?)\`\\)?`,
-    "gm",
+    parts.map((r) => r.replace("TAG_NAME", tagName)).join("|"),
+    // g: global search
+    // s: treat `.` as any character, including newlines
+    // d: save indices
+    "gsd",
   );
 
   let result;
   while ((result = regExp.exec(text)) !== null) {
-    const contents = replacePlaceholdersWithWhiteSpace(result[1]);
-    const position = document.positionAt(result.index + (tagName.length + 1));
+    // we have multiple alternative capture groups in the regexp, and only one of them will have a result
+    // so we need the index for that
+    const groupIndex = result.findIndex(
+      (part, index) => index != 0 && part != null,
+    );
+    const contents = replacePlaceholdersWithWhiteSpace(result[groupIndex]);
+    const position = document.positionAt(result.indices![groupIndex][0]);
     const locationOffset: SourceLocation = {
       line: position.line + 1,
       column: position.character + 1,

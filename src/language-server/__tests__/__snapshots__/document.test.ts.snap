@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`extractGraphQLDocuments extracting documents from JavaScript template literals mixedDocument.js fixture 1`] = `
+Array [
+  "
+  \\"\\"\\"
+  The query type, represents all of the entry points into our object graph
+  \\"\\"\\"
+  type Query {
+    me: User!
+  }
+
+  \\"\\"\\"
+  Test
+  \\"\\"\\"
+  type User {
+    id: ID!
+    name: String!
+  }
+",
+  "",
+  "
+  type User {
+    lastName: String!
+  }
+",
+  "
+  query {
+    name
+  }
+",
+  "
+  type Foo {
+    baaaaaar: String
+  }
+",
+  "#graphql
+foo
+",
+  "query {
+  foo
+  bar
+}
+",
+  "
+  fragment VehicleMake on Vehicle {
+    name
+  }
+",
+  "
+  fragment VehicleMake on Vehicle {
+    name
+  }
+",
+  "
+  {
+    foo
+  }
+",
+  "
+        {
+          hero {
+            ...Hero_character
+          }
+        }
+
+                                  
+
+        {
+          reviews(episode: NEWHOPE) {
+            ...ReviewList_reviews
+          }
+        }
+
+                                    
+    ",
+]
+`;

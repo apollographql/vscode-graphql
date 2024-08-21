@@ -1,5 +1,7 @@
+import { readFileSync } from "fs";
 import { extractGraphQLDocuments } from "../document";
 import { TextDocument, Position } from "vscode-languageserver";
+import { join } from "path";
 
 describe("extractGraphQLDocuments", () => {
   describe("extracting documents from JavaScript template literals", () => {
@@ -38,6 +40,18 @@ describe("extractGraphQLDocuments", () => {
       expect(documents?.length).toEqual(1);
       expect(documents?.[0].syntaxErrors.length).toBe(0);
       expect(documents?.[0].ast?.definitions.length).toBe(1);
+      expect(replaceWhitespaceWithDots(documents![0].source.body))
+        .toMatchInlineSnapshot(`
+"
+········{
+··········hero·{
+············...Hero_character
+··········}
+········}
+
+·············································
+······"
+`);
     });
 
     it("works with multiple placeholders in a document", () => {
@@ -65,6 +79,26 @@ describe("extractGraphQLDocuments", () => {
       expect(documents?.length).toEqual(1);
       expect(documents?.[0].syntaxErrors.length).toBe(0);
       expect(documents?.[0].ast?.definitions.length).toBe(2);
+      expect(replaceWhitespaceWithDots(documents![0].source.body))
+        .toMatchInlineSnapshot(`
+"
+········{
+··········hero·{
+············...Hero_character
+··········}
+········}
+
+··································
+
+········{
+··········reviews(episode:·NEWHOPE)·{
+············...ReviewList_reviews
+··········}
+········}
+
+······································
+······"
+`);
     });
 
     it("works with a custom tagname", () => {
@@ -90,8 +124,28 @@ describe("extractGraphQLDocuments", () => {
       const documents = extractGraphQLDocuments(textDocument, "gqltag");
 
       expect(documents?.length).toEqual(1);
-      expect(documents?.[0].syntaxErrors.length).toBe(0);
-      expect(documents?.[0].ast?.definitions.length).toBe(2);
+      expect(documents![0].syntaxErrors.length).toBe(0);
+      expect(documents![0].ast?.definitions.length).toBe(2);
+      expect(replaceWhitespaceWithDots(documents![0].source.body))
+        .toMatchInlineSnapshot(`
+"
+········{
+··········hero·{
+············...Hero_character
+··········}
+········}
+
+··································
+
+········{
+··········reviews(episode:·NEWHOPE)·{
+············...ReviewList_reviews
+··········}
+········}
+
+······································
+······"
+`);
     });
 
     it("works with parens", () => {
@@ -119,6 +173,39 @@ describe("extractGraphQLDocuments", () => {
       expect(documents?.length).toEqual(1);
       expect(documents?.[0].syntaxErrors.length).toBe(0);
       expect(documents?.[0].ast?.definitions.length).toBe(2);
+      expect(replaceWhitespaceWithDots(documents![0].source.body))
+        .toMatchInlineSnapshot(`
+"
+········{
+··········hero·{
+············...Hero_character
+··········}
+········}
+
+··································
+
+········{
+··········reviews(episode:·NEWHOPE)·{
+············...ReviewList_reviews
+··········}
+········}
+
+····································
+····"
+`);
+    });
+
+    test("mixedDocument.js fixture", () => {
+      const body = readFileSync(
+        join(__dirname, "fixtures", "mixedDocument.js"),
+        "utf8",
+      );
+
+      const documents = extractGraphQLDocuments(
+        TextDocument.create("file:///mixedDocument.js", "javascript", 1, body),
+      )!;
+
+      expect(documents.map((doc) => doc.source.body)).toMatchSnapshot();
     });
   });
 
@@ -185,3 +272,11 @@ describe("extractGraphQLDocuments", () => {
     });
   });
 });
+
+/**
+ * When editing this file manually, prettier will remove long bouts of whitespace in template strings on save,
+ * which messes up inline snapshots. This function replaces spaces with dots to prevent that.
+ */
+function replaceWhitespaceWithDots(str: string) {
+  return str.replace(/[ ]/g, "·");
+}

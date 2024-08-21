@@ -3,9 +3,9 @@
   "injectionSelector": "L:source -string -comment",
   "patterns": [
     {
-      "name": "taggedTemplates",
+      "name": "apollo.taggedTemplate",
       "contentName": "meta.embedded.block.graphql",
-      "begin": "(Relay\\.QL|gql|graphql(\\.experimental)?)\\(?(`)",
+      "begin": "(Relay\\.QL|gql|graphql(\\.experimental)?)(?:<[\\s\\S]*?>)?(`)",
       "beginCaptures": {
         "1": {
           "name": "entity.name.function.tagged-template.js"
@@ -14,7 +14,7 @@
           "name": "punctuation.definition.string.template.begin.js"
         }
       },
-      "end": "`\\)?",
+      "end": "`",
       "endCaptures": {
         "0": {
           "name": "punctuation.definition.string.template.end.js"
@@ -23,15 +23,55 @@
       "patterns": [{ "include": "source.graphql" }]
     },
     {
-      "name": "taggedTemplates",
+      "name": "apollo.templateWithComment",
       "contentName": "meta.embedded.block.graphql",
-      "begin": "(`)(#graphql)",
+      "begin": "(`)(#[ ]*(?:gql|graphql|GraphQL))",
       "beginCaptures": {
         "1": {
           "name": "punctuation.definition.string.template.begin.js"
         },
         "2": {
           "name": "comment.line.graphql.js"
+        }
+      },
+      "end": "`",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.template.end.js"
+        }
+      },
+      "patterns": [{ "include": "source.graphql" }]
+    },
+    {
+      "name": "apollo.functionCall",
+      "contentName": "meta.embedded.block.graphql",
+      "begin": "(gql|graphql)(?:<[\\s\\S]*?>)?\\((`)",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.tagged-template.js"
+        },
+        "2": {
+          "name": "punctuation.definition.string.template.begin.js"
+        }
+      },
+      "end": "`\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.template.end.js"
+        }
+      },
+      "patterns": [{ "include": "source.graphql" }]
+    },
+    {
+      "name": "apollo.commentWithTemplate",
+      "contentName": "meta.embedded.block.graphql",
+      "begin": "(\\/\\*[\\s\\*]*(?:gql|graphql|GraphQL)\\s*\\*\\/)\\s*(`)",
+      "beginCaptures": {
+        "1": {
+          "name": "comment.block.js"
+        },
+        "2": {
+          "name": "punctuation.definition.string.template.begin.js"
         }
       },
       "end": "`",

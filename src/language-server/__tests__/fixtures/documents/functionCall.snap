@@ -1,0 +1,168 @@
+>declare function gql<A = any, B = any>(arg: string): void;
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>declare type SomeResult = any;
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>declare type SomeVariables = any;
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql(`query { test }`)
+#^^^ inline.graphql apollo.functionCall entity.name.function.tagged-template.js
+#   ^ inline.graphql apollo.functionCall
+#    ^ inline.graphql apollo.functionCall punctuation.definition.string.template.begin.js
+#     ^^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql keyword.operation.graphql
+#          ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#           ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#            ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#             ^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                 ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#                  ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#                   ^^ inline.graphql apollo.functionCall punctuation.definition.string.template.end.js
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql<SomeResult, SomeVariables>(`query { test }`)
+#^^^ inline.graphql apollo.functionCall entity.name.function.tagged-template.js
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql apollo.functionCall
+#                               ^ inline.graphql apollo.functionCall punctuation.definition.string.template.begin.js
+#                                ^^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql keyword.operation.graphql
+#                                     ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#                                      ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#                                       ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#                                        ^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+#                                            ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#                                             ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+#                                              ^^ inline.graphql apollo.functionCall punctuation.definition.string.template.end.js
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql<{
+#^^^^^^ inline.graphql
+>  test: string;
+#^^^^^^^^^^^^^^^^ inline.graphql
+>},{
+#^^^^ inline.graphql
+>  test: string;
+#^^^^^^^^^^^^^^^^ inline.graphql
+>}>(`query { test }`)
+#^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql(
+#^^^^^ inline.graphql
+>`query { test }`
+#^^^^^^^^^^^^^^^^^ inline.graphql
+>)
+#^^ inline.graphql
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql
+#^^^^ inline.graphql
+>(
+#^^ inline.graphql
+>  `query { test }`
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>  )
+#^^^^ inline.graphql
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql  (  `query { test }` )
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql
+>
+>gql(`
+#^^^ inline.graphql apollo.functionCall entity.name.function.tagged-template.js
+#   ^ inline.graphql apollo.functionCall
+#    ^ inline.graphql apollo.functionCall punctuation.definition.string.template.begin.js
+>  query {
+#^^ inline.graphql apollo.functionCall meta.embedded.block.graphql
+#  ^^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql keyword.operation.graphql
+#       ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#        ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>    test
+#^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#    ^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+>  }
+#^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#  ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>`);
+#^^ inline.graphql apollo.functionCall punctuation.definition.string.template.end.js
+#  ^^ inline.graphql
+>
+>gql<SomeResult, SomeVariables>(`
+#^^^ inline.graphql apollo.functionCall entity.name.function.tagged-template.js
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ inline.graphql apollo.functionCall
+#                               ^ inline.graphql apollo.functionCall punctuation.definition.string.template.begin.js
+>  query {
+#^^ inline.graphql apollo.functionCall meta.embedded.block.graphql
+#  ^^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql keyword.operation.graphql
+#       ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#        ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>    test
+#^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#    ^^^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql variable.graphql
+>  }
+#^^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql
+#  ^ inline.graphql apollo.functionCall meta.embedded.block.graphql meta.selectionset.graphql punctuation.operation.graphql
+>`);
+#^^ inline.graphql apollo.functionCall punctuation.definition.string.template.end.js
+#  ^^ inline.graphql
+>
+>gql<
+#^^^^^ inline.graphql
+>  {
+#^^^^ inline.graphql
+>    test: string;
+#^^^^^^^^^^^^^^^^^^ inline.graphql
+>  },
+#^^^^^ inline.graphql
+>  {
+#^^^^ inline.graphql
+>    test: string;
+#^^^^^^^^^^^^^^^^^^ inline.graphql
+>  }
+#^^^^ inline.graphql
+>>(`
+#^^^^ inline.graphql
+>  query {
+#^^^^^^^^^^ inline.graphql
+>    test
+#^^^^^^^^^ inline.graphql
+>  }
+#^^^^ inline.graphql
+>`);
+#^^^^ inline.graphql
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql(
+#^^^^^ inline.graphql
+>`
+#^^ inline.graphql
+>  query {
+#^^^^^^^^^^ inline.graphql
+>    test
+#^^^^^^^^^ inline.graphql
+>  }
+#^^^^ inline.graphql
+>`
+#^^ inline.graphql
+>);
+#^^^ inline.graphql
+>
+>// prettier-ignore
+#^^^^^^^^^^^^^^^^^^^ inline.graphql
+>gql (  `
+#^^^^^^^^^ inline.graphql
+>  query {
+#^^^^^^^^^^ inline.graphql
+>    test
+#^^^^^^^^^ inline.graphql
+>  }
+#^^^^ inline.graphql
+>` );
+#^^^^^ inline.graphql
+>

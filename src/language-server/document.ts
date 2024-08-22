@@ -96,13 +96,13 @@ export function extractGraphQLDocuments(
 
 const parts = [
   // normal tagged template literals
-  /TAG_NAME(?:\s?<.*?>)?\s*`(.*?)`/,
-  // template string preceeded by a /* TAG_NAME */, /* graphql */ or /* GraphQL */ comment
-  /\/\*\s*(?:TAG_NAME|graphql|GraphQL)\s*\*\/\s?`(.*?)`/,
+  /TAG_NAME\s*(?:<.*?>\s*)?`(.*?)`/,
   // template string starting with a #TAG_NAME, #graphql or #GraphQL comment
   /`(\s*#[ ]*(?:TAG_NAME|graphql|GraphQL).*?)`/,
+  // template string preceeded by a /* TAG_NAME */, /* graphql */ or /* GraphQL */ comment
+  /\/\*\s*(?:TAG_NAME|graphql|GraphQL)\s*\*\/\s?`(.*?)`/,
   // function call to TAG_NAME with a single template string argument
-  /TAG_NAME(?:\s?<.*?>)?\s*\(`(.*?)`\)/,
+  /TAG_NAME\s*(?:<.*?>\s*)?\(\s*`(.*?)`\)/,
 ].map((r) => r.source);
 
 function extractGraphQLSourcesFromJSTemplateLiterals(

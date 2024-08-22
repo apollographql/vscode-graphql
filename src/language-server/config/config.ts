@@ -6,6 +6,8 @@ import z, { ZodError } from "zod";
 import { ValidationRule } from "graphql/validation/ValidationContext";
 import { Slot } from "@wry/context";
 import { fromZodError } from "zod-validation-error";
+import which from "which";
+import { accessSync, constants as fsConstants, statSync } from "node:fs";
 
 const ROVER_AVAILABLE = (process.env.APOLLO_FEATURE_FLAGS || "")
   .split(",")
@@ -79,7 +81,30 @@ const clientConfig = z.object({
 export type ClientConfigFormat = z.infer<typeof clientConfig>;
 
 const roverConfig = z.object({
-  bin: z.string().optional(),
+  bin: z
+    .preprocess(
+      (val) => val || which.sync("rover", { nothrow: true }) || undefined,
+      z.string({
+        message:
+          "Rover binary not found. Please either install it system-wide in PATH, or provide the `bin` option. Also ensure that the binary is executable.",
+      }),
+    )
+    .refine(
+      (bin) => {
+        try {
+          // is executable?
+          accessSync(bin, fsConstants.X_OK);
+          // is a file and not a directory?
+          return statSync(bin).isFile();
+        } catch {
+          return false;
+        }
+      },
+      {
+        message:
+          "Rover binary is not marked as an executable. If you are using OS X or Linux, ensure to set the executable bit.",
+      },
+    ),
   profile: z.string().optional(),
 });
 type RoverConfigFormat = z.infer<typeof roverConfig>;

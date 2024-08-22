@@ -7,6 +7,7 @@ import {
   ServerCapabilities,
   TextDocumentSyncKind,
   SymbolInformation,
+  FileEvent,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import type { QuickPickItem } from "vscode";
@@ -20,6 +21,8 @@ import {
   LanguageServerRequests as Requests,
 } from "../messages";
 import { isValidationError } from "zod-validation-error";
+import { Trie } from "@wry/trie";
+import { GraphQLProject } from "./project/base";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -85,6 +88,7 @@ connection.onInitialize(async ({ capabilities, workspaceFolders }) => {
   hasWorkspaceFolderCapability = !!(
     capabilities.workspace && capabilities.workspace.workspaceFolders
   );
+  workspace.capabilities = capabilities;
 
   if (workspaceFolders) {
     // We wait until all projects are added, because after `initialize` returns we can get additional requests
@@ -142,21 +146,30 @@ function isFile(uri: string) {
   return URI.parse(uri).scheme === "file";
 }
 
-documents.onDidChangeContent(
-  debounceHandler((params) => {
-    const project = workspace.projectForFile(params.document.uri);
-    if (!project) return;
+documents.onDidChangeContent((params) => {
+  const project = workspace.projectForFile(params.document.uri);
+  if (!project) return;
 
-    // Only watch changes to files
-    if (!isFile(params.document.uri)) {
-      return;
-    }
+  // Only watch changes to files
+  if (!isFile(params.document.uri)) {
+    return;
+  }
 
-    project.documentDidChange(params.document);
-  }),
+  project.documentDidChange(params.document);
+});
+
+documents.onDidOpen(
+  (params) =>
+    workspace.projectForFile(params.document.uri)?.onDidOpen?.(params),
+);
+
+documents.onDidClose(
+  (params) =>
+    workspace.projectForFile(params.document.uri)?.onDidClose?.(params),
 );
 
 connection.onDidChangeWatchedFiles((params) => {
+  const handledByProject = new Map<GraphQLProject, FileEvent[]>();
   for (const { uri, type } of params.changes) {
     if (
       uri.endsWith("apollo.config.js") ||
@@ -182,49 +195,41 @@ connection.onDidChangeWatchedFiles((params) => {
     const project = workspace.projectForFile(uri);
     if (!project) continue;
 
-    switch (type) {
-      case FileChangeType.Created:
-        project.fileDidChange(uri);
-        break;
-      case FileChangeType.Deleted:
-        project.fileWasDeleted(uri);
-        break;
-    }
+    handledByProject.set(project, handledByProject.get(project) || []);
+    handledByProject.get(project)!.push({ uri, type });
+  }
+  for (const [project, changes] of handledByProject) {
+    project.onDidChangeWatchedFiles({ changes });
   }
 });
 
 connection.onHover(
-  (params, token) =>
+  (params, token, workDoneProgress, resultProgress) =>
     workspace
       .projectForFile(params.textDocument.uri)
-      ?.provideHover?.(params.textDocument.uri, params.position, token) ?? null,
+      ?.onHover?.(params, token, workDoneProgress, resultProgress) ?? null,
 );
 
 connection.onDefinition(
-  (params, token) =>
+  (params, token, workDoneProgress, resultProgress) =>
     workspace
       .projectForFile(params.textDocument.uri)
-      ?.provideDefinition?.(params.textDocument.uri, params.position, token) ??
-    null,
+      ?.onDefinition?.(params, token, workDoneProgress, resultProgress) ?? null,
 );
 
 connection.onReferences(
-  (params, token) =>
+  (params, token, workDoneProgress, resultProgress) =>
     workspace
       .projectForFile(params.textDocument.uri)
-      ?.provideReferences?.(
-        params.textDocument.uri,
-        params.position,
-        params.context,
-        token,
-      ) ?? null,
+      ?.onReferences?.(params, token, workDoneProgress, resultProgress) ?? null,
 );
 
 connection.onDocumentSymbol(
-  (params, token) =>
+  (params, token, workDoneProgress, resultProgress) =>
     workspace
       .projectForFile(params.textDocument.uri)
-      ?.provideDocumentSymbol?.(params.textDocument.uri, token) ?? [],
+      ?.onDocumentSymbol?.(params, token, workDoneProgress, resultProgress) ??
+    [],
 );
 
 connection.onWorkspaceSymbol(async (params, token) => {
@@ -241,33 +246,28 @@ connection.onWorkspaceSymbol(async (params, token) => {
 
 connection.onCompletion(
   debounceHandler(
-    (params, token) =>
+    (params, token, workDoneProgress, resultProgress) =>
       workspace
         .projectForFile(params.textDocument.uri)
-        ?.provideCompletionItems?.(
-          params.textDocument.uri,
-          params.position,
-          token,
-        ) ?? [],
+        ?.onCompletion?.(params, token, workDoneProgress, resultProgress) ?? [],
   ),
 );
 
 connection.onCodeLens(
   debounceHandler(
-    (params, token) =>
+    (params, token, workDoneProgress, resultProgress) =>
       workspace
         .projectForFile(params.textDocument.uri)
-        ?.provideCodeLenses?.(params.textDocument.uri, token) ?? [],
+        ?.onCodeLens?.(params, token, workDoneProgress, resultProgress) ?? [],
   ),
 );
 
 connection.onCodeAction(
   debounceHandler(
-    (params, token) =>
+    (params, token, workDoneProgress, resultProgress) =>
       workspace
         .projectForFile(params.textDocument.uri)
-        ?.provideCodeAction?.(params.textDocument.uri, params.range, token) ??
-      [],
+        ?.onCodeAction?.(params, token, workDoneProgress, resultProgress) ?? [],
   ),
 );
 

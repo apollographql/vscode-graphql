@@ -47,12 +47,7 @@ import {
   CancellationToken,
   Position,
   Location,
-  Range,
-  CompletionItem,
-  Hover,
-  Definition,
   CodeLens,
-  ReferenceContext,
   InsertTextFormat,
   DocumentSymbol,
   SymbolKind,
@@ -108,6 +103,7 @@ import { isNotNullOrUndefined } from "../../tools";
 import type { CodeActionInfo } from "../errors/validation";
 import { GraphQLDiagnostic } from "../diagnostics";
 import { isInterfaceType } from "graphql";
+import { GraphQLInternalProject } from "./internal";
 
 type Maybe<T> = null | undefined | T;
 
@@ -180,7 +176,7 @@ export interface GraphQLClientProjectConfig {
   configFolderURI: URI;
   loadingHandler: LoadingHandler;
 }
-export class GraphQLClientProject extends GraphQLProject {
+export class GraphQLClientProject extends GraphQLInternalProject {
   public serviceID?: string;
   public config!: ClientConfig;
 
@@ -619,11 +615,10 @@ export class GraphQLClientProject extends GraphQLProject {
     return this.engineClient ? this.config.graph : undefined;
   }
 
-  async provideCompletionItems(
-    uri: DocumentUri,
-    position: Position,
+  onCompletion: GraphQLProject["onCompletion"] = async (
+    { textDocument: { uri }, position },
     _token: CancellationToken,
-  ): Promise<CompletionItem[]> {
+  ) => {
     const document = this.documentAt(uri, position);
     if (!document) return [];
 
@@ -769,13 +764,12 @@ export class GraphQLClientProject extends GraphQLProject {
     }
 
     return suggestions;
-  }
+  };
 
-  async provideHover(
-    uri: DocumentUri,
-    position: Position,
-    _token: CancellationToken,
-  ): Promise<Hover | null> {
+  onHover: GraphQLProject["onHover"] = async (
+    { textDocument: { uri }, position },
+    _token,
+  ) => {
     const document = this.documentAt(uri, position);
     if (!(document && document.ast)) return null;
 
@@ -929,13 +923,12 @@ export class GraphQLClientProject extends GraphQLProject {
       }
     }
     return null;
-  }
+  };
 
-  async provideDefinition(
-    uri: DocumentUri,
-    position: Position,
-    _token: CancellationToken,
-  ): Promise<Definition | null> {
+  onDefinition: GraphQLProject["onDefinition"] = async ({
+    position,
+    textDocument: { uri },
+  }) => {
     const document = this.documentAt(uri, position);
     if (!(document && document.ast)) return null;
 
@@ -989,14 +982,12 @@ export class GraphQLClientProject extends GraphQLProject {
       }
     }
     return null;
-  }
+  };
 
-  async provideReferences(
-    uri: DocumentUri,
-    position: Position,
-    _context: ReferenceContext,
-    _token: CancellationToken,
-  ): Promise<Location[] | null> {
+  onReferences: GraphQLProject["onReferences"] = async ({
+    position,
+    textDocument: { uri },
+  }) => {
     const document = this.documentAt(uri, position);
     if (!(document && document.ast)) return null;
 
@@ -1067,12 +1058,11 @@ export class GraphQLClientProject extends GraphQLProject {
     }
 
     return null;
-  }
+  };
 
-  async provideDocumentSymbol(
-    uri: DocumentUri,
-    _token: CancellationToken,
-  ): Promise<DocumentSymbol[]> {
+  onDocumentSymbol: GraphQLProject["onDocumentSymbol"] = async ({
+    textDocument: { uri },
+  }) => {
     const definitions = this.definitionsAt(uri);
 
     const symbols: DocumentSymbol[] = [];
@@ -1113,7 +1103,7 @@ export class GraphQLClientProject extends GraphQLProject {
     }
 
     return symbols;
-  }
+  };
 
   async provideSymbol(
     _query: string,
@@ -1136,10 +1126,9 @@ export class GraphQLClientProject extends GraphQLProject {
     return symbols;
   }
 
-  async provideCodeLenses(
-    uri: DocumentUri,
-    _token: CancellationToken,
-  ): Promise<CodeLens[]> {
+  onCodeLens: GraphQLProject["onCodeLens"] = async ({
+    textDocument: { uri },
+  }) => {
     // Wait for the project to be fully initialized, so we always provide code lenses for open files, even
     // if we receive the request before the project is ready.
     await this.whenReady;
@@ -1216,13 +1205,12 @@ export class GraphQLClientProject extends GraphQLProject {
       }
     }
     return codeLenses;
-  }
+  };
 
-  async provideCodeAction(
-    uri: DocumentUri,
-    range: Range,
-    _token: CancellationToken,
-  ): Promise<CodeAction[]> {
+  onCodeAction: GraphQLProject["onCodeAction"] = async ({
+    textDocument: { uri },
+    range,
+  }) => {
     function isPositionLessThanOrEqual(a: Position, b: Position) {
       return a.line !== b.line ? a.line < b.line : a.character <= b.character;
     }
@@ -1268,7 +1256,7 @@ export class GraphQLClientProject extends GraphQLProject {
     }
 
     return result;
-  }
+  };
 }
 
 function buildExplorerURL({

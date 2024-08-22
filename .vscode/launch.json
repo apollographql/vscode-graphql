@@ -14,7 +14,10 @@
         "${workspaceFolder}/sampleWorkspace/sampleWorkspace.code-workspace"
       ],
       "sourceMaps": true,
-      "env": { "APOLLO_ENGINE_ENDPOINT": "http://localhost:7096/apollo" },
+      "env": {
+        "APOLLO_ENGINE_ENDPOINT": "http://localhost:7096/apollo",
+        "APOLLO_FEATURE_FLAGS": "rover"
+      },
       "outFiles": ["${workspaceRoot}/lib/**/*.js"]
     },
     {

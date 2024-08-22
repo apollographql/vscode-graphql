@@ -2,7 +2,6 @@ import { parse, Source, DocumentNode } from "graphql";
 import { SourceLocation, getLocation } from "graphql/language/location";
 
 import {
-  TextDocument,
   Position,
   Diagnostic,
   DiagnosticSeverity,
@@ -14,6 +13,7 @@ import {
   positionFromSourceLocation,
   rangeInContainingDocument,
 } from "./utilities/source";
+import { TextDocument } from "vscode-languageserver-textdocument";
 
 export class GraphQLDocument {
   ast?: DocumentNode;
@@ -51,44 +51,51 @@ export class GraphQLDocument {
   }
 }
 
-export function extractGraphQLDocuments(
+export function extractGraphQLSources(
   document: TextDocument,
   tagName: string = "gql",
-): GraphQLDocument[] | null {
+): Source[] | null {
   switch (document.languageId) {
     case "graphql":
-      return [
-        new GraphQLDocument(new Source(document.getText(), document.uri)),
-      ];
+      return [new Source(document.getText(), document.uri)];
     case "javascript":
     case "javascriptreact":
     case "typescript":
     case "typescriptreact":
     case "vue":
     case "svelte":
-      return extractGraphQLDocumentsFromJSTemplateLiterals(document, tagName);
+      return extractGraphQLSourcesFromJSTemplateLiterals(document, tagName);
     case "python":
-      return extractGraphQLDocumentsFromPythonStrings(document, tagName);
+      return extractGraphQLSourcesFromPythonStrings(document, tagName);
     case "ruby":
-      return extractGraphQLDocumentsFromRubyStrings(document, tagName);
+      return extractGraphQLSourcesFromRubyStrings(document, tagName);
     case "dart":
-      return extractGraphQLDocumentsFromDartStrings(document, tagName);
+      return extractGraphQLSourcesFromDartStrings(document, tagName);
     case "reason":
-      return extractGraphQLDocumentsFromReasonStrings(document, tagName);
+      return extractGraphQLSourcesFromReasonStrings(document, tagName);
     case "elixir":
-      return extractGraphQLDocumentsFromElixirStrings(document, tagName);
+      return extractGraphQLSourcesFromElixirStrings(document, tagName);
     default:
       return null;
   }
 }
 
-function extractGraphQLDocumentsFromJSTemplateLiterals(
+export function extractGraphQLDocuments(
+  document: TextDocument,
+  tagName: string = "gql",
+): GraphQLDocument[] | null {
+  const sources = extractGraphQLSources(document, tagName);
+  if (!sources) return null;
+  return sources.map((source) => new GraphQLDocument(source));
+}
+
+function extractGraphQLSourcesFromJSTemplateLiterals(
   document: TextDocument,
   tagName: string,
-): GraphQLDocument[] | null {
+): Source[] | null {
   const text = document.getText();
 
-  const documents: GraphQLDocument[] = [];
+  const sources: Source[] = [];
 
   const regExp = new RegExp(
     `(?:${tagName}(?:\\s|\\()*\`|\`#graphql)([\\s\\S]+?)\`\\)?`,
@@ -104,21 +111,21 @@ function extractGraphQLDocumentsFromJSTemplateLiterals(
       column: position.character + 1,
     };
     const source = new Source(contents, document.uri, locationOffset);
-    documents.push(new GraphQLDocument(source));
+    sources.push(source);
   }
 
-  if (documents.length < 1) return null;
+  if (sources.length < 1) return null;
 
-  return documents;
+  return sources;
 }
 
-function extractGraphQLDocumentsFromPythonStrings(
+function extractGraphQLSourcesFromPythonStrings(
   document: TextDocument,
   tagName: string,
-): GraphQLDocument[] | null {
+): Source[] | null {
   const text = document.getText();
 
-  const documents: GraphQLDocument[] = [];
+  const sources: Source[] = [];
 
   const regExp = new RegExp(
     `\\b(${tagName}\\s*\\(\\s*[bfru]*("(?:"")?|'(?:'')?))([\\s\\S]+?)\\2\\s*\\)`,
@@ -134,21 +141,21 @@ function extractGraphQLDocumentsFromPythonStrings(
       column: position.character + 1,
     };
     const source = new Source(contents, document.uri, locationOffset);
-    documents.push(new GraphQLDocument(source));
+    sources.push(source);
   }
 
-  if (documents.length < 1) return null;
+  if (sources.length < 1) return null;
 
-  return documents;
+  return sources;
 }
 
-function extractGraphQLDocumentsFromRubyStrings(
+function extractGraphQLSourcesFromRubyStrings(
   document: TextDocument,
   tagName: string,
-): GraphQLDocument[] | null {
+): Source[] | null {
   const text = document.getText();
 
-  const documents: GraphQLDocument[] = [];
+  const sources: Source[] = [];
 
   const regExp = new RegExp(`(<<-${tagName})([\\s\\S]+?)${tagName}`, "gm");
 
@@ -161,21 +168,21 @@ function extractGraphQLDocumentsFromRubyStrings(
       column: position.character + 1,
     };
     const source = new Source(contents, document.uri, locationOffset);
-    documents.push(new GraphQLDocument(source));
+    sources.push(source);
   }
 
-  if (documents.length < 1) return null;
+  if (sources.length < 1) return null;
 
-  return documents;
+  return sources;
 }
 
-function extractGraphQLDocumentsFromDartStrings(
+function extractGraphQLSourcesFromDartStrings(
   document: TextDocument,
   tagName: string,
-): GraphQLDocument[] | null {
+): Source[] | null {
   const text = document.getText();
 
-  const documents: GraphQLDocument[] = [];
+  const sources: Source[] = [];
 
   const regExp = new RegExp(
     `\\b(${tagName}\\(\\s*r?("""|'''))([\\s\\S]+?)\\2\\s*\\)`,
@@ -191,26 +198,26 @@ function extractGraphQLDocumentsFromDartStrings(
       column: position.character + 1,
     };
     const source = new Source(contents, document.uri, locationOffset);
-    documents.push(new GraphQLDocument(source));
+    sources.push(source);
   }
 
-  if (documents.length < 1) return null;
+  if (sources.length < 1) return null;
 
-  return documents;
+  return sources;
 }
 
-function extractGraphQLDocumentsFromReasonStrings(
+function extractGraphQLSourcesFromReasonStrings(
   document: TextDocument,
   tagName: string,
-): GraphQLDocument[] | null {
+): Source[] | null {
   const text = document.getText();
 
-  const documents: GraphQLDocument[] = [];
+  const sources: Source[] = [];
 
   const reasonFileFilter = new RegExp(/(\[%(graphql|relay\.))/g);
 
   if (!reasonFileFilter.test(text)) {
-    return documents;
+    return sources;
   }
 
   const reasonRegexp = new RegExp(
@@ -226,20 +233,20 @@ function extractGraphQLDocumentsFromReasonStrings(
       column: position.character + 1,
     };
     const source = new Source(contents, document.uri, locationOffset);
-    documents.push(new GraphQLDocument(source));
+    sources.push(source);
   }
 
-  if (documents.length < 1) return null;
+  if (sources.length < 1) return null;
 
-  return documents;
+  return sources;
 }
 
-function extractGraphQLDocumentsFromElixirStrings(
+function extractGraphQLSourcesFromElixirStrings(
   document: TextDocument,
   tagName: string,
-): GraphQLDocument[] | null {
+): Source[] | null {
   const text = document.getText();
-  const documents: GraphQLDocument[] = [];
+  const sources: Source[] = [];
 
   const regExp = new RegExp(
     `\\b(${tagName}\\(\\s*r?("""))([\\s\\S]+?)\\2\\s*\\)`,
@@ -255,12 +262,12 @@ function extractGraphQLDocumentsFromElixirStrings(
       column: position.character + 1,
     };
     const source = new Source(contents, document.uri, locationOffset);
-    documents.push(new GraphQLDocument(source));
+    sources.push(source);
   }
 
-  if (documents.length < 1) return null;
+  if (sources.length < 1) return null;
 
-  return documents;
+  return sources;
 }
 
 function replacePlaceholdersWithWhiteSpace(content: string) {

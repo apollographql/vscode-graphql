@@ -2,6 +2,7 @@ import {
   WorkspaceFolder,
   NotificationHandler,
   PublishDiagnosticsParams,
+  ClientCapabilities,
 } from "vscode-languageserver/node";
 import { QuickPickItem } from "vscode";
 import { GraphQLProject, DocumentUri } from "./project/base";
@@ -15,6 +16,7 @@ import { URI } from "vscode-uri";
 import { Debug } from "./utilities";
 import type { EngineDecoration } from "../messages";
 import { equal } from "@wry/equality";
+import { isRoverConfig, RoverProject } from "./project/rover/project";
 
 export interface WorkspaceConfig {
   clientIdentity: ClientIdentity;
@@ -26,6 +28,7 @@ export class GraphQLWorkspace {
   private _onSchemaTags?: NotificationHandler<[ServiceID, SchemaTag[]]>;
   private _onConfigFilesFound?: NotificationHandler<(ApolloConfig | Error)[]>;
   private _projectForFileCache: Map<string, GraphQLProject> = new Map();
+  public capabilities?: ClientCapabilities;
 
   private projectsByFolderUri: Map<string, GraphQLProject[]> = new Map();
 
@@ -65,8 +68,15 @@ export class GraphQLWorkspace {
           configFolderURI: URI.parse(folder.uri),
           clientIdentity,
         })
+      : isRoverConfig(config)
+      ? new RoverProject({
+          config,
+          loadingHandler: this.LanguageServerLoadingHandler,
+          configFolderURI: URI.parse(folder.uri),
+          capabilities: this.capabilities!, // TODO?
+        })
       : (() => {
-          throw new Error("TODO rover project");
+          throw new Error("Impossible config!");
         })();
 
     project.onDiagnostics((params) => {
@@ -86,7 +96,7 @@ export class GraphQLWorkspace {
     // after a project has loaded, we do an initial validation to surface errors
     // on the start of the language server. Instead of doing this in the
     // base class which is used by codegen and other tools
-    project.whenReady.then(() => project.validate());
+    project.whenReady.then(() => project.validate?.());
 
     return project;
   }

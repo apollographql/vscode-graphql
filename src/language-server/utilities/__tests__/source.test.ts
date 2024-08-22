@@ -5,6 +5,7 @@ import {
   positionFromPositionInContainingDocument,
 } from "../source";
 import { handleFilePartUpdates } from "../../project/rover/DocumentSynchronization";
+
 const testText = `import gql from "graphql-tag";
 
 const foo = 1

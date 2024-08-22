@@ -86,7 +86,7 @@ const roverConfig = z.object({
       (val) => val || which.sync("rover", { nothrow: true }) || undefined,
       z.string({
         message:
-          "Rover binary not found. Please either install it system-wide in PATH, or provide the `bin` option. Please also ensure that the binary is executable.",
+          "Rover binary not found. Please either install it system-wide in PATH, or provide the `bin` option. Also ensure that the binary is executable.",
       }),
     )
     .refine(
@@ -101,7 +101,7 @@ const roverConfig = z.object({
         }
       },
       {
-        message: "Rover binary is not executable",
+        message: "Rover binary is not marked as an executable. If you are using OS X or Linux, ensure to set the executable bit.",
       },
     ),
   profile: z.string().optional(),

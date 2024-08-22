@@ -222,7 +222,6 @@ export class DocumentSynchronization {
     );
 
     if (!match) return;
-    console.log(positionParams.position, match.position);
     return cb({
       textDocument: {
         uri: getUri(match),

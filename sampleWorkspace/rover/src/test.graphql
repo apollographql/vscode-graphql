@@ -1,12 +1,10 @@
-
-
 """
 The query type, represents all of the entry points into our object graph
 """
 type Query {
   me: User!
 }
- 
+
 """
 Test
 """

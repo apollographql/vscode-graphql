@@ -101,7 +101,8 @@ const roverConfig = z.object({
         }
       },
       {
-        message: "Rover binary is not marked as an executable. If you are using OS X or Linux, ensure to set the executable bit.",
+        message:
+          "Rover binary is not marked as an executable. If you are using OS X or Linux, ensure to set the executable bit.",
       },
     ),
   profile: z.string().optional(),

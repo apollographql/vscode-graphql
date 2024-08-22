@@ -67,7 +67,7 @@ export class RoverProject extends GraphQLProject {
   }
 
   initialize() {
-    return [this.connection.then(() => {})];
+    return [this.getConnection().then(() => {})];
   }
 
   /**
@@ -81,7 +81,7 @@ export class RoverProject extends GraphQLProject {
     }
   }
 
-  get connection(): Promise<ProtocolConnection> {
+  getConnection(): Promise<ProtocolConnection> {
     const connectionFromStorage = this.connectionStorage.getStore();
     if (connectionFromStorage) {
       return Promise.resolve(connectionFromStorage);
@@ -98,7 +98,7 @@ export class RoverProject extends GraphQLProject {
     type: ProtocolNotificationType<P, RO>,
     params?: P,
   ): Promise<void> {
-    const connection = await this.connection;
+    const connection = await this.getConnection();
     DEBUG &&
       console.log("sending notification %o", {
         type: type.method,
@@ -119,7 +119,7 @@ export class RoverProject extends GraphQLProject {
     params: P,
     token?: CancellationToken,
   ): Promise<R> {
-    const connection = await this.connection;
+    const connection = await this.getConnection();
     DEBUG && console.log("sending request %o", { type: type.method, params });
     try {
       const result = await connection.sendRequest(type, params, token);

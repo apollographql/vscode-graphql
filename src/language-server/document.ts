@@ -102,7 +102,7 @@ const parts = [
   // template string preceeded by a /* TAG_NAME */, /* graphql */ or /* GraphQL */ comment
   /\/\*\s*(?:TAG_NAME|graphql|GraphQL)\s*\*\/\s?`(.*?)`/,
   // function call to TAG_NAME with a single template string argument
-  /TAG_NAME\s*(?:<.*?>\s*)?\(\s*`(.*?)`\)/,
+  /TAG_NAME\s*(?:<.*?>\s*)?\(\s*`(.*?)`\s*\)/,
 ].map((r) => r.source);
 
 function extractGraphQLSourcesFromJSTemplateLiterals(
@@ -135,7 +135,9 @@ function extractGraphQLSourcesFromJSTemplateLiterals(
       column: position.character + 1,
     };
     const source = new Source(contents, document.uri, locationOffset);
-    sources.push(source);
+    if (source.body.trim().length > 0) {
+      sources.push(source);
+    }
   }
 
   if (sources.length < 1) return null;

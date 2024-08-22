@@ -87,7 +87,7 @@ gql(
 // prettier-ignore
 gql
 (
-  `query { test }`
+  `query Q11 { test }`
   )
 
 export {};

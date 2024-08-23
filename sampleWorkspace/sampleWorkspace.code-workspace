@@ -1,23 +1,26 @@
 {
-	"folders": [
-		{
-			"path": "localSchema"
-		},
-		{
-			"path": "clientSchema"
-		},
-		{
-			"path": "spotifyGraph"
-		},
-		{
-			"path": "httpSchema"
-		},
-		{
-			"path": "localSchemaArray"
-		},
-		{
-			"path": "rover"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "localSchema"
+    },
+    {
+      "path": "clientSchema"
+    },
+    {
+      "path": "spotifyGraph"
+    },
+    {
+      "path": "httpSchema"
+    },
+    {
+      "path": "localSchemaArray"
+    },
+    {
+      "path": "rover"
+    },
+    {
+      "path": "../src/language-server/__tests__/fixtures/documents"
+    }
+  ],
+  "settings": {}
 }

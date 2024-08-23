@@ -3,43 +3,40 @@
   "injectionSelector": "L:source -string -comment",
   "patterns": [
     {
-      "name": "taggedTemplates",
       "contentName": "meta.embedded.block.graphql",
-      "begin": "(Relay\\.QL|gql|graphql(\\.experimental)?)\\(?(`)",
-      "beginCaptures": {
-        "1": {
-          "name": "entity.name.function.tagged-template.js"
-        },
-        "2": {
-          "name": "punctuation.definition.string.template.begin.js"
-        }
-      },
-      "end": "`\\)?",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.template.end.js"
-        }
-      },
+      "begin": "(?:Relay\\.QL|gql|graphql(\\.experimental)?)\\s*(?:<.*?>\\s*)?`",
+      "end": "`",
       "patterns": [{ "include": "source.graphql" }]
     },
     {
-      "name": "taggedTemplates",
       "contentName": "meta.embedded.block.graphql",
-      "begin": "(`)(#graphql)",
+      "begin": "`(\\s*#[ ]*(gql|graphql|GraphQL))",
       "beginCaptures": {
         "1": {
-          "name": "punctuation.definition.string.template.begin.js"
+          "name": "meta.embedded.block.graphql comment.line.graphql.js"
         },
         "2": {
-          "name": "comment.line.graphql.js"
+          "name": "markup.italic"
         }
       },
       "end": "`",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.template.end.js"
+      "patterns": [{ "include": "source.graphql" }]
+    },
+    {
+      "contentName": "meta.embedded.block.graphql",
+      "begin": "(?:gql|graphql)\\s*(?:<.*?>\\s*)?\\(\\s*`",
+      "end": "`\\s*\\)",
+      "patterns": [{ "include": "source.graphql" }]
+    },
+    {
+      "contentName": "meta.embedded.block.graphql",
+      "begin": "(?:\\/\\*[\\s\\*]*(gql|graphql|GraphQL)\\s*\\*\\/)\\s*(`)",
+      "beginCaptures": {
+        "1": {
+          "name": "markup.italic"
         }
       },
+      "end": "`",
       "patterns": [{ "include": "source.graphql" }]
     }
   ],

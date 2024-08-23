@@ -29,6 +29,7 @@
     "format": "prettier --write .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:extension": "node src/__e2e__/runTests.js",
+    "test:textmate": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
     "codegen": "graphql-codegen",
     "vscode:prepublish": "npm run build:production"
   },
@@ -91,7 +92,8 @@
     "rimraf": "6.0.1",
     "ts-jest": "29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vscode-tmgrammar-test": "^0.1.3"
   },
   "publisher": "apollographql",
   "categories": [

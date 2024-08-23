@@ -126,7 +126,7 @@ function extractGraphQLSourcesFromJSTemplateLiterals(
     // we have multiple alternative capture groups in the regexp, and only one of them will have a result
     // so we need the index for that
     const groupIndex = result.findIndex(
-      (part, index) => index != 0 && part != null,
+      (part, index) => index !== 0 && part != null,
     );
     const contents = replacePlaceholdersWithWhiteSpace(result[groupIndex]);
     const position = document.positionAt(result.indices![groupIndex][0]);

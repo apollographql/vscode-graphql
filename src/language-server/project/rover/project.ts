@@ -27,7 +27,7 @@ import { DocumentSynchronization } from "./DocumentSynchronization";
 import { AsyncLocalStorage } from "node:async_hooks";
 import internal from "node:stream";
 
-const DEBUG = true;
+export const DEBUG = true;
 
 export function isRoverConfig(config: ApolloConfig): config is RoverConfig {
   return config instanceof RoverConfig;

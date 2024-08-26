@@ -133,8 +133,6 @@ export abstract class GraphQLProject {
   onCodeLens?: ConnectionHandler["onCodeLens"];
   onCodeAction?: ConnectionHandler["onCodeAction"];
 
-  abstract onUnhandledRequest?: StarRequestHandler;
-  abstract onUnhandledNotification?: (
   onUnhandledRequest?: StarRequestHandler;
   onUnhandledNotification?: (
     connection: Connection,

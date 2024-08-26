@@ -19,6 +19,8 @@ import {
   PublishDiagnosticsNotification,
   ConnectionError,
   ConnectionErrors,
+  SemanticTokensRequest,
+  ProtocolRequestType0,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
@@ -57,6 +59,7 @@ export class RoverProject extends GraphQLProject {
   }
   private documents = new DocumentSynchronization(
     this.sendNotification.bind(this),
+    this.sendRequest.bind(this),
     (diagnostics) => this._onDiagnostics?.(diagnostics),
   );
 
@@ -248,8 +251,17 @@ export class RoverProject extends GraphQLProject {
       this.sendRequest(HoverRequest.type, virtualParams, token),
     );
 
-  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = (type, params) => {
-    DEBUG && console.info("unhandled request from VSCode", { type, params });
+  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = async (
+    type,
+    params,
+    token,
+  ) => {
+    if (isRequestType(SemanticTokensRequest.type, type, params)) {
+      return this.documents.getFullSemanticTokens(params, token);
+    } else {
+      DEBUG && console.info("unhandled request from VSCode", { type, params });
+      return undefined;
+    }
   };
   onUnhandledNotification: GraphQLProject["onUnhandledNotification"] = (
     _connection,
@@ -259,4 +271,23 @@ export class RoverProject extends GraphQLProject {
     DEBUG &&
       console.info("unhandled notification from VSCode", { type, params });
   };
+}
+
+function isRequestType<R, PR, E, RO>(
+  type: ProtocolRequestType0<R, PR, E, RO>,
+  method: string,
+  params: any,
+): params is PR;
+function isRequestType<P, R, PR, E, RO>(
+  type: ProtocolRequestType<P, R, PR, E, RO>,
+  method: string,
+  params: any,
+): params is P;
+function isRequestType(
+  type:
+    | ProtocolRequestType0<any, any, any, any>
+    | ProtocolRequestType<any, any, any, any, any>,
+  method: string,
+) {
+  return type.method === method;
 }

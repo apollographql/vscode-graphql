@@ -187,7 +187,10 @@ export class RoverProject extends GraphQLProject {
       );
       DEBUG && console.log("Connection initialized", status);
 
-      await this.connectionStorage.run(connection, this.documents.resendAllDocuments.bind(this.documents);
+      await this.connectionStorage.run(
+        connection,
+        this.documents.resendAllDocuments.bind(this.documents),
+      );
 
       return connection;
     } catch (error) {

@@ -327,8 +327,6 @@ export abstract class GraphQLInternalProject
     }
     return definitionsAndExtensions;
   }
-  onDidOpen: undefined;
-  onDidClose: undefined;
   onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
     params,
   ) => {
@@ -343,7 +341,4 @@ export abstract class GraphQLInternalProject
       }
     }
   };
-  onUnhandledRequest: undefined;
-  onUnhandledNotification: undefined;
-  dispose: undefined;
 }

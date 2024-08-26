@@ -207,8 +207,6 @@ export class RoverProject extends GraphQLProject {
     return uri.startsWith(this.rootURI.toString());
   }
 
-  validate?: () => void;
-
   onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
     params,
   ) => {
@@ -261,16 +259,4 @@ export class RoverProject extends GraphQLProject {
     DEBUG &&
       console.info("unhandled notification from VSCode", { type, params });
   };
-
-  // these are not supported yet
-  onDefinition: GraphQLProject["onDefinition"];
-  onReferences: GraphQLProject["onReferences"];
-  onDocumentSymbol: GraphQLProject["onDocumentSymbol"];
-  onCodeLens: GraphQLProject["onCodeLens"];
-  onCodeAction: GraphQLProject["onCodeAction"];
-
-  provideSymbol?(
-    query: string,
-    token: CancellationToken,
-  ): Promise<SymbolInformation[]>;
 }

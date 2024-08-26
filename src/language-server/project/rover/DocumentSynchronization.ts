@@ -5,23 +5,32 @@ import {
   DidOpenTextDocumentNotification,
   DidCloseTextDocumentNotification,
   TextDocumentPositionParams,
+  Diagnostic,
+  NotificationHandler,
+  PublishDiagnosticsParams,
 } from "vscode-languageserver-protocol";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { DocumentUri, GraphQLProject } from "../base";
 import { generateKeyBetween } from "fractional-indexing";
 import { Source } from "graphql";
-import { findContainedSourceAndPosition } from "../../utilities/source";
+import {
+  findContainedSourceAndPosition,
+  rangeInContainingDocument,
+} from "../../utilities/source";
+import { URI } from "vscode-uri";
+import { DEBUG } from "./project";
 
 export interface FilePart {
   fractionalIndex: string;
   source: Source;
+  diagnostics: Diagnostic[];
 }
 
 export function handleFilePartUpdates(
-  parsed: Source[],
-  previousParts: FilePart[],
-): FilePart[] {
-  const newParts = [];
+  parsed: ReadonlyArray<Source>,
+  previousParts: ReadonlyArray<FilePart>,
+): ReadonlyArray<FilePart> {
+  const newParts: FilePart[] = [];
   let newIdx = 0;
   let oldIdx = 0;
   let offsetCorrection = 0;
@@ -37,7 +46,7 @@ export function handleFilePartUpdates(
         newOffset === oldPart.source.locationOffset.line + offsetCorrection)
     ) {
       // replacement of chunk
-      newParts.push({ source, fractionalIndex: oldPart.fractionalIndex });
+      newParts.push({ ...oldPart, source });
       offsetCorrection =
         source.locationOffset.line - oldPart.source.locationOffset.line;
       newIdx++;
@@ -53,7 +62,7 @@ export function handleFilePartUpdates(
           : newParts[newParts.length - 1].fractionalIndex,
         oldPart ? oldPart.fractionalIndex : null,
       );
-      newParts.push({ source, fractionalIndex });
+      newParts.push({ source, fractionalIndex, diagnostics: [] });
       newIdx++;
       offsetCorrection += source.body.split("\n").length - 1;
     } else {
@@ -64,8 +73,21 @@ export function handleFilePartUpdates(
   return newParts;
 }
 
-function getUri(part: FilePart) {
-  return part.source.name + "/" + part.fractionalIndex + ".graphql";
+function getUri(document: TextDocument, part: FilePart) {
+  let uri = URI.parse(part.source.name);
+  if (document.languageId !== "graphql") {
+    uri = uri.with({ fragment: part.fractionalIndex });
+  }
+
+  return uri.toString();
+}
+
+function splitUri(fullUri: DocumentUri) {
+  const uri = URI.parse(fullUri);
+  return {
+    uri: uri.with({ fragment: null }).toString(),
+    fractionalIndex: uri.fragment || "a0",
+  };
 }
 
 export class DocumentSynchronization {
@@ -74,7 +96,7 @@ export class DocumentSynchronization {
     DocumentUri,
     {
       full: TextDocument;
-      parts: FilePart[];
+      parts: ReadonlyArray<FilePart>;
     }
   >();
 
@@ -83,6 +105,7 @@ export class DocumentSynchronization {
       type: ProtocolNotificationType<P, RO>,
       params?: P,
     ) => Promise<void>,
+    private sendDiagnostics: NotificationHandler<PublishDiagnosticsParams>,
   ) {}
 
   private documentSynchronizationScheduled = false;
@@ -109,10 +132,12 @@ export class DocumentSynchronization {
     }
   };
 
-  private async sendDocumentChanges(document: TextDocument) {
+  private async sendDocumentChanges(
+    document: TextDocument,
+    previousParts = this.knownFiles.get(document.uri)?.parts || [],
+  ) {
     this.pendingDocumentChanges.delete(document.uri);
 
-    const previousParts = this.knownFiles.get(document.uri)?.parts || [];
     const previousObj = Object.fromEntries(
       previousParts.map((p) => [p.fractionalIndex, p]),
     );
@@ -130,7 +155,7 @@ export class DocumentSynchronization {
       if (!previousPart) {
         await this.sendNotification(DidOpenTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(newPart),
+            uri: getUri(document, newPart),
             languageId: "graphql",
             version: document.version,
             text: newPart.source.body,
@@ -139,7 +164,7 @@ export class DocumentSynchronization {
       } else if (newPart.source.body !== previousPart.source.body) {
         await this.sendNotification(DidChangeTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(newPart),
+            uri: getUri(document, newPart),
             version: document.version,
           },
           contentChanges: [
@@ -154,10 +179,16 @@ export class DocumentSynchronization {
       if (!newObj[previousPart.fractionalIndex]) {
         await this.sendNotification(DidCloseTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(previousPart),
+            uri: getUri(document, previousPart),
           },
         });
       }
+    }
+  }
+
+  async resendAllDocuments() {
+    for (const file of this.knownFiles.values()) {
+      await this.sendDocumentChanges(file.full, []);
     }
   }
 
@@ -179,7 +210,7 @@ export class DocumentSynchronization {
       known.parts.map((part) =>
         this.sendNotification(DidCloseTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(part),
+            uri: getUri(known.full, part),
           },
         }),
       ),
@@ -224,9 +255,54 @@ export class DocumentSynchronization {
     if (!match) return;
     return cb({
       textDocument: {
-        uri: getUri(match),
+        uri: getUri(found.full, match),
       },
       position: match.position,
     });
+  }
+
+  handlePartDiagnostics(params: PublishDiagnosticsParams) {
+    DEBUG && console.log("Received diagnostics", params);
+    const uriDetails = splitUri(params.uri);
+    if (!uriDetails) {
+      return;
+    }
+    const found = this.knownFiles.get(uriDetails.uri);
+    if (!found) {
+      return;
+    }
+    const part = found.parts.find(
+      (p) => p.fractionalIndex === uriDetails.fractionalIndex,
+    );
+    if (!part) {
+      return;
+    }
+    part.diagnostics = params.diagnostics;
+
+    const fullDocumentParams: PublishDiagnosticsParams = {
+      uri: found.full.uri,
+      version: found.full.version,
+      diagnostics: found.parts.flatMap((p) =>
+        p.diagnostics.map((diagnostic) => ({
+          ...diagnostic,
+          range: rangeInContainingDocument(p.source, diagnostic.range),
+        })),
+      ),
+    };
+
+    this.sendDiagnostics(fullDocumentParams);
+  }
+
+  get openDocuments() {
+    return [...this.knownFiles.values()].map((f) => f.full);
+  }
+
+  clearAllDiagnostics() {
+    for (const file of this.knownFiles.values()) {
+      for (const part of file.parts) {
+        part.diagnostics = [];
+      }
+      this.sendDiagnostics({ uri: file.full.uri, diagnostics: [] });
+    }
   }
 }

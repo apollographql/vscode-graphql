@@ -167,12 +167,24 @@ export class GraphQLWorkspace {
     this.projectsByFolderUri.forEach((projects, uri) => {
       this.projectsByFolderUri.set(
         uri,
-        projects.map((project) => {
-          project.clearAllDiagnostics();
-          return this.createProject({
-            config: project.config,
-            folder: { uri } as WorkspaceFolder,
-          });
+        projects.map((oldProject) => {
+          oldProject.clearAllDiagnostics();
+
+          try {
+            const newProject = this.createProject({
+              config: oldProject.config,
+              folder: { uri } as WorkspaceFolder,
+            });
+            if (
+              oldProject instanceof RoverProject &&
+              newProject instanceof RoverProject
+            ) {
+              newProject.restoreFromPreviousProject(oldProject);
+            }
+            return newProject;
+          } finally {
+            oldProject.dispose?.();
+          }
         }),
       );
     });
@@ -237,7 +249,10 @@ export class GraphQLWorkspace {
   removeProjectsInFolder(folder: WorkspaceFolder) {
     const projects = this.projectsByFolderUri.get(folder.uri);
     if (projects) {
-      projects.forEach((project) => project.clearAllDiagnostics());
+      projects.forEach((project) => {
+        project.clearAllDiagnostics();
+        project.dispose?.();
+      });
       this.projectsByFolderUri.delete(folder.uri);
     }
   }

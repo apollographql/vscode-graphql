@@ -292,5 +292,50 @@ connection.onRequest(Requests.FileStats, async ({ uri }) => {
   return workspace.projectForFile(uri)?.getProjectStats() ?? { loaded: false };
 });
 
+connection.onRequest((method, params, token) => {
+  return getProjectFromUnknownParams(params, workspace)?.onUnhandledRequest?.(
+    method,
+    params,
+    token,
+  );
+});
+
+connection.onNotification((method, params) => {
+  return getProjectFromUnknownParams(
+    params,
+    workspace,
+  )?.onUnhandledNotification?.(connection, method, params);
+});
+
 // Listen on the connection
 connection.listen();
+
+// ------------------------------ utility functions ------------------------------
+
+function getProjectFromUnknownParams(
+  params: object | any[] | undefined,
+  workspace: GraphQLWorkspace,
+) {
+  const param0 = Array.isArray(params) ? params[0] : params;
+  if (!param0) return;
+  let uri: string | undefined;
+  if (typeof param0 === "string" && param0.startsWith("file://")) {
+    uri = param0;
+  } else if (
+    typeof param0 === "object" &&
+    "uri" in param0 &&
+    param0.uri &&
+    typeof param0.uri === "string"
+  ) {
+    uri = param0.uri;
+  } else if (
+    typeof param0 === "object" &&
+    param0.textDocument &&
+    typeof param0.textDocument === "object" &&
+    param0.textDocument.uri &&
+    typeof param0.textDocument.uri === "string"
+  ) {
+    uri = param0.textDocument.uri;
+  }
+  return uri ? workspace.projectForFile(uri) : undefined;
+}

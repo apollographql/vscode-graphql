@@ -343,4 +343,7 @@ export abstract class GraphQLInternalProject
       }
     }
   };
+  onUnhandledRequest: undefined;
+  onUnhandledNotification: undefined;
+  dispose: undefined;
 }

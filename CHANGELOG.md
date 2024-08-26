@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [#179](https://github.com/apollographql/vscode-graphql/pull/179) [`b4687eb52458c7fd80f447c8060922e23ef77590`](https://github.com/apollographql/vscode-graphql/commit/b4687eb52458c7fd80f447c8060922e23ef77590) Thanks [@phryneas](https://github.com/phryneas)! - Improve detection of GraphQL inside of JavaScript/TypeScript files.
+- [#179](https://github.com/apollographql/vscode-graphql/pull/179) [`b4687eb`](https://github.com/apollographql/vscode-graphql/commit/b4687eb52458c7fd80f447c8060922e23ef77590) Thanks [@phryneas](https://github.com/phryneas)! - Improve detection of GraphQL inside of JavaScript/TypeScript files.
   Add support for `/** GraphQL */` annotations before a template string.
 
 ### Patch Changes

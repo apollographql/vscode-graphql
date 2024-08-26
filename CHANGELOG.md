@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## 2.1.0
+
+### Minor Changes
+
+- [#179](https://github.com/apollographql/vscode-graphql/pull/179) [`b4687eb52458c7fd80f447c8060922e23ef77590`](https://github.com/apollographql/vscode-graphql/commit/b4687eb52458c7fd80f447c8060922e23ef77590) Thanks [@phryneas](https://github.com/phryneas)! - Improve detection of GraphQL inside of JavaScript/TypeScript files.
+  Add support for `/** GraphQL */` annotations before a template string.
+
+### Patch Changes
+
+- [#173](https://github.com/apollographql/vscode-graphql/pull/173) [`415ff4a1`](https://github.com/apollographql/vscode-graphql/commit/415ff4a1bb85adba6fc2da190510c8a4ba3a74d1) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug where when rapidly changing multiple files some of the changes might have gotten lost.
+
+- [#176](https://github.com/apollographql/vscode-graphql/pull/176) [`cbc1c638`](https://github.com/apollographql/vscode-graphql/commit/cbc1c6384a1275bfc9fddbb0ff2bdfddaa6464f9) Thanks [@phryneas](https://github.com/phryneas)! - Fixed a bug where annotations might have mapped to the wrong position on the first line of an embedded document.
+
+- [#173](https://github.com/apollographql/vscode-graphql/pull/173) [`415ff4a1`](https://github.com/apollographql/vscode-graphql/commit/415ff4a1bb85adba6fc2da190510c8a4ba3a74d1) Thanks [@phryneas](https://github.com/phryneas)! - Fixed a bug where hints on the 0-th line of an embedded GraphQL document were offset incorrectly.
+
+  E.g. in
+
+  ```js
+  const veryLongVariableName = gql`
+    type Foo {
+      baaaaaar: String
+    }
+  `;
+  ```
+
+  the hover on `String` would only appear when hovering characters left of it.
+
 ## 2.0.1
 
 ### Patch Changes

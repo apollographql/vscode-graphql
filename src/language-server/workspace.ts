@@ -17,6 +17,7 @@ import { Debug } from "./utilities";
 import type { EngineDecoration } from "../messages";
 import { equal } from "@wry/equality";
 import { isRoverConfig, RoverProject } from "./project/rover/project";
+import { VSCodeConnection } from "./server";
 
 export interface WorkspaceConfig {
   clientIdentity: ClientIdentity;
@@ -35,6 +36,7 @@ export class GraphQLWorkspace {
   constructor(
     private LanguageServerLoadingHandler: LanguageServerLoadingHandler,
     private config: WorkspaceConfig,
+    private whenConnectionInitialized: Promise<VSCodeConnection>,
   ) {}
 
   onDiagnostics(handler: NotificationHandler<PublishDiagnosticsParams>) {
@@ -98,6 +100,11 @@ export class GraphQLWorkspace {
     // base class which is used by codegen and other tools
     project.whenReady.then(() => project.validate?.());
 
+    if (project.onVSCodeConnectionInitialized) {
+      this.whenConnectionInitialized.then(
+        project.onVSCodeConnectionInitialized.bind(project),
+      );
+    }
     return project;
   }
 

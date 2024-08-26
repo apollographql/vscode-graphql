@@ -12,6 +12,7 @@ import {
   TextDocumentChangeEvent,
   StarRequestHandler,
   StarNotificationHandler,
+  ServerCapabilities,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
@@ -145,4 +146,7 @@ export abstract class GraphQLProject {
     query: string,
     token: CancellationToken,
   ): Promise<SymbolInformation[]>;
+
+  onVSCodeConnectionInitialized?(connection: Connection): void;
+  validate?(): void;
 }

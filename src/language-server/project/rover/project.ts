@@ -3,7 +3,6 @@ import { DocumentUri, GraphQLProject } from "../base";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
   CancellationToken,
-  SymbolInformation,
   InitializeRequest,
   StreamMessageReader,
   StreamMessageWriter,
@@ -21,6 +20,10 @@ import {
   ConnectionErrors,
   SemanticTokensRequest,
   ProtocolRequestType0,
+  ServerCapabilities,
+  SemanticTokensRegistrationType,
+  SemanticTokensOptions,
+  SemanticTokensRegistrationOptions,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
@@ -28,6 +31,7 @@ import { ApolloConfig, RoverConfig } from "../../config";
 import { DocumentSynchronization } from "./DocumentSynchronization";
 import { AsyncLocalStorage } from "node:async_hooks";
 import internal from "node:stream";
+import { VSCodeConnection } from "src/language-server/server";
 
 export const DEBUG = true;
 
@@ -54,6 +58,7 @@ export class RoverProject extends GraphQLProject {
     | undefined;
   private disposed = false;
   readonly capabilities: ClientCapabilities;
+  roverCapabilities?: ServerCapabilities;
   get displayName(): string {
     return "Rover Project";
   }
@@ -188,6 +193,7 @@ export class RoverProject extends GraphQLProject {
         },
         source.token,
       );
+      this.roverCapabilities = status.capabilities;
       DEBUG && console.log("Connection initialized", status);
 
       await this.connectionStorage.run(
@@ -271,6 +277,24 @@ export class RoverProject extends GraphQLProject {
     DEBUG &&
       console.info("unhandled notification from VSCode", { type, params });
   };
+
+  async onVSCodeConnectionInitialized(connection: VSCodeConnection) {
+    // Report the actual capabilities of the upstream LSP to VSCode.
+    // It is important to actually "ask" the LSP for this, because the capabilities
+    // also define the semantic token legend, which is needed to interpret the tokens.
+    await this.getConnection();
+    const capabilities = this.roverCapabilities;
+    if (capabilities?.semanticTokensProvider) {
+      connection.client.register(SemanticTokensRegistrationType.type, {
+        documentSelector: null,
+        ...capabilities.semanticTokensProvider,
+        full: {
+          // the upstream LSP supports "true" here, but we don't yet
+          delta: false,
+        },
+      });
+    }
+  }
 }
 
 function isRequestType<R, PR, E, RO>(

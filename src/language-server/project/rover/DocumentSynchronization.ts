@@ -17,6 +17,8 @@ import {
   findContainedSourceAndPosition,
   rangeInContainingDocument,
 } from "../../utilities/source";
+import { URI } from "vscode-uri";
+import { DEBUG } from "./project";
 
 export interface FilePart {
   fractionalIndex: string;
@@ -71,14 +73,21 @@ export function handleFilePartUpdates(
   return newParts;
 }
 
-function getUri(part: FilePart) {
-  return part.source.name + "/" + part.fractionalIndex + ".graphql";
+function getUri(document: TextDocument, part: FilePart) {
+  let uri = URI.parse(part.source.name);
+  if (document.languageId !== "graphql") {
+    uri = uri.with({ fragment: part.fractionalIndex });
+  }
+
+  return uri.toString();
 }
+
 function splitUri(fullUri: DocumentUri) {
-  const result = /^(.*)\/(\w+)\.graphql/.exec(fullUri);
-  if (!result) return null;
-  const [, uri, fractionalIndex] = result;
-  return { uri, fractionalIndex };
+  const uri = URI.parse(fullUri);
+  return {
+    uri: uri.with({ fragment: null }).toString(),
+    fractionalIndex: uri.fragment || "a0",
+  };
 }
 
 export class DocumentSynchronization {
@@ -146,7 +155,7 @@ export class DocumentSynchronization {
       if (!previousPart) {
         await this.sendNotification(DidOpenTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(newPart),
+            uri: getUri(document, newPart),
             languageId: "graphql",
             version: document.version,
             text: newPart.source.body,
@@ -155,7 +164,7 @@ export class DocumentSynchronization {
       } else if (newPart.source.body !== previousPart.source.body) {
         await this.sendNotification(DidChangeTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(newPart),
+            uri: getUri(document, newPart),
             version: document.version,
           },
           contentChanges: [
@@ -170,7 +179,7 @@ export class DocumentSynchronization {
       if (!newObj[previousPart.fractionalIndex]) {
         await this.sendNotification(DidCloseTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(previousPart),
+            uri: getUri(document, previousPart),
           },
         });
       }
@@ -201,7 +210,7 @@ export class DocumentSynchronization {
       known.parts.map((part) =>
         this.sendNotification(DidCloseTextDocumentNotification.type, {
           textDocument: {
-            uri: getUri(part),
+            uri: getUri(known.full, part),
           },
         }),
       ),
@@ -246,13 +255,14 @@ export class DocumentSynchronization {
     if (!match) return;
     return cb({
       textDocument: {
-        uri: getUri(match),
+        uri: getUri(found.full, match),
       },
       position: match.position,
     });
   }
 
   handlePartDiagnostics(params: PublishDiagnosticsParams) {
+    DEBUG && console.log("Received diagnostics", params);
     const uriDetails = splitUri(params.uri);
     if (!uriDetails) {
       return;

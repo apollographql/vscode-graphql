@@ -1,7 +1,6 @@
 import { ProjectStats } from "src/messages";
 import { DocumentUri, GraphQLProject } from "../base";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { generateKeyBetween } from "fractional-indexing";
 import {
   CancellationToken,
   SymbolInformation,
@@ -17,11 +16,18 @@ import {
   DidChangeWatchedFilesNotification,
   HoverRequest,
   CancellationTokenSource,
+  PublishDiagnosticsNotification,
+  ConnectionError,
+  ConnectionErrors,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
 import { ApolloConfig, RoverConfig } from "../../config";
 import { DocumentSynchronization } from "./DocumentSynchronization";
+import { AsyncLocalStorage } from "node:async_hooks";
+import internal from "node:stream";
+
+const DEBUG = true;
 
 export function isRoverConfig(config: ApolloConfig): config is RoverConfig {
   return config instanceof RoverConfig;
@@ -34,13 +40,24 @@ export interface RoverProjectConfig extends GraphQLProjectConfig {
 
 export class RoverProject extends GraphQLProject {
   config: RoverConfig;
-  _connection?: Promise<ProtocolConnection>;
-  capabilities: ClientCapabilities;
+  /**
+   * Allows overriding the connection for a certain async code path, so inside of initialization,
+   * calls to `this.connection` can immediately resolve without having to wait for initialization
+   * to complete (like every other call to `this.connection` would).
+   */
+  private connectionStorage = new AsyncLocalStorage<ProtocolConnection>();
+  private _connection?: Promise<ProtocolConnection>;
+  private child:
+    | cp.ChildProcessByStdio<internal.Writable, internal.Readable, null>
+    | undefined;
+  private disposed = false;
+  readonly capabilities: ClientCapabilities;
   get displayName(): string {
     return "Rover Project";
   }
   private documents = new DocumentSynchronization(
     this.sendNotification.bind(this),
+    (diagnostics) => this._onDiagnostics?.(diagnostics),
   );
 
   constructor(options: RoverProjectConfig) {
@@ -50,23 +67,51 @@ export class RoverProject extends GraphQLProject {
   }
 
   initialize() {
-    return [this.connection.then(() => {})];
+    return [this.getConnection().then(() => {})];
   }
 
-  get connection(): Promise<ProtocolConnection> {
-    if (this._connection instanceof Promise) {
-      return this._connection;
+  /**
+   * Since Rover projects do not scan all the folders in the workspace on start,
+   * we need to restore the information about open documents from the previous session
+   * in case or a project recreation (configuration reload).
+   */
+  restoreFromPreviousProject(previousProject: RoverProject) {
+    for (const document of previousProject.documents.openDocuments) {
+      this.documents.onDidOpenTextDocument({ document });
     }
-    return (this._connection = this.initializeConnection());
+  }
+
+  getConnection(): Promise<ProtocolConnection> {
+    const connectionFromStorage = this.connectionStorage.getStore();
+    if (connectionFromStorage) {
+      return Promise.resolve(connectionFromStorage);
+    }
+
+    if (!this._connection) {
+      this._connection = this.initializeConnection();
+    }
+
+    return this._connection;
   }
 
   private async sendNotification<P, RO>(
     type: ProtocolNotificationType<P, RO>,
     params?: P,
   ): Promise<void> {
-    const connection = await this.connection;
-    console.log("sending notification", { type, params });
-    return connection.sendNotification(type, params);
+    const connection = await this.getConnection();
+    DEBUG &&
+      console.log("sending notification %o", {
+        type: type.method,
+        params,
+      });
+    try {
+      return await connection.sendNotification(type, params);
+    } catch (error) {
+      if (error instanceof Error) {
+        (error as any).cause = { type: type.method, params };
+      }
+      throw error;
+    }
   }
 
   private async sendRequest<P, R, PR, E, RO>(
@@ -74,32 +119,41 @@ export class RoverProject extends GraphQLProject {
     params: P,
     token?: CancellationToken,
   ): Promise<R> {
-    const connection = await this.connection;
-    console.log("sending request", { type, params });
-    return connection
-      .sendRequest(type, params, token)
-      .then((result) => {
-        console.log({ result });
-        return result;
-      })
-      .catch((error) => {
-        console.error({ error });
-        throw error;
-      });
+    const connection = await this.getConnection();
+    DEBUG && console.log("sending request %o", { type: type.method, params });
+    try {
+      const result = await connection.sendRequest(type, params, token);
+      DEBUG && console.log({ result });
+      return result;
+    } catch (error) {
+      if (error instanceof Error) {
+        (error as any).cause = { type: type.method, params };
+      }
+      throw error;
+    }
   }
 
-  initializeConnection() {
+  async initializeConnection() {
+    if (this.child) {
+      this.child.kill();
+    }
+    if (this.disposed) {
+      throw new ConnectionError(
+        ConnectionErrors.Closed,
+        "Connection is closed.",
+      );
+    }
     const child = cp.spawn(this.config.rover.bin, ["lsp"], {
-      env: { RUST_BACKTRACE: "1" },
+      env: DEBUG ? { RUST_BACKTRACE: "1" } : {},
+      stdio: ["pipe", "pipe", DEBUG ? "inherit" : "ignore"],
     });
+    this.child = child;
     const reader = new StreamMessageReader(child.stdout);
     const writer = new StreamMessageWriter(child.stdin);
-    child.stderr.on("data", (data) => {
-      console.info("stderr", data.toString());
-    });
     const connection = createProtocolConnection(reader, writer);
     connection.onClose(() => {
-      console.log("Connection closed");
+      DEBUG && console.log("Connection closed");
+      child.kill();
       source.cancel();
       this._connection = undefined;
     });
@@ -108,12 +162,21 @@ export class RoverProject extends GraphQLProject {
       console.error({ err });
     });
 
+    connection.onNotification(
+      PublishDiagnosticsNotification.type,
+      this.documents.handlePartDiagnostics.bind(this.documents),
+    );
+
+    connection.onUnhandledNotification((notification) => {
+      DEBUG && console.info("unhandled notification from LSP", notification);
+    });
+
     connection.listen();
-    console.log("Initializing connection");
+    DEBUG && console.log("Initializing connection");
 
     const source = new CancellationTokenSource();
-    return connection
-      .sendRequest(
+    try {
+      const status = await connection.sendRequest(
         InitializeRequest.type,
         {
           capabilities: this.capabilities,
@@ -121,17 +184,19 @@ export class RoverProject extends GraphQLProject {
           rootUri: this.rootURI.toString(),
         },
         source.token,
-      )
-      .then(
-        (status) => {
-          console.log("Connection initialized", status);
-          return connection;
-        },
-        (error) => {
-          console.error("Connection failed to initialize", error);
-          throw error;
-        },
       );
+      DEBUG && console.log("Connection initialized", status);
+
+      await this.connectionStorage.run(
+        connection,
+        this.documents.resendAllDocuments.bind(this.documents),
+      );
+
+      return connection;
+    } catch (error) {
+      console.error("Connection failed to initialize", error);
+      throw error;
+    }
   }
 
   getProjectStats(): ProjectStats {
@@ -147,7 +212,6 @@ export class RoverProject extends GraphQLProject {
   onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
     params,
   ) => {
-    console.log("onDidChangeWatchedFiles", params);
     return this.sendNotification(
       DidChangeWatchedFilesNotification.type,
       params,
@@ -163,8 +227,18 @@ export class RoverProject extends GraphQLProject {
     return this.documents.documentDidChange(document);
   }
 
-  // TODO: diagnostics handling in general
-  clearAllDiagnostics() {}
+  clearAllDiagnostics() {
+    this.documents.clearAllDiagnostics();
+  }
+
+  dispose() {
+    this.disposed = true;
+    if (this.child) {
+      // this will immediately close the connection without a direct reference
+      this.child.stdout.emit("close");
+      this.child.kill();
+    }
+  }
 
   onCompletion: GraphQLProject["onCompletion"] = async (params, token) =>
     this.documents.insideVirtualDocument(params, (virtualParams) =>
@@ -175,6 +249,18 @@ export class RoverProject extends GraphQLProject {
     this.documents.insideVirtualDocument(params, (virtualParams) =>
       this.sendRequest(HoverRequest.type, virtualParams, token),
     );
+
+  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = (type, params) => {
+    DEBUG && console.info("unhandled request from VSCode", { type, params });
+  };
+  onUnhandledNotification: GraphQLProject["onUnhandledNotification"] = (
+    _connection,
+    type,
+    params,
+  ) => {
+    DEBUG &&
+      console.info("unhandled notification from VSCode", { type, params });
+  };
 
   // these are not supported yet
   onDefinition: GraphQLProject["onDefinition"];

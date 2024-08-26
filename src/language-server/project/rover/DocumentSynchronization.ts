@@ -5,23 +5,30 @@ import {
   DidOpenTextDocumentNotification,
   DidCloseTextDocumentNotification,
   TextDocumentPositionParams,
+  Diagnostic,
+  NotificationHandler,
+  PublishDiagnosticsParams,
 } from "vscode-languageserver-protocol";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { DocumentUri, GraphQLProject } from "../base";
 import { generateKeyBetween } from "fractional-indexing";
 import { Source } from "graphql";
-import { findContainedSourceAndPosition } from "../../utilities/source";
+import {
+  findContainedSourceAndPosition,
+  rangeInContainingDocument,
+} from "../../utilities/source";
 
 export interface FilePart {
   fractionalIndex: string;
   source: Source;
+  diagnostics: Diagnostic[];
 }
 
 export function handleFilePartUpdates(
-  parsed: Source[],
-  previousParts: FilePart[],
-): FilePart[] {
-  const newParts = [];
+  parsed: ReadonlyArray<Source>,
+  previousParts: ReadonlyArray<FilePart>,
+): ReadonlyArray<FilePart> {
+  const newParts: FilePart[] = [];
   let newIdx = 0;
   let oldIdx = 0;
   let offsetCorrection = 0;
@@ -37,7 +44,7 @@ export function handleFilePartUpdates(
         newOffset === oldPart.source.locationOffset.line + offsetCorrection)
     ) {
       // replacement of chunk
-      newParts.push({ source, fractionalIndex: oldPart.fractionalIndex });
+      newParts.push({ ...oldPart, source });
       offsetCorrection =
         source.locationOffset.line - oldPart.source.locationOffset.line;
       newIdx++;
@@ -53,7 +60,7 @@ export function handleFilePartUpdates(
           : newParts[newParts.length - 1].fractionalIndex,
         oldPart ? oldPart.fractionalIndex : null,
       );
-      newParts.push({ source, fractionalIndex });
+      newParts.push({ source, fractionalIndex, diagnostics: [] });
       newIdx++;
       offsetCorrection += source.body.split("\n").length - 1;
     } else {
@@ -67,6 +74,12 @@ export function handleFilePartUpdates(
 function getUri(part: FilePart) {
   return part.source.name + "/" + part.fractionalIndex + ".graphql";
 }
+function splitUri(fullUri: DocumentUri) {
+  const result = /^(.*)\/(\w+)\.graphql/.exec(fullUri);
+  if (!result) return null;
+  const [, uri, fractionalIndex] = result;
+  return { uri, fractionalIndex };
+}
 
 export class DocumentSynchronization {
   private pendingDocumentChanges = new Map<DocumentUri, TextDocument>();
@@ -74,7 +87,7 @@ export class DocumentSynchronization {
     DocumentUri,
     {
       full: TextDocument;
-      parts: FilePart[];
+      parts: ReadonlyArray<FilePart>;
     }
   >();
 
@@ -83,6 +96,7 @@ export class DocumentSynchronization {
       type: ProtocolNotificationType<P, RO>,
       params?: P,
     ) => Promise<void>,
+    private sendDiagnostics: NotificationHandler<PublishDiagnosticsParams>,
   ) {}
 
   private documentSynchronizationScheduled = false;
@@ -109,10 +123,12 @@ export class DocumentSynchronization {
     }
   };
 
-  private async sendDocumentChanges(document: TextDocument) {
+  private async sendDocumentChanges(
+    document: TextDocument,
+    previousParts = this.knownFiles.get(document.uri)?.parts || [],
+  ) {
     this.pendingDocumentChanges.delete(document.uri);
 
-    const previousParts = this.knownFiles.get(document.uri)?.parts || [];
     const previousObj = Object.fromEntries(
       previousParts.map((p) => [p.fractionalIndex, p]),
     );
@@ -158,6 +174,12 @@ export class DocumentSynchronization {
           },
         });
       }
+    }
+  }
+
+  async resendAllDocuments() {
+    for (const file of this.knownFiles.values()) {
+      await this.sendDocumentChanges(file.full, []);
     }
   }
 
@@ -228,5 +250,49 @@ export class DocumentSynchronization {
       },
       position: match.position,
     });
+  }
+
+  handlePartDiagnostics(params: PublishDiagnosticsParams) {
+    const uriDetails = splitUri(params.uri);
+    if (!uriDetails) {
+      return;
+    }
+    const found = this.knownFiles.get(uriDetails.uri);
+    if (!found) {
+      return;
+    }
+    const part = found.parts.find(
+      (p) => p.fractionalIndex === uriDetails.fractionalIndex,
+    );
+    if (!part) {
+      return;
+    }
+    part.diagnostics = params.diagnostics;
+
+    const fullDocumentParams: PublishDiagnosticsParams = {
+      uri: found.full.uri,
+      version: found.full.version,
+      diagnostics: found.parts.flatMap((p) =>
+        p.diagnostics.map((diagnostic) => ({
+          ...diagnostic,
+          range: rangeInContainingDocument(p.source, diagnostic.range),
+        })),
+      ),
+    };
+
+    this.sendDiagnostics(fullDocumentParams);
+  }
+
+  get openDocuments() {
+    return [...this.knownFiles.values()].map((f) => f.full);
+  }
+
+  clearAllDiagnostics() {
+    for (const file of this.knownFiles.values()) {
+      for (const part of file.parts) {
+        part.diagnostics = [];
+      }
+      this.sendDiagnostics({ uri: file.full.uri, diagnostics: [] });
+    }
   }
 }

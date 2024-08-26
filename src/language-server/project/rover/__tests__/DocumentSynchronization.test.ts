@@ -143,6 +143,7 @@ describe("handleFilePartUpdates", () => {
     expect(initialUpdates).toEqual([
       {
         fractionalIndex: "a0",
+        diagnostics: [],
         source: new Source(query1, "uri", {
           column: 5,
           line: 3,
@@ -150,6 +151,7 @@ describe("handleFilePartUpdates", () => {
       },
       {
         fractionalIndex: "a1",
+        diagnostics: [],
         source: new Source(query2, "uri", {
           column: 5,
           line: 11,
@@ -169,6 +171,7 @@ describe("handleFilePartUpdates", () => {
     ).toEqual([
       {
         fractionalIndex: "a0",
+        diagnostics: [],
         source: new Source(query1, "uri", {
           column: 5,
           line: 5,
@@ -176,6 +179,7 @@ describe("handleFilePartUpdates", () => {
       },
       {
         fractionalIndex: "a1",
+        diagnostics: [],
         source: new Source(query2, "uri", {
           column: 5,
           line: 13,
@@ -195,6 +199,7 @@ describe("handleFilePartUpdates", () => {
     ).toEqual([
       {
         fractionalIndex: "a0",
+        diagnostics: [],
         source: new Source(query1, "uri", {
           column: 5,
           line: 5,
@@ -202,6 +207,7 @@ describe("handleFilePartUpdates", () => {
       },
       {
         fractionalIndex: "a0V",
+        diagnostics: [],
         source: new Source(query3, "uri", {
           column: 5,
           line: 12,
@@ -209,6 +215,7 @@ describe("handleFilePartUpdates", () => {
       },
       {
         fractionalIndex: "a1",
+        diagnostics: [],
         source: new Source(query2, "uri", {
           column: 5,
           line: 19,
@@ -228,6 +235,7 @@ describe("handleFilePartUpdates", () => {
     ).toEqual([
       {
         fractionalIndex: "a0",
+        diagnostics: [],
         source: new Source(query1, "uri", {
           column: 5,
           line: 5,
@@ -235,6 +243,7 @@ describe("handleFilePartUpdates", () => {
       },
       {
         fractionalIndex: "a1",
+        diagnostics: [],
         source: new Source(query2, "uri", {
           column: 5,
           line: 12,
@@ -242,6 +251,7 @@ describe("handleFilePartUpdates", () => {
       },
       {
         fractionalIndex: "a2",
+        diagnostics: [],
         source: new Source(query3, "uri", {
           column: 5,
           line: 19,
@@ -261,6 +271,7 @@ describe("handleFilePartUpdates", () => {
     ).toEqual([
       {
         fractionalIndex: "a1",
+        diagnostics: [],
         source: new Source(query2, "uri", {
           column: 5,
           line: 5,
@@ -280,6 +291,7 @@ describe("handleFilePartUpdates", () => {
     ).toEqual([
       {
         fractionalIndex: "a0",
+        diagnostics: [],
         source: new Source(query1, "uri", {
           column: 5,
           line: 3,

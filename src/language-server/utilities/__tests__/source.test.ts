@@ -3,6 +3,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import {
   findContainedSourceAndPosition,
   positionFromPositionInContainingDocument,
+  positionInContainingDocument,
 } from "../source";
 import { handleFilePartUpdates } from "../../project/rover/DocumentSynchronization";
 
@@ -112,5 +113,50 @@ describe("findContainedSourceAndPosition", () => {
         character: 46,
       }),
     ).toEqual({ ...parts[1], position: { line: 0, character: 21 } });
+  });
+});
+describe("positionInContainingDocument", () => {
+  const parts = handleFilePartUpdates(
+    extractGraphQLSources(
+      TextDocument.create("uri", "javascript", 1, testText),
+      "gql",
+    )!,
+    [],
+  );
+
+  test("should return the correct position inside a document", () => {
+    expect(
+      positionInContainingDocument(parts[0].source, {
+        line: 1,
+        character: 3,
+      }),
+    ).toEqual({ line: 5, character: 3 });
+  });
+
+  test("should return the correct position on the first line of a document", () => {
+    expect(
+      positionInContainingDocument(parts[0].source, {
+        line: 0,
+        character: 0,
+      }),
+    ).toEqual({ line: 4, character: 4 });
+  });
+
+  test("should return the correct position on the last line of a document", () => {
+    expect(
+      positionInContainingDocument(parts[0].source, {
+        line: 6,
+        character: 0,
+      }),
+    ).toEqual({ line: 10, character: 0 });
+  });
+
+  test("should return the correct position on a single line document", () => {
+    expect(
+      positionInContainingDocument(parts[1].source, {
+        line: 0,
+        character: 21,
+      }),
+    ).toEqual({ line: 12, character: 46 });
   });
 });

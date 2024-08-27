@@ -6,6 +6,7 @@ import {
 
 /**
  * @returns An object with language identifiers as keys and file extensions as values.
+ * see https://github.com/microsoft/vscode/issues/109919
  */
 export function getLangugageInformation(): LanguageIdExtensionMap {
   const allKnownExtensions = vscode.extensions.all

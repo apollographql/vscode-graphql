@@ -99,9 +99,6 @@ Object {
       "**/node_modules",
       "**/__tests__",
     ],
-    "includes": Array [
-      "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
-    ],
     "service": "hello",
     "tagName": "gql",
   },
@@ -395,9 +392,14 @@ Object {
         configPath: dirPath,
       });
 
-      expect((config?.rawConfig as any).client.includes).toEqual([
-        "src/**/*.{ts,tsx,js,jsx,graphql,gql}",
-      ]);
+      expect((config?.rawConfig as any).client.includes).toEqual(
+        /**
+         * This will be calculated in the `GraphQLInternalProject` constructor by calling `getSupportedExtensions()`
+         * which will have information about all the extensions added by other VSCode extensions for the language ids
+         * that Apollo supports.
+         */
+        undefined,
+      );
     });
 
     it("merges engine config defaults", async () => {

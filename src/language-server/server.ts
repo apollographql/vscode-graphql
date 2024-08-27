@@ -21,8 +21,13 @@ import {
   LanguageServerRequests as Requests,
 } from "../messages";
 import { isValidationError } from "zod-validation-error";
-import { Trie } from "@wry/trie";
 import { GraphQLProject } from "./project/base";
+import type { LanguageIdExtensionMap } from "../tools/utilities/languageInformation";
+import { setLanguageIdExtensionMap } from "./utilities/languageIdForExtension";
+
+export type InitializationOptions = {
+  languageIdExtensionMap: LanguageIdExtensionMap;
+};
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -84,43 +89,49 @@ workspace.onConfigFilesFound(async (params) => {
   );
 });
 
-connection.onInitialize(async ({ capabilities, workspaceFolders }) => {
-  hasWorkspaceFolderCapability = !!(
-    capabilities.workspace && capabilities.workspace.workspaceFolders
-  );
-  workspace.capabilities = capabilities;
+connection.onInitialize(
+  async ({ capabilities, workspaceFolders, initializationOptions }) => {
+    const { languageIdExtensionMap } =
+      initializationOptions as InitializationOptions;
+    setLanguageIdExtensionMap(languageIdExtensionMap);
 
-  if (workspaceFolders) {
-    // We wait until all projects are added, because after `initialize` returns we can get additional requests
-    // like `textDocument/codeLens`, and that way these can await `GraphQLProject#whenReady` to make sure
-    // we provide them eventually.
-    await Promise.all(
-      workspaceFolders.map((folder) => workspace.addProjectsInFolder(folder)),
+    hasWorkspaceFolderCapability = !!(
+      capabilities.workspace && capabilities.workspace.workspaceFolders
     );
-  }
+    workspace.capabilities = capabilities;
 
-  return {
-    capabilities: {
-      hoverProvider: true,
-      completionProvider: {
-        resolveProvider: false,
-        triggerCharacters: ["...", "@"],
-      },
-      definitionProvider: true,
-      referencesProvider: true,
-      documentSymbolProvider: true,
-      workspaceSymbolProvider: true,
-      codeLensProvider: {
-        resolveProvider: false,
-      },
-      codeActionProvider: true,
-      executeCommandProvider: {
-        commands: [],
-      },
-      textDocumentSync: TextDocumentSyncKind.Full,
-    } as ServerCapabilities,
-  };
-});
+    if (workspaceFolders) {
+      // We wait until all projects are added, because after `initialize` returns we can get additional requests
+      // like `textDocument/codeLens`, and that way these can await `GraphQLProject#whenReady` to make sure
+      // we provide them eventually.
+      await Promise.all(
+        workspaceFolders.map((folder) => workspace.addProjectsInFolder(folder)),
+      );
+    }
+
+    return {
+      capabilities: {
+        hoverProvider: true,
+        completionProvider: {
+          resolveProvider: false,
+          triggerCharacters: ["...", "@"],
+        },
+        definitionProvider: true,
+        referencesProvider: true,
+        documentSymbolProvider: true,
+        workspaceSymbolProvider: true,
+        codeLensProvider: {
+          resolveProvider: false,
+        },
+        codeActionProvider: true,
+        executeCommandProvider: {
+          commands: [],
+        },
+        textDocumentSync: TextDocumentSyncKind.Full,
+      } as ServerCapabilities,
+    };
+  },
+);
 
 connection.onInitialized(async () => {
   initializeConnection();
@@ -147,7 +158,10 @@ function isFile(uri: string) {
 }
 
 documents.onDidChangeContent((params) => {
-  const project = workspace.projectForFile(params.document.uri);
+  const project = workspace.projectForFile(
+    params.document.uri,
+    params.document.languageId,
+  );
   if (!project) return;
 
   // Only watch changes to files
@@ -160,12 +174,16 @@ documents.onDidChangeContent((params) => {
 
 documents.onDidOpen(
   (params) =>
-    workspace.projectForFile(params.document.uri)?.onDidOpen?.(params),
+    workspace
+      .projectForFile(params.document.uri, params.document.languageId)
+      ?.onDidOpen?.(params),
 );
 
 documents.onDidClose(
   (params) =>
-    workspace.projectForFile(params.document.uri)?.onDidClose?.(params),
+    workspace
+      .projectForFile(params.document.uri, params.document.languageId)
+      ?.onDidClose?.(params),
 );
 
 connection.onDidChangeWatchedFiles((params) => {
@@ -246,28 +264,31 @@ connection.onWorkspaceSymbol(async (params, token) => {
 
 connection.onCompletion(
   debounceHandler(
-    (params, token, workDoneProgress, resultProgress) =>
+    ((params, token, workDoneProgress, resultProgress) =>
       workspace
         .projectForFile(params.textDocument.uri)
-        ?.onCompletion?.(params, token, workDoneProgress, resultProgress) ?? [],
+        ?.onCompletion?.(params, token, workDoneProgress, resultProgress) ??
+      []) satisfies Parameters<typeof connection.onCompletion>[0],
   ),
 );
 
 connection.onCodeLens(
   debounceHandler(
-    (params, token, workDoneProgress, resultProgress) =>
+    ((params, token, workDoneProgress, resultProgress) =>
       workspace
         .projectForFile(params.textDocument.uri)
-        ?.onCodeLens?.(params, token, workDoneProgress, resultProgress) ?? [],
+        ?.onCodeLens?.(params, token, workDoneProgress, resultProgress) ??
+      []) satisfies Parameters<typeof connection.onCodeLens>[0],
   ),
 );
 
 connection.onCodeAction(
   debounceHandler(
-    (params, token, workDoneProgress, resultProgress) =>
+    ((params, token, workDoneProgress, resultProgress) =>
       workspace
         .projectForFile(params.textDocument.uri)
-        ?.onCodeAction?.(params, token, workDoneProgress, resultProgress) ?? [],
+        ?.onCodeAction?.(params, token, workDoneProgress, resultProgress) ??
+      []) satisfies Parameters<typeof connection.onCodeAction>[0],
   ),
 );
 

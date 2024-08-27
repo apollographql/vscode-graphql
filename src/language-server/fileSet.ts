@@ -14,12 +14,10 @@ export class FileSet {
     rootURI,
     includes,
     excludes,
-    configURI,
   }: {
     rootURI: URI;
     includes: string[];
     excludes: string[];
-    configURI?: URI;
   }) {
     invariant(rootURI, `Must provide "rootURI".`);
     invariant(includes, `Must provide "includes".`);
@@ -28,13 +26,6 @@ export class FileSet {
     this.rootURI = rootURI;
     this.includes = includes;
     this.excludes = excludes;
-  }
-
-  pushIncludes(files: string[]) {
-    this.includes.push(...files);
-  }
-  pushExcludes(files: string[]) {
-    this.excludes.push(...files);
   }
 
   includesFile(filePath: string): boolean {
@@ -57,10 +48,14 @@ export class FileSet {
   }
 
   allFiles(): string[] {
-    // since glob.sync takes a single pattern, but we allow an array of `includes`, we can join all the
-    // `includes` globs into a single pattern and pass to glob.sync. The `ignore` option does, however, allow
-    // an array of globs to ignore, so we can pass it in directly
-    const joinedIncludes = `{${this.includes.join(",")}}`;
+    const joinedIncludes =
+      this.includes.length == 1
+        ? this.includes[0]
+        : // since glob.sync takes a single pattern, but we allow an array of `includes`, we can join all the
+          // `includes` globs into a single pattern and pass to glob.sync. The `ignore` option does, however, allow
+          // an array of globs to ignore, so we can pass it in directly
+          `{${this.includes.join(",")}}`;
+
     return globSync(joinedIncludes, {
       cwd: this.rootURI.fsPath,
       absolute: true,

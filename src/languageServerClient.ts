@@ -6,8 +6,16 @@ import {
   RevealOutputChannelOn,
 } from "vscode-languageclient/node";
 import { workspace, OutputChannel } from "vscode";
+import { supportedLanguageIds } from "./tools/utilities/languageInformation";
+import type { InitializationOptions } from "./language-server/server";
+import { getLangugageInformation } from "./tools/utilities/getLanguageInformation";
 
 const { version, referenceID } = require("../package.json");
+
+const languageIdExtensionMap = getLangugageInformation();
+const supportedExtensions = supportedLanguageIds.flatMap(
+  (id) => languageIdExtensionMap[id],
+);
 
 export function getLanguageServerClient(
   serverModule: string,
@@ -41,25 +49,12 @@ export function getLanguageServerClient(
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [
-      "graphql",
-      "javascript",
-      "typescript",
-      "javascriptreact",
-      "typescriptreact",
-      "vue",
-      "svelte",
-      "python",
-      "ruby",
-      "dart",
-      "reason",
-      "elixir",
-    ],
+    documentSelector: supportedLanguageIds,
     synchronize: {
       fileEvents: [
         workspace.createFileSystemWatcher("**/.env?(.local)"),
         workspace.createFileSystemWatcher(
-          "**/*.{graphql,js,ts,cjs,mjs,jsx,tsx,vue,svelte,py,rb,dart,re,ex,exs}",
+          "**/*{" + supportedExtensions.join(",") + "}",
         ),
       ],
     },
@@ -69,6 +64,9 @@ export function getLanguageServerClient(
       .get("debug.revealOutputOnLanguageServerError")
       ? RevealOutputChannelOn.Error
       : RevealOutputChannelOn.Never,
+    initializationOptions: {
+      languageIdExtensionMap,
+    } satisfies InitializationOptions,
   };
 
   return new LanguageClient(

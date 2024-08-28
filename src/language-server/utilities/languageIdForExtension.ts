@@ -1,10 +1,11 @@
 import {
+  FileExtension,
   LanguageIdExtensionMap,
   supportedLanguageIds,
 } from "../../tools/utilities/languageInformation";
 
-let languageIdPerExtension: Record<`.${string}`, string> | undefined;
-let supportedExtensions: `.${string}`[] | undefined;
+let languageIdPerExtension: Record<FileExtension, string> | undefined;
+let supportedExtensions: FileExtension[] | undefined;
 
 export function setLanguageIdExtensionMap(map: LanguageIdExtensionMap) {
   languageIdPerExtension = Object.fromEntries(
@@ -20,7 +21,7 @@ export function setLanguageIdExtensionMap(map: LanguageIdExtensionMap) {
 /**
  * @throws if called before the language server has received options via `onInitialize`.
  */
-export function getLanguageIdForExtension(ext: `.${string}`) {
+export function getLanguageIdForExtension(ext: FileExtension) {
   if (!languageIdPerExtension) {
     throw new Error("LanguageIdExtensionMap not set");
   }

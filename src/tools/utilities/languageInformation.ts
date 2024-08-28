@@ -17,9 +17,11 @@ export const supportedLanguageIds =
   // remove the `readonly` we get from using `as const`
   _supportedDocumentTypes as any as SupportedLanguageIds[];
 
+export type FileExtension = `.${string}`;
+
 export const minimumKnownExtensions: Record<
   SupportedLanguageIds,
-  `.${string}`[]
+  FileExtension[]
 > = {
   graphql: [".gql", ".graphql", ".graphqls"],
   javascript: [".js", ".mjs", ".cjs"],

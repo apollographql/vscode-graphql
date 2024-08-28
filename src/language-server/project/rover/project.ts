@@ -28,6 +28,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import internal from "node:stream";
 import { getLanguageIdForExtension } from "../../utilities/languageIdForExtension";
 import { extname } from "node:path";
+import type { FileExtension } from "../../../tools/utilities/languageInformation";
 
 export const DEBUG = true;
 
@@ -211,7 +212,7 @@ export class RoverProject extends GraphQLProject {
 
   includesFile(
     uri: DocumentUri,
-    languageId = getLanguageIdForExtension(extname(uri) as `.${string}`),
+    languageId = getLanguageIdForExtension(extname(uri) as FileExtension),
   ) {
     return (
       uri.startsWith(this.rootURI.toString()) &&

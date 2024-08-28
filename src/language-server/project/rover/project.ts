@@ -3,7 +3,6 @@ import { DocumentUri, GraphQLProject } from "../base";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
   CancellationToken,
-  SymbolInformation,
   InitializeRequest,
   StreamMessageReader,
   StreamMessageWriter,
@@ -19,6 +18,12 @@ import {
   PublishDiagnosticsNotification,
   ConnectionError,
   ConnectionErrors,
+  SemanticTokensRequest,
+  ProtocolRequestType0,
+  ServerCapabilities,
+  SemanticTokensRegistrationType,
+  SemanticTokensOptions,
+  SemanticTokensRegistrationOptions,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
@@ -26,6 +31,7 @@ import { ApolloConfig, RoverConfig } from "../../config";
 import { DocumentSynchronization } from "./DocumentSynchronization";
 import { AsyncLocalStorage } from "node:async_hooks";
 import internal from "node:stream";
+import { VSCodeConnection } from "../../server";
 import { getLanguageIdForExtension } from "../../utilities/languageIdForExtension";
 import { extname } from "node:path";
 import type { FileExtension } from "../../../tools/utilities/languageInformation";
@@ -59,11 +65,13 @@ export class RoverProject extends GraphQLProject {
     | undefined;
   private disposed = false;
   readonly capabilities: ClientCapabilities;
+  roverCapabilities?: ServerCapabilities;
   get displayName(): string {
     return "Rover Project";
   }
   private documents = new DocumentSynchronization(
     this.sendNotification.bind(this),
+    this.sendRequest.bind(this),
     (diagnostics) => this._onDiagnostics?.(diagnostics),
   );
 
@@ -192,6 +200,7 @@ export class RoverProject extends GraphQLProject {
         },
         source.token,
       );
+      this.roverCapabilities = status.capabilities;
       DEBUG && console.log("Connection initialized", status);
 
       await this.connectionStorage.run(
@@ -219,8 +228,6 @@ export class RoverProject extends GraphQLProject {
       supportedLanguageIds.includes(languageId)
     );
   }
-
-  validate?: () => void;
 
   onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
     params,
@@ -263,8 +270,17 @@ export class RoverProject extends GraphQLProject {
       this.sendRequest(HoverRequest.type, virtualParams, token),
     );
 
-  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = (type, params) => {
-    DEBUG && console.info("unhandled request from VSCode", { type, params });
+  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = async (
+    type,
+    params,
+    token,
+  ) => {
+    if (isRequestType(SemanticTokensRequest.type, type, params)) {
+      return this.documents.getFullSemanticTokens(params, token);
+    } else {
+      DEBUG && console.info("unhandled request from VSCode", { type, params });
+      return undefined;
+    }
   };
   onUnhandledNotification: GraphQLProject["onUnhandledNotification"] = (
     _connection,
@@ -275,15 +291,40 @@ export class RoverProject extends GraphQLProject {
       console.info("unhandled notification from VSCode", { type, params });
   };
 
-  // these are not supported yet
-  onDefinition: GraphQLProject["onDefinition"];
-  onReferences: GraphQLProject["onReferences"];
-  onDocumentSymbol: GraphQLProject["onDocumentSymbol"];
-  onCodeLens: GraphQLProject["onCodeLens"];
-  onCodeAction: GraphQLProject["onCodeAction"];
+  async onVSCodeConnectionInitialized(connection: VSCodeConnection) {
+    // Report the actual capabilities of the upstream LSP to VSCode.
+    // It is important to actually "ask" the LSP for this, because the capabilities
+    // also define the semantic token legend, which is needed to interpret the tokens.
+    await this.getConnection();
+    const capabilities = this.roverCapabilities;
+    if (capabilities?.semanticTokensProvider) {
+      connection.client.register(SemanticTokensRegistrationType.type, {
+        documentSelector: null,
+        ...capabilities.semanticTokensProvider,
+        full: {
+          // the upstream LSP supports "true" here, but we don't yet
+          delta: false,
+        },
+      });
+    }
+  }
+}
 
-  provideSymbol?(
-    query: string,
-    token: CancellationToken,
-  ): Promise<SymbolInformation[]>;
+function isRequestType<R, PR, E, RO>(
+  type: ProtocolRequestType0<R, PR, E, RO>,
+  method: string,
+  params: any,
+): params is PR;
+function isRequestType<P, R, PR, E, RO>(
+  type: ProtocolRequestType<P, R, PR, E, RO>,
+  method: string,
+  params: any,
+): params is P;
+function isRequestType(
+  type:
+    | ProtocolRequestType0<any, any, any, any>
+    | ProtocolRequestType<any, any, any, any, any>,
+  method: string,
+) {
+  return type.method === method;
 }

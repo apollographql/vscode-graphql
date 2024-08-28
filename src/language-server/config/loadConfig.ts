@@ -1,5 +1,5 @@
 import { cosmiconfig, defaultLoaders } from "cosmiconfig";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
 import { readFileSync, existsSync, lstatSync } from "fs";
 import {
   ApolloConfig,
@@ -103,5 +103,6 @@ export async function loadConfig({
   return parseApolloConfig(config, URI.file(resolve(filepath)), {
     apiKey,
     serviceName: nameFromKey,
+    configPath: dirname(filepath),
   });
 }

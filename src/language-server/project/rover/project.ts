@@ -150,7 +150,18 @@ export class RoverProject extends GraphQLProject {
         "Connection is closed.",
       );
     }
-    const child = cp.spawn(this.config.rover.bin, ["lsp"], {
+    const args = ["lsp", "--elv2-license", "accept"];
+    if (this.config.rover.profile) {
+      args.push("--profile", this.config.rover.profile);
+    }
+    if (this.config.rover.supergraphConfig) {
+      args.push("--supergraph-config", this.config.rover.supergraphConfig);
+    }
+    args.push(...this.config.rover.extraArgs);
+
+    DEBUG &&
+      console.log(`starting ${this.config.rover.bin} '${args.join("' '")}'`);
+    const child = cp.spawn(this.config.rover.bin, args, {
       env: DEBUG ? { RUST_BACKTRACE: "1" } : {},
       stdio: ["pipe", "pipe", DEBUG ? "inherit" : "ignore"],
     });

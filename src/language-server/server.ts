@@ -4,7 +4,6 @@ import {
   ProposedFeatures,
   TextDocuments,
   FileChangeType,
-  ServerCapabilities,
   TextDocumentSyncKind,
   SymbolInformation,
   FileEvent,
@@ -30,6 +29,7 @@ export type InitializationOptions = {
 };
 
 const connection = createConnection(ProposedFeatures.all);
+export type VSCodeConnection = typeof connection;
 
 Debug.SetConnection(connection);
 const { sendNotification: originalSendNotification } = connection;
@@ -42,8 +42,8 @@ connection.sendNotification = async (...args: [any, ...any[]]) => {
 let hasWorkspaceFolderCapability = false;
 
 // Awaitable promise for sending messages before the connection is initialized
-let initializeConnection: () => void;
-const whenConnectionInitialized: Promise<void> = new Promise(
+let initializeConnection: (c: typeof connection) => void;
+const whenConnectionInitialized: Promise<typeof connection> = new Promise(
   (resolve) => (initializeConnection = resolve),
 );
 
@@ -60,6 +60,7 @@ const workspace = new GraphQLWorkspace(
         require("../../package.json").version,
     },
   },
+  whenConnectionInitialized,
 );
 
 workspace.onDiagnostics((params) => {
@@ -128,13 +129,13 @@ connection.onInitialize(
           commands: [],
         },
         textDocumentSync: TextDocumentSyncKind.Full,
-      } as ServerCapabilities,
+      },
     };
   },
 );
 
 connection.onInitialized(async () => {
-  initializeConnection();
+  initializeConnection(connection);
   if (hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders(async (event) => {
       await Promise.all([

@@ -8,6 +8,11 @@ import {
   Diagnostic,
   NotificationHandler,
   PublishDiagnosticsParams,
+  SemanticTokensRequest,
+  ProtocolRequestType,
+  SemanticTokensParams,
+  SemanticTokens,
+  CancellationToken,
 } from "vscode-languageserver-protocol";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { DocumentUri, GraphQLProject } from "../base";
@@ -105,6 +110,11 @@ export class DocumentSynchronization {
       type: ProtocolNotificationType<P, RO>,
       params?: P,
     ) => Promise<void>,
+    private sendRequest: <P, R, PR, E, RO>(
+      type: ProtocolRequestType<P, R, PR, E, RO>,
+      params: P,
+      token?: CancellationToken,
+    ) => Promise<R>,
     private sendDiagnostics: NotificationHandler<PublishDiagnosticsParams>,
   ) {}
 
@@ -304,5 +314,72 @@ export class DocumentSynchronization {
       }
       this.sendDiagnostics({ uri: file.full.uri, diagnostics: [] });
     }
+  }
+
+  /**
+   * Receives semantic tokens for all sub-documents and glues them together.
+   * See https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens
+   * TLDR: The tokens are a flat array of numbers, where each token is represented by 5 numbers.
+   * The first two numbers represent the token's delta line and delta start character and might need adjusing
+   * relative to the start of a sub-document in relation to the position of the last token of the previous sub-document.
+   *
+   * There is also an "incremental" version of this request, but we don't support it yet.
+   * This is complicated enough as it is.
+   */
+  async getFullSemanticTokens(
+    params: SemanticTokensParams,
+    cancellationToken: CancellationToken,
+  ): Promise<SemanticTokens | null> {
+    await this.synchronizedWithDocument(params.textDocument.uri);
+    const found = this.knownFiles.get(params.textDocument.uri);
+    if (!found) {
+      return null;
+    }
+    const allParts = await Promise.all(
+      found.parts.map(async (part) => {
+        return {
+          part,
+          tokens: await this.sendRequest(
+            SemanticTokensRequest.type,
+            {
+              textDocument: { uri: getUri(found.full, part) },
+            },
+            cancellationToken,
+          ),
+        };
+      }),
+    );
+    let line = 0,
+      char = 0,
+      lastLine = 0,
+      lastChar = 0;
+    const combinedTokens = [];
+    for (const { part, tokens } of allParts) {
+      if (!tokens) {
+        continue;
+      }
+      line = part.source.locationOffset.line - 1;
+      char = part.source.locationOffset.column - 1;
+      for (let i = 0; i < tokens.data.length; i += 5) {
+        const deltaLine = tokens.data[i],
+          deltaStartChar = tokens.data[i + 1];
+
+        // We need to run this loop fully to correctly calculate the `lastLine` and `lastChar`
+        // so for the next incoming tokens, we can adjust the delta correctly.
+        line = line + deltaLine;
+        char = deltaLine === 0 ? char + deltaStartChar : deltaStartChar;
+        // we just need to adjust the deltas only for the first token
+        if (i === 0) {
+          tokens.data[0] = line - lastLine;
+          tokens.data[1] = line === lastLine ? lastChar - char : char;
+        }
+      }
+      combinedTokens.push(...tokens.data);
+      lastLine = line;
+      lastChar = char;
+    }
+    return {
+      data: combinedTokens,
+    };
   }
 }

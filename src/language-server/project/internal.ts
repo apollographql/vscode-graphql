@@ -30,6 +30,8 @@ import {
 import { ApolloEngineClient, ClientIdentity } from "../engine";
 import { GraphQLProject, DocumentUri, GraphQLProjectConfig } from "./base";
 import throttle from "lodash.throttle";
+import { FileSet } from "../fileSet";
+import { getSupportedExtensions } from "../utilities/languageIdForExtension";
 
 const fileAssociations: { [extension: string]: string } = {
   ".graphql": "graphql",
@@ -58,6 +60,7 @@ export abstract class GraphQLInternalProject
 {
   public schemaProvider: GraphQLSchemaProvider;
   protected engineClient?: ApolloEngineClient;
+  private fileSet: FileSet;
 
   private needsValidation = false;
 
@@ -70,16 +73,23 @@ export abstract class GraphQLInternalProject
     clientIdentity,
   }: GraphQLInternalProjectConfig) {
     super({ config, configFolderURI, loadingHandler });
-    const { includes = [], excludes = [] } = config.client;
+    const {
+      // something like
+      // 'src/**/*{.gql,.graphql,.graphqls,.js,.mjs,.cjs,.es6,.pac,.ts,.mts,.cts,.jsx,.tsx,.vue,.svelte,.py,.rpy,.pyw,.cpy,.gyp,.gypi,.pyi,.ipy,.pyt,.rb,.rbx,.rjs,.gemspec,.rake,.ru,.erb,.podspec,.rbi,.dart,.re,.ex,.exs}'
+      includes = [`src/**/*{${getSupportedExtensions().join(",")}}`],
+      excludes = [],
+    } = config.client;
 
     this.documentsByFile = new Map();
-
-    this.fileSet.pushIncludes(includes);
-    // We do not want to include the local schema file in our list of documents
-    this.fileSet.pushExcludes([
-      ...excludes,
-      ...this.getRelativeLocalSchemaFilePaths(),
-    ]);
+    this.fileSet = new FileSet({
+      rootURI: this.rootURI,
+      includes,
+      excludes: [
+        ...excludes,
+        // We do not want to include the local schema file in our list of documents
+        ...this.getRelativeLocalSchemaFilePaths(),
+      ],
+    });
 
     this.schemaProvider = schemaProviderFromConfig(config, clientIdentity);
     const { engine } = config;

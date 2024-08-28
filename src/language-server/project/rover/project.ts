@@ -31,7 +31,10 @@ import { ApolloConfig, RoverConfig } from "../../config";
 import { DocumentSynchronization } from "./DocumentSynchronization";
 import { AsyncLocalStorage } from "node:async_hooks";
 import internal from "node:stream";
-import { VSCodeConnection } from "src/language-server/server";
+import { VSCodeConnection } from "../../server";
+import { getLanguageIdForExtension } from "../../utilities/languageIdForExtension";
+import { extname } from "node:path";
+import type { FileExtension } from "../../../tools/utilities/languageInformation";
 
 export const DEBUG = true;
 
@@ -43,6 +46,10 @@ export interface RoverProjectConfig extends GraphQLProjectConfig {
   config: RoverConfig;
   capabilities: ClientCapabilities;
 }
+
+const supportedLanguageIds = (
+  process.env.APOLLO_ROVER_LANGUAGE_IDS || "graphql"
+).split(",");
 
 export class RoverProject extends GraphQLProject {
   config: RoverConfig;
@@ -212,8 +219,14 @@ export class RoverProject extends GraphQLProject {
     return { type: "Rover", loaded: true };
   }
 
-  includesFile(uri: DocumentUri) {
-    return uri.startsWith(this.rootURI.toString());
+  includesFile(
+    uri: DocumentUri,
+    languageId = getLanguageIdForExtension(extname(uri) as FileExtension),
+  ) {
+    return (
+      uri.startsWith(this.rootURI.toString()) &&
+      supportedLanguageIds.includes(languageId)
+    );
   }
 
   onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (

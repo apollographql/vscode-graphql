@@ -41,7 +41,7 @@ export interface RoverProjectConfig extends GraphQLProjectConfig {
 }
 
 const supportedLanguageIds = (
-  process.env.APOLLO_ROVER_LANUGAGE_IDS || "graphql"
+  process.env.APOLLO_ROVER_LANGUAGE_IDS || "graphql"
 ).split(",");
 
 export class RoverProject extends GraphQLProject {

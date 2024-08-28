@@ -1,13 +1,14 @@
-import { dirname } from "path";
+import { dirname, join } from "path";
 import { URI } from "vscode-uri";
 import { getGraphIdFromConfig, parseServiceSpecifier } from "./utils";
 import { Debug } from "../utilities";
 import z, { ZodError } from "zod";
 import { ValidationRule } from "graphql/validation/ValidationContext";
-import { Slot } from "@wry/context";
 import { fromZodError } from "zod-validation-error";
 import which from "which";
 import { accessSync, constants as fsConstants, statSync } from "node:fs";
+import { AsyncLocalStorage } from "async_hooks";
+import { existsSync } from "fs";
 
 const ROVER_AVAILABLE = (process.env.APOLLO_FEATURE_FLAGS || "")
   .split(",")
@@ -29,8 +30,9 @@ function ignoredFieldWarning(
 export interface Context {
   apiKey?: string;
   serviceName?: string;
+  configPath?: string;
 }
-const context = new Slot<Context>();
+const contextStore = new AsyncLocalStorage<Context>();
 
 const studioServiceConfig = z.string();
 
@@ -49,7 +51,7 @@ const localServiceConfig = z.object({
 export type LocalServiceConfig = z.infer<typeof localServiceConfig>;
 
 const clientServiceConfig = z.preprocess(
-  (value) => value || context.getValue()?.serviceName,
+  (value) => value || contextStore.getStore()?.serviceName,
   z.union([studioServiceConfig, remoteServiceConfig, localServiceConfig]),
 );
 export type ClientServiceConfig = z.infer<typeof clientServiceConfig>;
@@ -104,6 +106,21 @@ const roverConfig = z.object({
       },
     ),
   profile: z.string().optional(),
+  supergraphConfig: z
+    .preprocess((value) => {
+      if (value !== undefined) return value;
+      const configPath = contextStore.getStore()?.configPath!;
+      const supergraphConfig = join(configPath, "supergraph.yml");
+      return existsSync(supergraphConfig) ? supergraphConfig : undefined;
+    }, z.string().nullable().optional())
+    .describe(
+      "The path to your `supergraph.yml` file. \n" +
+        "Defaults to a `supergraph.yml` in the folder of your `apollo.config.js`, if there is one.",
+    ),
+  extraArgs: z
+    .array(z.string())
+    .default([])
+    .describe("Extra arguments to pass to the Rover CLI."),
 });
 type RoverConfigFormat = z.infer<typeof roverConfig>;
 
@@ -115,7 +132,7 @@ const engineConfig = z.object({
         "https://graphql.api.apollographql.com/api/graphql",
     ),
   apiKey: z.preprocess(
-    (val) => val || context.getValue()?.apiKey,
+    (val) => val || contextStore.getStore()?.apiKey,
     z.string().optional(),
   ),
 });
@@ -200,9 +217,7 @@ export function parseApolloConfig(
   configURI?: URI,
   ctx: Context = {},
 ) {
-  const parsed = context.withValue(ctx, () =>
-    configSchema.safeParse(rawConfig),
-  );
+  const parsed = contextStore.run(ctx, () => configSchema.safeParse(rawConfig));
   if (!parsed.success) {
     // Remove "or Required at rover" errors when a client config is provided
     // Remove "or Required at client" errors when a rover config is provided

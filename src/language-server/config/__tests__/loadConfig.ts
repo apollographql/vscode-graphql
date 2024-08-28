@@ -134,6 +134,7 @@ Object {
   },
   "rover": Object {
     "bin": "${dir}/bin/rover",
+    "extraArgs": Array [],
   },
 }
 `);

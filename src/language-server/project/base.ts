@@ -46,11 +46,12 @@ export abstract class GraphQLProject {
   private readyPromise: Promise<void>;
   public config: ApolloConfig;
   protected schema?: GraphQLSchema;
-  protected fileSet: FileSet;
   protected rootURI: URI;
   protected loadingHandler: LoadingHandler;
 
   protected lastLoadDate?: number;
+
+  private configFileSet: FileSet;
 
   constructor({
     config,
@@ -63,7 +64,7 @@ export abstract class GraphQLProject {
     // if a config doesn't have a uri associated, we can assume the `rootURI` is the project's root.
     this.rootURI = config.configDirURI || configFolderURI;
 
-    this.fileSet = new FileSet({
+    this.configFileSet = new FileSet({
       rootURI: this.rootURI,
       includes: [
         ".env",
@@ -73,7 +74,6 @@ export abstract class GraphQLProject {
         "apollo.config.ts",
       ],
       excludes: [],
-      configURI: config.configURI,
     });
 
     this._isReady = false;
@@ -117,7 +117,10 @@ export abstract class GraphQLProject {
     this._onDiagnostics = handler;
   }
 
-  abstract includesFile(uri: DocumentUri): boolean;
+  abstract includesFile(uri: DocumentUri, languageId?: string): boolean;
+  isConfiguredBy(uri: DocumentUri): boolean {
+    return this.configFileSet.includesFile(uri);
+  }
 
   abstract onDidChangeWatchedFiles: ConnectionHandler["onDidChangeWatchedFiles"];
   abstract onDidOpen?: (event: TextDocumentChangeEvent<TextDocument>) => void;

@@ -201,7 +201,7 @@ export class GraphQLWorkspace {
       error = e;
     }
 
-    const project = this.projectForFile(configUri);
+    const project = this.projectForConfigFile(configUri);
 
     if (this._onConfigFilesFound) {
       this._onConfigFilesFound([config || error]);
@@ -261,14 +261,31 @@ export class GraphQLWorkspace {
     return Array.from(this.projectsByFolderUri.values()).flat();
   }
 
-  projectForFile(uri: DocumentUri): GraphQLProject | undefined {
+  projectForConfigFile(configUri: DocumentUri): GraphQLProject | undefined {
+    for (const projects of this.projectsByFolderUri.values()) {
+      const project = projects.find((project) =>
+        project.isConfiguredBy(configUri),
+      );
+      if (project) {
+        return project;
+      }
+    }
+    return undefined;
+  }
+
+  projectForFile(
+    uri: DocumentUri,
+    languageId?: string,
+  ): GraphQLProject | undefined {
     const cachedResult = this._projectForFileCache.get(uri);
     if (cachedResult) {
       return cachedResult;
     }
 
     for (const projects of this.projectsByFolderUri.values()) {
-      const project = projects.find((project) => project.includesFile(uri));
+      const project = projects.find((project) =>
+        project.includesFile(uri, languageId),
+      );
       if (project) {
         this._projectForFileCache.set(uri, project);
         return project;

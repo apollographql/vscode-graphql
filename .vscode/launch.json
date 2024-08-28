@@ -17,6 +17,7 @@
       "env": {
         "APOLLO_ENGINE_ENDPOINT": "http://localhost:7096/apollo",
         "APOLLO_FEATURE_FLAGS": "rover"
+        //"APOLLO_ROVER_LANGUAGE_IDS": "graphql,javascript"
       },
       "outFiles": ["${workspaceRoot}/lib/**/*.js"]
     },

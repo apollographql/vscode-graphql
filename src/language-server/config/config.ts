@@ -63,9 +63,7 @@ const clientConfig = z.object({
     ])
     .optional(),
   // maybe shared with rover?
-  includes: z
-    .array(z.string())
-    .default(["src/**/*.{ts,tsx,js,jsx,graphql,gql}"]),
+  includes: z.array(z.string()).optional(),
   // maybe shared with rover?
   excludes: z.array(z.string()).default(["**/node_modules", "**/__tests__"]),
   // maybe shared with rover?

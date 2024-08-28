@@ -27,6 +27,7 @@ import {
   printStatsToClientOutputChannel,
 } from "./utils";
 import { Debug } from "./debug";
+import { DevToolsViewProvider } from "./devtools/DevToolsViewProvider";
 
 const { version } = require("../package.json");
 
@@ -328,6 +329,14 @@ export async function activate(
       return uri.query;
     },
   });
+
+  const provider = new DevToolsViewProvider(context.extensionUri);
+
+  context.subscriptions.push(
+    commands.registerCommand("apollographql/showDevTools", () => {
+      DevToolsViewProvider.show(context.extensionUri);
+    }),
+  );
 
   await client.start();
   return {

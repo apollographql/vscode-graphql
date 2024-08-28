@@ -246,6 +246,11 @@
         "command": "apollographql/showStats",
         "title": "Show Status",
         "category": "Apollo"
+      },
+      {
+        "command": "apollographql/showDevTools",
+        "title": "Show Apollo Client DevTools",
+        "category": "Apollo"
       }
     ]
   },

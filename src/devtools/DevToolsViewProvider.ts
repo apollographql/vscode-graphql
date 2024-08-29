@@ -1,5 +1,6 @@
 import { Debug } from "src/debug";
 import * as vscode from "vscode";
+import { devtoolsEvents } from "./server";
 
 export class DevToolsViewProvider {
   public static readonly viewType = "apollo.client.devTools";
@@ -26,7 +27,10 @@ export class DevToolsViewProvider {
     panel.webview.html = this._getHtmlForWebview(panel.webview, extensionUri);
 
     panel.webview.onDidReceiveMessage((data) => {
-      console.log(data);
+      devtoolsEvents.emit("fromDevTools", data);
+    });
+    devtoolsEvents.addListener("toDevTools", (data) => {
+      panel.webview.postMessage(data);
     });
 
     panel.webview
@@ -52,7 +56,7 @@ export class DevToolsViewProvider {
   ) {
     // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(extensionUri, "lib", "devtool-build", "panel.js"),
+      vscode.Uri.joinPath(extensionUri, "devtool-build", "panel.js"),
     );
     Debug.info(
       vscode.Uri.joinPath(
@@ -94,6 +98,17 @@ export class DevToolsViewProvider {
   </head>
   <body class="text-primary dark:text-primary-dark">
     <div id="devtools"></div>
+    <script nonce="${nonce}">
+      const vscode = acquireVsCodeApi();
+      const originalPostMessage = window.postMessage;
+      window.postMessage = function wrapPostMessage (...args) {
+        if (args.length>1 && args[1].startsWith("vscode-webview://")) {
+          return originalPostMessage.apply(this, args);
+        }
+        return vscode.postMessage.apply(vscode, args);
+      };
+      window.addEventListener("message", (event) => { if (event.origin != "https://explorer.embed.apollographql.com") console.log(event); });
+    </script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
   </body>
 </html>

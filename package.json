@@ -60,6 +60,7 @@
     "vscode-languageserver-textdocument": "1.0.12",
     "vscode-uri": "3.0.8",
     "which": "4.0.0",
+    "ws": "8.18.0",
     "zod": "3.23.8",
     "zod-validation-error": "3.3.1"
   },
@@ -250,6 +251,16 @@
       {
         "command": "apollographql/showDevTools",
         "title": "Show Apollo Client DevTools",
+        "category": "Apollo"
+      },
+      {
+        "command": "apollographql/startDevToolsServer",
+        "title": "Start Apollo Client DevTools Server",
+        "category": "Apollo"
+      },
+      {
+        "command": "apollographql/stopDevToolsServer",
+        "title": "Stop Apollo Client DevTools Server",
         "category": "Apollo"
       }
     ]

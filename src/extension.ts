@@ -28,6 +28,7 @@ import {
 } from "./utils";
 import { Debug } from "./debug";
 import { DevToolsViewProvider } from "./devtools/DevToolsViewProvider";
+import { startServer } from "./devtools/server";
 
 const { version } = require("../package.json");
 
@@ -330,11 +331,24 @@ export async function activate(
     },
   });
 
-  const provider = new DevToolsViewProvider(context.extensionUri);
-
   context.subscriptions.push(
     commands.registerCommand("apollographql/showDevTools", () => {
+      commands.executeCommand("apollographql/startDevToolsServer");
       DevToolsViewProvider.show(context.extensionUri);
+    }),
+  );
+  let devtoolServer: Disposable | null = null;
+  context.subscriptions.push(
+    commands.registerCommand("apollographql/startDevToolsServer", () => {
+      if (!devtoolServer) {
+        context.subscriptions.push((devtoolServer = startServer(8090)));
+      }
+    }),
+  );
+  context.subscriptions.push(
+    commands.registerCommand("apollographql/stopDevToolsServer", () => {
+      devtoolServer?.dispose();
+      devtoolServer = null;
     }),
   );
 

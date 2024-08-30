@@ -17,7 +17,7 @@ import { RemoteServiceConfig } from "../../config";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
 import { Debug } from "../../utilities";
 import { isString } from "util";
-
+import { Agent } from "undici";
 export class EndpointSchemaProvider implements GraphQLSchemaProvider {
   private schema?: GraphQLSchema;
   private federatedServiceSDL?: string;
@@ -29,10 +29,16 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
     const options: HttpOptions = {
       uri: url,
     };
+
     if (url.startsWith("https:") && skipSSLValidation) {
       options.fetchOptions = {
-        agent: new HTTPSAgent({ rejectUnauthorized: false }),
-      };
+        // see https://github.com/nodejs/undici/issues/1489#issuecomment-1543856261
+        dispatcher: new Agent({
+          connect: {
+            rejectUnauthorized: false,
+          },
+        }),
+      } satisfies import("undici").RequestInit;
     }
 
     const { data, errors } = (await toPromise(

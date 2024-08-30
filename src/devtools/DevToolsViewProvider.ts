@@ -21,6 +21,7 @@ export class DevToolsViewProvider {
       {
         enableScripts: true,
         localResourceRoots: [extensionUri],
+        retainContextWhenHidden: true,
       },
     );
 

@@ -99,10 +99,17 @@ export class DocumentSynchronization {
   private pendingDocumentChanges = new Map<DocumentUri, TextDocument>();
   private knownFiles = new Map<
     DocumentUri,
-    {
-      full: TextDocument;
-      parts: ReadonlyArray<FilePart>;
-    }
+    | {
+        source: "editor";
+        full: TextDocument;
+        parts: ReadonlyArray<FilePart>;
+      }
+    | {
+        source: "lsp";
+        full: Pick<TextDocument, "uri">;
+        parts?: undefined;
+        diagnostics?: Diagnostic[];
+      }
   >();
 
   constructor(
@@ -158,7 +165,11 @@ export class DocumentSynchronization {
     const newObj = Object.fromEntries(
       newParts.map((p) => [p.fractionalIndex, p]),
     );
-    this.knownFiles.set(document.uri, { full: document, parts: newParts });
+    this.knownFiles.set(document.uri, {
+      source: "editor",
+      full: document,
+      parts: newParts,
+    });
 
     for (const newPart of newParts) {
       const previousPart = previousObj[newPart.fractionalIndex];
@@ -198,7 +209,9 @@ export class DocumentSynchronization {
 
   async resendAllDocuments() {
     for (const file of this.knownFiles.values()) {
-      await this.sendDocumentChanges(file.full, []);
+      if (file.source === "editor") {
+        await this.sendDocumentChanges(file.full, []);
+      }
     }
   }
 
@@ -216,15 +229,17 @@ export class DocumentSynchronization {
       return;
     }
     this.knownFiles.delete(params.document.uri);
-    return Promise.all(
-      known.parts.map((part) =>
-        this.sendNotification(DidCloseTextDocumentNotification.type, {
-          textDocument: {
-            uri: getUri(known.full, part),
-          },
-        }),
-      ),
-    );
+    return known.source === "editor"
+      ? Promise.all(
+          known.parts.map((part) =>
+            this.sendNotification(DidCloseTextDocumentNotification.type, {
+              textDocument: {
+                uri: getUri(known.full, part),
+              },
+            }),
+          ),
+        )
+      : undefined;
   };
 
   async documentDidChange(document: TextDocument) {
@@ -254,7 +269,7 @@ export class DocumentSynchronization {
   ): Promise<T | undefined> {
     await this.synchronizedWithDocument(positionParams.textDocument.uri);
     const found = this.knownFiles.get(positionParams.textDocument.uri);
-    if (!found) {
+    if (!found || found.source !== "editor") {
       return;
     }
     const match = findContainedSourceAndPosition(
@@ -274,11 +289,14 @@ export class DocumentSynchronization {
   handlePartDiagnostics(params: PublishDiagnosticsParams) {
     DEBUG && console.log("Received diagnostics", params);
     const uriDetails = splitUri(params.uri);
-    if (!uriDetails) {
-      return;
-    }
     const found = this.knownFiles.get(uriDetails.uri);
-    if (!found) {
+    if (!found || found.source === "lsp") {
+      this.knownFiles.set(uriDetails.uri, {
+        source: "lsp",
+        full: { uri: uriDetails.uri },
+        diagnostics: params.diagnostics,
+      });
+      this.sendDiagnostics(params);
       return;
     }
     const part = found.parts.find(
@@ -304,13 +322,19 @@ export class DocumentSynchronization {
   }
 
   get openDocuments() {
-    return [...this.knownFiles.values()].map((f) => f.full);
+    return [...this.knownFiles.values()]
+      .filter((f) => f.source === "editor")
+      .map((f) => f.full);
   }
 
   clearAllDiagnostics() {
     for (const file of this.knownFiles.values()) {
-      for (const part of file.parts) {
-        part.diagnostics = [];
+      if (file.source === "editor") {
+        for (const part of file.parts) {
+          part.diagnostics = [];
+        }
+      } else {
+        file.diagnostics = [];
       }
       this.sendDiagnostics({ uri: file.full.uri, diagnostics: [] });
     }
@@ -332,7 +356,7 @@ export class DocumentSynchronization {
   ): Promise<SemanticTokens | null> {
     await this.synchronizedWithDocument(params.textDocument.uri);
     const found = this.knownFiles.get(params.textDocument.uri);
-    if (!found) {
+    if (!found || found.source !== "editor") {
       return null;
     }
     const allParts = await Promise.all(

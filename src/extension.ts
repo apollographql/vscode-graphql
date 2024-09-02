@@ -333,13 +333,7 @@ export async function activate(
 
   const provider = new DevToolsViewProvider(context.extensionUri);
   context.subscriptions.push(
-    window.registerWebviewViewProvider(
-      DevToolsViewProvider.viewType,
-      provider,
-      {
-        webviewOptions: { retainContextWhenHidden: true },
-      },
-    ),
+    window.registerWebviewViewProvider(DevToolsViewProvider.viewType, provider),
   );
   let devtoolServer: Disposable | null = null;
   context.subscriptions.push(

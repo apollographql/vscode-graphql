@@ -1,7 +1,5 @@
-import { Debug } from "src/debug";
 import * as vscode from "vscode";
 import { devtoolsEvents } from "./server";
-
 export class DevToolsViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-apollo-client-devtools";
 
@@ -24,21 +22,13 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
     panel.webview.onDidReceiveMessage((data) => {
       devtoolsEvents.emit("fromDevTools", data);
     });
-    devtoolsEvents.addListener("toDevTools", (data) => {
+    function forwardToDevTools(data: unknown) {
       panel.webview.postMessage(data);
-    });
-
-    const delivered = await panel.webview.postMessage({
-      id: 123,
-      source: "apollo-client-devtools",
-      type: "actor",
-      message: { type: "initializePanel" },
-    });
-    if (!delivered) {
-      Debug.error(
-        "Failed to deliver initialization message to Apollo Client DevTools",
-      );
     }
+    devtoolsEvents.addListener("toDevTools", forwardToDevTools);
+    panel.onDidDispose(() => {
+      devtoolsEvents.removeListener("toDevTools", forwardToDevTools);
+    });
   }
 
   private static _getHtmlForWebview(
@@ -49,15 +39,6 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(extensionUri, "devtool-build", "panel.js"),
     );
-    Debug.info(
-      vscode.Uri.joinPath(
-        extensionUri,
-        "lib",
-        "devtool-build",
-        "panel.js",
-      ).toString(),
-    );
-    Debug.info(scriptUri.toString());
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
@@ -106,16 +87,25 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
     <div id="devtools"></div>
     <script nonce="${nonce}">
       const vscode = acquireVsCodeApi();
-      const originalPostMessage = window.postMessage;
+      window.originalPostMessage = window.postMessage;
       window.postMessage = function wrapPostMessage (...args) {
         if (args.length>1 && args[1].startsWith("vscode-webview://")) {
-          return originalPostMessage.apply(this, args);
+          return window.originalPostMessage(...args);
         }
-        return vscode.postMessage.apply(vscode, args);
+        return vscode.postMessage(...args);
       };
-      window.addEventListener("message", (event) => { if (event.origin != "https://explorer.embed.apollographql.com") console.log(event); });
+
+      window.addEventListener("message", (event) => {  console.debug(event); });
     </script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
+    <script nonce="${nonce}">
+      window.originalPostMessage({
+        id: 123,
+        source: "apollo-client-devtools",
+        type: "actor",
+        message: { type: "initializePanel" },
+      });
+    </script>
   </body>
 </html>
 `;

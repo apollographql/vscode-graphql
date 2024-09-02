@@ -37,9 +37,10 @@ Get detailed profile information about the current user (including the current u
 });
 
 test("wrong token", async () => {
+  const baseUri = `http://localhost:${mockPort}/`;
   try {
-    await mocks.sendMock(mockPort, mocks.GetSchemaByTag_WRONG_TOKEN);
-    await mocks.sendMock(mockPort, mocks.SchemaTagsAndFieldStats_WRONG_TOKEN);
+    await mocks.sendMock(baseUri, mocks.GetSchemaByTag_WRONG_TOKEN);
+    await mocks.sendMock(baseUri, mocks.SchemaTagsAndFieldStats_WRONG_TOKEN);
 
     const ext = getExtension();
     ext.outputChannel.clear();
@@ -59,7 +60,7 @@ Invalid credentials provided
     at new ApolloError`.trim(),
     );
   } finally {
-    await mocks.loadDefaultMocks(mockPort);
+    await mocks.loadDefaultMocks(baseUri);
     await reloadService();
   }
 });

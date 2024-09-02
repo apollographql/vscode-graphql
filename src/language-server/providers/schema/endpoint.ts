@@ -17,7 +17,16 @@ import { RemoteServiceConfig } from "../../config";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
 import { Debug } from "../../utilities";
 import { isString } from "util";
-import { Agent } from "undici";
+import { fetch as undiciFetch, Agent } from "undici";
+
+const skipSSLValidationFetchOptions = {
+  // see https://github.com/nodejs/undici/issues/1489#issuecomment-1543856261
+  dispatcher: new Agent({
+    connect: {
+      rejectUnauthorized: false,
+    },
+  }),
+} satisfies import("undici").RequestInit;
 export class EndpointSchemaProvider implements GraphQLSchemaProvider {
   private schema?: GraphQLSchema;
   private federatedServiceSDL?: string;
@@ -28,17 +37,11 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
     const { skipSSLValidation, url, headers } = this.config;
     const options: HttpOptions = {
       uri: url,
+      fetch: undiciFetch as typeof fetch,
     };
 
     if (url.startsWith("https:") && skipSSLValidation) {
-      options.fetchOptions = {
-        // see https://github.com/nodejs/undici/issues/1489#issuecomment-1543856261
-        dispatcher: new Agent({
-          connect: {
-            rejectUnauthorized: false,
-          },
-        }),
-      } satisfies import("undici").RequestInit;
+      options.fetchOptions = skipSSLValidationFetchOptions;
     }
 
     const { data, errors } = (await toPromise(
@@ -98,12 +101,10 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
     const { skipSSLValidation, url, headers } = this.config;
     const options: HttpOptions = {
       uri: url,
-      fetch,
+      fetch: undiciFetch as typeof fetch,
     };
     if (url.startsWith("https:") && skipSSLValidation) {
-      options.fetchOptions = {
-        agent: new HTTPSAgent({ rejectUnauthorized: false }),
-      };
+      options.fetchOptions = skipSSLValidationFetchOptions;
     }
 
     const getFederationInfoQuery = `

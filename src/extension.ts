@@ -349,8 +349,11 @@ export async function activate(
   let devtoolServer: Disposable | null = null;
   context.subscriptions.push(
     commands.registerCommand("apollographql/startDevToolsServer", () => {
-      if (!devtoolServer) {
-        context.subscriptions.push((devtoolServer = startServer(8090)));
+      const port = workspace
+        .getConfiguration("apollographql")
+        .get("devTools.serverPort", 0);
+      if (!devtoolServer && port) {
+        context.subscriptions.push((devtoolServer = startServer(port)));
       }
     }),
   );

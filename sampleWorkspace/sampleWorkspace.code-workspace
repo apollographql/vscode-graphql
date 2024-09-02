@@ -23,6 +23,7 @@
     }
   ],
   "settings": {
-    "apollographql.devTools.showPanel": "detect"
+    "apollographql.devTools.showPanel": "detect",
+    "apollographql.devTools.serverPort": 7095
   }
 }

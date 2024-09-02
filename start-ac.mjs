@@ -41,4 +41,4 @@ const client = new ApolloClient({
   devtools: { name: process.argv[2] },
 });
 client.watchQuery({ query: helloWorld }).subscribe({ next() {} });
-registerClient(client, "ws://localhost:8090");
+registerClient(client, "ws://localhost:7095");

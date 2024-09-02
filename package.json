@@ -249,11 +249,6 @@
         "category": "Apollo"
       },
       {
-        "command": "apollographql/showDevTools",
-        "title": "Show Apollo Client DevTools",
-        "category": "Apollo"
-      },
-      {
         "command": "apollographql/startDevToolsServer",
         "title": "Start Apollo Client DevTools Server",
         "category": "Apollo"
@@ -263,7 +258,26 @@
         "title": "Stop Apollo Client DevTools Server",
         "category": "Apollo"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "client-devtools",
+          "title": "Apollo Client DevTools",
+          "icon": "resources/apollo.svg"
+        }
+      ]
+    },
+    "views": {
+      "client-devtools": [
+        {
+          "type": "webview",
+          "id": "vscode-apollo-client-devtools",
+          "name": "Apollo Client DevTools",
+          "icon": "resources/apollo.svg"
+        }
+      ]
+    }
   },
   "galleryBanner": {
     "color": "#1d127d",

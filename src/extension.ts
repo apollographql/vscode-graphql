@@ -331,11 +331,15 @@ export async function activate(
     },
   });
 
+  const provider = new DevToolsViewProvider(context.extensionUri);
   context.subscriptions.push(
-    commands.registerCommand("apollographql/showDevTools", () => {
-      commands.executeCommand("apollographql/startDevToolsServer");
-      DevToolsViewProvider.show(context.extensionUri);
-    }),
+    window.registerWebviewViewProvider(
+      DevToolsViewProvider.viewType,
+      provider,
+      {
+        webviewOptions: { retainContextWhenHidden: true },
+      },
+    ),
   );
   let devtoolServer: Disposable | null = null;
   context.subscriptions.push(

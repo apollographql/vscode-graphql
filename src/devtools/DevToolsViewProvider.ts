@@ -2,30 +2,24 @@ import { Debug } from "src/debug";
 import * as vscode from "vscode";
 import { devtoolsEvents } from "./server";
 
-export class DevToolsViewProvider {
-  public static readonly viewType = "apollo.client.devTools";
-
-  private _view?: vscode.WebviewView;
+export class DevToolsViewProvider implements vscode.WebviewViewProvider {
+  public static readonly viewType = "vscode-apollo-client-devtools";
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
-
-  public static show(extensionUri: vscode.Uri) {
-    const column = vscode.window.activeTextEditor
-      ? vscode.window.activeTextEditor.viewColumn
-      : undefined;
-
-    const panel = vscode.window.createWebviewPanel(
-      DevToolsViewProvider.viewType,
-      "Apollo Client DevTools",
-      column || vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-        localResourceRoots: [extensionUri],
-        retainContextWhenHidden: true,
-      },
+  async resolveWebviewView(
+    panel: vscode.WebviewView,
+    context: vscode.WebviewViewResolveContext,
+    token: vscode.CancellationToken,
+  ): Promise<void> {
+    vscode.commands.executeCommand("apollographql/startDevToolsServer");
+    panel.webview.options = {
+      enableScripts: true,
+      localResourceRoots: [this._extensionUri],
+    };
+    panel.webview.html = DevToolsViewProvider._getHtmlForWebview(
+      panel.webview,
+      this._extensionUri,
     );
-
-    panel.webview.html = this._getHtmlForWebview(panel.webview, extensionUri);
 
     panel.webview.onDidReceiveMessage((data) => {
       devtoolsEvents.emit("fromDevTools", data);
@@ -34,22 +28,18 @@ export class DevToolsViewProvider {
       panel.webview.postMessage(data);
     });
 
-    panel.webview
-      .postMessage({
-        id: 123,
-        source: "apollo-client-devtools",
-        type: "actor",
-        message: { type: "initializePanel" },
-      })
-      .then((x) => Debug.info("delivered: " + x));
+    const delivered = await panel.webview.postMessage({
+      id: 123,
+      source: "apollo-client-devtools",
+      type: "actor",
+      message: { type: "initializePanel" },
+    });
+    if (!delivered) {
+      Debug.error(
+        "Failed to deliver initialization message to Apollo Client DevTools",
+      );
+    }
   }
-
-  // public addColor() {
-  //   if (this._view) {
-  //     this._view.show?.(true); // `show` is not implemented in 1.49 but is for 1.50 insiders
-  //     this._view.webview.postMessage({ type: "addColor" });
-  //   }
-  // }
 
   private static _getHtmlForWebview(
     webview: vscode.Webview,

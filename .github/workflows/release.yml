@@ -86,7 +86,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "A new version of `vscode-apollo` was released: <https://github.com/apollographql/vscode-apollo/releases/tag/v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}|v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}> :rocket:"
+                    "text": "A new version of `vscode-apollo` was released: <https://github.com/apollographql/vscode-graphql/releases/tag/v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}|v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}> :rocket:"
                   }
                 }
               ]

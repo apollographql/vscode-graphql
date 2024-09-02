@@ -67,7 +67,22 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title></title>
+
+    <!--
+					Use a content security policy to only allow loading images from https or from our extension directory,
+					and only allow scripts that have a specific nonce.
+		-->
+		<meta http-equiv="Content-Security-Policy" content="
+      default-src 'none';
+      style-src ${webview.cspSource} https://fonts.googleapis.com 'unsafe-inline';
+      font-src ${webview.cspSource} https://fonts.gstatic.com;
+      img-src ${webview.cspSource} https:;
+      script-src 'nonce-${nonce}';
+      frame-src https://*.apollographql.com/;
+    ">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Apollo Client DevTools</title>
     <style>
       html,
       body {

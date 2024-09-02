@@ -159,6 +159,17 @@ export async function activate(
       } else {
         statusBar.showLoadedState({ hasActiveTextEditor });
       }
+
+      const containsClientConfig = response.some(
+        (item) => !isError(item) && "client" in item,
+      );
+      if (containsClientConfig) {
+        commands.executeCommand(
+          "setContext",
+          "vscode-apollo.hasClientProject",
+          true,
+        );
+      }
     } else {
       Debug.error(
         `Invalid response type in message apollographql/configFilesFound:\n${JSON.stringify(

@@ -24,6 +24,8 @@
             # See https://github.com/apollographql/vscode-graphql/blob/a905280c143991b3fd675f8b4c3a7da277ccf095/packages/apollo-language-server/src/engine/index.ts#L86
             "a905280c143991b3fd675f8b4c3a7da277ccf095"
         ]
+
+[[ rules ]]
     id = "private-key"
     [ rules.allowlist ]
         paths = [

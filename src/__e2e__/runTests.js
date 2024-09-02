@@ -5,6 +5,7 @@ const { runMockServer } = require("./mockServer.js");
 const { loadDefaultMocks } = require("./mocks.js");
 
 async function main() {
+  const disposables = /**{@type Disposable[]}*/ [];
   try {
     // The folder containing the Extension Manifest package.json
     // Passed to `--extensionDevelopmentPath`
@@ -17,15 +18,11 @@ async function main() {
     const TEST_PORT = 7096;
     process.env.APOLLO_ENGINE_ENDPOINT = "http://localhost:7096/apollo";
     process.env.MOCK_SERVER_PORT = String(TEST_PORT);
-    using httpDisposable = await runMockServer(
-      TEST_PORT,
-      false,
-      loadDefaultMocks,
-    );
-    using httpsDisposable = await runMockServer(
-      TEST_PORT + 1,
-      true,
-      loadDefaultMocks,
+    disposables.push(
+      ...(await Promise.all([
+        runMockServer(TEST_PORT, false, loadDefaultMocks),
+        runMockServer(TEST_PORT + 1, true, loadDefaultMocks),
+      ])),
     );
     // Download VS Code, unzip it and run the integration test
     const exitCode = await runTests({
@@ -41,6 +38,8 @@ async function main() {
     console.error(err);
     console.error("Failed to run tests");
     process.exit(1);
+  } finally {
+    disposables.forEach((d) => d[Symbol.dispose]());
   }
 }
 

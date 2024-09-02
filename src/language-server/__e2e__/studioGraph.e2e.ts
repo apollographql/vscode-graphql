@@ -37,7 +37,7 @@ Get detailed profile information about the current user (including the current u
 });
 
 test("wrong token", async () => {
-  const baseUri = `http://localhost:${mockPort}/`;
+  const baseUri = `http://localhost:${mockPort}`;
   try {
     await mocks.sendMock(baseUri, mocks.GetSchemaByTag_WRONG_TOKEN);
     await mocks.sendMock(baseUri, mocks.SchemaTagsAndFieldStats_WRONG_TOKEN);

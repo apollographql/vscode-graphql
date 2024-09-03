@@ -8,6 +8,7 @@ import WebSocket from "ws";
 import { ApolloClient, InMemoryCache } from "@apollo/client/core/index.js";
 import { MockLink } from "@apollo/client/testing/core/index.js";
 import gql from "graphql-tag";
+import { set } from "zod";
 
 globalThis.WebSocket ||= WebSocket;
 
@@ -41,4 +42,13 @@ const client = new ApolloClient({
   devtools: { name: process.argv[2] },
 });
 client.watchQuery({ query: helloWorld }).subscribe({ next() {} });
-registerClient(client, "ws://localhost:7095");
+const { connected, unregister, onCleanup } = registerClient(
+  client,
+  "ws://localhost:7095",
+);
+console.log("connecting...");
+onCleanup(() => console.log("disconnected"));
+connected.then(() => {
+  console.log("connected");
+  // setTimeout(unregister, 5000);
+});

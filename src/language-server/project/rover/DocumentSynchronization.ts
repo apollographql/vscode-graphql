@@ -221,7 +221,7 @@ export class DocumentSynchronization {
     this.documentDidChange(params.document);
   };
 
-  onDidCloseTextDocument: NonNullable<GraphQLProject["onDidClose"]> = (
+  onDidCloseTextDocument: NonNullable<GraphQLProject["onDidClose"]> = async (
     params,
   ) => {
     const known = this.knownFiles.get(params.document.uri);
@@ -229,17 +229,15 @@ export class DocumentSynchronization {
       return;
     }
     this.knownFiles.delete(params.document.uri);
-    return known.source === "editor"
-      ? Promise.all(
-          known.parts.map((part) =>
-            this.sendNotification(DidCloseTextDocumentNotification.type, {
-              textDocument: {
-                uri: getUri(known.full, part),
-              },
-            }),
-          ),
-        )
-      : undefined;
+    if (known.source === "editor") {
+      for (const part of known.parts) {
+        await this.sendNotification(DidCloseTextDocumentNotification.type, {
+          textDocument: {
+            uri: getUri(known.full, part),
+          },
+        });
+      }
+    }
   };
 
   async documentDidChange(document: TextDocument) {

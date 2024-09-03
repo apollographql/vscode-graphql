@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 import { Disposable } from "vscode";
-import { runServer } from "../../devtool-build/vscode-server";
+import { runServer } from "@apollo/client-devtools-vscode/vscode-server";
 import { Debug } from "../debug";
 import { EventEmitter } from "node:events";
 

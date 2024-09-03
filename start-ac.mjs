@@ -3,7 +3,7 @@
 // for testing, start a few of these, e.g. with
 // while true; do echo "foo\nbar\nbaz" | parallel ./start-ac.mjs; sleep 1; done
 
-import { registerClient } from "./devtool-build/vscode-client.js";
+import { registerClient } from "@apollo/client-devtools-vscode";
 import WebSocket from "ws";
 import { ApolloClient, InMemoryCache } from "@apollo/client/core/index.js";
 import { MockLink } from "@apollo/client/testing/core/index.js";

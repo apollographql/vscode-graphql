@@ -5,7 +5,14 @@ const watch = process.argv.includes("--watch");
 
 async function main() {
   const ctx = await esbuild.context({
-    entryPoints: ["src/extension.ts", "src/language-server/server.ts"],
+    entryPoints: [
+      "src/extension.ts",
+      "src/language-server/server.ts",
+      {
+        in: require.resolve("@apollo/client-devtools-vscode/panel"),
+        out: "panel",
+      },
+    ],
     bundle: true,
     format: "cjs",
     minify: production,

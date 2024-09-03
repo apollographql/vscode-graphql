@@ -161,7 +161,7 @@ export async function activate(
       }
 
       const containsClientConfig = response.some(
-        (item) => !isError(item) && "client" in item,
+        (item) => item && !isError(item) && "client" in item,
       );
       if (containsClientConfig) {
         commands.executeCommand(

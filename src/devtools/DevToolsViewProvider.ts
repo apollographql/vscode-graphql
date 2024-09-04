@@ -68,6 +68,7 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
       html,
       body {
         overflow: hidden;
+        font-size: var(--vscode-font-size);
       }
       ::-webkit-scrollbar {
         display: none;

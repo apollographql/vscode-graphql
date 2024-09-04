@@ -58,6 +58,7 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
       style-src ${webview.cspSource} https://fonts.googleapis.com 'unsafe-inline';
       font-src ${webview.cspSource} https://fonts.gstatic.com;
       img-src ${webview.cspSource} https:;
+      connect-src ${webview.cspSource} https://*.github.com;
       script-src 'nonce-${nonce}';
       frame-src https://*.apollographql.com/;
     ">

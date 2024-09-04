@@ -8,7 +8,6 @@ import WebSocket from "ws";
 import { ApolloClient, InMemoryCache } from "@apollo/client/core/index.js";
 import { MockLink } from "@apollo/client/testing/core/index.js";
 import gql from "graphql-tag";
-import { set } from "zod";
 
 globalThis.WebSocket ||= WebSocket;
 
@@ -47,8 +46,14 @@ const { connected, unregister, onCleanup } = registerClient(
   "ws://localhost:7095",
 );
 console.log("connecting...");
-onCleanup(() => console.log("disconnected"));
+onCleanup((reason) =>
+  console.log(
+    "disconnected",
+    reason,
+    /* referencing client here to prevent it from getting garbage connected */ client.version,
+  ),
+);
 connected.then(() => {
   console.log("connected");
-  // setTimeout(unregister, 5000);
+  setTimeout(unregister, 5000, "TIMEOUT");
 });

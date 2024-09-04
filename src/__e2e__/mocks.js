@@ -1,25 +1,29 @@
 // @ts-check
-
-async function loadDefaultMocks(/** @type {number} */ port) {
-  await sendMock(port, FrontendUrlRoot);
-  await sendMock(port, SchemaTagsAndFieldStats);
-  await sendMock(port, GetSchemaByTag);
+async function loadDefaultMocks(/** @type {string} */ baseUri) {
+  await sendMock(baseUri, FrontendUrlRoot);
+  await sendMock(baseUri, SchemaTagsAndFieldStats);
+  await sendMock(baseUri, GetSchemaByTag);
 }
 
 function sendMock(
-  /** @type {number} */ port,
+  /** @type {string} */ baseUri,
   /** @type { { operationName: string, variables: Record<string, string>, response: unknown }} */ {
     operationName,
     variables,
     response,
   },
 ) {
-  return fetch(`http://localhost:${port}/apollo`, {
+  return require("undici").fetch(`${baseUri}/apollo`, {
     method: "PUT",
     body: JSON.stringify({
       operationName,
       variables,
       response,
+    }),
+    dispatcher: new (require("undici").Agent)({
+      connect: {
+        rejectUnauthorized: false,
+      },
     }),
   });
 }

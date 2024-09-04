@@ -142,8 +142,8 @@
             "never",
             "detect"
           ],
-          "default": "detect",
-          "markdownDescription": "If the Apollo Client DevTools panel should be shown. If set to `detect`, the panel will only be shown if a configuration file with a client project is found in the workspace.",
+          "default": "never",
+          "markdownDescription": "[Experimental Feature] If the Apollo Client DevTools panel should be shown. If set to `detect`, the panel will only be shown if a configuration file with a client project is found in the workspace.",
           "scope": "window"
         },
         "apollographql.devTools.serverPort": {

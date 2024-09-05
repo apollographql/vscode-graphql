@@ -89,6 +89,10 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
     <div id="devtools"></div>
     <script nonce="${nonce}">
       const vscode = acquireVsCodeApi();
+      try {
+        // remove VSCode default styles
+        _defaultStyles.remove();
+      } catch {}
       window.originalPostMessage = window.postMessage;
       window.postMessage = function wrapPostMessage (...args) {
         if (args.length>1 && args[1].startsWith("vscode-webview://")) {

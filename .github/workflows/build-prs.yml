@@ -11,16 +11,23 @@ jobs:
         with:
           cache: "npm"
       - run: npm install
-      - run: echo PKG_VERSION="$(git show --no-patch --format=0.0.0-pr.%ct.${{ github.event.pull_request.number }}.%h)" >> $GITHUB_ENV
+      - run: echo PKG_VERSION="$(git show --no-patch --format=0.0.0-build.%ct.pr.${{ github.event.pull_request.number }}.commit.%h)" >> $GITHUB_ENV
       - run: npm pkg set "version=${{ env.PKG_VERSION }}"
       - run: npx -y @vscode/vsce package --out vscode-apollo-${{ env.PKG_VERSION }}.vsix
 
       - uses: actions/upload-artifact@v4
         id: artifact-upload-step
         with:
-          name: extension
+          name: vscode-apollo-${{ env.PKG_VERSION }}
           path: vscode-apollo-${{ env.PKG_VERSION }}.vsix
           retention-days: 14
 
       - name: Output artifact URL
         run: echo 'Artifact URL is ${{ steps.artifact-upload-step.outputs.artifact-url }}'
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            You can download the latest build of the extension for this PR here: [vscode-apollo-${{ env.PKG_VERSION }}.zip](${{ steps.artifact-upload-step.outputs.artifact-url }}).

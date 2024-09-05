@@ -1,0 +1,55 @@
+name: Bundle Extension as Artifact Download
+on:
+  pull_request:
+jobs:
+  test:
+    name: Bundle Extension as Artifact Download
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+      - run: npm install
+      - run: echo PKG_VERSION="$(git show --no-patch --format=0.0.0-build.%ct.pr.${{ github.event.pull_request.number }}.commit.%h)" >> $GITHUB_ENV
+      - run: npm pkg set "version=${{ env.PKG_VERSION }}"
+      - run: npx -y @vscode/vsce package --out vscode-apollo-${{ env.PKG_VERSION }}.vsix
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: vscode-apollo-${{ env.PKG_VERSION }}
+          path: vscode-apollo-${{ env.PKG_VERSION }}.vsix
+          retention-days: 14
+
+      - name: Output artifact URL
+        run: echo 'Artifact URL is ${{ steps.artifact-upload-step.outputs.artifact-url }}'
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: <!-- ARTIFACT-DOWNLOAD -->
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            <!-- ARTIFACT-DOWNLOAD -->
+            You can download the latest build of the extension for this PR here:
+            [vscode-apollo-${{ env.PKG_VERSION }}.zip](${{ steps.artifact-upload-step.outputs.artifact-url }}).
+
+            To install the extension, download the file, unzip it and install it in VS Code by selecting "Install from VSIX..." in the Extensions view.
+
+            Alternatively, run
+            ```sh
+            code --install-extension vscode-apollo-${{ env.PKG_VERSION }}.vsix --force
+            ```
+            from the command line.
+
+            For older build, please see the edit history of this comment.

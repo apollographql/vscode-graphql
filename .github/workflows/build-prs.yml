@@ -38,6 +38,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
           body: |
             <!-- ARTIFACT-DOWNLOAD -->
             You can download the latest build of the extension for this PR here:
@@ -50,3 +51,5 @@ jobs:
             code --install-extension vscode-apollo-${{ env.PKG_VERSION }}.vsix --force
             ```
             from the command line.
+
+            For older build, please see the edit history of this comment.

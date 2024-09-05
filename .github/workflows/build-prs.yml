@@ -1,0 +1,26 @@
+name: Bundle Extension as Artifact Download
+on:
+  pull_request:
+jobs:
+  test:
+    name: Bundle Extension as Artifact Download
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+      - run: npm install
+      - run: echo PKG_VERSION="$(git show --no-patch --format=0.0.0-pr.%ct.${{ github.event.pull_request.number }}.%h)" >> $GITHUB_ENV
+      - run: npm pkg set "version=${{ env.PKG_VERSION }}"
+      - run: npx -y @vscode/vsce package --out vscode-apollo-${{ env.PKG_VERSION }}.vsix
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: extension
+          path: vscode-apollo-${{ env.PKG_VERSION }}.vsix
+          retention-days: 14
+
+      - name: Output artifact URL
+        run: echo 'Artifact URL is ${{ steps.artifact-upload-step.outputs.artifact-url }}'

@@ -40,7 +40,8 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           body: |
             <!-- ARTIFACT-DOWNLOAD -->
-            You can download the latest build of the extension for this PR here: [vscode-apollo-${{ env.PKG_VERSION }}.zip](${{ steps.artifact-upload-step.outputs.artifact-url }}).
+            You can download the latest build of the extension for this PR here:
+            [vscode-apollo-${{ env.PKG_VERSION }}.zip](${{ steps.artifact-upload-step.outputs.artifact-url }}).
 
             To install the extension, download the file, unzip it and install it in VS Code by selecting "Install from VSIX..." in the Extensions view.
 

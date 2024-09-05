@@ -31,3 +31,11 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             You can download the latest build of the extension for this PR here: [vscode-apollo-${{ env.PKG_VERSION }}.zip](${{ steps.artifact-upload-step.outputs.artifact-url }}).
+
+            To install the extension, download the file, unzip it and install it in VS Code by selecting "Install from VSIX..." in the Extensions view.
+
+            Alternatively, run
+            ```sh
+            code --install-extension vscode-apollo-${{ env.PKG_VERSION }}.vsix --force
+            ```
+            from the command line.

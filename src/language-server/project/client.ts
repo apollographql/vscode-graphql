@@ -104,6 +104,7 @@ import type { CodeActionInfo } from "../errors/validation";
 import { GraphQLDiagnostic } from "../diagnostics";
 import { isInterfaceType } from "graphql";
 import { GraphQLInternalProject } from "./internal";
+import { Debug } from "../utilities";
 
 type Maybe<T> = null | undefined | T;
 
@@ -272,14 +273,20 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     await this.loadingHandler.handle(
       `Loading schema for ${this.displayName}`,
       (async () => {
-        this.serviceSchema = augmentSchemaWithGeneratedSDLIfNeeded(
-          await this.schemaProvider.resolveSchema({
-            tag: tag || this.config.variant,
-            force: true,
-          }),
-        );
-
-        this.schema = extendSchema(this.serviceSchema, this.clientSchema);
+        Debug.info("Loading schema for client project" + this.displayName);
+        try {
+          this.serviceSchema = augmentSchemaWithGeneratedSDLIfNeeded(
+            await this.schemaProvider.resolveSchema({
+              tag: tag || this.config.variant,
+              force: true,
+            }),
+          );
+          Debug.info("Adding client metadata to schema nodes");
+          this.schema = extendSchema(this.serviceSchema, this.clientSchema);
+          Debug.info("Successfully handled schema");
+        } catch (e) {
+          Debug.error("Error loading schema:" + e);
+        }
       })(),
     );
   }

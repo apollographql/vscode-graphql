@@ -110,12 +110,12 @@ const roverConfig = z.object({
     .preprocess((value) => {
       if (value !== undefined) return value;
       const configPath = contextStore.getStore()?.configPath!;
-      const supergraphConfig = join(configPath, "supergraph.yml");
+      const supergraphConfig = join(configPath, "supergraph.yaml");
       return existsSync(supergraphConfig) ? supergraphConfig : undefined;
     }, z.string().nullable().optional())
     .describe(
-      "The path to your `supergraph.yml` file. \n" +
-        "Defaults to a `supergraph.yml` in the folder of your `apollo.config.js`, if there is one.",
+      "The path to your `supergraph.yaml` file. \n" +
+        "Defaults to a `supergraph.yaml` in the folder of your `apollo.config.js`, if there is one.",
     ),
   extraArgs: z
     .array(z.string())

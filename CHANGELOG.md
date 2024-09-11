@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.2.1
+
+### Patch Changes
+
+- [#198](https://github.com/apollographql/vscode-graphql/pull/198) [`3bebbdc4`](https://github.com/apollographql/vscode-graphql/commit/3bebbdc40faf8f9d62d0709de3312d5cb629af15) Thanks [@phryneas](https://github.com/phryneas)! - Change syntax highlighting of graphql object fields from "string" to "variable".
+
+- [#199](https://github.com/apollographql/vscode-graphql/pull/199) [`7c1172be`](https://github.com/apollographql/vscode-graphql/commit/7c1172be690488dbf0510c2d412cba502acd1468) Thanks [@phryneas](https://github.com/phryneas)! - Fix "Toggle Line Comment"
+
+- [#190](https://github.com/apollographql/vscode-graphql/pull/190) [`ec1e9927`](https://github.com/apollographql/vscode-graphql/commit/ec1e9927a178e75cae21d795d47426f40bf9d27b) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug that prevented `skipSSLValidation` from working.
+
 ## 2.2.0
 
 ### Minor Changes

@@ -43,7 +43,7 @@ const client = new ApolloClient({
 client.watchQuery({ query: helloWorld }).subscribe({ next() {} });
 const { connected, unregister, onCleanup } = registerClient(
   client,
-  "ws://localhost:7095",
+  "ws://localhost:7095", // nosemgrep
 );
 console.log("connecting...");
 onCleanup((reason) =>

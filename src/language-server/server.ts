@@ -9,7 +9,7 @@ import {
   FileEvent,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { Uri, type QuickPickItem } from "vscode";
+import { type QuickPickItem } from "vscode";
 import { basename } from "node:path";
 import { GraphQLWorkspace } from "./workspace";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
@@ -192,7 +192,7 @@ documents.onDidClose(
 connection.onDidChangeWatchedFiles((params) => {
   const handledByProject = new Map<GraphQLProject, FileEvent[]>();
   for (const { uri, type } of params.changes) {
-    const fsPath = Uri.parse(uri).fsPath;
+    const fsPath = URI.parse(uri).fsPath;
     const fileName = basename(fsPath);
     if (
       supportedConfigFileNames.includes(fileName) ||

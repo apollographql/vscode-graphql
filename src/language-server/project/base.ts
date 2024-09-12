@@ -21,6 +21,7 @@ import { FileSet } from "../fileSet";
 import {
   ApolloConfig,
   ClientConfig,
+  envFileNames,
   RoverConfig,
   supportedConfigFileNames,
 } from "../config";
@@ -72,7 +73,7 @@ export abstract class GraphQLProject {
 
     this.configFileSet = new FileSet({
       rootURI: this.rootURI,
-      includes: supportedConfigFileNames.concat([".env"]),
+      includes: supportedConfigFileNames.concat(envFileNames),
       excludes: [],
     });
 

@@ -197,7 +197,7 @@ export class GraphQLWorkspace {
     });
   }
 
-  async reloadProjectForConfig(configUri: DocumentUri) {
+  async reloadProjectForConfigOrCompanionFile(configUri: DocumentUri) {
     const configPath = dirname(URI.parse(configUri).fsPath);
     let config: ApolloConfig | null;
     let error;

@@ -189,6 +189,36 @@ Object {
       const config = await loadConfig({ configPath: dirPath });
       expect(config?.client?.service).toEqual("hello");
     });
+
+    it("loads config from a yml file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.yml": `
+client:
+  service: hello
+`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
+
+    it("loads config from a yaml file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.yaml": `
+client:
+  service: hello
+`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
+
+    it("loads config from a json file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.json": `{"client": {"service": "hello"} }`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
   });
 
   describe("errors", () => {

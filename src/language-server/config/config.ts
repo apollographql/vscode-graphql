@@ -344,7 +344,7 @@ export abstract class ApolloConfig {
   get configDirURI() {
     // if the filepath has a _file_ in it, then we get its dir
     return this.configURI &&
-      this.configURI.fsPath.match(/\.(ts|js|cjs|mjs|json)$/i)
+      this.configURI.fsPath.match(/\.(ts|js|cjs|mjs|yaml|yml|json)$/i)
       ? URI.parse(dirname(this.configURI.fsPath))
       : this.configURI;
   }

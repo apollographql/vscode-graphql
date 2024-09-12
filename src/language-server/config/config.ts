@@ -68,14 +68,17 @@ const remoteServiceConfig = z
   .describe("Configuration for using a local schema from a URL.");
 export type RemoteServiceConfig = z.infer<typeof remoteServiceConfig>;
 
+const LOCAL_SCHEMA_FILE_DESCRIPTION =
+  "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one.";
 const localServiceConfig = z
   .object({
     name: z.string().optional().describe(NAME_DESCRIPTION),
     localSchemaFile: z
-      .union([z.string(), z.array(z.string())])
-      .describe(
-        "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one.",
-      ),
+      .union([
+        z.string().describe(LOCAL_SCHEMA_FILE_DESCRIPTION),
+        z.array(z.string()).describe(LOCAL_SCHEMA_FILE_DESCRIPTION),
+      ])
+      .describe(LOCAL_SCHEMA_FILE_DESCRIPTION),
   })
   .describe("Configuration for using a local schema from a file.");
 export type LocalServiceConfig = z.infer<typeof localServiceConfig>;
@@ -90,18 +93,24 @@ const clientServiceConfig = z
   );
 export type ClientServiceConfig = z.infer<typeof clientServiceConfig>;
 
+const VALIDATION_RULES_DESCRIPTION =
+  "Additional validation rules to check for. To use this feature, please use a configuration file format that allows passing JavaScript objects.";
 export const clientConfig = z
   .object({
     service: clientServiceConfig,
     validationRules: z
       .union([
-        z.array(z.custom<ValidationRule>()),
-        z.function().args(z.custom<ValidationRule>()).returns(z.boolean()),
+        z
+          .array(z.custom<ValidationRule>())
+          .describe(VALIDATION_RULES_DESCRIPTION),
+        z
+          .function()
+          .args(z.custom<ValidationRule>())
+          .returns(z.boolean())
+          .describe(VALIDATION_RULES_DESCRIPTION),
       ])
       .optional()
-      .describe(
-        "Additional validation rules to check for. To use this feature, please use a configuration file format that allows passing JavaScript objects.",
-      ),
+      .describe(VALIDATION_RULES_DESCRIPTION),
     // maybe shared with rover?
     includes: z
       .array(z.string())

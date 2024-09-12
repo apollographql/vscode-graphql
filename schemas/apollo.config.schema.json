@@ -66,13 +66,15 @@
                 "localSchemaFile": {
                   "anyOf": [
                     {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one."
                     },
                     {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one."
                     }
                   ],
                   "description": "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one."
@@ -90,7 +92,8 @@
         "validationRules": {
           "anyOf": [
             {
-              "type": "array"
+              "type": "array",
+              "description": "Additional validation rules to check for. To use this feature, please use a configuration file format that allows passing JavaScript objects."
             }
           ],
           "description": "Additional validation rules to check for. To use this feature, please use a configuration file format that allows passing JavaScript objects."

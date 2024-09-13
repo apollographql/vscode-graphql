@@ -1,5 +1,5 @@
 import { Loader, defaultLoaders } from "cosmiconfig";
-import { basename, dirname, format as formatPath } from "node:path";
+import { dirname } from "node:path";
 import { rm, writeFile } from "node:fs/promises";
 import typescript from "typescript";
 

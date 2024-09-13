@@ -1,7 +1,6 @@
 import { Loader, defaultLoaders } from "cosmiconfig";
 import { basename, dirname, sep, format as formatPath } from "node:path";
-import { rm, writeFile } from "node:fs/promises";
-import { existsSync, mkdtempSync } from "node:fs";
+import { rm, writeFile, mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import typescript from "typescript";
 
@@ -35,7 +34,7 @@ async function load(
   extension: string,
   compilerOptions: Partial<import("typescript").CompilerOptions>,
 ) {
-  const tempDir = mkdtempSync(`${tmpdir()}${sep}`);
+  const tempDir = await mkdtemp(`${tmpdir()}${sep}`);
   const base = basename(filepath);
   const compiledFilepath = formatPath({
     dir: tempDir,
@@ -66,9 +65,7 @@ async function load(
     // eslint-disable-next-line @typescript-eslint/return-await
     return await defaultLoaders[".js"](compiledFilepath, transpiledContent);
   } finally {
-    if (existsSync(compiledFilepath)) {
-      await rm(compiledFilepath);
-    }
+    await rm(tempDir, { recursive: true, force: true });
   }
 }
 

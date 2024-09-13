@@ -18,7 +18,13 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 
 import type { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
-import { ApolloConfig, ClientConfig, RoverConfig } from "../config";
+import {
+  ApolloConfig,
+  ClientConfig,
+  envFileNames,
+  RoverConfig,
+  supportedConfigFileNames,
+} from "../config";
 import type { ProjectStats } from "../../messages";
 
 export type DocumentUri = string;
@@ -67,13 +73,7 @@ export abstract class GraphQLProject {
 
     this.configFileSet = new FileSet({
       rootURI: this.rootURI,
-      includes: [
-        ".env",
-        "apollo.config.js",
-        "apollo.config.cjs",
-        "apollo.config.mjs",
-        "apollo.config.ts",
-      ],
+      includes: supportedConfigFileNames.concat(envFileNames),
       excludes: [],
     });
 

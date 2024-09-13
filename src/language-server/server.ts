@@ -9,7 +9,8 @@ import {
   FileEvent,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import type { QuickPickItem } from "vscode";
+import { type QuickPickItem } from "vscode";
+import { basename } from "node:path";
 import { GraphQLWorkspace } from "./workspace";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
@@ -23,6 +24,7 @@ import { isValidationError } from "zod-validation-error";
 import { GraphQLProject } from "./project/base";
 import type { LanguageIdExtensionMap } from "../tools/utilities/languageInformation";
 import { setLanguageIdExtensionMap } from "./utilities/languageIdForExtension";
+import { envFileNames, supportedConfigFileNames } from "./config";
 
 export type InitializationOptions = {
   languageIdExtensionMap: LanguageIdExtensionMap;
@@ -190,14 +192,13 @@ documents.onDidClose(
 connection.onDidChangeWatchedFiles((params) => {
   const handledByProject = new Map<GraphQLProject, FileEvent[]>();
   for (const { uri, type } of params.changes) {
+    const fsPath = URI.parse(uri).fsPath;
+    const fileName = basename(fsPath);
     if (
-      uri.endsWith("apollo.config.js") ||
-      uri.endsWith("apollo.config.cjs") ||
-      uri.endsWith("apollo.config.mjs") ||
-      uri.endsWith("apollo.config.ts") ||
-      uri.endsWith(".env")
+      supportedConfigFileNames.includes(fileName) ||
+      envFileNames.includes(fileName)
     ) {
-      workspace.reloadProjectForConfig(uri);
+      workspace.reloadProjectForConfigOrCompanionFile(uri);
     }
 
     // Don't respond to changes in files that are currently open,

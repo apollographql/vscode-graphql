@@ -125,7 +125,7 @@ export class GraphQLWorkspace {
 
     */
     const apolloConfigFiles: string[] = globSync(
-      "**/apollo.config.@(js|ts|cjs|mjs)",
+      "**/apollo.config.@(js|ts|cjs|mjs|yaml|yml|json)",
       {
         cwd: URI.parse(folder.uri).fsPath,
         absolute: true,
@@ -197,7 +197,7 @@ export class GraphQLWorkspace {
     });
   }
 
-  async reloadProjectForConfig(configUri: DocumentUri) {
+  async reloadProjectForConfigOrCompanionFile(configUri: DocumentUri) {
     const configPath = dirname(URI.parse(configUri).fsPath);
     let config: ApolloConfig | null;
     let error;

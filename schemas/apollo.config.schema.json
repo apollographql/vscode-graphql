@@ -1,0 +1,184 @@
+{
+  "allOf": [
+    {
+      "$ref": "#/definitions/baseConfig"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "client": {
+          "$ref": "#/definitions/clientConfig"
+        }
+      },
+      "required": [
+        "client"
+      ]
+    }
+  ],
+  "definitions": {
+    "clientConfig": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "The name of the Apollo Studio graph to use. Alternatively pass in an object to configure a local schema."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name your project will be referred to by the Apollo GraphQL extension."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "URL of a GraphQL to use for the GraphQL Schema for this project. Needs introspection enabled."
+                },
+                "headers": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "default": {},
+                  "description": "Additional headers to send to the server."
+                },
+                "skipSSLValidation": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Skip SSL validation. May be required for self-signed certificates."
+                }
+              },
+              "required": [
+                "url"
+              ],
+              "additionalProperties": false,
+              "description": "Configuration for using a local schema from a URL."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name your project will be referred to by the Apollo GraphQL extension."
+                },
+                "localSchemaFile": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one."
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one."
+                    }
+                  ],
+                  "description": "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one."
+                }
+              },
+              "required": [
+                "localSchemaFile"
+              ],
+              "additionalProperties": false,
+              "description": "Configuration for using a local schema from a file."
+            }
+          ],
+          "description": "A string to refer to a graph in Apollo Studio, or an object for a local schema."
+        },
+        "validationRules": {
+          "anyOf": [
+            {
+              "type": "array",
+              "description": "Additional validation rules to check for. To use this feature, please use a configuration file format that allows passing JavaScript objects."
+            }
+          ],
+          "description": "Additional validation rules to check for. To use this feature, please use a configuration file format that allows passing JavaScript objects."
+        },
+        "includes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of glob patterns this project should be active on. The Apollo GraphQL extension will only support IntelliSense-like features in files listed here."
+        },
+        "excludes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/node_modules",
+            "**/__tests__"
+          ],
+          "description": "Files to exclude from this project. The Apollo GraphQL extension will not provide IntelliSense-like features in these files."
+        },
+        "tagName": {
+          "type": "string",
+          "default": "gql",
+          "description": "The name of the template literal tag or function used in JavaScript files to declare GraphQL Documents."
+        },
+        "clientOnlyDirectives": {
+          "description": "This option is no longer supported, please remove it from your configuration file."
+        },
+        "clientSchemaDirectives": {
+          "description": "This option is no longer supported, please remove it from your configuration file."
+        },
+        "statsWindow": {
+          "description": "This option is no longer supported, please remove it from your configuration file."
+        },
+        "name": {
+          "description": "This option is no longer supported, please remove it from your configuration file."
+        },
+        "referenceId": {
+          "description": "This option is no longer supported, please remove it from your configuration file."
+        },
+        "version": {
+          "description": "This option is no longer supported, please remove it from your configuration file."
+        }
+      },
+      "required": [
+        "service"
+      ],
+      "additionalProperties": false,
+      "description": "Configuration for a Client project."
+    },
+    "engineConfig": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "default": "https://graphql.api.apollographql.com/api/graphql",
+          "description": "The URL of the Apollo Studio API."
+        },
+        "apiKey": {
+          "type": "string",
+          "description": "The API key to use for Apollo Studio. If possible, use a `.env` file or `.env.local` file instead to store secrets like this."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Network configuration for Apollo Studio API."
+    },
+    "baseConfig": {
+      "type": "object",
+      "properties": {
+        "engine": {
+          "$ref": "#/definitions/engineConfig",
+          "default": {},
+          "description": "Network configuration for Apollo Studio API."
+        },
+        "client": {
+          "description": "Configuration for a Client project."
+        },
+        "service": {
+          "description": "This option is no longer supported, please remove it from your configuration file."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

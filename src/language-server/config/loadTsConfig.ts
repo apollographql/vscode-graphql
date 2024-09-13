@@ -1,15 +1,20 @@
-import { Loader, defaultLoaders } from "cosmiconfig";
+import { Loader } from "cosmiconfig";
 import { dirname } from "node:path";
-import { rm, writeFile } from "node:fs/promises";
+import { rm, writeFile, stat, readFile } from "node:fs/promises";
 import typescript from "typescript";
-
+import { pathToFileURL } from "node:url";
+import { Debug } from "../utilities";
+import { register } from "node:module";
+import { buildVirtualUrl } from "./cache-busting-resolver";
 // implementation based on https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/src/loaders.ts
 // Copyright (c) 2015 David Clark licensed MIT. Full license can be found here:
 // https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/LICENSE
 
+register(pathToFileURL(require.resolve("./config/cache-busting-resolver.js")));
+
 export const loadTs: Loader = async function loadTs(filepath, content) {
   try {
-    return await load(filepath, content, ".vscode-extension-ignore.mjs", {
+    return await load(filepath, content, "module", {
       module: typescript.ModuleKind.ES2022,
     });
   } catch (error) {
@@ -18,7 +23,7 @@ export const loadTs: Loader = async function loadTs(filepath, content) {
       // [ERROR] ReferenceError: module is not defined in ES module scope
       error.message.includes("module is not defined")
     ) {
-      return await load(filepath, content, ".vscode-extension-ignore.cjs", {
+      return await load(filepath, content, "commonjs", {
         module: typescript.ModuleKind.CommonJS,
       });
     } else {
@@ -30,36 +35,33 @@ export const loadTs: Loader = async function loadTs(filepath, content) {
 async function load(
   filepath: string,
   content: string,
-  extension: string,
+  type: "module" | "commonjs",
   compilerOptions: Partial<import("typescript").CompilerOptions>,
 ) {
-  const compiledFilepath = `${filepath}${extension}`;
   let transpiledContent;
-  try {
-    try {
-      const config = resolveTsConfig(dirname(filepath)) ?? {};
-      config.compilerOptions = {
-        ...config.compilerOptions,
 
-        moduleResolution: typescript.ModuleResolutionKind.Bundler,
-        target: typescript.ScriptTarget.ES2022,
-        noEmit: false,
-        ...compilerOptions,
-      };
-      transpiledContent = typescript.transpileModule(
-        content,
-        config,
-      ).outputText;
-      await writeFile(compiledFilepath, transpiledContent);
-    } catch (error: any) {
-      error.message = `TypeScript Error in ${filepath}:\n${error.message}`;
-      throw error;
-    }
-    // eslint-disable-next-line @typescript-eslint/return-await
-    return await defaultLoaders[".js"](compiledFilepath, transpiledContent);
-  } finally {
-    await rm(compiledFilepath, { force: true });
+  try {
+    const config = resolveTsConfig(dirname(filepath)) ?? {};
+    config.compilerOptions = {
+      ...config.compilerOptions,
+
+      moduleResolution: typescript.ModuleResolutionKind.Bundler,
+      target: typescript.ScriptTarget.ES2022,
+      noEmit: false,
+      ...compilerOptions,
+    };
+    transpiledContent = typescript.transpileModule(content, config).outputText;
+    //await writeFile(compiledFilepath, transpiledContent);
+  } catch (error: any) {
+    error.message = `TypeScript Error in ${filepath}:\n${error.message}`;
+    throw error;
   }
+  // eslint-disable-next-line @typescript-eslint/return-await
+  const imported = await import(
+    buildVirtualUrl(filepath, transpiledContent, type)
+  );
+  console.log(imported);
+  return imported.default;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,3 +80,14 @@ function resolveTsConfig(directory: string): any {
   }
   return;
 }
+
+export const loadJs: Loader = async function loadJs(filepath, contents) {
+  return (
+    await import(
+      buildVirtualUrl(
+        filepath,
+        contents, // || (await readFile(filepath, { encoding: "utf-8" })),
+      )
+    )
+  ).default;
+};

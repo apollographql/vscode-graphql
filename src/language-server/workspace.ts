@@ -215,9 +215,6 @@ export class GraphQLWorkspace {
     }
     // If project exists, update the config
     if (project && config) {
-      if (equal(project.config.rawConfig, config.rawConfig)) {
-        return;
-      }
       await Promise.all(project.updateConfig(config));
       this.reloadService();
     }

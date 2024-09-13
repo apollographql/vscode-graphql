@@ -1,38 +1,58 @@
 import { Loader, defaultLoaders } from "cosmiconfig";
-import { dirname } from "node:path";
+import { basename, dirname, sep, format as formatPath } from "node:path";
 import { rm, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import typescript from "typescript";
 
 // implementation based on https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/src/loaders.ts
 // Copyright (c) 2015 David Clark licensed MIT. Full license can be found here:
 // https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/LICENSE
 
-let typescript: typeof import("typescript");
 export const loadTs: Loader = async function loadTs(filepath, content) {
   try {
-    return await defaultLoaders[".ts"](filepath, content);
+    return await load(filepath, content, ".mjs", {
+      module: typescript.ModuleKind.ES2022,
+    });
   } catch (error) {
     if (
-      !(error instanceof Error) ||
-      !error.message.includes("module is not defined")
-    )
+      error instanceof Error &&
+      // [ERROR] ReferenceError: module is not defined in ES module scope
+      error.message.includes("module is not defined")
+    ) {
+      return await load(filepath, content, ".cjs", {
+        module: typescript.ModuleKind.CommonJS,
+      });
+    } else {
       throw error;
+    }
   }
+};
 
-  if (typescript === undefined) {
-    typescript = await import("typescript");
-  }
-  const compiledFilepath = `${filepath.slice(0, -2)}cjs`;
+async function load(
+  filepath: string,
+  content: string,
+  extension: string,
+  compilerOptions: Partial<import("typescript").CompilerOptions>,
+) {
+  const tempDir = mkdtempSync(`${tmpdir()}${sep}`);
+  const base = basename(filepath);
+  const compiledFilepath = formatPath({
+    dir: tempDir,
+    name: base,
+    ext: extension,
+  });
   let transpiledContent;
   try {
     try {
       const config = resolveTsConfig(dirname(filepath)) ?? {};
       config.compilerOptions = {
         ...config.compilerOptions,
-        module: typescript.ModuleKind.CommonJS,
+
         moduleResolution: typescript.ModuleResolutionKind.Bundler,
         target: typescript.ScriptTarget.ES2022,
         noEmit: false,
+        ...compilerOptions,
       };
       transpiledContent = typescript.transpileModule(
         content,
@@ -50,7 +70,7 @@ export const loadTs: Loader = async function loadTs(filepath, content) {
       await rm(compiledFilepath);
     }
   }
-};
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function resolveTsConfig(directory: string): any {

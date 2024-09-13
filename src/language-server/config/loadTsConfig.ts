@@ -1,7 +1,6 @@
 import { Loader, defaultLoaders } from "cosmiconfig";
-import { basename, dirname, sep, format as formatPath } from "node:path";
-import { rm, writeFile, mkdtemp } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { basename, dirname, format as formatPath } from "node:path";
+import { rm, writeFile } from "node:fs/promises";
 import typescript from "typescript";
 
 // implementation based on https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/src/loaders.ts
@@ -10,7 +9,7 @@ import typescript from "typescript";
 
 export const loadTs: Loader = async function loadTs(filepath, content) {
   try {
-    return await load(filepath, content, ".mjs", {
+    return await load(filepath, content, ".vscode-extension-ignore.mjs", {
       module: typescript.ModuleKind.ES2022,
     });
   } catch (error) {
@@ -19,7 +18,7 @@ export const loadTs: Loader = async function loadTs(filepath, content) {
       // [ERROR] ReferenceError: module is not defined in ES module scope
       error.message.includes("module is not defined")
     ) {
-      return await load(filepath, content, ".cjs", {
+      return await load(filepath, content, ".vscode-extension-ignore.cjs", {
         module: typescript.ModuleKind.CommonJS,
       });
     } else {
@@ -34,13 +33,7 @@ async function load(
   extension: string,
   compilerOptions: Partial<import("typescript").CompilerOptions>,
 ) {
-  const tempDir = await mkdtemp(`${tmpdir()}${sep}`);
-  const base = basename(filepath);
-  const compiledFilepath = formatPath({
-    dir: tempDir,
-    name: base,
-    ext: extension,
-  });
+  const compiledFilepath = `${filepath}${extension}`;
   let transpiledContent;
   try {
     try {
@@ -65,7 +58,7 @@ async function load(
     // eslint-disable-next-line @typescript-eslint/return-await
     return await defaultLoaders[".js"](compiledFilepath, transpiledContent);
   } finally {
-    await rm(tempDir, { recursive: true, force: true });
+    await rm(compiledFilepath, { force: true });
   }
 }
 

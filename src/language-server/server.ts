@@ -190,6 +190,9 @@ documents.onDidClose(
 connection.onDidChangeWatchedFiles((params) => {
   const handledByProject = new Map<GraphQLProject, FileEvent[]>();
   for (const { uri, type } of params.changes) {
+    if (uri.match(/vscode-extension-ignore.[mc]?js$/)) {
+      continue;
+    }
     if (
       uri.endsWith("apollo.config.js") ||
       uri.endsWith("apollo.config.cjs") ||

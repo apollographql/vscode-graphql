@@ -266,6 +266,21 @@
         "command": "apollographql/showStats",
         "title": "Show Status",
         "category": "Apollo"
+      },
+      {
+        "command": "apollographql/apollo/enableAutoComposition",
+        "title": "Enable auto composition",
+        "category": "Apollo"
+      },
+      {
+        "command": "apollographql/apollo/disableAutoComposition",
+        "title": "Disable auto composition",
+        "category": "Apollo"
+      },
+      {
+        "command": "apollographql/composeServices",
+        "title": "Trigger composition",
+        "category": "Apollo"
       }
     ]
   },

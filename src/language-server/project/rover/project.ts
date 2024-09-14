@@ -35,6 +35,7 @@ import { VSCodeConnection } from "../../server";
 import { getLanguageIdForExtension } from "../../utilities/languageIdForExtension";
 import { extname } from "node:path";
 import type { FileExtension } from "../../../tools/utilities/languageInformation";
+import { commands } from "vscode";
 
 export const DEBUG = true;
 
@@ -197,6 +198,22 @@ export class RoverProject extends GraphQLProject {
       DEBUG && console.info("unhandled notification from LSP", notification);
     });
 
+    commands.registerCommand("apollo/enableAutoComposition", () => {
+      connection.sendNotification("apollo/configureAutoComposition", {
+        enabled: true,
+      });
+    });
+
+    commands.registerCommand("apollo/disableAutoComposition", () => {
+      connection.sendNotification("apollo/configureAutoComposition", {
+        enabled: false,
+      });
+    });
+
+    commands.registerCommand("apollo/composeServices", () => {
+      connection.sendNotification("apollo/composeServices");
+    });
+
     connection.listen();
     DEBUG && console.log("Initializing connection");
 
@@ -208,6 +225,9 @@ export class RoverProject extends GraphQLProject {
           capabilities: this.capabilities,
           processId: process.pid,
           rootUri: this.rootURI.toString(),
+          initializationOptions: {
+            enableAutoComposition: false,
+          },
         },
         source.token,
       );

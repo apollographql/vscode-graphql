@@ -31,7 +31,8 @@
     "test:extension": "node src/__e2e__/runTests.js",
     "test:textmate": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
     "codegen": "graphql-codegen",
-    "vscode:prepublish": "npm run build:production"
+    "vscode:prepublish": "npm run build:production",
+    "build-install-local": "npx -y @vscode/vsce package --out vscode-ext-local.vsix && code --install-extension vscode-ext-local.vsix --force"
   },
   "engines": {
     "vscode": "^1.90.0"

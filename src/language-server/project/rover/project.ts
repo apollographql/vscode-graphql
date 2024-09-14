@@ -24,6 +24,7 @@ import {
   SemanticTokensRegistrationType,
   SemanticTokensOptions,
   SemanticTokensRegistrationOptions,
+  DefinitionRequest,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
@@ -279,6 +280,11 @@ export class RoverProject extends GraphQLProject {
   onHover: GraphQLProject["onHover"] = async (params, token) =>
     this.documents.insideVirtualDocument(params, (virtualParams) =>
       this.sendRequest(HoverRequest.type, virtualParams, token),
+    );
+
+  onDefinition: GraphQLProject["onDefinition"] = async (params, token) =>
+    this.documents.insideVirtualDocument(params, (virtualParams) =>
+      this.sendRequest(DefinitionRequest.type, virtualParams, token),
     );
 
   onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = async (

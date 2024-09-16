@@ -12,7 +12,7 @@ async function main() {
       "src/extension.ts",
       "src/language-server/server.ts",
       "src/language-server/config/config.ts",
-      "src/language-server/config/cache-busting-resolver.ts",
+      "src/language-server/config/cache-busting-resolver.js",
     ],
     bundle: true,
     format: "cjs",

@@ -4,7 +4,7 @@ export type ImportAttributes =
   | {
       as: "cachebust";
       contents: string;
-      format?: ResolutionResult["format"];
+      format?: Format;
     }
   | { as?: undefined };
 
@@ -17,26 +17,26 @@ type Format =
   | null
   | undefined;
 
-interface ResolveContext {
+export interface ResolveContext {
   conditions: string[];
   importAttributes: ImportAttributes;
   parentURL?: string;
 }
 
-interface ImportContext {
+export interface ImportContext {
   conditions: string[];
   importAttributes: ImportAttributes;
   format: Format;
 }
 
-interface ResolutionResult {
+export interface ResolutionResult {
   format: Format;
   importAttributes?: ImportAttributes;
   shortCircuit?: boolean;
   url: string;
 }
 
-interface LoadResult {
+export interface LoadResult {
   format: Format;
   shortCircuit?: boolean;
   source: string;

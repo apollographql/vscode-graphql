@@ -52,7 +52,6 @@ async function resolve(specifier, context, nextResolve) {
  * @returns {Promise<LoadResult>}
  */
 async function load(url, context, nextLoad) {
-  console.log(url);
   if (context.importAttributes.as !== "cachebust") {
     return nextLoad(url, context);
   }

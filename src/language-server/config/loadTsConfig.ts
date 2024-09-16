@@ -55,7 +55,6 @@ async function load(
       ...compilerOptions,
     };
     transpiledContent = typescript.transpileModule(content, config).outputText;
-    //await writeFile(compiledFilepath, transpiledContent);
   } catch (error: any) {
     error.message = `TypeScript Error in ${filepath}:\n${error.message}`;
     throw error;

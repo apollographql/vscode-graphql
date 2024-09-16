@@ -37,10 +37,7 @@ async function resolve(specifier, context, nextResolve) {
   return {
     ...result,
     url: bustFileName(result.url),
-    importAttributes: {
-      ...context.importAttributes,
-      format: result.format,
-    },
+    importAttributes: context.importAttributes,
   };
 }
 
@@ -56,7 +53,7 @@ async function load(url, context, nextLoad) {
     return nextLoad(url, context);
   }
   return {
-    format: context.importAttributes.format || "module",
+    format: context.format || "module",
     shortCircuit: true,
     source: context.importAttributes.contents,
   };

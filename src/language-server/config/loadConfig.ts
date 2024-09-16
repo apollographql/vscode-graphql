@@ -13,14 +13,17 @@ import { loadTs } from "./loadTsConfig";
 
 // config settings
 const MODULE_NAME = "apollo";
-const defaultFileNames = [
+export const supportedConfigFileNames = [
   "package.json",
   `${MODULE_NAME}.config.js`,
   `${MODULE_NAME}.config.ts`,
   `${MODULE_NAME}.config.mjs`,
   `${MODULE_NAME}.config.cjs`,
+  `${MODULE_NAME}.config.yaml`,
+  `${MODULE_NAME}.config.yml`,
+  `${MODULE_NAME}.config.json`,
 ];
-const envFileNames = [".env", ".env.local"];
+export const envFileNames = [".env", ".env.local"];
 
 export const keyEnvVar = "APOLLO_KEY";
 
@@ -43,7 +46,7 @@ export async function loadConfig({
   configPath,
 }: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
-    searchPlaces: defaultFileNames,
+    searchPlaces: supportedConfigFileNames,
     loaders: {
       ...defaultLoaders,
       [".ts"]: loadTs,

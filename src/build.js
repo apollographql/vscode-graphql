@@ -1,11 +1,18 @@
 const esbuild = require("esbuild");
+const { zodToJsonSchema } = require("zod-to-json-schema");
+const { writeFileSync } = require("fs");
+const importFresh = require("import-fresh");
 
 const production = process.argv.includes("--production");
 const watch = process.argv.includes("--watch");
 
 async function main() {
   const ctx = await esbuild.context({
-    entryPoints: ["src/extension.ts", "src/language-server/server.ts"],
+    entryPoints: [
+      "src/extension.ts",
+      "src/language-server/server.ts",
+      "src/language-server/config/config.ts",
+    ],
     bundle: true,
     format: "cjs",
     minify: production,
@@ -19,6 +26,7 @@ async function main() {
     plugins: [
       /* add to the end of plugins array */
       esbuildProblemMatcherPlugin,
+      buildJsonSchemaPlugin,
     ],
   });
   if (watch) {
@@ -47,6 +55,36 @@ const esbuildProblemMatcherPlugin = {
         );
       });
       console.log("[watch] build finished");
+    });
+  },
+};
+
+const buildJsonSchemaPlugin = {
+  name: "build-json-schema",
+  setup(build) {
+    build.onEnd(() => {
+      const {
+        configSchema,
+        clientConfig,
+        // roverConfig,
+        engineConfig,
+        baseConfig,
+        // @ts-ignore
+      } = importFresh("../lib/language-server/config/config.js");
+
+      const jsonSchema = zodToJsonSchema(configSchema, {
+        errorMessages: true,
+        definitions: {
+          clientConfig,
+          //roverConfig,
+          engineConfig,
+          baseConfig,
+        },
+      });
+      writeFileSync(
+        "./schemas/apollo.config.schema.json",
+        JSON.stringify(jsonSchema, null, 2),
+      );
     });
   },
 };

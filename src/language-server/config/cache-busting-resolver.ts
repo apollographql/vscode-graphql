@@ -1,7 +1,3 @@
-import { readFile } from "node:fs/promises";
-
-import { fileURLToPath, pathToFileURL } from "node:url";
-
 interface Context {
   conditions: string[];
   importAttributes: Record<string, string>;
@@ -22,26 +18,53 @@ interface ResolutionResult {
   url: string;
 }
 
-const fileSchema = "file://";
-const cacheBustSchema = "apollo-cachebust://";
+const prefix = `data:cachebust;`;
+type CachebustingUrl =
+  `data:cachebust;format=${string};path=${string};base64,${string}` & {
+    __brand: "CachebustingUrl";
+  };
 
 export function buildVirtualUrl(
   filename: string,
   contents: string,
   format?: ResolutionResult["format"],
-): string {
-  const url = pathToFileURL(filename);
-  url.searchParams.set("cachebust", contents);
-  if (format) {
-    url.searchParams.set("format", format);
-  }
-  return cacheBustSchema + url.toString().slice(fileSchema.length);
+): CachebustingUrl {
+  return buildUrl(
+    format || "detect",
+    filename,
+    Buffer.from(contents).toString("base64"),
+  );
 }
 
-function toFileUrl(bustingUrl: string): string {
-  const url = new URL(fileSchema + bustingUrl.slice(cacheBustSchema.length));
-  url.search = "";
-  return url.toString();
+function isCachebustingUrl(url: string | undefined): url is CachebustingUrl {
+  return !!url && url.startsWith(prefix);
+}
+
+function getUrlInfo(dataUrl: CachebustingUrl) {
+  const split = dataUrl.split(";");
+  return {
+    format: split[1].slice(7) as
+      | "detect"
+      | "builtin"
+      | "commonjs"
+      | "json"
+      | "module"
+      | "wasm"
+      | null
+      | undefined,
+    path: split[2].slice(5),
+    base64: split[3].slice(7),
+  };
+}
+
+function buildUrl(
+  format: string,
+  path: string,
+  base64: string,
+): CachebustingUrl {
+  return `${prefix}format=${
+    format || "detect"
+  };path=${path};base64,${base64}` as CachebustingUrl;
 }
 
 export async function resolve(
@@ -52,40 +75,40 @@ export async function resolve(
     context: Context,
   ) => Promise<ResolutionResult>,
 ): Promise<ResolutionResult> {
-  if (!specifier.startsWith(cacheBustSchema)) {
-    if (context.parentURL?.startsWith(cacheBustSchema)) {
+  if (!isCachebustingUrl(specifier)) {
+    if (isCachebustingUrl(context.parentURL)) {
       // ensure that imports are resolved relative to the correct file position
       return nextResolve(specifier, {
         ...context,
-        parentURL: toFileUrl(context.parentURL),
+        parentURL: getUrlInfo(context.parentURL).path,
       });
     }
     return nextResolve(specifier, context);
   }
 
-  const url = new URL(specifier);
-  if (url.searchParams.has("format")) {
+  const info = getUrlInfo(specifier);
+  if (info.format !== "detect") {
     return {
       url: specifier,
-      format: url.searchParams.get("format") as ResolutionResult["format"],
+      format: info.format,
       shortCircuit: true,
     };
   }
-  let result = await nextResolve(toFileUrl(specifier), context);
-  url.searchParams.set("format", result.format || "module");
+  let result = await nextResolve(info.path, context);
   return {
     ...result,
-    url: url.toString(),
+    url: buildUrl(result.format || "module", info.path, info.base64),
   };
 }
+
 export async function load(url: any, context: any, nextLoad: any) {
-  if (!url.startsWith(cacheBustSchema)) {
+  if (!isCachebustingUrl(url)) {
     return nextLoad(url, context);
   }
-  const urlObj = new URL(url);
+  const info = getUrlInfo(url);
   return {
-    format: urlObj.searchParams.get("format"),
+    format: info.format,
     shortCircuit: true,
-    source: urlObj.searchParams.get("cachebust"),
+    source: Buffer.from(info.base64, "base64").toString("ascii"),
   };
 }

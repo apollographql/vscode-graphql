@@ -1,114 +1,95 @@
-interface Context {
+import { pathToFileURL } from "node:url";
+
+export type ImportAttributes =
+  | {
+      as: "cachebust";
+      contents: string;
+      format?: ResolutionResult["format"];
+    }
+  | { as?: undefined };
+
+type Format =
+  | "builtin"
+  | "commonjs"
+  | "json"
+  | "module"
+  | "wasm"
+  | null
+  | undefined;
+
+interface ResolveContext {
   conditions: string[];
-  importAttributes: Record<string, string>;
+  importAttributes: ImportAttributes;
   parentURL?: string;
 }
 
+interface ImportContext {
+  conditions: string[];
+  importAttributes: ImportAttributes;
+  format: Format;
+}
+
 interface ResolutionResult {
-  format:
-    | "builtin"
-    | "commonjs"
-    | "json"
-    | "module"
-    | "wasm"
-    | null
-    | undefined;
-  importAttribute?: any;
+  format: Format;
+  importAttributes?: ImportAttributes;
   shortCircuit?: boolean;
   url: string;
 }
 
-const prefix = `data:cachebust;`;
-type CachebustingUrl =
-  `data:cachebust;format=${string};path=${string};base64,${string}` & {
-    __brand: "CachebustingUrl";
-  };
-
-export function buildVirtualUrl(
-  filename: string,
-  contents: string,
-  format?: ResolutionResult["format"],
-): CachebustingUrl {
-  return buildUrl(
-    format || "detect",
-    filename,
-    Buffer.from(contents).toString("base64"),
-  );
+interface LoadResult {
+  format: Format;
+  shortCircuit?: boolean;
+  source: string;
 }
 
-function isCachebustingUrl(url: string | undefined): url is CachebustingUrl {
-  return !!url && url.startsWith(prefix);
-}
-
-function getUrlInfo(dataUrl: CachebustingUrl) {
-  const split = dataUrl.split(";");
-  return {
-    format: split[1].slice(7) as
-      | "detect"
-      | "builtin"
-      | "commonjs"
-      | "json"
-      | "module"
-      | "wasm"
-      | null
-      | undefined,
-    path: split[2].slice(5),
-    base64: split[3].slice(7),
-  };
-}
-
-function buildUrl(
-  format: string,
-  path: string,
-  base64: string,
-): CachebustingUrl {
-  return `${prefix}format=${
-    format || "detect"
-  };path=${path};base64,${base64}` as CachebustingUrl;
+function bustFileName(specifier: string) {
+  const url = pathToFileURL(specifier);
+  url.pathname = url.pathname + "." + Date.now() + ".js";
+  return url.toString();
 }
 
 export async function resolve(
   specifier: string,
-  context: Context,
+  context: ResolveContext,
   nextResolve: (
     specifier: string,
-    context: Context,
+    context: ResolveContext,
   ) => Promise<ResolutionResult>,
 ): Promise<ResolutionResult> {
-  if (!isCachebustingUrl(specifier)) {
-    if (isCachebustingUrl(context.parentURL)) {
-      // ensure that imports are resolved relative to the correct file position
-      return nextResolve(specifier, {
-        ...context,
-        parentURL: getUrlInfo(context.parentURL).path,
-      });
-    }
+  if (context.importAttributes.as !== "cachebust") {
     return nextResolve(specifier, context);
   }
-
-  const info = getUrlInfo(specifier);
-  if (info.format !== "detect") {
+  if (context.importAttributes.format) {
+    // no need to resolve at all, we have all necessary information
     return {
-      url: specifier,
-      format: info.format,
+      url: bustFileName(specifier),
+      format: context.importAttributes.format,
+      importAttributes: context.importAttributes,
       shortCircuit: true,
     };
   }
-  let result = await nextResolve(info.path, context);
+  const result = await nextResolve(specifier, context);
   return {
     ...result,
-    url: buildUrl(result.format || "module", info.path, info.base64),
+    url: bustFileName(result.url),
+    importAttributes: {
+      ...context.importAttributes,
+      format: result.format,
+    },
   };
 }
 
-export async function load(url: any, context: any, nextLoad: any) {
-  if (!isCachebustingUrl(url)) {
+export async function load(
+  url: string,
+  context: ImportContext,
+  nextLoad: (url: string, context: ImportContext) => Promise<LoadResult>,
+): Promise<LoadResult> {
+  if (context.importAttributes.as !== "cachebust") {
     return nextLoad(url, context);
   }
-  const info = getUrlInfo(url);
   return {
-    format: info.format,
+    format: context.importAttributes.format || "module",
     shortCircuit: true,
-    source: Buffer.from(info.base64, "base64").toString("ascii"),
+    source: context.importAttributes.contents,
   };
 }

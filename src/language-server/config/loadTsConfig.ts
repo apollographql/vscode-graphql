@@ -1,11 +1,9 @@
 import { Loader } from "cosmiconfig";
 import { dirname } from "node:path";
-import { rm, writeFile, stat, readFile } from "node:fs/promises";
 import typescript from "typescript";
 import { pathToFileURL } from "node:url";
-import { Debug } from "../utilities";
 import { register } from "node:module";
-import { buildVirtualUrl } from "./cache-busting-resolver";
+import { ImportAttributes } from "./cache-busting-resolver";
 // implementation based on https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/src/loaders.ts
 // Copyright (c) 2015 David Clark licensed MIT. Full license can be found here:
 // https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/LICENSE
@@ -58,9 +56,16 @@ async function load(
   }
   // eslint-disable-next-line @typescript-eslint/return-await
   const imported = await import(
-    buildVirtualUrl(filepath, transpiledContent, type)
+    filepath,
+    //@ts-ignore
+    {
+      with: {
+        as: "cachebust",
+        contents: transpiledContent,
+        format: type,
+      } satisfies ImportAttributes,
+    }
   );
-  console.log(imported);
   return imported.default;
 }
 
@@ -84,10 +89,13 @@ function resolveTsConfig(directory: string): any {
 export const loadJs: Loader = async function loadJs(filepath, contents) {
   return (
     await import(
-      buildVirtualUrl(
-        filepath,
-        contents, // || (await readFile(filepath, { encoding: "utf-8" })),
-      )
+      filepath, // @ts-ignore
+      {
+        with: {
+          as: "cachebust",
+          contents,
+        } satisfies ImportAttributes,
+      }
     )
   ).default;
 };

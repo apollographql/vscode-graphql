@@ -50,9 +50,9 @@ To link a project to a published schema, edit the `apollo.config.json` file to l
 ```json
 {
   "client": {
-    "service": "graphos-graph-id",
-  },
-};
+    "service": "graphos-graph-id"
+  }
+}
 ```
 
 The `service` name is the name of the graph you've created in [GraphOS Studio](https://studio.apollographql.com).
@@ -89,10 +89,10 @@ Sometimes it may make sense to link the editor to a locally running version of a
   "client": {
     "service": {
       "name": "my-graphql-app",
-      "url": "http://localhost:4000/graphql",
-    },
-  },
-};
+      "url": "http://localhost:4000/graphql"
+    }
+  }
+}
 ```
 
 Linking to the local schema won't provide all features, such as switching graph variants and performance metrics.
@@ -113,10 +113,10 @@ To link to a local schema file, add the following to the `apollo.config.json` fi
   "client": {
     "service": {
       // can be a string pointing to a single file or an array of strings
-      "localSchemaFile": "./path/to/schema.graphql",
-    },
-  },
-};
+      "localSchemaFile": "./path/to/schema.graphql"
+    }
+  }
+}
 ```
 
 </details>
@@ -134,9 +134,9 @@ Client side schema definitions can be spread throughout the client app project a
     // array of glob patterns
     "includes": ["./src/**/*.js"],
     // array of glob patterns
-    "excludes": ["**/__tests__/**"],
-  },
-};
+    "excludes": ["**/__tests__/**"]
+  }
+}
 ```
 
 <h3 id="get-the-extension">Get the extension</h3>
@@ -218,11 +218,11 @@ _Optional_ - custom tagged template literal.
 
 When using GraphQL with JavaScript or TypeScript projects, it is common to use the `gql` tagged template literal to write out operations. Apollo tools look through your files for the `gql` tag to extract your queries, so if you use a different template literal, you can configure it like so:
 
-```js
-module.exports = {
-  client: {
-    tagName: "graphql", // highlight-line
-    service: ...
+```json
+{
+  "client": {
+    "tagName": "graphql",
+    "service": //...
   }
-};
+}
 ```

@@ -26,20 +26,25 @@ The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience
 
 <h2 id="getting-started">Getting started</h2>
 
+<details>
+<summary>
+<h3>Setting the Extension up for use with GraphOS</h3>
+</summary>
+
 To get all the benefits of the VS Code experience, it's best to link the schema that is being developed against before installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/publishing-schemas/) to the Apollo schema registry. After that's done:
 
-1. Create an `apollo.config.js` file at the root of the project.
-   Alternatively, you can create a `cjs`, `mjs`, or `ts` file with the same configuration.
+1. Create an `apollo.config.json` file at the root of the project.
+   Alternatively, you can create a `yaml`, `cjs`, `mjs`, or `ts` file with the same configuration.
 2. Obtain a [Personal API key](https://www.apollographql.com/docs/graphos/api-keys) from GraphOS Studio.
 
 <h3 id="apollo-config">Setting up an Apollo config</h3>
 
-For the VS Code plugin to know how to find the schema, it needs to be linked to either a published schema or a local one. To link a project to a published schema, edit the `apollo.config.js` file to look like this:
+For the VS Code plugin to know how to find the schema, it needs to be linked to either a published schema or a local one. To link a project to a published schema, edit the `apollo.config.json` file to look like this:
 
-```js
-module.exports = {
-  client: {
-    service: "my-graphql-app",
+```json
+{
+  "client": {
+    "service": "my-graphql-app",
   },
 };
 ```
@@ -50,7 +55,7 @@ See [additional configuration options](#additional-apollo-config-options).
 
 <h3 id="api-key">Setting up the <code>.env</code> file</h3>
 
-To authenticate with GraphOS Studio to pull down your schema, create a `.env` file in the same directory as the `apollo.config.js` file. This should be an untracked file (that is, don't commit it to Git).
+To authenticate with GraphOS Studio to pull down your schema, create a `.env` file in the same directory as the `apollo.config.json` file. This should be an untracked file (that is, don't commit it to Git).
 
 Then go to your [User Settings page](https://studio.apollographql.com/user-settings/api-keys?referrer=docs-content) in GraphOS Studio to create a new Personal API key.
 
@@ -64,16 +69,21 @@ APOLLO_KEY=<enter copied key here>
 
 After this is done, VS Code can be reloaded and the Apollo integration will connect to GraphOS Studio to provide autocomplete, validation, and more.
 
-<h3 id="local-schemas">Local schemas</h3>
+</details>
 
-Sometimes it may make sense to link the editor to a locally running version of a schema to try out new designs that are in active development. To do this, the `apollo.config.js` file can be linked to a local service definition:
+<details>
+<summary>
+<h3 id="local-schemas">Setting the Extension up for use with a local schema</h3>
+</summary>
 
-```js
-module.exports = {
-  client: {
-    service: {
-      name: "my-graphql-app",
-      url: "http://localhost:4000/graphql",
+Sometimes it may make sense to link the editor to a locally running version of a schema to try out new designs that are in active development. To do this, the `apollo.config.json` file can be linked to a local service definition:
+
+```json
+{
+  "client": {
+    "service": {
+      "name": "my-graphql-app",
+      "url": "http://localhost:4000/graphql",
     },
   },
 };
@@ -81,37 +91,44 @@ module.exports = {
 
 Linking to the local schema won't provide all features, such as switching graph variants and performance metrics.
 
-<h3 id="local-schema-files">Local schema files</h3>
+</details>
+
+<details>
+<summary>
+<h3 id="local-schema-files">Setting the Extension up for use with local schema files</h3>
+</summary>
 
 You might not always have a running server to link to, so the extension also supports linking to a local schema file.
 This is useful for working on a schema in isolation or for testing out new features.
-To link to a local schema file, add the following to the `apollo.config.js` file:
+To link to a local schema file, add the following to the `apollo.config.json` file:
 
-```js
-module.exports = {
-  client: {
-    service: {
+```json
+{
+  "client": {
+    "service": {
       // can be a string pointing to a single file or an array of strings
-      localSchemaFile: "./path/to/schema.graphql",
+      "localSchemaFile": "./path/to/schema.graphql",
     },
   },
 };
 ```
 
-<h3 id="client-only-schemas">Client-only schemas</h3>
+</details>
+
+<h3 id="client-only-schemas">Adding Client-only schemas</h3>
 
 One of the best features of the VS Code extension is the automatic merging of remote schemas and local ones when using integrated state management with Apollo Client. This happens automatically whenever schema definitions are found within a client project. By default, the VS Code extension will look for all JavaScript, TypeScript and GraphQL files under `./src` to find both the operations and schema definitions for building a complete schema for the application.
 
-Client side schema definitions can be spread throughout the client app project and will be merged together to create one single schema. The default behavior can be controlled by adding specifications to the `apollo.config.js`:
+Client side schema definitions can be spread throughout the client app project and will be merged together to create one single schema. The default behavior can be controlled by adding specifications to the `apollo.config.json`:
 
-```js
-module.exports = {
-  client: {
-    service: "my-graphql-app",
+```json
+{
+  "client": {
+    "service": "my-graphql-app",
     // array of glob patterns
-    includes: ["./src/**/*.js"],
+    "includes": ["./src/**/*.js"],
     // array of glob patterns
-    excludes: ["**/__tests__/**"],
+    "excludes": ["**/__tests__/**"],
   },
 };
 ```

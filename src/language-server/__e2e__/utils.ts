@@ -8,6 +8,25 @@ function resolve(file: string) {
   return join(__dirname, "..", "..", "..", "sampleWorkspace", file);
 }
 
+export type GetPositionFn = ReturnType<typeof getPositionForEditor>;
+export function getPositionForEditor(editor: vscode.TextEditor) {
+  return function getPosition(cursor: `${string}|${string}`): [number, number] {
+    if (cursor.indexOf("|") !== cursor.lastIndexOf("|")) {
+      throw new Error(
+        "`getPosition` cursor description can only contain one |",
+      );
+    }
+    const text = editor.document.getText();
+    const idx = text.indexOf(cursor.replace("|", ""));
+    if (idx !== text.lastIndexOf(cursor.replace("|", ""))) {
+      throw new Error("`getPosition` cursor description is not unique");
+    }
+    const cursorIndex = idx + cursor.indexOf("|");
+    const position = editor.document.positionAt(cursorIndex);
+    return [position.line, position.character];
+  };
+}
+
 export async function closeAllEditors() {
   while (vscode.window.visibleTextEditors.length > 0) {
     await vscode.commands.executeCommand("workbench.action.closeActiveEditor");

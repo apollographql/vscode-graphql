@@ -10,7 +10,7 @@ import { getServiceFromKey } from "./utils";
 import { URI } from "vscode-uri";
 import { Debug } from "../utilities";
 import { loadTs } from "./loadTsConfig";
-import { ParseError, parse as parseJsonC } from "jsonc-parser/lib/esm/main.js";
+import { ParseError, parse as parseJsonC } from "jsonc-parser";
 
 // config settings
 const MODULE_NAME = "apollo";

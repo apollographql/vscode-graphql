@@ -48,6 +48,7 @@
     "graphql": "16.9.0",
     "graphql-language-service": "5.2.2",
     "graphql-tag": "2.12.6",
+    "jsonc-parser": "^3.3.1",
     "lodash.debounce": "4.0.8",
     "lodash.merge": "4.6.2",
     "lodash.throttle": "4.1.1",
@@ -150,6 +151,12 @@
           "GraphQL"
         ],
         "configuration": "./graphql.configuration.json"
+      },
+      {
+        "id": "jsonc",
+        "filenames": [
+          "apollo.config.json"
+        ]
       }
     ],
     "grammars": [

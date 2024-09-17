@@ -26,25 +26,31 @@ The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience
 
 <h2 id="getting-started">Getting started</h2>
 
+For the VS Code plugin to know how to find the schema, it needs to be linked to either a published schema or a local one.
+
+First, create an `apollo.config.json` file at the root of the project.
+Alternatively, you can create a `yaml`, `cjs`, `mjs`, or `ts` file with the same configuration.
+
+For the contents of this configuration file, select one of these options:
+
 <details>
 <summary>
-<h3>Setting the Extension up for use with GraphOS</h3>
+<h3>Setting the Extension up for use with Apollo GraphOS</h3>
 </summary>
 
 To get all the benefits of the VS Code experience, it's best to link the schema that is being developed against before installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/publishing-schemas/) to the Apollo schema registry. After that's done:
 
 1. Create an `apollo.config.json` file at the root of the project.
-   Alternatively, you can create a `yaml`, `cjs`, `mjs`, or `ts` file with the same configuration.
 2. Obtain a [Personal API key](https://www.apollographql.com/docs/graphos/api-keys) from GraphOS Studio.
 
 <h3 id="apollo-config">Setting up an Apollo config</h3>
 
-For the VS Code plugin to know how to find the schema, it needs to be linked to either a published schema or a local one. To link a project to a published schema, edit the `apollo.config.json` file to look like this:
+To link a project to a published schema, edit the `apollo.config.json` file to look like this:
 
 ```json
 {
   "client": {
-    "service": "my-graphql-app",
+    "service": "graphos-graph-id",
   },
 };
 ```
@@ -124,7 +130,7 @@ Client side schema definitions can be spread throughout the client app project a
 ```json
 {
   "client": {
-    "service": "my-graphql-app",
+    // "service": <your service configuration>,
     // array of glob patterns
     "includes": ["./src/**/*.js"],
     // array of glob patterns

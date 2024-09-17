@@ -1,4 +1,4 @@
-import { cosmiconfig, defaultLoaders } from "cosmiconfig";
+import { cosmiconfig, defaultLoaders, Loader } from "cosmiconfig";
 import { dirname, resolve } from "path";
 import { readFileSync, existsSync, lstatSync } from "fs";
 import {
@@ -10,6 +10,7 @@ import { getServiceFromKey } from "./utils";
 import { URI } from "vscode-uri";
 import { Debug } from "../utilities";
 import { loadTs } from "./loadTsConfig";
+import { ParseError, parse as parseJsonC } from "jsonc-parser/lib/esm/main.js";
 
 // config settings
 const MODULE_NAME = "apollo";
@@ -42,6 +43,19 @@ export type ConfigResult<T> = {
 
 // XXX load .env files automatically
 
+const loadJsonc: Loader = (filename, contents) => {
+  const errors: ParseError[] = [];
+  try {
+    return parseJsonC(contents, errors);
+  } finally {
+    if (errors.length) {
+      Debug.error(
+        `Error parsing JSONC file ${filename}, file might not be valid JSONC`,
+      );
+    }
+  }
+};
+
 export async function loadConfig({
   configPath,
 }: LoadConfigSettings): Promise<ApolloConfig | null> {
@@ -50,6 +64,7 @@ export async function loadConfig({
     loaders: {
       ...defaultLoaders,
       [".ts"]: loadTs,
+      ".json": loadJsonc,
     },
   });
 

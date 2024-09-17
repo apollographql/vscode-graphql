@@ -214,7 +214,7 @@ client:
 
     it("loads config from a json file", async () => {
       writeFilesToDir(dir, {
-        "apollo.config.json": `{"client": {"service": "hello"} }`,
+        "apollo.config.json": `{"client": /* testing jsonc */ {"service": "hello"} }`,
       });
       const config = await loadConfig({ configPath: dirPath });
       expect(config?.client?.service).toEqual("hello");

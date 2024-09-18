@@ -7,10 +7,9 @@ import {
   getExtension,
   getOutputChannelDocument,
   reloadService,
+  getPositionForEditor,
 } from "./utils";
 import mocks from "../../__e2e__/mocks.js";
-import vscode from "vscode";
-import { scheduler } from "node:timers/promises";
 
 const mockPort = Number(process.env.MOCK_SERVER_PORT);
 beforeAll(async () => {
@@ -19,13 +18,20 @@ beforeAll(async () => {
 
 test("completion", async () => {
   const editor = await openEditor("spotifyGraph/src/test.js");
-  await testCompletion(editor, [4, 9], [["profile", "CurrentUserProfile!"]]);
-  await testCompletion(editor, [6, 15], [["displayName", "String"]]);
+  const getPosition = getPositionForEditor(editor);
+  await testCompletion(editor, getPosition("pr|ofile"), [
+    ["profile", "CurrentUserProfile!"],
+  ]);
+  await testCompletion(editor, getPosition("dis|playName"), [
+    ["displayName", "String"],
+  ]);
 });
 
 test("hover", async () => {
   const editor = await openEditor("spotifyGraph/src/test.js");
-  expect(await getHover(editor, [4, 9])).toMatchInlineSnapshot(`
+  const getPosition = getPositionForEditor(editor);
+  expect(await getHover(editor, getPosition("pr|ofile")))
+    .toMatchInlineSnapshot(`
 "\`\`\`graphql
 CurrentUser.profile: CurrentUserProfile!
 \`\`\`

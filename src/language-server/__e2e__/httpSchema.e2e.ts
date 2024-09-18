@@ -13,7 +13,6 @@ let getPosition: GetPositionFn;
 beforeAll(async () => {
   closeAllEditors();
   editor = await openEditor("httpSchema/src/test.js");
-
   getPosition = getPositionForEditor(editor);
 });
 

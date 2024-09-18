@@ -4,6 +4,15 @@ import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { ParsedApolloConfigFormat } from "../config";
+import { TextEditor } from "vscode";
+import {
+  closeAllEditors,
+  openEditor,
+  getCompletionItems,
+  getHover,
+  getPositionForEditor,
+  GetPositionFn,
+} from "./utils";
 
 // we want to skip these tests unless the user running them has a rover config profile named "VSCode-E2E"
 let test = origTest.skip;
@@ -30,7 +39,77 @@ if (test === origTest.skip) {
   );
 }
 
-test("result", () => {
-  // deliberately fail the test to show that it's running
-  expect(true).toBeFalsy();
+let editor: TextEditor;
+let getPosition: GetPositionFn;
+beforeAll(async () => {
+  closeAllEditors();
+  editor = await openEditor("rover/src/test.graphql");
+  getPosition = getPositionForEditor(editor);
+});
+
+test("hover", async () => {
+  expect(await getHover(editor, getPosition("@over|ride(from")))
+    .toMatchInlineSnapshot(`
+"The [\`@override\`](https://www.apollographql.com/docs/federation/federated-schemas/federated-directives/#override) directive indicates that an object field is now resolved by this subgraph instead of another subgraph where it's also defined. This enables you to migrate a field from one subgraph to another.
+
+You can apply \`@override\` to entity fields and fields of the root operation types (such as \`Query\` and \`Mutation\`). A second \`label\` argument can be used to progressively override a field. See [the docs](https://www.apollographql.com/docs/federation/entities/migrate-fields/#incremental-migration-with-progressive-override) for more information.
+***
+\`\`\`graphql
+directive @override(from: String!, label: String) on FIELD_DEFINITION
+\`\`\`"
+`);
+});
+
+// skipping, it seems completion happens too quickly so we don't get a response
+origTest("completion", async () => {
+  expect(
+  await getCompletionItems(editor, getPosition("@over|ride(from"))
+).toMatchInlineSnapshot(`
+[
+  {
+    "detail": undefined,
+    "label": "@deprecated",
+  },
+  {
+    "detail": undefined,
+    "label": "@external",
+  },
+  {
+    "detail": undefined,
+    "label": "@federation__authenticated",
+  },
+  {
+    "detail": undefined,
+    "label": "@federation__inaccessible",
+  },
+  {
+    "detail": undefined,
+    "label": "@federation__policy(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@federation__provides(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@federation__requiresScopes(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@federation__tag(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@override(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@requires(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@shareable",
+  },
+]
+`);
 });

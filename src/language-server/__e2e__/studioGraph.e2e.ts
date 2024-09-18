@@ -2,7 +2,7 @@ import { TextEditor } from "vscode";
 import {
   closeAllEditors,
   openEditor,
-  testCompletion,
+  getCompletionItems,
   getHover,
   getExtension,
   getOutputChannelDocument,
@@ -19,12 +19,18 @@ beforeAll(async () => {
 test("completion", async () => {
   const editor = await openEditor("spotifyGraph/src/test.js");
   const getPosition = getPositionForEditor(editor);
-  await testCompletion(editor, getPosition("pr|ofile"), [
-    ["profile", "CurrentUserProfile!"],
-  ]);
-  await testCompletion(editor, getPosition("dis|playName"), [
-    ["displayName", "String"],
-  ]);
+  expect(
+    (await getCompletionItems(editor, getPosition("pr|ofile")))[0],
+  ).toStrictEqual({
+    label: "profile",
+    detail: "CurrentUserProfile!",
+  });
+  expect(
+    (await getCompletionItems(editor, getPosition("dis|playName")))[0],
+  ).toStrictEqual({
+    label: "displayName",
+    detail: "String",
+  });
 });
 
 test("hover", async () => {

@@ -2,7 +2,7 @@ import { TextEditor } from "vscode";
 import {
   closeAllEditors,
   openEditor,
-  testCompletion,
+  getCompletionItems,
   getHover,
   getPositionForEditor,
   GetPositionFn,
@@ -17,9 +17,24 @@ beforeAll(async () => {
 });
 
 test("completion", async () => {
-  await testCompletion(editor, getPosition("dro|id"), [["droid", "Droid"]]);
-  await testCompletion(editor, getPosition("na|me"), [["name", "String!"]]);
-  await testCompletion(editor, getPosition("mo|del"), [["model", "String"]]);
+  expect(
+    (await getCompletionItems(editor, getPosition("dro|id")))[0],
+  ).toStrictEqual({
+    label: "droid",
+    detail: "Droid",
+  });
+  expect(
+    (await getCompletionItems(editor, getPosition("na|me")))[0],
+  ).toStrictEqual({
+    label: "name",
+    detail: "String!",
+  });
+  expect(
+    (await getCompletionItems(editor, getPosition("mo|del")))[0],
+  ).toStrictEqual({
+    label: "model",
+    detail: "String",
+  });
 });
 
 test("hover", async () => {

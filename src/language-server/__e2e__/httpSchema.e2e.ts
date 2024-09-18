@@ -2,7 +2,7 @@ import { TextEditor } from "vscode";
 import {
   closeAllEditors,
   openEditor,
-  testCompletion,
+  getCompletionItems,
   getHover,
   getPositionForEditor,
   GetPositionFn,
@@ -17,8 +17,18 @@ beforeAll(async () => {
 });
 
 test("completion", async () => {
-  await testCompletion(editor, getPosition("bo|oks"), [["books", "[Book]"]]);
-  await testCompletion(editor, getPosition("au|thor"), [["author", "String"]]);
+  expect(
+    (await getCompletionItems(editor, getPosition("bo|oks")))[0],
+  ).toStrictEqual({
+    label: "books",
+    detail: "[Book]",
+  });
+  expect(
+    (await getCompletionItems(editor, getPosition("au|thor")))[0],
+  ).toStrictEqual({
+    label: "author",
+    detail: "String",
+  });
 });
 
 test("hover", async () => {

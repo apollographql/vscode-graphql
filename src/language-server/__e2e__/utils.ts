@@ -10,7 +10,7 @@ function resolve(file: string) {
 
 export type GetPositionFn = ReturnType<typeof getPositionForEditor>;
 export function getPositionForEditor(editor: vscode.TextEditor) {
-  return function getPosition(cursor: `${string}|${string}`): [number, number] {
+  return function getPosition(cursor: `${string}|${string}`) {
     if (cursor.indexOf("|") !== cursor.lastIndexOf("|")) {
       throw new Error(
         "`getPosition` cursor description can only contain one |",
@@ -23,7 +23,7 @@ export function getPositionForEditor(editor: vscode.TextEditor) {
     }
     const cursorIndex = idx + cursor.indexOf("|");
     const position = editor.document.positionAt(cursorIndex);
-    return [position.line, position.character];
+    return position;
   };
 }
 
@@ -69,23 +69,28 @@ export function waitForLSP(file: string) {
   });
 }
 
-export async function testCompletion(
+export async function getCompletionItems(
   editor: vscode.TextEditor,
-  [line, character]: [number, number],
-  expected: Array<[label: string, detail: string]>,
+  position: vscode.Position,
 ) {
+  let result: { label: string; detail: string | undefined }[] | undefined = [];
   await waitFor(async () => {
-    editor.selection = new vscode.Selection(line, character, line, character);
+    editor.selection = new vscode.Selection(
+      position.line,
+      position.character,
+      position.line,
+      position.character,
+    );
     // without this, the completion list is not updated
     await scheduler.wait(300);
     const completions =
       await vscode.commands.executeCommand<vscode.CompletionList>(
         "vscode.executeCompletionItemProvider",
         editor.document.uri,
-        new vscode.Position(line, character),
+        position,
       );
-
-    const labels = completions.items.slice(0, expected.length).map((item) =>
+    expect(completions.items).not.toHaveLength(0);
+    const labels = completions.items.map((item) =>
       typeof item.label === "string"
         ? { label: item.label, detail: "" }
         : {
@@ -93,23 +98,27 @@ export async function testCompletion(
             detail: item.detail,
           },
     );
-    expect(labels).toStrictEqual(
-      expected.map(([label, detail]) => ({ label, detail })),
-    );
+    result = labels;
   });
+  return result;
 }
 
 export async function getHover(
   editor: vscode.TextEditor,
-  [line, character]: [number, number],
+  position: vscode.Position,
 ) {
-  editor.selection = new vscode.Selection(line, character, line, character);
+  editor.selection = new vscode.Selection(
+    position.line,
+    position.character,
+    position.line,
+    position.character,
+  );
   // without this, the completion list is not updated
   await scheduler.wait(300);
   const hovers = await vscode.commands.executeCommand<vscode.Hover[]>(
     "vscode.executeHoverProvider",
     editor.document.uri,
-    new vscode.Position(line, character),
+    position,
   );
 
   const item = hovers[0];

@@ -1,6 +1,7 @@
 {
   "client": {
     "service": {
+      // test
       "name": "localMultiSchema",
       "localSchemaFile": ["./starwarsSchema.graphql", "./planets.graphql"]
     }

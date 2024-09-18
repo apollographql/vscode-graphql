@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 2.3.0
+
+### Minor Changes
+
+- [#209](https://github.com/apollographql/vscode-graphql/pull/209) [`fc73ed30`](https://github.com/apollographql/vscode-graphql/commit/fc73ed3089e281aa1234268f4ec78e6aa68eae15) Thanks [@phryneas](https://github.com/phryneas)! - Change default recommended configuration file format to `json`.
+
+### Patch Changes
+
+- [#200](https://github.com/apollographql/vscode-graphql/pull/200) [`d6c6af81`](https://github.com/apollographql/vscode-graphql/commit/d6c6af811e1c04901990278e3b76057ef2221911) Thanks [@phryneas](https://github.com/phryneas)! - Fixed an issue where the configuration was not reloaded when the `.env.local` file changed.
+
+- [#202](https://github.com/apollographql/vscode-graphql/pull/202) [`ea5cc094`](https://github.com/apollographql/vscode-graphql/commit/ea5cc0944b7015cd7b2cfee15993469c124a8356) Thanks [@phryneas](https://github.com/phryneas)! - Prevent configuration file parsing loop when transpiling TypeScript configs.
+
+- [#204](https://github.com/apollographql/vscode-graphql/pull/204) [`c2351d2e`](https://github.com/apollographql/vscode-graphql/commit/c2351d2e179eb92fb493a4209a3461c8aa92c979) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug where config file changes could not be picked up
+
+- [#200](https://github.com/apollographql/vscode-graphql/pull/200) [`d6c6af81`](https://github.com/apollographql/vscode-graphql/commit/d6c6af811e1c04901990278e3b76057ef2221911) Thanks [@phryneas](https://github.com/phryneas)! - Add support for `apollo.config.yml`, `apollo.config.yaml` and `apollo.config.json`.
+
 ## 2.2.1
 
 ### Patch Changes

@@ -192,9 +192,6 @@ documents.onDidClose(
 connection.onDidChangeWatchedFiles((params) => {
   const handledByProject = new Map<GraphQLProject, FileEvent[]>();
   for (const { uri, type } of params.changes) {
-    if (uri.match(/vscode-extension-ignore.[mc]?js$/)) {
-      continue;
-    }
     const fsPath = URI.parse(uri).fsPath;
     const fileName = basename(fsPath);
     if (

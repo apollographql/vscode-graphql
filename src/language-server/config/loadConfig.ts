@@ -9,8 +9,8 @@ import {
 import { getServiceFromKey } from "./utils";
 import { URI } from "vscode-uri";
 import { Debug } from "../utilities";
-import { loadTs } from "./loadTsConfig";
 import { ParseError, parse as parseJsonC } from "jsonc-parser";
+import { loadJs, loadTs } from "./loadTsConfig";
 
 // config settings
 const MODULE_NAME = "apollo";
@@ -63,7 +63,10 @@ export async function loadConfig({
     searchPlaces: supportedConfigFileNames,
     loaders: {
       ...defaultLoaders,
-      [".ts"]: loadTs,
+      ".ts": loadTs,
+      ".mjs": loadJs,
+      ".cjs": loadJs,
+      ".js": loadJs,
       ".json": loadJsonc,
     },
   });

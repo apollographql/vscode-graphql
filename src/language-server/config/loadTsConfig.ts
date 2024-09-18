@@ -1,56 +1,78 @@
-import { Loader, defaultLoaders } from "cosmiconfig";
+import { Loader } from "cosmiconfig";
 import { dirname } from "node:path";
-import { rm, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-
+import typescript from "typescript";
+import { pathToFileURL } from "node:url";
+import { register } from "node:module";
+import { ImportAttributes } from "./cache-busting-resolver.types";
 // implementation based on https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/src/loaders.ts
 // Copyright (c) 2015 David Clark licensed MIT. Full license can be found here:
 // https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/LICENSE
 
-let typescript: typeof import("typescript");
+if (process.env.JEST_WORKER_ID === undefined) {
+  register(
+    pathToFileURL(require.resolve("./config/cache-busting-resolver.js")),
+  );
+} else {
+  register(pathToFileURL(require.resolve("./cache-busting-resolver.js")));
+}
+
 export const loadTs: Loader = async function loadTs(filepath, content) {
   try {
-    return await defaultLoaders[".ts"](filepath, content);
+    return await load(filepath, content, "module", {
+      module: typescript.ModuleKind.ES2022,
+    });
   } catch (error) {
     if (
-      !(error instanceof Error) ||
-      !error.message.includes("module is not defined")
-    )
-      throw error;
-  }
-
-  if (typescript === undefined) {
-    typescript = await import("typescript");
-  }
-  const compiledFilepath = `${filepath.slice(0, -2)}cjs`;
-  let transpiledContent;
-  try {
-    try {
-      const config = resolveTsConfig(dirname(filepath)) ?? {};
-      config.compilerOptions = {
-        ...config.compilerOptions,
+      error instanceof Error &&
+      // [ERROR] ReferenceError: module is not defined in ES module scope
+      error.message.includes("module is not defined")
+    ) {
+      return await load(filepath, content, "commonjs", {
         module: typescript.ModuleKind.CommonJS,
-        moduleResolution: typescript.ModuleResolutionKind.Bundler,
-        target: typescript.ScriptTarget.ES2022,
-        noEmit: false,
-      };
-      transpiledContent = typescript.transpileModule(
-        content,
-        config,
-      ).outputText;
-      await writeFile(compiledFilepath, transpiledContent);
-    } catch (error: any) {
-      error.message = `TypeScript Error in ${filepath}:\n${error.message}`;
+      });
+    } else {
       throw error;
-    }
-    // eslint-disable-next-line @typescript-eslint/return-await
-    return await defaultLoaders[".js"](compiledFilepath, transpiledContent);
-  } finally {
-    if (existsSync(compiledFilepath)) {
-      await rm(compiledFilepath);
     }
   }
 };
+
+async function load(
+  filepath: string,
+  content: string,
+  type: "module" | "commonjs",
+  compilerOptions: Partial<import("typescript").CompilerOptions>,
+) {
+  let transpiledContent;
+
+  try {
+    const config = resolveTsConfig(dirname(filepath)) ?? {};
+    config.compilerOptions = {
+      ...config.compilerOptions,
+
+      moduleResolution: typescript.ModuleResolutionKind.Bundler,
+      target: typescript.ScriptTarget.ES2022,
+      noEmit: false,
+      ...compilerOptions,
+    };
+    transpiledContent = typescript.transpileModule(content, config).outputText;
+  } catch (error: any) {
+    error.message = `TypeScript Error in ${filepath}:\n${error.message}`;
+    throw error;
+  }
+  // eslint-disable-next-line @typescript-eslint/return-await
+  const imported = await import(
+    filepath,
+    //@ts-ignore
+    {
+      with: {
+        as: "cachebust",
+        contents: transpiledContent,
+        format: type,
+      } satisfies ImportAttributes,
+    }
+  );
+  return imported.default;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function resolveTsConfig(directory: string): any {
@@ -68,3 +90,17 @@ function resolveTsConfig(directory: string): any {
   }
   return;
 }
+
+export const loadJs: Loader = async function loadJs(filepath, contents) {
+  return (
+    await import(
+      filepath, // @ts-ignore
+      {
+        with: {
+          as: "cachebust",
+          contents,
+        } satisfies ImportAttributes,
+      }
+    )
+  ).default;
+};

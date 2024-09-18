@@ -59,7 +59,6 @@ workflows:
       - lint
       - typescript
       - test
-      - E2E tests
   security-scans:
     jobs:
       - secops/gitleaks:

@@ -18,7 +18,7 @@ jobs:
       - run: npm run build:production
       - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
       - run: |
-          expect <<EOF                                                                                                        pr/extend-ci
+          expect <<EOF
           spawn ./node_modules/.bin/rover config auth --profile VSCode-E2E
           expect "Copy the key and paste it into the prompt below."
           send -- "test\n"

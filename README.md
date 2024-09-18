@@ -35,22 +35,17 @@ For the contents of this configuration file, select one of these options:
 
 <details>
 <summary>
-<h3>Setting the Extension up for use with Apollo GraphOS</h3>
+<h3>Configure extension for schemas published to Apollo GraphOS</h3>
 </summary>
 
-To get all the benefits of the VS Code experience, it's best to link the schema that is being developed against before installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/publishing-schemas/) to the Apollo schema registry. After that's done:
+To get all the benefits of the VS Code experience, it's best to link the schema that is being developed against before installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/publishing-schemas/) to the Apollo schema registry.
 
-1. Create an `apollo.config.json` file at the root of the project.
-2. Obtain a [Personal API key](https://www.apollographql.com/docs/graphos/api-keys) from GraphOS Studio.
-
-<h3 id="apollo-config">Setting up an Apollo config</h3>
-
-To link a project to a published schema, edit the `apollo.config.json` file to look like this:
+After that's done, edit the `apollo.config.json` file to look like this:
 
 ```json
 {
   "client": {
-    "service": "graphos-graph-id"
+    "service": "graphos-graph-name"
   }
 }
 ```
@@ -58,8 +53,6 @@ To link a project to a published schema, edit the `apollo.config.json` file to l
 The `service` name is the name of the graph you've created in [GraphOS Studio](https://studio.apollographql.com).
 
 See [additional configuration options](#additional-apollo-config-options).
-
-<h3 id="api-key">Setting up the <code>.env</code> file</h3>
 
 To authenticate with GraphOS Studio to pull down your schema, create a `.env` file in the same directory as the `apollo.config.json` file. This should be an untracked file (that is, don't commit it to Git).
 
@@ -79,7 +72,7 @@ After this is done, VS Code can be reloaded and the Apollo integration will conn
 
 <details>
 <summary>
-<h3 id="local-schemas">Setting the Extension up for use with a local schema</h3>
+<h3 id="local-schemas">Configure extension to use introspection from a locally running service</h3>
 </summary>
 
 Sometimes it may make sense to link the editor to a locally running version of a schema to try out new designs that are in active development. To do this, the `apollo.config.json` file can be linked to a local service definition:
@@ -101,7 +94,7 @@ Linking to the local schema won't provide all features, such as switching graph 
 
 <details>
 <summary>
-<h3 id="local-schema-files">Setting the Extension up for use with local schema files</h3>
+<h3 id="local-schema-files">Configure extension for local schema files</h3>
 </summary>
 
 You might not always have a running server to link to, so the extension also supports linking to a local schema file.

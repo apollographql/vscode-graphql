@@ -93,7 +93,6 @@ const buildJsonSchemaPlugin = {
 const resolvePlugin = {
   name: "resolve",
   setup(build) {
-    console.log("setup");
     build.onResolve(
       { filter: /^jsonc-parser$/ },
       async ({ path, ...options }) => {

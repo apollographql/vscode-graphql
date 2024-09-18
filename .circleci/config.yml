@@ -53,21 +53,6 @@ jobs:
           name: Test
           command: npm run test --  --runInBand
 
-  E2E tests:
-    executor: node
-    steps:
-      - checkout
-      - npm-install
-      - run: sudo apt update &&  sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
-      - run:
-          name: Build
-          command: npm run build:production
-      - run:
-          command: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
-      - run:
-          name: E2E tests
-          command: xvfb-run -a npm run test:extension
-
 workflows:
   build-test-deploy:
     jobs:

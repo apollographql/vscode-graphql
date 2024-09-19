@@ -1,0 +1,27 @@
+name: Run E2E tests
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    name: Run E2E tests
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt update && sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb expect
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+      - run: npm install
+      - run: npm run build:production
+      - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
+      - run: |
+          expect <<EOF
+          spawn ./node_modules/.bin/rover config auth --profile VSCode-E2E
+          expect "Copy the key and paste it into the prompt below."
+          send -- "test\n"
+          expect eof
+          EOF
+      - run: xvfb-run -a npm run test:extension

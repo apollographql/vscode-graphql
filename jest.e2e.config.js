@@ -3,6 +3,8 @@ const path = require("path");
 
 module.exports = {
   moduleFileExtensions: ["js", "ts"],
+  // restrict the roots here so jest doesn't complain about *other* snapshots it sees as obsolete
+  roots: ["<rootDir>/src/language-server/__e2e__"],
   testMatch: ["<rootDir>/src/**/*.e2e.ts"],
   testEnvironment: "./src/__e2e__/vscode-environment.js",
   setupFiles: ["./src/__e2e__/setup.js"],

@@ -177,3 +177,57 @@ export async function reloadService() {
   await reloaded;
   await scheduler.wait(100);
 }
+
+export async function getFullSemanticTokens(editor: vscode.TextEditor) {
+  const legend = await vscode.commands.executeCommand<
+    vscode.SemanticTokensLegend | undefined
+  >(
+    // https://github.com/microsoft/vscode/blob/d90ab31527203cdb15056df0dc84ab9ddcbbde40/src/vs/workbench/api/common/extHostApiCommands.ts#L220
+    "vscode.provideDocumentSemanticTokensLegend",
+    editor.document.uri,
+  );
+  expect(legend).toBeDefined();
+  const tokens = await vscode.commands.executeCommand<
+    vscode.SemanticTokens | undefined
+  >(
+    // https://github.com/microsoft/vscode/blob/d90ab31527203cdb15056df0dc84ab9ddcbbde40/src/vs/workbench/api/common/extHostApiCommands.ts#L229
+    "vscode.provideDocumentSemanticTokens",
+    editor.document.uri,
+  );
+  expect(tokens).toBeDefined();
+
+  return decodeSemanticTokens(tokens!, legend!);
+}
+
+function decodeSemanticTokens(
+  tokens: vscode.SemanticTokens,
+  legend: vscode.SemanticTokensLegend,
+) {
+  const tokenArr = Array.from(tokens.data);
+  const decodedTokens: {
+    range: vscode.Range;
+    tokenType: string;
+    tokenModifiers: string[];
+  }[] = [];
+  let line = 0,
+    start = 0;
+  for (let pos = 0; pos < tokenArr.length; pos += 5) {
+    const [deltaLine, deltaStart, length, tokenType, tokenModifiers] =
+      tokenArr.slice(pos, pos + 5);
+    if (deltaLine) {
+      line += deltaLine;
+      start = 0;
+    }
+    start += deltaStart;
+    const decodedModifiers: string[] = [];
+    for (let modifiers = tokenModifiers; modifiers > 0; modifiers >>= 1) {
+      decodedModifiers.push(legend.tokenModifiers[modifiers & 0xf]);
+    }
+    decodedTokens.push({
+      range: new vscode.Range(line, start, line, start + length),
+      tokenType: legend.tokenTypes[tokenType],
+      tokenModifiers: decodedModifiers,
+    });
+  }
+  return decodedTokens;
+}

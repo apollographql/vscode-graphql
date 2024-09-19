@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { ParsedApolloConfigFormat } from "../config";
-import { TextEditor } from "vscode";
+import vscode, { TextEditor } from "vscode";
 import {
   closeAllEditors,
   openEditor,
@@ -12,6 +12,7 @@ import {
   getHover,
   getPositionForEditor,
   GetPositionFn,
+  getFullSemanticTokens,
 } from "./utils";
 
 // we want to skip these tests unless the user running them has a rover config profile named "VSCode-E2E"
@@ -60,11 +61,9 @@ directive @override(from: String!, label: String) on FIELD_DEFINITION
 `);
 });
 
-// skipping, it seems completion happens too quickly so we don't get a response
-origTest("completion", async () => {
-  expect(
-  await getCompletionItems(editor, getPosition("@over|ride(from"))
-).toMatchInlineSnapshot(`
+test("completion", async () => {
+  expect(await getCompletionItems(editor, getPosition("@over|ride(from")))
+    .toMatchInlineSnapshot(`
 [
   {
     "detail": undefined,
@@ -109,6 +108,41 @@ origTest("completion", async () => {
   {
     "detail": undefined,
     "label": "@shareable",
+  },
+]
+`);
+});
+
+test("semantic tokens", async () => {
+  expect(getFullSemanticTokens(editor)).toMatchInlineSnapshot(`
+[
+  {
+    "range": [
+      {
+        "character": 21,
+        "line": 10,
+      },
+      {
+        "character": 22,
+        "line": 10,
+      },
+    ],
+    "tokenModifiers": [],
+    "tokenType": "property",
+  },
+  {
+    "range": [
+      {
+        "character": 32,
+        "line": 12,
+      },
+      {
+        "character": 33,
+        "line": 12,
+      },
+    ],
+    "tokenModifiers": [],
+    "tokenType": "property",
   },
 ]
 `);

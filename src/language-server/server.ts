@@ -7,6 +7,7 @@ import {
   TextDocumentSyncKind,
   SymbolInformation,
   FileEvent,
+  SetTraceNotification,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { type QuickPickItem } from "vscode";
@@ -25,6 +26,7 @@ import { GraphQLProject } from "./project/base";
 import type { LanguageIdExtensionMap } from "../tools/utilities/languageInformation";
 import { setLanguageIdExtensionMap } from "./utilities/languageIdForExtension";
 import { envFileNames, supportedConfigFileNames } from "./config";
+import { TraceLevel } from "./utilities/debug";
 
 export type InitializationOptions = {
   languageIdExtensionMap: LanguageIdExtensionMap;
@@ -92,11 +94,16 @@ workspace.onConfigFilesFound(async (params) => {
   );
 });
 
+connection.onNotification(SetTraceNotification.type, ({ value }) => {
+  Debug.traceLevel = value;
+});
+
 connection.onInitialize(
-  async ({ capabilities, workspaceFolders, initializationOptions }) => {
+  async ({ capabilities, workspaceFolders, initializationOptions, trace }) => {
     const { languageIdExtensionMap } =
       initializationOptions as InitializationOptions;
     setLanguageIdExtensionMap(languageIdExtensionMap);
+    Debug.traceLevel = trace;
 
     hasWorkspaceFolderCapability = !!(
       capabilities.workspace && capabilities.workspace.workspaceFolders

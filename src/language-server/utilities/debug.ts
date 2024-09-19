@@ -1,5 +1,6 @@
 import { LanguageServerNotifications as Notifications } from "../../messages";
-import { Connection } from "vscode-languageserver/node";
+import { Connection, TraceValues } from "vscode-languageserver/node";
+import { format } from "util";
 
 /**
  * for errors (and other logs in debug mode) we want to print
@@ -15,9 +16,27 @@ const createAndTrimStackTrace = () => {
     : stack;
 };
 
-type Logger = (message?: any) => void;
+type Logger = (message?: any, minLevel?: TraceLevel) => void;
+export enum TraceLevel {
+  "off" = 0,
+  "messages" = 1,
+  "verbose" = 2,
+}
 
 export class Debug {
+  private static _traceLevel: TraceLevel = TraceLevel.off;
+  public static get traceLevel(): TraceLevel {
+    return Debug._traceLevel;
+  }
+  public static set traceLevel(value: TraceValues | undefined) {
+    if (value === "compact") {
+      // we do not handle "compact" and it's not possible to set in settings, but it doesn't hurt to at least map
+      // it to another value
+      this._traceLevel = TraceLevel.messages;
+    } else {
+      this._traceLevel = TraceLevel[value || "off"];
+    }
+  }
   private static connection?: Connection;
   private static infoLogger: Logger = (message) =>
     console.log("[INFO] " + message);
@@ -67,17 +86,39 @@ export class Debug {
     if (error) Debug.errorLogger = error;
   }
 
-  public static info(message: string) {
-    Debug.infoLogger(message);
+  public static info(message: string, ...param: any[]) {
+    Debug.infoLogger(format(message, ...param));
   }
 
-  public static error(message: string) {
+  public static error(message: string, ...param: any[]) {
     const stack = createAndTrimStackTrace();
-    Debug.errorLogger(`${message}\n${stack}`);
+    Debug.errorLogger(`${format(message, ...param)}\n${stack}`);
   }
 
-  public static warning(message: string) {
-    Debug.warningLogger(message);
+  public static warning(message: string, ...param: any[]) {
+    Debug.warningLogger(format(message, ...param));
+  }
+
+  public static traceMessage(
+    short: string,
+    verbose = short,
+    ...verboseParams: any[]
+  ) {
+    if (Debug.traceLevel >= TraceLevel.verbose) {
+      // directly logging to `console` because
+      // we don't want to send yet another notification that will be traced
+      console.info(verbose, ...verboseParams);
+    } else if (Debug.traceLevel >= TraceLevel.messages) {
+      console.info(short);
+    }
+  }
+
+  public static traceVerbose(message: string, ...params: any[]) {
+    if (Debug.traceLevel >= TraceLevel.verbose) {
+      // directly logging to `console` because
+      // we don't want to send yet another notification that will be traced
+      console.info(message, ...params);
+    }
   }
 
   public static sendErrorTelemetry(message: string) {

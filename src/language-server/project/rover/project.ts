@@ -36,8 +36,8 @@ import { VSCodeConnection } from "../../server";
 import { getLanguageIdForExtension } from "../../utilities/languageIdForExtension";
 import { extname } from "node:path";
 import type { FileExtension } from "../../../tools/utilities/languageInformation";
-
-export const DEBUG = true;
+import { Debug } from "../../utilities";
+import { TraceLevel } from "src/language-server/utilities/debug";
 
 export function isRoverConfig(config: ApolloConfig): config is RoverConfig {
   return config instanceof RoverConfig;
@@ -115,11 +115,14 @@ export class RoverProject extends GraphQLProject {
     params?: P,
   ): Promise<void> {
     const connection = await this.getConnection();
-    DEBUG &&
-      console.log("sending notification %o", {
+    Debug.traceMessage(
+      "[Rover] Sending notification: " + type.method,
+      "[Rover] Sending notification %o",
+      {
         type: type.method,
         params,
-      });
+      },
+    );
     try {
       return await connection.sendNotification(type, params);
     } catch (error) {
@@ -136,10 +139,20 @@ export class RoverProject extends GraphQLProject {
     token?: CancellationToken,
   ): Promise<R> {
     const connection = await this.getConnection();
-    DEBUG && console.log("sending request %o", { type: type.method, params });
+    Debug.traceMessage(
+      "[Rover] Sending request: " + type.method,
+      "[Rover] Sending request %o",
+      { type: type.method, params },
+    );
     try {
       const result = await connection.sendRequest(type, params, token);
-      DEBUG && console.log({ result });
+      Debug.traceMessage(
+        "[Rover] Received response: " + type.method,
+        "[Rover] Received response %s\nResult: %o",
+        type.method,
+
+        result,
+      );
       return result;
     } catch (error) {
       if (error instanceof Error) {
@@ -168,25 +181,31 @@ export class RoverProject extends GraphQLProject {
     }
     args.push(...this.config.rover.extraArgs);
 
-    DEBUG &&
-      console.log(`starting ${this.config.rover.bin} '${args.join("' '")}'`);
+    Debug.traceVerbose(
+      `starting ${this.config.rover.bin} '${args.join("' '")}'`,
+    );
     const child = cp.spawn(this.config.rover.bin, args, {
-      env: DEBUG ? { RUST_BACKTRACE: "1" } : {},
-      stdio: ["pipe", "pipe", DEBUG ? "inherit" : "ignore"],
+      env:
+        Debug.traceLevel >= TraceLevel.verbose ? { RUST_BACKTRACE: "1" } : {},
+      stdio: [
+        "pipe",
+        "pipe",
+        Debug.traceLevel >= TraceLevel.verbose ? "inherit" : "ignore",
+      ],
     });
     this.child = child;
     const reader = new StreamMessageReader(child.stdout);
     const writer = new StreamMessageWriter(child.stdin);
     const connection = createProtocolConnection(reader, writer);
     connection.onClose(() => {
-      DEBUG && console.log("Connection closed");
+      Debug.traceMessage("[Rover] Connection closed");
       child.kill();
       source.cancel();
       this._connection = undefined;
     });
 
     connection.onError((err) => {
-      console.error({ err });
+      Debug.error("%o", { err });
     });
 
     connection.onNotification(
@@ -195,11 +214,14 @@ export class RoverProject extends GraphQLProject {
     );
 
     connection.onUnhandledNotification((notification) => {
-      DEBUG && console.info("unhandled notification from LSP", notification);
+      Debug.traceVerbose(
+        "[Rover] unhandled notification from LSP",
+        notification,
+      );
     });
 
     connection.listen();
-    DEBUG && console.log("Initializing connection");
+    Debug.traceMessage("[Rover] Initializing connection");
 
     const source = new CancellationTokenSource();
     try {
@@ -213,7 +235,11 @@ export class RoverProject extends GraphQLProject {
         source.token,
       );
       this.roverCapabilities = status.capabilities;
-      DEBUG && console.log("Connection initialized", status);
+      Debug.traceMessage(
+        "[Rover] Connection initialized",
+        "[Rover] Connection initialized %o",
+        status,
+      );
 
       await this.connectionStorage.run(
         connection,
@@ -222,7 +248,7 @@ export class RoverProject extends GraphQLProject {
 
       return connection;
     } catch (error) {
-      console.error("Connection failed to initialize", error);
+      Debug.error("Connection with Rover failed to initialize", error);
       throw error;
     }
   }
@@ -295,7 +321,7 @@ export class RoverProject extends GraphQLProject {
     if (isRequestType(SemanticTokensRequest.type, type, params)) {
       return this.documents.getFullSemanticTokens(params, token);
     } else {
-      DEBUG && console.info("unhandled request from VSCode", { type, params });
+      Debug.traceVerbose("unhandled request from VSCode", { type, params });
       return undefined;
     }
   };
@@ -304,8 +330,7 @@ export class RoverProject extends GraphQLProject {
     type,
     params,
   ) => {
-    DEBUG &&
-      console.info("unhandled notification from VSCode", { type, params });
+    Debug.traceVerbose("unhandled notification from VSCode", { type, params });
   };
 
   async onVSCodeConnectionInitialized(connection: VSCodeConnection) {

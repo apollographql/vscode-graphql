@@ -23,7 +23,7 @@ import {
   rangeInContainingDocument,
 } from "../../utilities/source";
 import { URI } from "vscode-uri";
-import { DEBUG } from "./project";
+import { Debug } from "../../utilities";
 
 export interface FilePart {
   fractionalIndex: string;
@@ -285,7 +285,7 @@ export class DocumentSynchronization {
   }
 
   handlePartDiagnostics(params: PublishDiagnosticsParams) {
-    DEBUG && console.log("Received diagnostics", params);
+    Debug.traceVerbose("Received diagnostics", params);
     const uriDetails = splitUri(params.uri);
     const found = this.knownFiles.get(uriDetails.uri);
     if (!found || found.source === "lsp") {

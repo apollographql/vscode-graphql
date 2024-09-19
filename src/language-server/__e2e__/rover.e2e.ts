@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { ParsedApolloConfigFormat } from "../config";
-import vscode, { TextEditor } from "vscode";
+import { TextEditor } from "vscode";
 import {
   closeAllEditors,
   openEditor,
@@ -13,6 +13,7 @@ import {
   getPositionForEditor,
   GetPositionFn,
   getFullSemanticTokens,
+  getDefinitions,
 } from "./utils";
 
 // we want to skip these tests unless the user running them has a rover config profile named "VSCode-E2E"
@@ -127,4 +128,23 @@ test("semantic tokens", async () => {
     tokenType: "property",
     tokenModifiers: [],
   });
+});
+
+test("definitions", async () => {
+  const definitions = await getDefinitions(editor, getPosition("a: |A"));
+
+  expect(definitions[0].targetUri.toString()).toBe(
+    editor.document.uri.toString(),
+  );
+  expect(
+    editor.document.getText(definitions[0].targetSelectionRange!),
+  ).toMatchInlineSnapshot(`"A"`);
+  expect(editor.document.getText(definitions[0].targetRange))
+    .toMatchInlineSnapshot(`
+"type A @key(fields: "a") {
+  a: ID @override(from: "DNE")
+  b: String! @requires(fields: "c") @shareable
+  c: String! @external
+}"
+`);
 });

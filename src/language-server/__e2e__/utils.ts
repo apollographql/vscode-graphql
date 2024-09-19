@@ -235,3 +235,18 @@ function decodeSemanticTokens(
   }
   return decodedTokens;
 }
+
+export async function getDefinitions(
+  editor: vscode.TextEditor,
+  position: vscode.Position,
+) {
+  return vscode.commands.executeCommand<
+    // this is not the correct type, but the best match with public types I could find
+    vscode.LocationLink[]
+  >(
+    // https://github.com/microsoft/vscode/blob/d90ab31527203cdb15056df0dc84ab9ddcbbde40/src/vs/workbench/api/common/extHostApiCommands.ts#L87
+    "vscode.executeDefinitionProvider",
+    editor.document.uri,
+    position,
+  );
+}

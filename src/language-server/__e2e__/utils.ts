@@ -7,6 +7,7 @@ import { VSCodeGraphQLExtension } from "src/extension";
 function resolve(file: string) {
   return join(__dirname, "..", "..", "..", "sampleWorkspace", file);
 }
+export { resolve as resolveRelativeToSampleWorkspace };
 
 export async function closeAllEditors() {
   while (vscode.window.visibleTextEditors.length > 0) {
@@ -46,7 +47,7 @@ export function waitForLSP(file: string) {
       uri.toString(),
     );
     expect(stats.loaded).toBe(true);
-    return stats;
+    return stats as ProjectStats & { loaded: true };
   });
 }
 

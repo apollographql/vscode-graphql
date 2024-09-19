@@ -263,7 +263,6 @@ client:
 
       await loadConfig({
         configPath: dirPath,
-        requireConfig: true, // this is what we're testing
       });
 
       expect(spy).toHaveBeenCalledWith(
@@ -282,7 +281,7 @@ client:
       }).catch((e: any) => e);
 
       expect(error.message).toMatch(
-        /Config needs to contain a 'client' field./i,
+        /Config needs to contain either 'client' or 'rover' fields/i,
       );
     });
   });

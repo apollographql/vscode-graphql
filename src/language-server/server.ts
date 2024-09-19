@@ -26,7 +26,6 @@ import { GraphQLProject } from "./project/base";
 import type { LanguageIdExtensionMap } from "../tools/utilities/languageInformation";
 import { setLanguageIdExtensionMap } from "./utilities/languageIdForExtension";
 import { envFileNames, supportedConfigFileNames } from "./config";
-import { TraceLevel } from "./utilities/debug";
 
 export type InitializationOptions = {
   languageIdExtensionMap: LanguageIdExtensionMap;

@@ -205,7 +205,8 @@ function decodeSemanticTokens(
 ) {
   const tokenArr = Array.from(tokens.data);
   const decodedTokens: {
-    range: vscode.Range;
+    startPosition: vscode.Position;
+    endPosition: vscode.Position;
     tokenType: string;
     tokenModifiers: string[];
   }[] = [];
@@ -223,8 +224,11 @@ function decodeSemanticTokens(
     for (let modifiers = tokenModifiers; modifiers > 0; modifiers >>= 1) {
       decodedModifiers.push(legend.tokenModifiers[modifiers & 0xf]);
     }
+    const startPosition = new vscode.Position(line, start);
+    const endPosition = startPosition.translate(0, length);
     decodedTokens.push({
-      range: new vscode.Range(line, start, line, start + length),
+      startPosition,
+      endPosition,
       tokenType: legend.tokenTypes[tokenType],
       tokenModifiers: decodedModifiers,
     });

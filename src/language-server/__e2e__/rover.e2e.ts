@@ -114,36 +114,17 @@ test("completion", async () => {
 });
 
 test("semantic tokens", async () => {
-  expect(getFullSemanticTokens(editor)).toMatchInlineSnapshot(`
-[
-  {
-    "range": [
-      {
-        "character": 21,
-        "line": 10,
-      },
-      {
-        "character": 22,
-        "line": 10,
-      },
-    ],
-    "tokenModifiers": [],
-    "tokenType": "property",
-  },
-  {
-    "range": [
-      {
-        "character": 32,
-        "line": 12,
-      },
-      {
-        "character": 33,
-        "line": 12,
-      },
-    ],
-    "tokenModifiers": [],
-    "tokenType": "property",
-  },
-]
-`);
+  const tokens = await getFullSemanticTokens(editor);
+  expect(tokens[0]).toStrictEqual({
+    startPosition: getPosition('fields: "|a"'),
+    endPosition: getPosition('fields: "a|"'),
+    tokenType: "property",
+    tokenModifiers: [],
+  });
+  expect(tokens[1]).toStrictEqual({
+    startPosition: getPosition('fields: "|c"'),
+    endPosition: getPosition('fields: "c|"'),
+    tokenType: "property",
+    tokenModifiers: [],
+  });
 });

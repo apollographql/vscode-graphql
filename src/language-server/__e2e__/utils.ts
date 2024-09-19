@@ -8,6 +8,25 @@ function resolve(file: string) {
   return join(__dirname, "..", "..", "..", "sampleWorkspace", file);
 }
 
+export type GetPositionFn = ReturnType<typeof getPositionForEditor>;
+export function getPositionForEditor(editor: vscode.TextEditor) {
+  return function getPosition(cursor: `${string}|${string}`) {
+    if (cursor.indexOf("|") !== cursor.lastIndexOf("|")) {
+      throw new Error(
+        "`getPosition` cursor description can only contain one |",
+      );
+    }
+    const text = editor.document.getText();
+    const idx = text.indexOf(cursor.replace("|", ""));
+    if (idx !== text.lastIndexOf(cursor.replace("|", ""))) {
+      throw new Error("`getPosition` cursor description is not unique");
+    }
+    const cursorIndex = idx + cursor.indexOf("|");
+    const position = editor.document.positionAt(cursorIndex);
+    return position;
+  };
+}
+
 export async function closeAllEditors() {
   while (vscode.window.visibleTextEditors.length > 0) {
     await vscode.commands.executeCommand("workbench.action.closeActiveEditor");
@@ -50,23 +69,28 @@ export function waitForLSP(file: string) {
   });
 }
 
-export async function testCompletion(
+export async function getCompletionItems(
   editor: vscode.TextEditor,
-  [line, character]: [number, number],
-  expected: Array<[label: string, detail: string]>,
+  position: vscode.Position,
 ) {
+  let result: { label: string; detail: string | undefined }[] | undefined = [];
   await waitFor(async () => {
-    editor.selection = new vscode.Selection(line, character, line, character);
+    editor.selection = new vscode.Selection(
+      position.line,
+      position.character,
+      position.line,
+      position.character,
+    );
     // without this, the completion list is not updated
     await scheduler.wait(300);
     const completions =
       await vscode.commands.executeCommand<vscode.CompletionList>(
         "vscode.executeCompletionItemProvider",
         editor.document.uri,
-        new vscode.Position(line, character),
+        position,
       );
-
-    const labels = completions.items.slice(0, expected.length).map((item) =>
+    expect(completions.items).not.toHaveLength(0);
+    const labels = completions.items.map((item) =>
       typeof item.label === "string"
         ? { label: item.label, detail: "" }
         : {
@@ -74,23 +98,27 @@ export async function testCompletion(
             detail: item.detail,
           },
     );
-    expect(labels).toStrictEqual(
-      expected.map(([label, detail]) => ({ label, detail })),
-    );
+    result = labels;
   });
+  return result;
 }
 
 export async function getHover(
   editor: vscode.TextEditor,
-  [line, character]: [number, number],
+  position: vscode.Position,
 ) {
-  editor.selection = new vscode.Selection(line, character, line, character);
+  editor.selection = new vscode.Selection(
+    position.line,
+    position.character,
+    position.line,
+    position.character,
+  );
   // without this, the completion list is not updated
   await scheduler.wait(300);
   const hovers = await vscode.commands.executeCommand<vscode.Hover[]>(
     "vscode.executeHoverProvider",
     editor.document.uri,
-    new vscode.Position(line, character),
+    position,
   );
 
   const item = hovers[0];
@@ -148,4 +176,77 @@ export async function reloadService() {
 
   await reloaded;
   await scheduler.wait(100);
+}
+
+export async function getFullSemanticTokens(editor: vscode.TextEditor) {
+  const legend = await vscode.commands.executeCommand<
+    vscode.SemanticTokensLegend | undefined
+  >(
+    // https://github.com/microsoft/vscode/blob/d90ab31527203cdb15056df0dc84ab9ddcbbde40/src/vs/workbench/api/common/extHostApiCommands.ts#L220
+    "vscode.provideDocumentSemanticTokensLegend",
+    editor.document.uri,
+  );
+  expect(legend).toBeDefined();
+  const tokens = await vscode.commands.executeCommand<
+    vscode.SemanticTokens | undefined
+  >(
+    // https://github.com/microsoft/vscode/blob/d90ab31527203cdb15056df0dc84ab9ddcbbde40/src/vs/workbench/api/common/extHostApiCommands.ts#L229
+    "vscode.provideDocumentSemanticTokens",
+    editor.document.uri,
+  );
+  expect(tokens).toBeDefined();
+
+  return decodeSemanticTokens(tokens!, legend!);
+}
+
+function decodeSemanticTokens(
+  tokens: vscode.SemanticTokens,
+  legend: vscode.SemanticTokensLegend,
+) {
+  const tokenArr = Array.from(tokens.data);
+  const decodedTokens: {
+    startPosition: vscode.Position;
+    endPosition: vscode.Position;
+    tokenType: string;
+    tokenModifiers: string[];
+  }[] = [];
+  let line = 0,
+    start = 0;
+  for (let pos = 0; pos < tokenArr.length; pos += 5) {
+    const [deltaLine, deltaStart, length, tokenType, tokenModifiers] =
+      tokenArr.slice(pos, pos + 5);
+    if (deltaLine) {
+      line += deltaLine;
+      start = 0;
+    }
+    start += deltaStart;
+    const decodedModifiers: string[] = [];
+    for (let modifiers = tokenModifiers; modifiers > 0; modifiers >>= 1) {
+      decodedModifiers.push(legend.tokenModifiers[modifiers & 0xf]);
+    }
+    const startPosition = new vscode.Position(line, start);
+    const endPosition = startPosition.translate(0, length);
+    decodedTokens.push({
+      startPosition,
+      endPosition,
+      tokenType: legend.tokenTypes[tokenType],
+      tokenModifiers: decodedModifiers,
+    });
+  }
+  return decodedTokens;
+}
+
+export async function getDefinitions(
+  editor: vscode.TextEditor,
+  position: vscode.Position,
+) {
+  return vscode.commands.executeCommand<
+    // this is not the correct type, but the best match with public types I could find
+    vscode.LocationLink[]
+  >(
+    // https://github.com/microsoft/vscode/blob/d90ab31527203cdb15056df0dc84ab9ddcbbde40/src/vs/workbench/api/common/extHostApiCommands.ts#L87
+    "vscode.executeDefinitionProvider",
+    editor.document.uri,
+    position,
+  );
 }

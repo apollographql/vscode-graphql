@@ -1,5 +1,5 @@
 import { Loader } from "cosmiconfig";
-import { dirname } from "node:path";
+import { dirname, extname } from "node:path";
 import typescript from "typescript";
 import { pathToFileURL } from "node:url";
 import { register } from "node:module";
@@ -59,19 +59,7 @@ async function load(
     error.message = `TypeScript Error in ${filepath}:\n${error.message}`;
     throw error;
   }
-  // eslint-disable-next-line @typescript-eslint/return-await
-  const imported = await import(
-    filepath,
-    //@ts-ignore
-    {
-      with: {
-        as: "cachebust",
-        contents: transpiledContent,
-        format: type,
-      } satisfies ImportAttributes,
-    }
-  );
-  return imported.default;
+  return loadCachebustedJs(filepath, transpiledContent, type);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,39 +80,44 @@ function resolveTsConfig(directory: string): any {
 }
 
 export const loadJs: Loader = async function loadJs(filepath, contents) {
+  const extension = extname(filepath);
+  if (extension === ".mjs") {
+    return loadCachebustedJs(filepath, contents, "module");
+  }
+  if (extension === ".cjs") {
+    return loadCachebustedJs(filepath, contents, "commonjs");
+  }
   try {
-    return (
-      await import(
-        filepath, // @ts-ignore
-        {
-          with: {
-            as: "cachebust",
-            contents,
-            format: "module",
-          } satisfies ImportAttributes,
-        }
-      )
-    ).default;
+    return await loadCachebustedJs(filepath, contents, "module");
   } catch (error) {
     if (
       error instanceof Error &&
       // [ERROR] ReferenceError: module is not defined in ES module scope
       error.message.includes("module is not defined")
     ) {
-      return (
-        await import(
-          filepath, // @ts-ignore
-          {
-            with: {
-              as: "cachebust",
-              contents,
-              format: "commonjs",
-            } satisfies ImportAttributes,
-          }
-        )
-      ).default;
+      return loadCachebustedJs(filepath, contents, "commonjs");
     } else {
       throw error;
     }
   }
 };
+
+async function loadCachebustedJs(
+  filename: string,
+  contents: string,
+  type: "module" | "commonjs",
+) {
+  return (
+    await import(
+      filename,
+      // @ts-ignore
+      {
+        with: {
+          as: "cachebust",
+          contents,
+          format: type,
+        } satisfies ImportAttributes,
+      }
+    )
+  ).default;
+}

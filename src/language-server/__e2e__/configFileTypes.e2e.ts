@@ -6,6 +6,10 @@ import {
 } from "./utils";
 
 test.each([
+  ["cjsConfig", "commonjs"],
+  ["cjsConfig", "module"],
+  ["mjsConfig", "module"],
+  ["mjsConfig", "commonjs"],
   ["jsConfigWithCJS", "commonjs"],
   ["jsConfigWithCJS", "module"],
   ["jsConfigWithESM", "module"],

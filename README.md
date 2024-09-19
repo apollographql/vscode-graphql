@@ -33,9 +33,10 @@ Alternatively, you can create a `yaml`, `cjs`, `mjs`, or `ts` file with the same
 
 For the contents of this configuration file, select one of these options:
 
+<h3>Configure extension for schemas published to Apollo GraphOS</h3>
 <details>
 <summary>
-<h3>Configure extension for schemas published to Apollo GraphOS</h3>
+<i>Expand for instructions.</i>
 </summary>
 
 To get all the benefits of the VS Code experience, it's best to link the schema that is being developed against before installing the extension. The best way to do that is by [publishing a schema](https://www.apollographql.com/docs/graphos/delivery/publishing-schemas/) to the Apollo schema registry.
@@ -70,9 +71,10 @@ After this is done, VS Code can be reloaded and the Apollo integration will conn
 
 </details>
 
+<h3 id="local-schemas">Configure extension to use introspection from a locally running service</h3>
 <details>
 <summary>
-<h3 id="local-schemas">Configure extension to use introspection from a locally running service</h3>
+<i>Expand for instructions.</i>
 </summary>
 
 Sometimes it may make sense to link the editor to a locally running version of a schema to try out new designs that are in active development. To do this, the `apollo.config.json` file can be linked to a local service definition:
@@ -92,9 +94,10 @@ Linking to the local schema won't provide all features, such as switching graph 
 
 </details>
 
+<h3 id="local-schema-files">Configure extension for local schema files</h3>
 <details>
 <summary>
-<h3 id="local-schema-files">Configure extension for local schema files</h3>
+<i>Expand for instructions.</i>
 </summary>
 
 You might not always have a running server to link to, so the extension also supports linking to a local schema file.

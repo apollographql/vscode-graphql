@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.3.2
+
+### Patch Changes
+
+- [#211](https://github.com/apollographql/vscode-graphql/pull/211) [`9aa1fc1b`](https://github.com/apollographql/vscode-graphql/commit/9aa1fc1b9b419a5e72216f032e64aa5f86f15b59) Thanks [@phryneas](https://github.com/phryneas)! - Avoid detection if .js config file is ESM or CommonJs, just try both.
+
 ## 2.3.1
 
 ### Patch Changes

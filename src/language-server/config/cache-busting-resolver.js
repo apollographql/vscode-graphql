@@ -24,20 +24,12 @@ async function resolve(specifier, context, nextResolve) {
   if (context.importAttributes.as !== "cachebust") {
     return nextResolve(specifier, context);
   }
-  if (context.importAttributes.format) {
-    // no need to resolve at all, we have all necessary information
-    return {
-      url: bustFileName(specifier),
-      format: context.importAttributes.format,
-      importAttributes: context.importAttributes,
-      shortCircuit: true,
-    };
-  }
-  const result = await nextResolve(specifier, context);
+  // no need to resolve at all, we have all necessary information
   return {
-    ...result,
-    url: bustFileName(result.url),
+    url: bustFileName(specifier),
+    format: context.importAttributes.format,
     importAttributes: context.importAttributes,
+    shortCircuit: true,
   };
 }
 

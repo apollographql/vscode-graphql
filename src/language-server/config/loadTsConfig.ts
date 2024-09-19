@@ -92,15 +92,39 @@ function resolveTsConfig(directory: string): any {
 }
 
 export const loadJs: Loader = async function loadJs(filepath, contents) {
-  return (
-    await import(
-      filepath, // @ts-ignore
-      {
-        with: {
-          as: "cachebust",
-          contents,
-        } satisfies ImportAttributes,
-      }
-    )
-  ).default;
+  try {
+    return (
+      await import(
+        filepath, // @ts-ignore
+        {
+          with: {
+            as: "cachebust",
+            contents,
+            format: "module",
+          } satisfies ImportAttributes,
+        }
+      )
+    ).default;
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      // [ERROR] ReferenceError: module is not defined in ES module scope
+      error.message.includes("module is not defined")
+    ) {
+      return (
+        await import(
+          filepath, // @ts-ignore
+          {
+            with: {
+              as: "cachebust",
+              contents,
+              format: "commonjs",
+            } satisfies ImportAttributes,
+          }
+        )
+      ).default;
+    } else {
+      throw error;
+    }
+  }
 };

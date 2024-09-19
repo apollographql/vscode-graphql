@@ -4,7 +4,7 @@ export type ImportAttributes =
   | {
       as: "cachebust";
       contents: string;
-      format?: Format;
+      format: Format;
     }
   | { as?: undefined };
 

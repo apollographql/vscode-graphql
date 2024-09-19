@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.3.1
+
+### Patch Changes
+
+- [`7a55e46b`](https://github.com/apollographql/vscode-graphql/commit/7a55e46bbce01af851a5daafd2507a7b353ea081) Thanks [@phryneas](https://github.com/phryneas)! - Fix styling in README.
+
 ## 2.3.0
 
 ### Minor Changes

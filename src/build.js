@@ -28,6 +28,7 @@ async function main() {
       /* add to the end of plugins array */
       esbuildProblemMatcherPlugin,
       buildJsonSchemaPlugin,
+      resolvePlugin,
     ],
   });
   if (watch) {
@@ -87,6 +88,18 @@ const buildJsonSchemaPlugin = {
         JSON.stringify(jsonSchema, null, 2),
       );
     });
+  },
+};
+
+const resolvePlugin = {
+  name: "resolve",
+  setup(build) {
+    build.onResolve(
+      { filter: /^jsonc-parser$/ },
+      async ({ path, ...options }) => {
+        return build.resolve("jsonc-parser/lib/esm/main.js", options);
+      },
+    );
   },
 };
 

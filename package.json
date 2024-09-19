@@ -2,7 +2,7 @@
   "name": "vscode-apollo",
   "displayName": "Apollo GraphQL",
   "description": "Rich editor support for GraphQL client and server development that seamlessly integrates with the Apollo platform",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "referenceID": "87197759-7617-40d0-b32e-46d378e907c7",
   "author": "Apollo GraphQL <opensource@apollographql.com>",
   "license": "MIT",
@@ -49,6 +49,7 @@
     "graphql": "16.9.0",
     "graphql-language-service": "5.2.2",
     "graphql-tag": "2.12.6",
+    "jsonc-parser": "^3.3.1",
     "lodash.debounce": "4.0.8",
     "lodash.merge": "4.6.2",
     "lodash.throttle": "4.1.1",
@@ -151,6 +152,12 @@
           "GraphQL"
         ],
         "configuration": "./graphql.configuration.json"
+      },
+      {
+        "id": "jsonc",
+        "filenames": [
+          "apollo.config.json"
+        ]
       }
     ],
     "grammars": [

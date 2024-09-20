@@ -3,7 +3,7 @@
 // for testing, start a few of these, e.g. with
 // while true; do echo "foo\nbar\nbaz" | parallel ./start-ac.mjs; sleep 1; done
 
-import { registerClient } from "@apollo/client-devtools-vscode";
+import { connectApolloClientToVSCodeDevTools } from "@apollo/client-devtools-vscode";
 import WebSocket from "ws";
 import { ApolloClient, InMemoryCache } from "@apollo/client/core/index.js";
 import { MockLink } from "@apollo/client/testing/core/index.js";
@@ -41,10 +41,11 @@ const client = new ApolloClient({
   devtools: { name: process.argv[2] },
 });
 client.watchQuery({ query: helloWorld }).subscribe({ next() {} });
-const { connected, unregister, onCleanup } = registerClient(
-  client,
-  "ws://localhost:7095", // nosemgrep
-);
+const { connectedPromise, disconnect, onCleanup } =
+  connectApolloClientToVSCodeDevTools(
+    client,
+    "ws://localhost:7095", // nosemgrep
+  );
 console.log("connecting...");
 onCleanup((reason) =>
   console.log(
@@ -53,7 +54,7 @@ onCleanup((reason) =>
     /* referencing client here to prevent it from getting garbage connected */ client.version,
   ),
 );
-connected.then(() => {
+connectedPromise.then(() => {
   console.log("connected");
   //  setTimeout(unregister, 5000, "USERLAND_TIMEOUT");
 });

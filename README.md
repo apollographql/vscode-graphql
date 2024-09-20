@@ -231,8 +231,6 @@ The extension provides features for Supergraph editing, such as support for Fede
 
 <img
   src="https://raw.githubusercontent.com/apollographql/vscode-graphql/be7abe7d5ca348c3138642ce528ace3009ef7a6d/images/marketplace/federation-directive-hover.png"
-  width="80%"
-  style="margin: 5%"
   alt="Hover on Federation directive"
 />
 

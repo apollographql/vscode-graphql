@@ -19,6 +19,7 @@ The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience
 - Get instant feedback and [intelligent autocomplete](#intelligent-autocomplete) for fields, arguments, types, and variables as you write queries
 - Manage client side schema alongside remote schema
 - See [performance information](#performance-insights) inline with your query definitions
+- Extra features to help you with [Supergraph editing](#supergraph-editing)
 - Validate field and argument usage in operations
 - [Navigate projects more easily](#navigating-projects) with jump-to and peek-at definitions
 - Manage [client-only](#client-only-schemas) schemas
@@ -223,6 +224,17 @@ The VS Code extension will show inline performance diagnostics when connected to
 <h3 id="syntax-highlighting">Syntax highlighting</h3>
 
 Apollo's editor extension provides syntax highlighting for all things GraphQL, including schema definitions in `.graphql` files, complex queries in TypeScript, and even client-only schema extensions. Syntax highlighting for GraphQL works out-of-the-box in GraphQL, JavaScript, TypeScript, Python, Lua, Ruby, Dart, Elixir and ReasonML files.
+
+<h3 id="supergraph-editing">Supergraph editing</h3>
+
+The extension provides features for Supergraph editing, such as support for Federation directives, subgraph-spanning go-to-definition and reporting composition errors directly to the "Problems" panel.
+
+<img
+  src="https://raw.githubusercontent.com/apollographql/vscode-graphql/blob/cfebb7f4cc0dab88cd443abbd10efbf0de7b5a9a/images/marketplace/federation-directive-hover.png"
+  width="80%"
+  style="margin: 5%"
+  alt="Hover on Federation directive"
+/>
 
 <h3 id="navigating-projects">Navigating projects</h3>
 

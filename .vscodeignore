@@ -10,7 +10,6 @@ src
 .prettierrc
 .gitattributes
 codegen.yml
-graphql.configuration.json
 jest.*.ts
 jest.*.js
 package-lock.json

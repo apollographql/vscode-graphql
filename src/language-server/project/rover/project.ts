@@ -3,7 +3,6 @@ import { DocumentUri, GraphQLProject } from "../base";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
   CancellationToken,
-  SymbolInformation,
   InitializeRequest,
   StreamMessageReader,
   StreamMessageWriter,
@@ -19,6 +18,13 @@ import {
   PublishDiagnosticsNotification,
   ConnectionError,
   ConnectionErrors,
+  SemanticTokensRequest,
+  ProtocolRequestType0,
+  ServerCapabilities,
+  SemanticTokensRegistrationType,
+  SemanticTokensOptions,
+  SemanticTokensRegistrationOptions,
+  DefinitionRequest,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
@@ -26,11 +32,12 @@ import { ApolloConfig, RoverConfig } from "../../config";
 import { DocumentSynchronization } from "./DocumentSynchronization";
 import { AsyncLocalStorage } from "node:async_hooks";
 import internal from "node:stream";
+import { VSCodeConnection } from "../../server";
 import { getLanguageIdForExtension } from "../../utilities/languageIdForExtension";
 import { extname } from "node:path";
 import type { FileExtension } from "../../../tools/utilities/languageInformation";
-
-export const DEBUG = true;
+import { Debug } from "../../utilities";
+import { TraceLevel } from "src/language-server/utilities/debug";
 
 export function isRoverConfig(config: ApolloConfig): config is RoverConfig {
   return config instanceof RoverConfig;
@@ -59,11 +66,13 @@ export class RoverProject extends GraphQLProject {
     | undefined;
   private disposed = false;
   readonly capabilities: ClientCapabilities;
+  roverCapabilities?: ServerCapabilities;
   get displayName(): string {
     return "Rover Project";
   }
   private documents = new DocumentSynchronization(
     this.sendNotification.bind(this),
+    this.sendRequest.bind(this),
     (diagnostics) => this._onDiagnostics?.(diagnostics),
   );
 
@@ -106,11 +115,14 @@ export class RoverProject extends GraphQLProject {
     params?: P,
   ): Promise<void> {
     const connection = await this.getConnection();
-    DEBUG &&
-      console.log("sending notification %o", {
+    Debug.traceMessage(
+      "[Rover] Sending notification: " + type.method,
+      "[Rover] Sending notification %o",
+      {
         type: type.method,
         params,
-      });
+      },
+    );
     try {
       return await connection.sendNotification(type, params);
     } catch (error) {
@@ -127,10 +139,20 @@ export class RoverProject extends GraphQLProject {
     token?: CancellationToken,
   ): Promise<R> {
     const connection = await this.getConnection();
-    DEBUG && console.log("sending request %o", { type: type.method, params });
+    Debug.traceMessage(
+      "[Rover] Sending request: " + type.method,
+      "[Rover] Sending request %o",
+      { type: type.method, params },
+    );
     try {
       const result = await connection.sendRequest(type, params, token);
-      DEBUG && console.log({ result });
+      Debug.traceMessage(
+        "[Rover] Received response: " + type.method,
+        "[Rover] Received response %s\nResult: %o",
+        type.method,
+
+        result,
+      );
       return result;
     } catch (error) {
       if (error instanceof Error) {
@@ -150,23 +172,40 @@ export class RoverProject extends GraphQLProject {
         "Connection is closed.",
       );
     }
-    const child = cp.spawn(this.config.rover.bin, ["lsp"], {
-      env: DEBUG ? { RUST_BACKTRACE: "1" } : {},
-      stdio: ["pipe", "pipe", DEBUG ? "inherit" : "ignore"],
+    const args = ["lsp", "--elv2-license", "accept"];
+    if (this.config.rover.profile) {
+      args.push("--profile", this.config.rover.profile);
+    }
+    if (this.config.rover.supergraphConfig) {
+      args.push("--supergraph-config", this.config.rover.supergraphConfig);
+    }
+    args.push(...this.config.rover.extraArgs);
+
+    Debug.traceVerbose(
+      `starting ${this.config.rover.bin} '${args.join("' '")}'`,
+    );
+    const child = cp.spawn(this.config.rover.bin, args, {
+      env:
+        Debug.traceLevel >= TraceLevel.verbose ? { RUST_BACKTRACE: "1" } : {},
+      stdio: [
+        "pipe",
+        "pipe",
+        Debug.traceLevel >= TraceLevel.verbose ? "inherit" : "ignore",
+      ],
     });
     this.child = child;
     const reader = new StreamMessageReader(child.stdout);
     const writer = new StreamMessageWriter(child.stdin);
     const connection = createProtocolConnection(reader, writer);
     connection.onClose(() => {
-      DEBUG && console.log("Connection closed");
+      Debug.traceMessage("[Rover] Connection closed");
       child.kill();
       source.cancel();
       this._connection = undefined;
     });
 
     connection.onError((err) => {
-      console.error({ err });
+      Debug.error("%o", { err });
     });
 
     connection.onNotification(
@@ -175,11 +214,14 @@ export class RoverProject extends GraphQLProject {
     );
 
     connection.onUnhandledNotification((notification) => {
-      DEBUG && console.info("unhandled notification from LSP", notification);
+      Debug.traceVerbose(
+        "[Rover] unhandled notification from LSP",
+        notification,
+      );
     });
 
     connection.listen();
-    DEBUG && console.log("Initializing connection");
+    Debug.traceMessage("[Rover] Initializing connection");
 
     const source = new CancellationTokenSource();
     try {
@@ -192,7 +234,12 @@ export class RoverProject extends GraphQLProject {
         },
         source.token,
       );
-      DEBUG && console.log("Connection initialized", status);
+      this.roverCapabilities = status.capabilities;
+      Debug.traceMessage(
+        "[Rover] Connection initialized",
+        "[Rover] Connection initialized %o",
+        status,
+      );
 
       await this.connectionStorage.run(
         connection,
@@ -201,7 +248,7 @@ export class RoverProject extends GraphQLProject {
 
       return connection;
     } catch (error) {
-      console.error("Connection failed to initialize", error);
+      Debug.error("Connection with Rover failed to initialize", error);
       throw error;
     }
   }
@@ -219,8 +266,6 @@ export class RoverProject extends GraphQLProject {
       supportedLanguageIds.includes(languageId)
     );
   }
-
-  validate?: () => void;
 
   onDidChangeWatchedFiles: GraphQLProject["onDidChangeWatchedFiles"] = (
     params,
@@ -263,27 +308,65 @@ export class RoverProject extends GraphQLProject {
       this.sendRequest(HoverRequest.type, virtualParams, token),
     );
 
-  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = (type, params) => {
-    DEBUG && console.info("unhandled request from VSCode", { type, params });
+  onDefinition: GraphQLProject["onDefinition"] = async (params, token) =>
+    this.documents.insideVirtualDocument(params, (virtualParams) =>
+      this.sendRequest(DefinitionRequest.type, virtualParams, token),
+    );
+
+  onUnhandledRequest: GraphQLProject["onUnhandledRequest"] = async (
+    type,
+    params,
+    token,
+  ) => {
+    if (isRequestType(SemanticTokensRequest.type, type, params)) {
+      return this.documents.getFullSemanticTokens(params, token);
+    } else {
+      Debug.traceVerbose("unhandled request from VSCode", { type, params });
+      return undefined;
+    }
   };
   onUnhandledNotification: GraphQLProject["onUnhandledNotification"] = (
     _connection,
     type,
     params,
   ) => {
-    DEBUG &&
-      console.info("unhandled notification from VSCode", { type, params });
+    Debug.traceVerbose("unhandled notification from VSCode", { type, params });
   };
 
-  // these are not supported yet
-  onDefinition: GraphQLProject["onDefinition"];
-  onReferences: GraphQLProject["onReferences"];
-  onDocumentSymbol: GraphQLProject["onDocumentSymbol"];
-  onCodeLens: GraphQLProject["onCodeLens"];
-  onCodeAction: GraphQLProject["onCodeAction"];
+  async onVSCodeConnectionInitialized(connection: VSCodeConnection) {
+    // Report the actual capabilities of the upstream LSP to VSCode.
+    // It is important to actually "ask" the LSP for this, because the capabilities
+    // also define the semantic token legend, which is needed to interpret the tokens.
+    await this.getConnection();
+    const capabilities = this.roverCapabilities;
+    if (capabilities?.semanticTokensProvider) {
+      connection.client.register(SemanticTokensRegistrationType.type, {
+        documentSelector: null,
+        ...capabilities.semanticTokensProvider,
+        full: {
+          // the upstream LSP supports "true" here, but we don't yet
+          delta: false,
+        },
+      });
+    }
+  }
+}
 
-  provideSymbol?(
-    query: string,
-    token: CancellationToken,
-  ): Promise<SymbolInformation[]>;
+function isRequestType<R, PR, E, RO>(
+  type: ProtocolRequestType0<R, PR, E, RO>,
+  method: string,
+  params: any,
+): params is PR;
+function isRequestType<P, R, PR, E, RO>(
+  type: ProtocolRequestType<P, R, PR, E, RO>,
+  method: string,
+  params: any,
+): params is P;
+function isRequestType(
+  type:
+    | ProtocolRequestType0<any, any, any, any>
+    | ProtocolRequestType<any, any, any, any, any>,
+  method: string,
+) {
+  return type.method === method;
 }

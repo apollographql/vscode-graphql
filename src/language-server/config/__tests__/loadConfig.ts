@@ -134,6 +134,7 @@ Object {
   },
   "rover": Object {
     "bin": "${dir}/bin/rover",
+    "extraArgs": Array [],
   },
 }
 `);
@@ -173,7 +174,10 @@ Object {
       expect(config?.client?.service).toEqual("hello");
     });
 
-    it("loads config from a cjs file", async () => {
+    // we skip these tests because ts-jest transpiles every `import` down to a `require` call,
+    // which messes up all the importing anyways.
+    // we have to rely on our E2E tests to ensure that config files resolve correctly
+    it.skip("loads config from a cjs file", async () => {
       writeFilesToDir(dir, {
         "apollo.config.cjs": `module.exports = {"client": {"service": "hello"} }`,
       });
@@ -181,9 +185,39 @@ Object {
       expect(config?.client?.service).toEqual("hello");
     });
 
-    it("loads config from a mjs file", async () => {
+    it.skip("loads config from a mjs file", async () => {
       writeFilesToDir(dir, {
         "apollo.config.mjs": `export default {"client": {"service": "hello"} }`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
+
+    it("loads config from a yml file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.yml": `
+client:
+  service: hello
+`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
+
+    it("loads config from a yaml file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.yaml": `
+client:
+  service: hello
+`,
+      });
+      const config = await loadConfig({ configPath: dirPath });
+      expect(config?.client?.service).toEqual("hello");
+    });
+
+    it("loads config from a json file", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.json": `{"client": /* testing jsonc */ {"service": "hello"} }`,
       });
       const config = await loadConfig({ configPath: dirPath });
       expect(config?.client?.service).toEqual("hello");

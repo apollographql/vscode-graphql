@@ -19,6 +19,9 @@
       "path": "rover"
     },
     {
+      "path": "configFileTypes"
+    },
+    {
       "path": "../src/language-server/__tests__/fixtures/documents"
     }
   ],

@@ -601,8 +601,8 @@
     "graphql-object-field": {
       "match": "\\s*(([_A-Za-z][_0-9A-Za-z]*))\\s*(:)",
       "captures": {
-        "1": { "name": "constant.object.key.graphql" },
-        "2": { "name": "string.unquoted.graphql" },
+        "1": { "name": "string.unquoted.graphql" },
+        "2": { "name": "variable.object.key.graphql" },
         "3": { "name": "punctuation.graphql" }
       }
     },

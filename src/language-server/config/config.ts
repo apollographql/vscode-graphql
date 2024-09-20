@@ -1,13 +1,14 @@
-import { dirname } from "path";
+import { dirname, join } from "path";
 import { URI } from "vscode-uri";
 import { getGraphIdFromConfig, parseServiceSpecifier } from "./utils";
 import { Debug } from "../utilities";
 import z, { ZodError } from "zod";
 import { ValidationRule } from "graphql/validation/ValidationContext";
-import { Slot } from "@wry/context";
 import { fromZodError } from "zod-validation-error";
 import which from "which";
 import { accessSync, constants as fsConstants, statSync } from "node:fs";
+import { AsyncLocalStorage } from "async_hooks";
+import { existsSync } from "fs";
 
 const ROVER_AVAILABLE = (process.env.APOLLO_FEATURE_FLAGS || "")
   .split(",")
@@ -24,61 +25,125 @@ function ignoredFieldWarning(
         Debug.warning(getMessage(ctx.path.join(".")));
       }
     })
-    .optional();
+    .optional()
+    .describe(
+      `This option is no longer supported, please remove it from your configuration file.`,
+    );
 }
 export interface Context {
   apiKey?: string;
   serviceName?: string;
+  configPath?: string;
 }
-const context = new Slot<Context>();
+const contextStore = new AsyncLocalStorage<Context>();
 
-const studioServiceConfig = z.string();
+const NAME_DESCRIPTION =
+  "The name your project will be referred to by the Apollo GraphQL extension.";
 
-const remoteServiceConfig = z.object({
-  name: z.string().optional(),
-  url: z.string(),
-  headers: z.record(z.string()).default({}),
-  skipSSLValidation: z.boolean().default(false),
-});
+const studioServiceConfig = z
+  .string()
+  .describe(
+    "The name of the Apollo Studio graph to use. Alternatively pass in an object to configure a local schema.",
+  );
+
+const remoteServiceConfig = z
+  .object({
+    name: z.string().optional().describe(NAME_DESCRIPTION),
+    url: z
+      .string()
+      .describe(
+        "URL of a GraphQL to use for the GraphQL Schema for this project. Needs introspection enabled.",
+      ),
+    headers: z
+      .record(z.string())
+      .default({})
+      .describe("Additional headers to send to the server."),
+    skipSSLValidation: z
+      .boolean()
+      .default(false)
+      .describe(
+        "Skip SSL validation. May be required for self-signed certificates.",
+      ),
+  })
+  .describe("Configuration for using a local schema from a URL.");
 export type RemoteServiceConfig = z.infer<typeof remoteServiceConfig>;
 
-const localServiceConfig = z.object({
-  name: z.string().optional(),
-  localSchemaFile: z.union([z.string(), z.array(z.string())]),
-});
+const LOCAL_SCHEMA_FILE_DESCRIPTION =
+  "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one.";
+const localServiceConfig = z
+  .object({
+    name: z.string().optional().describe(NAME_DESCRIPTION),
+    localSchemaFile: z
+      .union([
+        z.string().describe(LOCAL_SCHEMA_FILE_DESCRIPTION),
+        z.array(z.string()).describe(LOCAL_SCHEMA_FILE_DESCRIPTION),
+      ])
+      .describe(LOCAL_SCHEMA_FILE_DESCRIPTION),
+  })
+  .describe("Configuration for using a local schema from a file.");
 export type LocalServiceConfig = z.infer<typeof localServiceConfig>;
 
-const clientServiceConfig = z.preprocess(
-  (value) => value || context.getValue()?.serviceName,
-  z.union([studioServiceConfig, remoteServiceConfig, localServiceConfig]),
-);
+const clientServiceConfig = z
+  .preprocess(
+    (value) => value || contextStore.getStore()?.serviceName,
+    z.union([studioServiceConfig, remoteServiceConfig, localServiceConfig]),
+  )
+  .describe(
+    "A string to refer to a graph in Apollo Studio, or an object for a local schema.",
+  );
 export type ClientServiceConfig = z.infer<typeof clientServiceConfig>;
 
-const clientConfig = z.object({
-  service: clientServiceConfig,
-  validationRules: z
-    .union([
-      z.array(z.custom<ValidationRule>()),
-      z.function().args(z.custom<ValidationRule>()).returns(z.boolean()),
-    ])
-    .optional(),
-  // maybe shared with rover?
-  includes: z.array(z.string()).optional(),
-  // maybe shared with rover?
-  excludes: z.array(z.string()).default(["**/node_modules", "**/__tests__"]),
-  // maybe shared with rover?
-  tagName: z.string().default("gql"),
-  // removed:
-  clientOnlyDirectives: ignoredFieldWarning(),
-  clientSchemaDirectives: ignoredFieldWarning(),
-  statsWindow: ignoredFieldWarning(),
-  name: ignoredFieldWarning(),
-  referenceId: ignoredFieldWarning(),
-  version: ignoredFieldWarning(),
-});
+const VALIDATION_RULES_DESCRIPTION =
+  "Additional validation rules to check for. To use this feature, please use a configuration file format that allows passing JavaScript objects.";
+export const clientConfig = z
+  .object({
+    service: clientServiceConfig,
+    validationRules: z
+      .union([
+        z
+          .array(z.custom<ValidationRule>())
+          .describe(VALIDATION_RULES_DESCRIPTION),
+        z
+          .function()
+          .args(z.custom<ValidationRule>())
+          .returns(z.boolean())
+          .describe(VALIDATION_RULES_DESCRIPTION),
+      ])
+      .optional()
+      .describe(VALIDATION_RULES_DESCRIPTION),
+    // maybe shared with rover?
+    includes: z
+      .array(z.string())
+      .optional()
+      .describe(
+        "An array of glob patterns this project should be active on. The Apollo GraphQL extension will only support IntelliSense-like features in files listed here.",
+      ),
+    // maybe shared with rover?
+    excludes: z
+      .array(z.string())
+      .default(["**/node_modules", "**/__tests__"])
+      .describe(
+        "Files to exclude from this project. The Apollo GraphQL extension will not provide IntelliSense-like features in these files.",
+      ),
+    // maybe shared with rover?
+    tagName: z
+      .string()
+      .default("gql")
+      .describe(
+        "The name of the template literal tag or function used in JavaScript files to declare GraphQL Documents.",
+      ),
+    // removed:
+    clientOnlyDirectives: ignoredFieldWarning(),
+    clientSchemaDirectives: ignoredFieldWarning(),
+    statsWindow: ignoredFieldWarning(),
+    name: ignoredFieldWarning(),
+    referenceId: ignoredFieldWarning(),
+    version: ignoredFieldWarning(),
+  })
+  .describe("Configuration for a Client project.");
 export type ClientConfigFormat = z.infer<typeof clientConfig>;
 
-const roverConfig = z.object({
+export const roverConfig = z.object({
   bin: z
     .preprocess(
       (val) => val || which.sync("rover", { nothrow: true }) || undefined,
@@ -102,29 +167,57 @@ const roverConfig = z.object({
         message:
           "Rover binary is not marked as an executable. If you are using OS X or Linux, ensure to set the executable bit.",
       },
+    )
+    .describe("The path to your Rover binary. If omitted, will look in PATH."),
+  profile: z.string().optional().describe("The name of the profile to use."),
+  supergraphConfig: z
+    .preprocess((value) => {
+      if (value !== undefined) return value;
+      const configPath = contextStore.getStore()?.configPath!;
+      const supergraphConfig = join(configPath, "supergraph.yaml");
+      return existsSync(supergraphConfig) ? supergraphConfig : undefined;
+    }, z.string().nullable().optional())
+    .describe(
+      "The path to your `supergraph.yaml` file. \n" +
+        "Defaults to a `supergraph.yaml` in the folder of your `apollo.config.js`, if there is one.",
     ),
-  profile: z.string().optional(),
+  extraArgs: z
+    .array(z.string())
+    .default([])
+    .describe("Extra arguments to pass to the Rover CLI."),
 });
 type RoverConfigFormat = z.infer<typeof roverConfig>;
 
-const engineConfig = z.object({
-  endpoint: z
-    .string()
-    .default(
-      process.env.APOLLO_ENGINE_ENDPOINT ||
-        "https://graphql.api.apollographql.com/api/graphql",
-    ),
-  apiKey: z.preprocess(
-    (val) => val || context.getValue()?.apiKey,
-    z.string().optional(),
-  ),
-});
+export const engineConfig = z
+  .object({
+    endpoint: z
+      .string()
+      .default(
+        process.env.APOLLO_ENGINE_ENDPOINT ||
+          "https://graphql.api.apollographql.com/api/graphql",
+      )
+      .describe("The URL of the Apollo Studio API."),
+    apiKey: z
+      .preprocess(
+        (val) => val || contextStore.getStore()?.apiKey,
+        z.string().optional(),
+      )
+      .describe(
+        "The API key to use for Apollo Studio. If possible, use a `.env` file or `.env.local` file instead to store secrets like this.",
+      ),
+  })
+  .describe("Network configuration for Apollo Studio API.");
 export type EngineConfig = z.infer<typeof engineConfig>;
 
-const baseConfig = z.object({
+export const baseConfig = z.object({
   engine: engineConfig.default({}),
-  client: z.unknown().optional(),
-  rover: z.unknown().optional(),
+  client: z.unknown().optional().describe(clientConfig.description!),
+  ...ifRoverAvailable(
+    {
+      rover: z.unknown().optional(),
+    },
+    {},
+  ),
   service: ignoredFieldWarning(
     (path) =>
       `Service-type projects are no longer supported. Please remove the "${path}" field from your configuration file.`,
@@ -200,9 +293,7 @@ export function parseApolloConfig(
   configURI?: URI,
   ctx: Context = {},
 ) {
-  const parsed = context.withValue(ctx, () =>
-    configSchema.safeParse(rawConfig),
-  );
+  const parsed = contextStore.run(ctx, () => configSchema.safeParse(rawConfig));
   if (!parsed.success) {
     // Remove "or Required at rover" errors when a client config is provided
     // Remove "or Required at client" errors when a rover config is provided
@@ -253,7 +344,7 @@ export abstract class ApolloConfig {
   get configDirURI() {
     // if the filepath has a _file_ in it, then we get its dir
     return this.configURI &&
-      this.configURI.fsPath.match(/\.(ts|js|cjs|mjs|json)$/i)
+      this.configURI.fsPath.match(/\.(ts|js|cjs|mjs|yaml|yml|json)$/i)
       ? URI.parse(dirname(this.configURI.fsPath))
       : this.configURI;
   }

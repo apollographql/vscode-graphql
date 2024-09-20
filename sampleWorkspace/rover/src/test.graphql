@@ -1,14 +1,15 @@
-"""
-The query type, represents all of the entry points into our object graph
-"""
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.8"
+    import: ["@key", "@override", "@requires", "@external", "@shareable"]
+  )
+
 type Query {
-  me: User!
+  a: A
 }
 
-"""
-Test
-"""
-type User {
-  id: ID!
-  name: String!
+type A @key(fields: "a") {
+  a: ID @override(from: "DNE")
+  b: String! @requires(fields: "c") @shareable
+  c: String! @external
 }

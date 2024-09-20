@@ -1,5 +1,5 @@
-import { cosmiconfig, defaultLoaders } from "cosmiconfig";
-import { resolve } from "path";
+import { cosmiconfig, defaultLoaders, Loader } from "cosmiconfig";
+import { dirname, resolve } from "path";
 import { readFileSync, existsSync, lstatSync } from "fs";
 import {
   ApolloConfig,
@@ -9,18 +9,22 @@ import {
 import { getServiceFromKey } from "./utils";
 import { URI } from "vscode-uri";
 import { Debug } from "../utilities";
-import { loadTs } from "./loadTsConfig";
+import { ParseError, parse as parseJsonC } from "jsonc-parser";
+import { loadJs, loadTs } from "./loadTsConfig";
 
 // config settings
 const MODULE_NAME = "apollo";
-const defaultFileNames = [
+export const supportedConfigFileNames = [
   "package.json",
   `${MODULE_NAME}.config.js`,
   `${MODULE_NAME}.config.ts`,
   `${MODULE_NAME}.config.mjs`,
   `${MODULE_NAME}.config.cjs`,
+  `${MODULE_NAME}.config.yaml`,
+  `${MODULE_NAME}.config.yml`,
+  `${MODULE_NAME}.config.json`,
 ];
-const envFileNames = [".env", ".env.local"];
+export const envFileNames = [".env", ".env.local"];
 
 export const keyEnvVar = "APOLLO_KEY";
 
@@ -39,14 +43,31 @@ export type ConfigResult<T> = {
 
 // XXX load .env files automatically
 
+const loadJsonc: Loader = (filename, contents) => {
+  const errors: ParseError[] = [];
+  try {
+    return parseJsonC(contents, errors);
+  } finally {
+    if (errors.length) {
+      Debug.error(
+        `Error parsing JSONC file ${filename}, file might not be valid JSONC`,
+      );
+    }
+  }
+};
+
 export async function loadConfig({
   configPath,
 }: LoadConfigSettings): Promise<ApolloConfig | null> {
   const explorer = cosmiconfig(MODULE_NAME, {
-    searchPlaces: defaultFileNames,
+    searchPlaces: supportedConfigFileNames,
     loaders: {
       ...defaultLoaders,
-      [".ts"]: loadTs,
+      ".ts": loadTs,
+      ".mjs": loadJs,
+      ".cjs": loadJs,
+      ".js": loadJs,
+      ".json": loadJsonc,
     },
   });
 
@@ -103,5 +124,6 @@ export async function loadConfig({
   return parseApolloConfig(config, URI.file(resolve(filepath)), {
     apiKey,
     serviceName: nameFromKey,
+    configPath: dirname(filepath),
   });
 }

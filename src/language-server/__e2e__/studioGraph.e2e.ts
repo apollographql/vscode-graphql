@@ -2,15 +2,14 @@ import { TextEditor } from "vscode";
 import {
   closeAllEditors,
   openEditor,
-  testCompletion,
+  getCompletionItems,
   getHover,
   getExtension,
   getOutputChannelDocument,
   reloadService,
+  getPositionForEditor,
 } from "./utils";
 import mocks from "../../__e2e__/mocks.js";
-import vscode from "vscode";
-import { scheduler } from "node:timers/promises";
 
 const mockPort = Number(process.env.MOCK_SERVER_PORT);
 beforeAll(async () => {
@@ -19,13 +18,26 @@ beforeAll(async () => {
 
 test("completion", async () => {
   const editor = await openEditor("spotifyGraph/src/test.js");
-  await testCompletion(editor, [4, 9], [["profile", "CurrentUserProfile!"]]);
-  await testCompletion(editor, [6, 15], [["displayName", "String"]]);
+  const getPosition = getPositionForEditor(editor);
+  expect(
+    (await getCompletionItems(editor, getPosition("pr|ofile")))[0],
+  ).toStrictEqual({
+    label: "profile",
+    detail: "CurrentUserProfile!",
+  });
+  expect(
+    (await getCompletionItems(editor, getPosition("dis|playName")))[0],
+  ).toStrictEqual({
+    label: "displayName",
+    detail: "String",
+  });
 });
 
 test("hover", async () => {
   const editor = await openEditor("spotifyGraph/src/test.js");
-  expect(await getHover(editor, [4, 9])).toMatchInlineSnapshot(`
+  const getPosition = getPositionForEditor(editor);
+  expect(await getHover(editor, getPosition("pr|ofile")))
+    .toMatchInlineSnapshot(`
 "\`\`\`graphql
 CurrentUser.profile: CurrentUserProfile!
 \`\`\`
@@ -37,9 +49,10 @@ Get detailed profile information about the current user (including the current u
 });
 
 test("wrong token", async () => {
+  const baseUri = `http://localhost:${mockPort}`;
   try {
-    await mocks.sendMock(mockPort, mocks.GetSchemaByTag_WRONG_TOKEN);
-    await mocks.sendMock(mockPort, mocks.SchemaTagsAndFieldStats_WRONG_TOKEN);
+    await mocks.sendMock(baseUri, mocks.GetSchemaByTag_WRONG_TOKEN);
+    await mocks.sendMock(baseUri, mocks.SchemaTagsAndFieldStats_WRONG_TOKEN);
 
     const ext = getExtension();
     ext.outputChannel.clear();
@@ -59,7 +72,7 @@ Invalid credentials provided
     at new ApolloError`.trim(),
     );
   } finally {
-    await mocks.loadDefaultMocks(mockPort);
+    await mocks.loadDefaultMocks(baseUri);
     await reloadService();
   }
 });

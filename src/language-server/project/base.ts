@@ -12,12 +12,19 @@ import {
   TextDocumentChangeEvent,
   StarRequestHandler,
   StarNotificationHandler,
+  ServerCapabilities,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
 import type { LoadingHandler } from "../loadingHandler";
 import { FileSet } from "../fileSet";
-import { ApolloConfig, ClientConfig, RoverConfig } from "../config";
+import {
+  ApolloConfig,
+  ClientConfig,
+  envFileNames,
+  RoverConfig,
+  supportedConfigFileNames,
+} from "../config";
 import type { ProjectStats } from "../../messages";
 
 export type DocumentUri = string;
@@ -66,13 +73,7 @@ export abstract class GraphQLProject {
 
     this.configFileSet = new FileSet({
       rootURI: this.rootURI,
-      includes: [
-        ".env",
-        "apollo.config.js",
-        "apollo.config.cjs",
-        "apollo.config.mjs",
-        "apollo.config.ts",
-      ],
+      includes: supportedConfigFileNames.concat(envFileNames),
       excludes: [],
     });
 
@@ -123,29 +124,32 @@ export abstract class GraphQLProject {
   }
 
   abstract onDidChangeWatchedFiles: ConnectionHandler["onDidChangeWatchedFiles"];
-  abstract onDidOpen?: (event: TextDocumentChangeEvent<TextDocument>) => void;
-  abstract onDidClose?: (event: TextDocumentChangeEvent<TextDocument>) => void;
+  onDidOpen?: (event: TextDocumentChangeEvent<TextDocument>) => void;
+  onDidClose?: (event: TextDocumentChangeEvent<TextDocument>) => void;
   abstract documentDidChange(document: TextDocument): void;
   abstract clearAllDiagnostics(): void;
 
-  abstract onCompletion?: ConnectionHandler["onCompletion"];
-  abstract onHover?: ConnectionHandler["onHover"];
-  abstract onDefinition?: ConnectionHandler["onDefinition"];
-  abstract onReferences?: ConnectionHandler["onReferences"];
-  abstract onDocumentSymbol?: ConnectionHandler["onDocumentSymbol"];
-  abstract onCodeLens?: ConnectionHandler["onCodeLens"];
-  abstract onCodeAction?: ConnectionHandler["onCodeAction"];
+  onCompletion?: ConnectionHandler["onCompletion"];
+  onHover?: ConnectionHandler["onHover"];
+  onDefinition?: ConnectionHandler["onDefinition"];
+  onReferences?: ConnectionHandler["onReferences"];
+  onDocumentSymbol?: ConnectionHandler["onDocumentSymbol"];
+  onCodeLens?: ConnectionHandler["onCodeLens"];
+  onCodeAction?: ConnectionHandler["onCodeAction"];
 
-  abstract onUnhandledRequest?: StarRequestHandler;
-  abstract onUnhandledNotification?: (
+  onUnhandledRequest?: StarRequestHandler;
+  onUnhandledNotification?: (
     connection: Connection,
     ...rest: Parameters<StarNotificationHandler>
   ) => ReturnType<StarNotificationHandler>;
 
-  abstract dispose?(): void;
+  dispose?(): void;
 
-  abstract provideSymbol?(
+  provideSymbol?(
     query: string,
     token: CancellationToken,
   ): Promise<SymbolInformation[]>;
+
+  onVSCodeConnectionInitialized?(connection: Connection): void;
+  validate?(): void;
 }

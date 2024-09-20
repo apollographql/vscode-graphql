@@ -1,5 +1,57 @@
 # CHANGELOG
 
+## 2.3.2
+
+### Patch Changes
+
+- [#211](https://github.com/apollographql/vscode-graphql/pull/211) [`9aa1fc1b`](https://github.com/apollographql/vscode-graphql/commit/9aa1fc1b9b419a5e72216f032e64aa5f86f15b59) Thanks [@phryneas](https://github.com/phryneas)! - Avoid detection if .js config file is ESM or CommonJs, just try both.
+
+## 2.3.1
+
+### Patch Changes
+
+- [`7a55e46b`](https://github.com/apollographql/vscode-graphql/commit/7a55e46bbce01af851a5daafd2507a7b353ea081) Thanks [@phryneas](https://github.com/phryneas)! - Fix styling in README.
+
+## 2.3.0
+
+### Minor Changes
+
+- [#209](https://github.com/apollographql/vscode-graphql/pull/209) [`fc73ed30`](https://github.com/apollographql/vscode-graphql/commit/fc73ed3089e281aa1234268f4ec78e6aa68eae15) Thanks [@phryneas](https://github.com/phryneas)! - Change default recommended configuration file format to `json`.
+
+### Patch Changes
+
+- [#200](https://github.com/apollographql/vscode-graphql/pull/200) [`d6c6af81`](https://github.com/apollographql/vscode-graphql/commit/d6c6af811e1c04901990278e3b76057ef2221911) Thanks [@phryneas](https://github.com/phryneas)! - Fixed an issue where the configuration was not reloaded when the `.env.local` file changed.
+
+- [#202](https://github.com/apollographql/vscode-graphql/pull/202) [`ea5cc094`](https://github.com/apollographql/vscode-graphql/commit/ea5cc0944b7015cd7b2cfee15993469c124a8356) Thanks [@phryneas](https://github.com/phryneas)! - Prevent configuration file parsing loop when transpiling TypeScript configs.
+
+- [#204](https://github.com/apollographql/vscode-graphql/pull/204) [`c2351d2e`](https://github.com/apollographql/vscode-graphql/commit/c2351d2e179eb92fb493a4209a3461c8aa92c979) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug where config file changes could not be picked up
+
+- [#200](https://github.com/apollographql/vscode-graphql/pull/200) [`d6c6af81`](https://github.com/apollographql/vscode-graphql/commit/d6c6af811e1c04901990278e3b76057ef2221911) Thanks [@phryneas](https://github.com/phryneas)! - Add support for `apollo.config.yml`, `apollo.config.yaml` and `apollo.config.json`.
+
+## 2.2.1
+
+### Patch Changes
+
+- [#198](https://github.com/apollographql/vscode-graphql/pull/198) [`3bebbdc4`](https://github.com/apollographql/vscode-graphql/commit/3bebbdc40faf8f9d62d0709de3312d5cb629af15) Thanks [@phryneas](https://github.com/phryneas)! - Change syntax highlighting of graphql object fields from "string" to "variable".
+
+- [#199](https://github.com/apollographql/vscode-graphql/pull/199) [`7c1172be`](https://github.com/apollographql/vscode-graphql/commit/7c1172be690488dbf0510c2d412cba502acd1468) Thanks [@phryneas](https://github.com/phryneas)! - Fix "Toggle Line Comment"
+
+- [#190](https://github.com/apollographql/vscode-graphql/pull/190) [`ec1e9927`](https://github.com/apollographql/vscode-graphql/commit/ec1e9927a178e75cae21d795d47426f40bf9d27b) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug that prevented `skipSSLValidation` from working.
+
+## 2.2.0
+
+### Minor Changes
+
+- [#184](https://github.com/apollographql/vscode-graphql/pull/184) [`9c53a11e`](https://github.com/apollographql/vscode-graphql/commit/9c53a11e3006dd69675af976ef3857212d8f9f43) Thanks [@phryneas](https://github.com/phryneas)! - Derive extensions for supported languages and monitored files from other installed extensions.
+  Adjust default `includes` for client projects.
+
+  This changes the default `includes` similar to (depending on additional extensions you might have installed):
+
+  ```diff
+  -'src/**/*.{ts,tsx,js,jsx,graphql,gql}',
+  +'src/**/*{.gql,.graphql,.graphqls,.js,.mjs,.cjs,.es6,.pac,.ts,.mts,.cts,.jsx,.tsx,.vue,.svelte,.py,.rpy,.pyw,.cpy,.gyp,.gypi,.pyi,.ipy,.pyt,.rb,.rbx,.rjs,.gemspec,.rake,.ru,.erb,.podspec,.rbi,.dart,.re,.ex,.exs}'
+  ```
+
 ## 2.1.0
 
 ### Minor Changes

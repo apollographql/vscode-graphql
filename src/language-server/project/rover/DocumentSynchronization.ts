@@ -8,6 +8,11 @@ import {
   Diagnostic,
   NotificationHandler,
   PublishDiagnosticsParams,
+  SemanticTokensRequest,
+  ProtocolRequestType,
+  SemanticTokensParams,
+  SemanticTokens,
+  CancellationToken,
 } from "vscode-languageserver-protocol";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { DocumentUri, GraphQLProject } from "../base";
@@ -18,7 +23,7 @@ import {
   rangeInContainingDocument,
 } from "../../utilities/source";
 import { URI } from "vscode-uri";
-import { DEBUG } from "./project";
+import { Debug } from "../../utilities";
 
 export interface FilePart {
   fractionalIndex: string;
@@ -94,10 +99,17 @@ export class DocumentSynchronization {
   private pendingDocumentChanges = new Map<DocumentUri, TextDocument>();
   private knownFiles = new Map<
     DocumentUri,
-    {
-      full: TextDocument;
-      parts: ReadonlyArray<FilePart>;
-    }
+    | {
+        source: "editor";
+        full: TextDocument;
+        parts: ReadonlyArray<FilePart>;
+      }
+    | {
+        source: "lsp";
+        full: Pick<TextDocument, "uri">;
+        parts?: undefined;
+        diagnostics?: Diagnostic[];
+      }
   >();
 
   constructor(
@@ -105,6 +117,11 @@ export class DocumentSynchronization {
       type: ProtocolNotificationType<P, RO>,
       params?: P,
     ) => Promise<void>,
+    private sendRequest: <P, R, PR, E, RO>(
+      type: ProtocolRequestType<P, R, PR, E, RO>,
+      params: P,
+      token?: CancellationToken,
+    ) => Promise<R>,
     private sendDiagnostics: NotificationHandler<PublishDiagnosticsParams>,
   ) {}
 
@@ -148,7 +165,11 @@ export class DocumentSynchronization {
     const newObj = Object.fromEntries(
       newParts.map((p) => [p.fractionalIndex, p]),
     );
-    this.knownFiles.set(document.uri, { full: document, parts: newParts });
+    this.knownFiles.set(document.uri, {
+      source: "editor",
+      full: document,
+      parts: newParts,
+    });
 
     for (const newPart of newParts) {
       const previousPart = previousObj[newPart.fractionalIndex];
@@ -188,7 +209,9 @@ export class DocumentSynchronization {
 
   async resendAllDocuments() {
     for (const file of this.knownFiles.values()) {
-      await this.sendDocumentChanges(file.full, []);
+      if (file.source === "editor") {
+        await this.sendDocumentChanges(file.full, []);
+      }
     }
   }
 
@@ -198,7 +221,7 @@ export class DocumentSynchronization {
     this.documentDidChange(params.document);
   };
 
-  onDidCloseTextDocument: NonNullable<GraphQLProject["onDidClose"]> = (
+  onDidCloseTextDocument: NonNullable<GraphQLProject["onDidClose"]> = async (
     params,
   ) => {
     const known = this.knownFiles.get(params.document.uri);
@@ -206,15 +229,15 @@ export class DocumentSynchronization {
       return;
     }
     this.knownFiles.delete(params.document.uri);
-    return Promise.all(
-      known.parts.map((part) =>
-        this.sendNotification(DidCloseTextDocumentNotification.type, {
+    if (known.source === "editor") {
+      for (const part of known.parts) {
+        await this.sendNotification(DidCloseTextDocumentNotification.type, {
           textDocument: {
             uri: getUri(known.full, part),
           },
-        }),
-      ),
-    );
+        });
+      }
+    }
   };
 
   async documentDidChange(document: TextDocument) {
@@ -244,7 +267,7 @@ export class DocumentSynchronization {
   ): Promise<T | undefined> {
     await this.synchronizedWithDocument(positionParams.textDocument.uri);
     const found = this.knownFiles.get(positionParams.textDocument.uri);
-    if (!found) {
+    if (!found || found.source !== "editor") {
       return;
     }
     const match = findContainedSourceAndPosition(
@@ -262,13 +285,16 @@ export class DocumentSynchronization {
   }
 
   handlePartDiagnostics(params: PublishDiagnosticsParams) {
-    DEBUG && console.log("Received diagnostics", params);
+    Debug.traceVerbose("Received diagnostics", params);
     const uriDetails = splitUri(params.uri);
-    if (!uriDetails) {
-      return;
-    }
     const found = this.knownFiles.get(uriDetails.uri);
-    if (!found) {
+    if (!found || found.source === "lsp") {
+      this.knownFiles.set(uriDetails.uri, {
+        source: "lsp",
+        full: { uri: uriDetails.uri },
+        diagnostics: params.diagnostics,
+      });
+      this.sendDiagnostics(params);
       return;
     }
     const part = found.parts.find(
@@ -294,15 +320,88 @@ export class DocumentSynchronization {
   }
 
   get openDocuments() {
-    return [...this.knownFiles.values()].map((f) => f.full);
+    return [...this.knownFiles.values()]
+      .filter((f) => f.source === "editor")
+      .map((f) => f.full);
   }
 
   clearAllDiagnostics() {
     for (const file of this.knownFiles.values()) {
-      for (const part of file.parts) {
-        part.diagnostics = [];
+      if (file.source === "editor") {
+        for (const part of file.parts) {
+          part.diagnostics = [];
+        }
+      } else {
+        file.diagnostics = [];
       }
       this.sendDiagnostics({ uri: file.full.uri, diagnostics: [] });
     }
+  }
+
+  /**
+   * Receives semantic tokens for all sub-documents and glues them together.
+   * See https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens
+   * TLDR: The tokens are a flat array of numbers, where each token is represented by 5 numbers.
+   * The first two numbers represent the token's delta line and delta start character and might need adjusing
+   * relative to the start of a sub-document in relation to the position of the last token of the previous sub-document.
+   *
+   * There is also an "incremental" version of this request, but we don't support it yet.
+   * This is complicated enough as it is.
+   */
+  async getFullSemanticTokens(
+    params: SemanticTokensParams,
+    cancellationToken: CancellationToken,
+  ): Promise<SemanticTokens | null> {
+    await this.synchronizedWithDocument(params.textDocument.uri);
+    const found = this.knownFiles.get(params.textDocument.uri);
+    if (!found || found.source !== "editor") {
+      return null;
+    }
+    const allParts = await Promise.all(
+      found.parts.map(async (part) => {
+        return {
+          part,
+          tokens: await this.sendRequest(
+            SemanticTokensRequest.type,
+            {
+              textDocument: { uri: getUri(found.full, part) },
+            },
+            cancellationToken,
+          ),
+        };
+      }),
+    );
+    let line = 0,
+      char = 0,
+      lastLine = 0,
+      lastChar = 0;
+    const combinedTokens = [];
+    for (const { part, tokens } of allParts) {
+      if (!tokens) {
+        continue;
+      }
+      line = part.source.locationOffset.line - 1;
+      char = part.source.locationOffset.column - 1;
+      for (let i = 0; i < tokens.data.length; i += 5) {
+        const deltaLine = tokens.data[i],
+          deltaStartChar = tokens.data[i + 1];
+
+        // We need to run this loop fully to correctly calculate the `lastLine` and `lastChar`
+        // so for the next incoming tokens, we can adjust the delta correctly.
+        line = line + deltaLine;
+        char = deltaLine === 0 ? char + deltaStartChar : deltaStartChar;
+        // we just need to adjust the deltas only for the first token
+        if (i === 0) {
+          tokens.data[0] = line - lastLine;
+          tokens.data[1] = line === lastLine ? lastChar - char : char;
+        }
+      }
+      combinedTokens.push(...tokens.data);
+      lastLine = line;
+      lastChar = char;
+    }
+    return {
+      data: combinedTokens,
+    };
   }
 }

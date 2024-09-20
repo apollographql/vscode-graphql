@@ -4,13 +4,14 @@ import {
   ProposedFeatures,
   TextDocuments,
   FileChangeType,
-  ServerCapabilities,
   TextDocumentSyncKind,
   SymbolInformation,
   FileEvent,
+  SetTraceNotification,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import type { QuickPickItem } from "vscode";
+import { type QuickPickItem } from "vscode";
+import { basename } from "node:path";
 import { GraphQLWorkspace } from "./workspace";
 import { LanguageServerLoadingHandler } from "./loadingHandler";
 import { debounceHandler, Debug } from "./utilities";
@@ -24,12 +25,14 @@ import { isValidationError } from "zod-validation-error";
 import { GraphQLProject } from "./project/base";
 import type { LanguageIdExtensionMap } from "../tools/utilities/languageInformation";
 import { setLanguageIdExtensionMap } from "./utilities/languageIdForExtension";
+import { envFileNames, supportedConfigFileNames } from "./config";
 
 export type InitializationOptions = {
   languageIdExtensionMap: LanguageIdExtensionMap;
 };
 
 const connection = createConnection(ProposedFeatures.all);
+export type VSCodeConnection = typeof connection;
 
 Debug.SetConnection(connection);
 const { sendNotification: originalSendNotification } = connection;
@@ -42,8 +45,8 @@ connection.sendNotification = async (...args: [any, ...any[]]) => {
 let hasWorkspaceFolderCapability = false;
 
 // Awaitable promise for sending messages before the connection is initialized
-let initializeConnection: () => void;
-const whenConnectionInitialized: Promise<void> = new Promise(
+let initializeConnection: (c: typeof connection) => void;
+const whenConnectionInitialized: Promise<typeof connection> = new Promise(
   (resolve) => (initializeConnection = resolve),
 );
 
@@ -60,6 +63,7 @@ const workspace = new GraphQLWorkspace(
         require("../../package.json").version,
     },
   },
+  whenConnectionInitialized,
 );
 
 workspace.onDiagnostics((params) => {
@@ -89,11 +93,16 @@ workspace.onConfigFilesFound(async (params) => {
   );
 });
 
+connection.onNotification(SetTraceNotification.type, ({ value }) => {
+  Debug.traceLevel = value;
+});
+
 connection.onInitialize(
-  async ({ capabilities, workspaceFolders, initializationOptions }) => {
+  async ({ capabilities, workspaceFolders, initializationOptions, trace }) => {
     const { languageIdExtensionMap } =
       initializationOptions as InitializationOptions;
     setLanguageIdExtensionMap(languageIdExtensionMap);
+    Debug.traceLevel = trace;
 
     hasWorkspaceFolderCapability = !!(
       capabilities.workspace && capabilities.workspace.workspaceFolders
@@ -128,13 +137,13 @@ connection.onInitialize(
           commands: [],
         },
         textDocumentSync: TextDocumentSyncKind.Full,
-      } as ServerCapabilities,
+      },
     };
   },
 );
 
 connection.onInitialized(async () => {
-  initializeConnection();
+  initializeConnection(connection);
   if (hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders(async (event) => {
       await Promise.all([
@@ -189,14 +198,13 @@ documents.onDidClose(
 connection.onDidChangeWatchedFiles((params) => {
   const handledByProject = new Map<GraphQLProject, FileEvent[]>();
   for (const { uri, type } of params.changes) {
+    const fsPath = URI.parse(uri).fsPath;
+    const fileName = basename(fsPath);
     if (
-      uri.endsWith("apollo.config.js") ||
-      uri.endsWith("apollo.config.cjs") ||
-      uri.endsWith("apollo.config.mjs") ||
-      uri.endsWith("apollo.config.ts") ||
-      uri.endsWith(".env")
+      supportedConfigFileNames.includes(fileName) ||
+      envFileNames.includes(fileName)
     ) {
-      workspace.reloadProjectForConfig(uri);
+      workspace.reloadProjectForConfigOrCompanionFile(uri);
     }
 
     // Don't respond to changes in files that are currently open,

@@ -1,19 +1,43 @@
 // @ts-check
-const http = require("http");
 const {
   parseRequestParams,
   createHandler,
 } = require("graphql-http/lib/use/http");
 const { buildSchema } = require("graphql");
 const { Trie } = require("@wry/trie");
+const { readFileSync } = require("fs");
+const { join } = require("path");
 
-function runMockServer(
+async function runMockServer(
   /** @type {number}  */ port,
-  onStart = (/** @type {number}  */ port) => {},
+  useSelfSignedCert = false,
+  onStart = (/** @type {string}  */ baseUri) => {},
 ) {
   const mocks = new Trie(false);
 
-  const server = http.createServer(async (req, res) => {
+  /**
+   *
+   * @param {import('node:http').RequestListener} listener
+   * @returns
+   */
+  function createServer(listener) {
+    if (useSelfSignedCert) {
+      return require("node:https").createServer(
+        {
+          key: readFileSync(
+            join(__dirname, "../../sampleWorkspace/httpSchema/self-signed.key"),
+          ),
+          cert: readFileSync(
+            join(__dirname, "../../sampleWorkspace/httpSchema/self-signed.crt"),
+          ),
+        },
+        listener,
+      );
+    }
+    return require("node:http").createServer(listener);
+  }
+
+  const server = createServer(async (req, res) => {
     if (req.url === "/apollo") {
       if (req.method === "POST") {
         await handleApolloPost(req, res);
@@ -33,8 +57,9 @@ function runMockServer(
 
   console.log("Starting server...");
   server.listen(port);
-  onStart(port);
-  console.log(`Server ready at: http://localhost:${port}`);
+  const baseUri = `${useSelfSignedCert ? "https" : "http"}://localhost:${port}`;
+  await onStart(baseUri);
+  console.log(`Server ready at: ${baseUri}`);
   return {
     [Symbol.dispose]() {
       console.log("Closing server...");
@@ -45,8 +70,8 @@ function runMockServer(
 
   /**
    * Mock GraphQL Endpoint Handler
-   * @param {http.IncomingMessage} req
-   * @param {http.ServerResponse} res
+   * @param {import('node:http').IncomingMessage} req
+   * @param {import('node:http').ServerResponse} res
    */
   async function handleApolloPost(req, res) {
     const { operationName, variables } =
@@ -79,8 +104,8 @@ function runMockServer(
 
   /**
    * Handler to accept new GraphQL Mocks
-   * @param {http.IncomingMessage} req
-   * @param {http.ServerResponse} res
+   * @param {import('node:http').IncomingMessage} req
+   * @param {import('node:http').ServerResponse} res
    */
   async function handleApolloPut(req, res) {
     const body = await new Promise((resolve) => {
@@ -111,7 +136,8 @@ const schemaHandler = createHandler({
 });
 
 if (require.main === module) {
-  runMockServer(7096, require("./mocks.js").loadDefaultMocks);
+  runMockServer(7096, false, require("./mocks.js").loadDefaultMocks);
+  runMockServer(7097, true, require("./mocks.js").loadDefaultMocks);
 }
 
 module.exports.runMockServer = runMockServer;

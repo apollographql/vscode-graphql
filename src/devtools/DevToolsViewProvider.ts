@@ -1,9 +1,11 @@
 import * as vscode from "vscode";
 import { devtoolsEvents } from "./server";
+
 export class DevToolsViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-apollo-client-devtools";
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
+  
   async resolveWebviewView(
     panel: vscode.WebviewView,
     context: vscode.WebviewViewResolveContext,
@@ -101,7 +103,7 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
         return vscode.postMessage(...args);
       };
 
-      window.addEventListener("message", (event) => {  console.debug(event); });
+      window.addEventListener("message", (event) => { console.debug(event); });
     </script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script nonce="${nonce}">

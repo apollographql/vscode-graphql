@@ -230,7 +230,7 @@ Apollo's editor extension provides syntax highlighting for all things GraphQL, i
 The extension provides features for Supergraph editing, such as support for Federation directives, subgraph-spanning go-to-definition and reporting composition errors directly to the "Problems" panel.
 
 <img
-  src="https://raw.githubusercontent.com/apollographql/vscode-graphql/cfebb7f4cc0dab88cd443abbd10efbf0de7b5a9a/images/marketplace/federation-directive-hover.png"
+  src="https://raw.githubusercontent.com/apollographql/vscode-graphql/be7abe7d5ca348c3138642ce528ace3009ef7a6d/images/marketplace/federation-directive-hover.png"
   width="80%"
   style="margin: 5%"
   alt="Hover on Federation directive"

@@ -33,7 +33,7 @@ Alternatively, you can create a `yaml`, `cjs`, `mjs`, or `ts` file with the same
 
 For the contents of this configuration file, select one of these options:
 
-<h3>Configure extension for schemas published to Apollo GraphOS</h3>
+<h3>Configure extension for Client development with schemas published to Apollo GraphOS</h3>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -43,7 +43,7 @@ To get all the benefits of the VS Code experience, it's best to link the schema 
 
 After that's done, edit the `apollo.config.json` file to look like this:
 
-```json
+```jsonc
 {
   "client": {
     "service": "graphos-graph-name"
@@ -71,7 +71,44 @@ After this is done, VS Code can be reloaded and the Apollo integration will conn
 
 </details>
 
-<h3 id="local-schemas">Configure extension to use introspection from a locally running service</h3>
+<h3>Configure extension for Supergraph Schema development</h3>
+<details>
+<summary>
+<i>Expand for instructions.</i>
+</summary>
+
+The extension can integrate with the [Rover CLI](https://www.apollographql.com/docs/rover/) to help you design Supergraph Schemas with additional support for Apollo Federation.
+
+For this, please make sure that you have [installed Rover](https://www.apollographql.com/docs/rover/getting-started) and [configured Rover](https://www.apollographql.com/docs/rover/configuring).
+
+After that, edit your `apollo.config.json` to look like this:
+
+```jsonc
+{
+  "rover": {
+    // optional, if your rover binary is in PATH it will automatically be detected
+    "bin": "/path/to/rover",
+    // optional, defaults to `supergraph.yaml` in the folder of the configuration file
+    "supergraphConfig": "/path/to/supergraph.yaml",
+    // optional, defaults to the Rover default profile
+    "profile": ""
+  }
+}
+```
+
+As all of these options are optional, it can be enough to just specify the `rover` key to indicate that you want to use Rover for Schema development instead of doing Client development:
+
+```jsonc
+{
+  "rover": {}
+}
+```
+
+After this is done, VS Code can be reloaded and the Apollo extension will start using Rover to help you build your Supergraph.
+
+</details>
+
+<h3 id="local-schemas">Configure extension for Client development with introspection from a locally running service</h3>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -79,7 +116,7 @@ After this is done, VS Code can be reloaded and the Apollo integration will conn
 
 Sometimes it may make sense to link the editor to a locally running version of a schema to try out new designs that are in active development. To do this, the `apollo.config.json` file can be linked to a local service definition:
 
-```json
+```jsonc
 {
   "client": {
     "service": {
@@ -94,7 +131,7 @@ Linking to the local schema won't provide all features, such as switching graph 
 
 </details>
 
-<h3 id="local-schema-files">Configure extension for local schema files</h3>
+<h3 id="local-schema-files">Configure extension for Client development with local schema files</h3>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -104,7 +141,7 @@ You might not always have a running server to link to, so the extension also sup
 This is useful for working on a schema in isolation or for testing out new features.
 To link to a local schema file, add the following to the `apollo.config.json` file:
 
-```json
+```jsonc
 {
   "client": {
     "service": {
@@ -117,13 +154,16 @@ To link to a local schema file, add the following to the `apollo.config.json` fi
 
 </details>
 
-<h3 id="client-only-schemas">Adding Client-only schemas</h3>
-
+<h3 id="client-only-schemas">Bonus: Adding Client-only schemas</h3>
+<details>
+<summary>
+<i>Expand for instructions.</i>
+</summary>
 One of the best features of the VS Code extension is the automatic merging of remote schemas and local ones when using integrated state management with Apollo Client. This happens automatically whenever schema definitions are found within a client project. By default, the VS Code extension will look for all JavaScript, TypeScript and GraphQL files under `./src` to find both the operations and schema definitions for building a complete schema for the application.
 
 Client side schema definitions can be spread throughout the client app project and will be merged together to create one single schema. The default behavior can be controlled by adding specifications to the `apollo.config.json`:
 
-```json
+```jsonc
 {
   "client": {
     // "service": <your service configuration>,
@@ -134,6 +174,8 @@ Client side schema definitions can be spread throughout the client app project a
   }
 }
 ```
+
+</details>
 
 <h3 id="get-the-extension">Get the extension</h3>
 
@@ -180,7 +222,7 @@ The VS Code extension will show inline performance diagnostics when connected to
 
 <h3 id="syntax-highlighting">Syntax highlighting</h3>
 
-Apollo's editor extension provides syntax highlighting for all things GraphQL, including schema definitions in `.graphql` files, complex queries in TypeScript, and even client-only schema extensions. Syntax highlighting for GraphQL works out-of-the-box for `.graphql`, `.gql`, `.js` and `.ts` file types.
+Apollo's editor extension provides syntax highlighting for all things GraphQL, including schema definitions in `.graphql` files, complex queries in TypeScript, and even client-only schema extensions. Syntax highlighting for GraphQL works out-of-the-box in GraphQL, JavaScript, TypeScript, Python, Lua, Ruby, Dart, Elixir and ReasonML files.
 
 <h3 id="navigating-projects">Navigating projects</h3>
 
@@ -194,7 +236,7 @@ Apollo supports publishing multiple versions ([variants](https://www.apollograph
 
 <h2 id="troubleshooting">Troubleshooting</h2>
 
-The most common errors are configuration errors, like a missing `.env` file or incorrect service information in the `apollo.config.js` file. Please see [the Apollo config docs](https://www.apollographql.com/docs/devtools/apollo-config/) for more configuration guidance.
+The most common errors are configuration errors, like a missing `.env` file or incorrect service information in the `apollo.config.json` file. Please see [the Apollo config docs](https://www.apollographql.com/docs/devtools/apollo-config/) for more configuration guidance.
 
 Other errors may be caused from an old version of a published schema. To reload a schema, open the Command Palette (`cmd + shift + p` on mac), search "Apollo" and choose the "Apollo: Reload Schema" option.
 
@@ -214,7 +256,7 @@ _Optional_ - custom tagged template literal.
 
 When using GraphQL with JavaScript or TypeScript projects, it is common to use the `gql` tagged template literal to write out operations. Apollo tools look through your files for the `gql` tag to extract your queries, so if you use a different template literal, you can configure it like so:
 
-```json
+```jsonc
 {
   "client": {
     "tagName": "graphql",

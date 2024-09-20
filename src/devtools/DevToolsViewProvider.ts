@@ -5,7 +5,7 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-apollo-client-devtools";
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
-  
+
   async resolveWebviewView(
     panel: vscode.WebviewView,
     context: vscode.WebviewViewResolveContext,

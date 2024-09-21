@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.11.4",
-    "@apollo/subgraph": "2.8.4",
+    "@apollo/subgraph": "2.9.1",
     "@graphql-tools/schema": "10.0.5",
     "@wry/equality": "0.5.7",
     "cosmiconfig": "9.0.0",

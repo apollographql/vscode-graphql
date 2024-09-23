@@ -427,12 +427,18 @@ export class RoverConfig extends ApolloConfig {
         const error = new Error(
           `Rover version ${version} is not supported by the extension. Please upgrade to at least 0.27.0.`,
         );
+        // @ts-expect-error would require a target of ES2022 in tsconfig
         error.cause = "ROVER_TOO_OLD";
         throw error;
       }
       // we can't find out the version, but we'll try anyways
     } catch (error) {
-      if (error && error instanceof Error && error.cause === "ROVER_TOO_OLD") {
+      if (
+        error &&
+        error instanceof Error &&
+        // @ts-expect-error would require a target of ES2022 in tsconfig
+        error.cause === "ROVER_TOO_OLD"
+      ) {
         throw error;
       }
       // we ignore all other errors and will handle that when we actually spawn the rover binary

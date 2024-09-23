@@ -18,10 +18,23 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2020", "esnext.asynciterable"],
-    "types": ["node", "jest"],
+    "lib": [
+      "es2020",
+      "esnext.asynciterable",
+      "ES2022.Error"
+    ],
+    "types": [
+      "node",
+      "jest"
+    ],
     "baseUrl": "."
   },
-  "include": ["./src"],
-  "exclude": ["./lib", "jest.config.ts", "./sampleWorkspace"]
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "./lib",
+    "jest.config.ts",
+    "./sampleWorkspace"
+  ]
 }

@@ -27,6 +27,8 @@ import {
   printStatsToClientOutputChannel,
 } from "./utils";
 import { Debug } from "./debug";
+import { DevToolsViewProvider } from "./devtools/DevToolsViewProvider";
+import { startServer } from "./devtools/server";
 
 const { version } = require("../package.json");
 
@@ -156,6 +158,17 @@ export async function activate(
         });
       } else {
         statusBar.showLoadedState({ hasActiveTextEditor });
+      }
+
+      const containsClientConfig = response.some(
+        (item) => item && !isError(item) && "client" in item,
+      );
+      if (containsClientConfig) {
+        commands.executeCommand(
+          "setContext",
+          "vscode-apollo.hasClientProject",
+          true,
+        );
       }
     } else {
       Debug.error(
@@ -328,6 +341,28 @@ export async function activate(
       return uri.query;
     },
   });
+
+  const provider = new DevToolsViewProvider(context.extensionUri);
+  context.subscriptions.push(
+    window.registerWebviewViewProvider(DevToolsViewProvider.viewType, provider),
+  );
+  let devtoolServer: Disposable | null = null;
+  context.subscriptions.push(
+    commands.registerCommand("apollographql/startDevToolsServer", () => {
+      const port = workspace
+        .getConfiguration("apollographql")
+        .get("devTools.serverPort", 0);
+      if (!devtoolServer && port) {
+        context.subscriptions.push((devtoolServer = startServer(port)));
+      }
+    }),
+  );
+  context.subscriptions.push(
+    commands.registerCommand("apollographql/stopDevToolsServer", () => {
+      devtoolServer?.dispose();
+      devtoolServer = null;
+    }),
+  );
 
   await client.start();
   return {

@@ -9,6 +9,9 @@ import which from "which";
 import { accessSync, constants as fsConstants, statSync } from "node:fs";
 import { AsyncLocalStorage } from "async_hooks";
 import { existsSync } from "fs";
+import { spawn } from "node:child_process";
+import { text } from "node:stream/consumers";
+import semver from "semver";
 
 function ignoredFieldWarning(
   getMessage = (path: string) =>
@@ -346,6 +349,11 @@ export abstract class ApolloConfig {
     if (this._graphId) return this._graphId;
     return getGraphIdFromConfig(this.rawConfig);
   }
+
+  /**
+   * execute some additional asynchronous verification steps that cannot be part of the sync parsing part
+   */
+  async verify() {}
 }
 
 export class ClientConfig extends ApolloConfig {
@@ -369,5 +377,46 @@ export class RoverConfig extends ApolloConfig {
   ) {
     super(rawConfig, configURI);
     this.rover = rawConfig.rover;
+  }
+
+  /**
+   * execute some additional asynchronous verification steps that cannot be part of the sync parsing part
+   */
+  async verify() {
+    try {
+      const child = spawn(this.rover.bin, ["-V"], {
+        stdio: ["pipe", "pipe", "ignore"],
+      });
+      const output = await text(child.stdout);
+      const versionPrefix = "Rover ";
+      if (output.startsWith(versionPrefix)) {
+        const version = output.slice(versionPrefix.length).trim();
+        if (!semver.valid(version)) {
+          // not a valid version, we accept this and will try anyways
+          return;
+        }
+        if (semver.gte(version, "0.27.0-alpha.0")) {
+          // this is a supported version
+          return;
+        }
+        const error = new Error(
+          `Rover version ${version} is not supported by the extension. Please upgrade to at least 0.27.0.`,
+        );
+        // @ts-expect-error would require a target of ES2022 in tsconfig
+        error.cause = "ROVER_TOO_OLD";
+        throw error;
+      }
+      // we can't find out the version, but we'll try anyways
+    } catch (error) {
+      if (
+        error &&
+        error instanceof Error &&
+        // @ts-expect-error would require a target of ES2022 in tsconfig
+        error.cause === "ROVER_TOO_OLD"
+      ) {
+        throw error;
+      }
+      // we ignore all other errors and will handle that when we actually spawn the rover binary
+    }
   }
 }

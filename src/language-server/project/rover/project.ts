@@ -179,6 +179,9 @@ export class RoverProject extends GraphQLProject {
     if (this.config.rover.supergraphConfig) {
       args.push("--supergraph-config", this.config.rover.supergraphConfig);
     }
+    if (Debug.traceLevel >= TraceLevel.verbose) {
+      args.push("--log", "debug");
+    }
     args.push(...this.config.rover.extraArgs);
 
     Debug.traceVerbose(

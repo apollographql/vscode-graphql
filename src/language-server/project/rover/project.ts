@@ -185,7 +185,7 @@ export class RoverProject extends GraphQLProject {
       `starting ${this.config.rover.bin} '${args.join("' '")}'`,
     );
     const child = cp.spawn(this.config.rover.bin, args, {
-      env: {NO_COLOR: "1"},
+      env: { NO_COLOR: "1" },
       stdio: [
         "pipe",
         "pipe",

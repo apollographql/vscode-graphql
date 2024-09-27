@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.3.3
+
+### Patch Changes
+
+- [#191](https://github.com/apollographql/vscode-graphql/pull/191) [`2e56f42d`](https://github.com/apollographql/vscode-graphql/commit/2e56f42d172a7ec8afd003f056aeabac9eab1789) Thanks [@svc-secops](https://github.com/svc-secops)! - Chores: update various dependencies (#181, #191, #217, #218)
+
 ## 2.3.2
 
 ### Patch Changes

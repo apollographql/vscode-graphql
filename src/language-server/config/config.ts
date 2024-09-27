@@ -13,10 +13,6 @@ import { spawn } from "node:child_process";
 import { text } from "node:stream/consumers";
 import semver from "semver";
 
-const ROVER_AVAILABLE = (process.env.APOLLO_FEATURE_FLAGS || "")
-  .split(",")
-  .includes("rover");
-
 function ignoredFieldWarning(
   getMessage = (path: string) =>
     `The option ${path} is no longer supported, please remove it from your configuration file.`,
@@ -146,49 +142,53 @@ export const clientConfig = z
   .describe("Configuration for a Client project.");
 export type ClientConfigFormat = z.infer<typeof clientConfig>;
 
-export const roverConfig = z.object({
-  bin: z
-    .preprocess(
-      (val) => val || which.sync("rover", { nothrow: true }) || undefined,
-      z.string({
-        message:
-          "Rover binary not found. Please either install it system-wide in PATH, or provide the `bin` option. Also ensure that the binary is executable.",
-      }),
-    )
-    .refine(
-      (bin) => {
-        try {
-          // is executable?
-          accessSync(bin, fsConstants.X_OK);
-          // is a file and not a directory?
-          return statSync(bin).isFile();
-        } catch {
-          return false;
-        }
-      },
-      {
-        message:
-          "Rover binary is not marked as an executable. If you are using OS X or Linux, ensure to set the executable bit.",
-      },
-    )
-    .describe("The path to your Rover binary. If omitted, will look in PATH."),
-  profile: z.string().optional().describe("The name of the profile to use."),
-  supergraphConfig: z
-    .preprocess((value) => {
-      if (value !== undefined) return value;
-      const configPath = contextStore.getStore()?.configPath!;
-      const supergraphConfig = join(configPath, "supergraph.yaml");
-      return existsSync(supergraphConfig) ? supergraphConfig : undefined;
-    }, z.string().nullable().optional())
-    .describe(
-      "The path to your `supergraph.yaml` file. \n" +
-        "Defaults to a `supergraph.yaml` in the folder of your `apollo.config.js`, if there is one.",
-    ),
-  extraArgs: z
-    .array(z.string())
-    .default([])
-    .describe("Extra arguments to pass to the Rover CLI."),
-});
+export const roverConfig = z
+  .object({
+    bin: z
+      .preprocess(
+        (val) => val || which.sync("rover", { nothrow: true }) || undefined,
+        z.string({
+          message:
+            "Rover binary not found. Please either install it system-wide in PATH, or provide the `bin` option. Also ensure that the binary is executable.",
+        }),
+      )
+      .refine(
+        (bin) => {
+          try {
+            // is executable?
+            accessSync(bin, fsConstants.X_OK);
+            // is a file and not a directory?
+            return statSync(bin).isFile();
+          } catch {
+            return false;
+          }
+        },
+        {
+          message:
+            "Rover binary is not marked as an executable. If you are using OS X or Linux, ensure to set the executable bit.",
+        },
+      )
+      .describe(
+        "The path to your Rover binary. If omitted, will look in PATH.",
+      ),
+    profile: z.string().optional().describe("The name of the profile to use."),
+    supergraphConfig: z
+      .preprocess((value) => {
+        if (value !== undefined) return value;
+        const configPath = contextStore.getStore()?.configPath || ".";
+        const supergraphConfig = join(configPath, "supergraph.yaml");
+        return existsSync(supergraphConfig) ? supergraphConfig : undefined;
+      }, z.string().nullable().optional())
+      .describe(
+        "The path to your `supergraph.yaml` file. \n" +
+          "Defaults to a `supergraph.yaml` in the folder of your `apollo.config.json`, if there is one.",
+      ),
+    extraArgs: z
+      .array(z.string())
+      .default([])
+      .describe("Extra arguments to pass to the Rover CLI."),
+  })
+  .describe("Configuration for a federated project.");
 type RoverConfigFormat = z.infer<typeof roverConfig>;
 
 export const engineConfig = z
@@ -215,12 +215,7 @@ export type EngineConfig = z.infer<typeof engineConfig>;
 export const baseConfig = z.object({
   engine: engineConfig.default({}),
   client: z.unknown().optional().describe(clientConfig.description!),
-  ...ifRoverAvailable(
-    {
-      rover: z.unknown().optional(),
-    },
-    {},
-  ),
+  rover: z.unknown().optional().describe(roverConfig.description!),
   service: ignoredFieldWarning(
     (path) =>
       `Service-type projects are no longer supported. Please remove the "${path}" field from your configuration file.`,
@@ -237,56 +232,36 @@ export type FullRoverConfigFormat = Extract<
   { rover: {} }
 >;
 
-/** Helper function for TypeScript - we just want the first type to make it into the types, not the "no feature flag" fallback */
-function ifRoverAvailable<T>(yes: T, no: any): T {
-  return ROVER_AVAILABLE ? yes : no;
-}
-
 export const configSchema = baseConfig
   .superRefine((val, ctx) => {
-    if (ROVER_AVAILABLE) {
-      if ("client" in val && "rover" in val) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Config cannot contain both 'client' and 'rover' fields",
-          fatal: true,
-        });
-      }
-      if (!("client" in val) && !("rover" in val)) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Config needs to contain either 'client' or 'rover' fields",
-          fatal: true,
-        });
-      }
-    } else {
-      if (!("client" in val)) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Config needs to contain a 'client' field.",
-          fatal: true,
-        });
-      }
+    if ("client" in val && "rover" in val) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Config cannot contain both 'client' and 'rover' fields",
+        fatal: true,
+      });
+    }
+    if (!("client" in val) && !("rover" in val)) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Config needs to contain either 'client' or 'rover' fields",
+        fatal: true,
+      });
     }
   })
   .and(
-    ifRoverAvailable(
-      z.union([
-        z
-          .object({
-            client: clientConfig,
-          })
-          .transform((val): typeof val & { rover?: never } => val),
-        z
-          .object({
-            rover: roverConfig,
-          })
-          .transform((val): typeof val & { client?: never } => val),
-      ]),
-      z.object({
-        client: clientConfig,
-      }),
-    ),
+    z.union([
+      z
+        .object({
+          client: clientConfig,
+        })
+        .transform((val): typeof val & { rover?: never } => val),
+      z
+        .object({
+          rover: roverConfig,
+        })
+        .transform((val): typeof val & { client?: never } => val),
+    ]),
   );
 export type RawApolloConfigFormat = z.input<typeof configSchema>;
 export type ParsedApolloConfigFormat = z.output<typeof configSchema>;

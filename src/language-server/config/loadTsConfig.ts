@@ -93,7 +93,8 @@ export const loadJs: Loader = async function loadJs(filepath, contents) {
     if (
       error instanceof Error &&
       // [ERROR] ReferenceError: module is not defined in ES module scope
-      error.message.includes("module is not defined")
+      // [ERROR] ReferenceError: require is not defined in ES module scope
+      error.message.includes("is not defined in ES module scope")
     ) {
       return loadCachebustedJs(filepath, contents, "commonjs");
     } else {

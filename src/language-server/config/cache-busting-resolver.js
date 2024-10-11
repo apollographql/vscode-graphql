@@ -4,6 +4,19 @@ const { pathToFileURL } = require("node:url");
 /** @import { ResolveContext, ResolutionResult, LoadResult, ImportContext } from "./cache-busting-resolver.types" */
 
 /**
+ * importAssertions was renamed to importAttributes in newer versions of Node.js.
+ *
+ * @param {ResolveContext|ImportContext} context
+ * @returns {"importAttributes"|"importAssertions"}
+ */
+function importAttributesKeyName(context) {
+  if (!("importAttributes" in context) && "importAssertions" in context) {
+    return "importAssertions";
+  }
+  return "importAttributes";
+}
+
+/**
  * @param {string} specifier
  * @returns {string}
  */
@@ -21,14 +34,15 @@ function bustFileName(specifier) {
  * @returns {Promise<ResolutionResult>}
  */
 async function resolve(specifier, context, nextResolve) {
-  if (context.importAttributes.as !== "cachebust") {
+  const importAttributesKey = importAttributesKeyName(context);
+  if (context[importAttributesKey].as !== "cachebust") {
     return nextResolve(specifier, context);
   }
   // no need to resolve at all, we have all necessary information
   return {
     url: bustFileName(specifier),
-    format: context.importAttributes.format,
-    importAttributes: context.importAttributes,
+    format: context[importAttributesKey].format,
+    [importAttributesKey]: context[importAttributesKey],
     shortCircuit: true,
   };
 }
@@ -41,13 +55,14 @@ async function resolve(specifier, context, nextResolve) {
  * @returns {Promise<LoadResult>}
  */
 async function load(url, context, nextLoad) {
-  if (context.importAttributes.as !== "cachebust") {
+  const importAttributesKey = importAttributesKeyName(context);
+  if (context[importAttributesKey].as !== "cachebust") {
     return nextLoad(url, context);
   }
   return {
     format: context.format || "module",
     shortCircuit: true,
-    source: context.importAttributes.contents,
+    source: context[importAttributesKey].contents,
   };
 }
 

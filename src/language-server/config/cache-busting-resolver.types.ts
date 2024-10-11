@@ -19,13 +19,15 @@ type Format =
 
 export interface ResolveContext {
   conditions: string[];
-  importAttributes: ImportAttributes;
+  importAttributes?: ImportAttributes;
+  importAssertions: ImportAttributes;
   parentURL?: string;
 }
 
 export interface ImportContext {
   conditions: string[];
-  importAttributes: ImportAttributes;
+  importAttributes?: ImportAttributes;
+  importAssertions: ImportAttributes;
   format: Format;
 }
 

@@ -68,7 +68,7 @@ const buildJsonSchemaPlugin = {
       const {
         configSchema,
         clientConfig,
-        // roverConfig,
+        roverConfig,
         engineConfig,
         baseConfig,
         // @ts-ignore
@@ -78,7 +78,7 @@ const buildJsonSchemaPlugin = {
         errorMessages: true,
         definitions: {
           clientConfig,
-          //roverConfig,
+          roverConfig,
           engineConfig,
           baseConfig,
         },

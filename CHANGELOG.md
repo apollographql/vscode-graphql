@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.3.5
+
+### Patch Changes
+
+- [#226](https://github.com/apollographql/vscode-graphql/pull/226) [`57c51c81`](https://github.com/apollographql/vscode-graphql/commit/57c51c81ec56d68c2226f0b169ed849fcbdaad55) Thanks [@yesmeck](https://github.com/yesmeck)! - Fixes config files being unable to load in old VSCode versions
+
 ## 2.3.4
 
 ### Patch Changes

@@ -3,16 +3,19 @@ import { dirname, extname } from "node:path";
 import typescript from "typescript";
 import { pathToFileURL } from "node:url";
 import { register } from "node:module";
-import { ImportAttributes } from "./cache-busting-resolver.types";
+import {
+  ImportAssertions,
+  ImportAttributes,
+} from "./cache-busting-resolver.types";
 // implementation based on https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/src/loaders.ts
 // Copyright (c) 2015 David Clark licensed MIT. Full license can be found here:
 // https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/LICENSE
 
-if (process.env.JEST_WORKER_ID === undefined) {
+try {
   register(
     pathToFileURL(require.resolve("./config/cache-busting-resolver.js")),
   );
-} else {
+} catch {
   register(pathToFileURL(require.resolve("./cache-busting-resolver.js")));
 }
 
@@ -114,10 +117,15 @@ async function loadCachebustedJs(
       // @ts-ignore
       {
         with: {
-          as: "cachebust",
+          as: `cachebust:${type}`,
           contents,
           format: type,
         } satisfies ImportAttributes,
+        assert: {
+          as: `cachebust:${type}`,
+          contents,
+          format: type,
+        } satisfies ImportAssertions,
       }
     )
   ).default;

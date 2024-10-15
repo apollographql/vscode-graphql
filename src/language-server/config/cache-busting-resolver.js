@@ -106,7 +106,7 @@ async function load(url, context, nextLoad) {
   const contents =
     "contents" in importAttributes
       ? importAttributes.contents
-      : Object.keys(importAttributes)[1];
+      : Object.keys(importAttributes).find((key) => key != "as");
   return {
     format,
     shortCircuit: true,

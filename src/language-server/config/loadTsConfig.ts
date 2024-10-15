@@ -113,9 +113,12 @@ async function loadCachebustedJs(
       // @ts-ignore
       {
         with: {
-          as: "cachebust",
+          as: `cachebust:${type}`,
           contents,
-          format: type,
+        } satisfies ImportAttributes,
+        assert: {
+          as: `cachebust:${type}`,
+          contents,
         } satisfies ImportAttributes,
       }
     )

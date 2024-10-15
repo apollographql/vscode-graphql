@@ -2,9 +2,8 @@ import { pathToFileURL } from "node:url";
 
 export type ImportAttributes =
   | {
-      as: "cachebust";
+      as: `cachebust:${"module" | "commonjs"}`;
       contents: string;
-      format: Format;
     }
   | { as?: undefined };
 

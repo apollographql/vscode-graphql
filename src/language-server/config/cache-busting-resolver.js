@@ -7,13 +7,37 @@ const { pathToFileURL } = require("node:url");
  * importAssertions was renamed to importAttributes in newer versions of Node.js.
  *
  * @param {ResolveContext|ImportContext} context
+ * @returns {boolean}
+ */
+
+function isImportAttributesAvailable(context) {
+  return "importAttributes" in context;
+}
+
+/**
+ * importAssertions was renamed to importAttributes in newer versions of Node.js.
+ *
+ * @param {ResolveContext|ImportContext} context
  * @returns {"importAttributes"|"importAssertions"}
  */
 function importAttributesKeyName(context) {
-  if (!("importAttributes" in context) && "importAssertions" in context) {
-    return "importAssertions";
+  if (isImportAttributesAvailable(context)) {
+    return "importAttributes";
   }
-  return "importAttributes";
+  return "importAssertions";
+}
+
+/**
+ * importAssertions was renamed to importAttributes in newer versions of Node.js.
+ *
+ * @param {ResolveContext|ImportContext} context
+ * @returns {ImportAttributes}
+ */
+function resolveImportAttributes(context) {
+  if (!isImportAttributesAvailable(context)) {
+    return context.importAssertions;
+  }
+  return context.importAttributes;
 }
 
 /**
@@ -34,15 +58,16 @@ function bustFileName(specifier) {
  * @returns {Promise<ResolutionResult>}
  */
 async function resolve(specifier, context, nextResolve) {
-  const importAttributesKey = importAttributesKeyName(context);
-  if (context[importAttributesKey].as !== "cachebust") {
+  const importAttributes = resolveImportAttributes(context);
+  const [as, format] = importAttributes.as.split(":");
+  if (as !== "cachebust") {
     return nextResolve(specifier, context);
   }
   // no need to resolve at all, we have all necessary information
   return {
     url: bustFileName(specifier),
-    format: context[importAttributesKey].format,
-    [importAttributesKey]: context[importAttributesKey],
+    format,
+    [importAttributesKeyName(context)]: importAttributes,
     shortCircuit: true,
   };
 }
@@ -55,14 +80,19 @@ async function resolve(specifier, context, nextResolve) {
  * @returns {Promise<LoadResult>}
  */
 async function load(url, context, nextLoad) {
-  const importAttributesKey = importAttributesKeyName(context);
-  if (context[importAttributesKey].as !== "cachebust") {
+  const importAttributes = resolveImportAttributes(context);
+  const [as, format] = importAttributes.as.split(":");
+  if (as !== "cachebust") {
     return nextLoad(url, context);
   }
+  const contents =
+    "contents" in importAttributes
+      ? importAttributes.contents
+      : Object.keys(importAttributes)[1];
   return {
-    format: context.format || "module",
+    format: format || "module",
     shortCircuit: true,
-    source: context[importAttributesKey].contents,
+    source: contents,
   };
 }
 

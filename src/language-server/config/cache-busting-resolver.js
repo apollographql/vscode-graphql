@@ -18,7 +18,7 @@ function isImportAttributesAvailable(context) {
  * @param {ResolveContext|ImportContext} context
  * @returns {"importAttributes"|"importAssertions"}
  */
-function importAttributesKeyName(context) {
+function resolveImportAttributesKeyName(context) {
   if (isImportAttributesAvailable(context)) {
     return "importAttributes";
   }
@@ -63,7 +63,7 @@ async function resolve(specifier, context, nextResolve) {
   return {
     url: bustFileName(specifier),
     format,
-    [importAttributesKeyName(context)]: importAttributes,
+    [resolveImportAttributesKeyName(context)]: importAttributes,
     shortCircuit: true,
   };
 }

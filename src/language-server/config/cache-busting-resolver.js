@@ -1,12 +1,22 @@
 // @ts-check
 const { pathToFileURL } = require("node:url");
 
-/** @import { ResolveContext, ResolutionResult, LoadResult, ImportContext, ImportAttributes } from "./cache-busting-resolver.types" */
+/** @import { ResolveContext, ResolutionResult, LoadResult, ImportContext, ImportAttributes, ImportAssertions, LegacyResolveContext, LegacyImportContext, Format } from "./cache-busting-resolver.types" */
+
 /**
- * importAssertions was renamed to importAttributes in newer versions of Node.js.
+ * importAssertions was renamed to importAttributes after following versions of Node.js.
+ * Once we hit a minimum of 1.92, we can remove the legacy check and
+ * use `importAttributes` directly.
  *
- * @param {ResolveContext|ImportContext} context
- * @returns {context is {importAttributes: ImportAttributes}}
+ * - v21.0.0
+ * - v20.10.0
+ * - v18.19.0
+ *
+ * @see https://github.com/apollographql/vscode-graphql/issues/225
+ * @see https://nodejs.org/docs/latest/api/module.html#resolvespecifier-context-nextresolve
+ *
+ * @param {ResolveContext|ImportContext|LegacyResolveContext|LegacyImportContext} context
+ * @returns {context is ResolveContext|ImportContext}
  */
 function isImportAttributesAvailable(context) {
   return "importAttributes" in context;
@@ -24,14 +34,28 @@ function resolveImportAttributesKeyName(context) {
 }
 
 /**
- * @param {ResolveContext|ImportContext} context
- * @returns {ImportAttributes}
+ * @param {ResolveContext|ImportContext|LegacyResolveContext|LegacyImportContext} context
+ * @returns {ImportAttributes|ImportAssertions}
  */
 function resolveImportAttributes(context) {
   if (isImportAttributesAvailable(context)) {
     return context.importAttributes;
   }
   return context.importAssertions;
+}
+
+/**
+ * @param {ImportAttributes|ImportAssertions} importAttributes
+ * @returns {Format|null}
+ */
+function resolveConfigFormat(importAttributes) {
+  const [as, format] = importAttributes.as
+    ? importAttributes.as.split(":")
+    : [];
+  if (as === "cachebust" && format) {
+    return /** @type {Format} */ (format);
+  }
+  return null;
 }
 
 /**
@@ -53,8 +77,8 @@ function bustFileName(specifier) {
  */
 async function resolve(specifier, context, nextResolve) {
   const importAttributes = resolveImportAttributes(context);
-  const [as, format] = importAttributes.as.split(":");
-  if (as !== "cachebust") {
+  const format = resolveConfigFormat(importAttributes);
+  if (!format) {
     return nextResolve(specifier, context);
   }
   // no need to resolve at all, we have all necessary information
@@ -75,8 +99,8 @@ async function resolve(specifier, context, nextResolve) {
  */
 async function load(url, context, nextLoad) {
   const importAttributes = resolveImportAttributes(context);
-  const [as, format] = importAttributes.as.split(":");
-  if (as !== "cachebust") {
+  const format = resolveConfigFormat(importAttributes);
+  if (!format) {
     return nextLoad(url, context);
   }
   const contents =
@@ -84,7 +108,7 @@ async function load(url, context, nextLoad) {
       ? importAttributes.contents
       : Object.keys(importAttributes)[1];
   return {
-    format: format || "module",
+    format,
     shortCircuit: true,
     source: contents,
   };

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.3.4
+
+### Patch Changes
+
+- [#224](https://github.com/apollographql/vscode-graphql/pull/224) [`b7d300f7`](https://github.com/apollographql/vscode-graphql/commit/b7d300f7d44138ef656bf5e5359dc284d41b78e2) Thanks [@phryneas](https://github.com/phryneas)! - Fix a situation where config files using `require` would not be imported as CommonJS.
+
 ## 2.3.3
 
 ### Patch Changes

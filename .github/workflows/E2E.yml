@@ -9,7 +9,7 @@ jobs:
     name: Run E2E tests
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt update && sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb expect
+      - run: sudo apt update && sudo apt install -y libasound2t64 libgbm1 libgtk-3-0 libnss3 xvfb expect
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:

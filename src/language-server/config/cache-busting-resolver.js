@@ -6,7 +6,7 @@ const { pathToFileURL } = require("node:url");
  * importAssertions was renamed to importAttributes in newer versions of Node.js.
  *
  * @param {ResolveContext|ImportContext} context
- * @returns {boolean}
+ * @returns {context is {importAttributes: ImportAttributes}}
  */
 function isImportAttributesAvailable(context) {
   return "importAttributes" in context;

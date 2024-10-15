@@ -110,7 +110,7 @@ async function load(url, context, nextLoad) {
   return {
     format,
     shortCircuit: true,
-    source: contents,
+    source: /** @type {string} */ (contents),
   };
 }
 

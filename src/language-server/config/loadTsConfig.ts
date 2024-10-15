@@ -8,11 +8,11 @@ import { ImportAttributes } from "./cache-busting-resolver.types";
 // Copyright (c) 2015 David Clark licensed MIT. Full license can be found here:
 // https://github.com/cosmiconfig/cosmiconfig/blob/a5a842547c13392ebb89a485b9e56d9f37e3cbd3/LICENSE
 
-if (process.env.JEST_WORKER_ID === undefined) {
+try {
   register(
     pathToFileURL(require.resolve("./config/cache-busting-resolver.js")),
   );
-} else {
+} catch {
   register(pathToFileURL(require.resolve("./cache-busting-resolver.js")));
 }
 

@@ -5,7 +5,7 @@ const { pathToFileURL } = require("node:url");
 
 /**
  * importAssertions was renamed to importAttributes after following versions of Node.js.
- * Once we hit a minimum of 1.92, we can remove the legacy check and
+ * Once we hit a minimum of v1.92 of VSCode, we can remove the legacy check and
  * use `importAttributes` directly.
  *
  * - v21.0.0

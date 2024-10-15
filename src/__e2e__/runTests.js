@@ -28,6 +28,7 @@ async function main() {
     const exitCode = await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
+      version: process.env.VSCODE_VERSION || "stable",
       launchArgs: [
         "--disable-extensions",
         `${extensionDevelopmentPath}/sampleWorkspace/sampleWorkspace.code-workspace`,

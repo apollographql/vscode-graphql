@@ -2,7 +2,7 @@
 const { pathToFileURL } = require("node:url");
 
 /** @import { ResolveContext, ResolutionResult, LoadResult, ImportContext } from "./cache-busting-resolver.types" */
-
+/** @import { ResolveContext, ResolutionResult, LoadResult, ImportContext,ImportAttributes } from "./cache-busting-resolver.types" */
 /**
  * importAssertions was renamed to importAttributes in newer versions of Node.js.
  *

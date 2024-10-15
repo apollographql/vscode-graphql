@@ -73,10 +73,16 @@ export async function loadConfig({
 
   // search can fail if a file can't be parsed (ex: a nonsense js file) so we wrap in a try/catch
   let loadedConfig: ConfigResult<RawApolloConfigFormat>;
-  loadedConfig = (await explorer.search(
-    configPath,
-  )) as ConfigResult<RawApolloConfigFormat>;
-
+  try {
+    loadedConfig = (await explorer.search(
+      configPath,
+    )) as ConfigResult<RawApolloConfigFormat>;
+  } catch (error) {
+    throw new Error(`A config file failed to load with options: ${JSON.stringify(
+      arguments[0],
+    )}.
+    The error was: ${error}`);
+  }
 
   if (!loadedConfig || loadedConfig.isEmpty) {
     Debug.error(

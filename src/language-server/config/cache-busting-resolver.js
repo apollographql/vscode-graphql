@@ -29,10 +29,10 @@ function resolveImportAttributesKeyName(context) {
  * @returns {ImportAttributes}
  */
 function resolveImportAttributes(context) {
-  if (!isImportAttributesAvailable(context)) {
-    return context.importAssertions;
+  if (isImportAttributesAvailable(context)) {
+    return context.importAttributes;
   }
-  return context.importAttributes;
+  return context.importAssertions;
 }
 
 /**

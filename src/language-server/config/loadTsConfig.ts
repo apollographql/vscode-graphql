@@ -117,10 +117,6 @@ async function loadCachebustedJs(
           as: `cachebust:${type}`,
           contents,
         } satisfies ImportAttributes,
-        assert: {
-          as: `cachebust:${type}`,
-          contents,
-        } satisfies ImportAttributes,
       }
     )
   ).default;

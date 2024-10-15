@@ -15,8 +15,6 @@ function isImportAttributesAvailable(context) {
 }
 
 /**
- * importAssertions was renamed to importAttributes in newer versions of Node.js.
- *
  * @param {ResolveContext|ImportContext} context
  * @returns {"importAttributes"|"importAssertions"}
  */
@@ -28,8 +26,6 @@ function importAttributesKeyName(context) {
 }
 
 /**
- * importAssertions was renamed to importAttributes in newer versions of Node.js.
- *
  * @param {ResolveContext|ImportContext} context
  * @returns {ImportAttributes}
  */

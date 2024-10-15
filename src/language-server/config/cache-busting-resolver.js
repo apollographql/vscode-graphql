@@ -9,7 +9,6 @@ const { pathToFileURL } = require("node:url");
  * @param {ResolveContext|ImportContext} context
  * @returns {boolean}
  */
-
 function isImportAttributesAvailable(context) {
   return "importAttributes" in context;
 }

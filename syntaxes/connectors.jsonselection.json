@@ -1,0 +1,233 @@
+{
+  "name": "Apollo Connectors JSONSelection",
+  "scopeName": "inline.connectors.jsonselection.graphql",
+  "injectionSelector": "L:meta.embedded.block.jsonselection.graphql -string -comment",
+  "patterns": [
+    {
+      "include": "#JSONSelection"
+    }
+  ],
+  "repository": {
+    "JSONSelection": {
+      "name": "meta.JSONSelection",
+      "patterns": [
+        {
+          "include": "#NakedSubSelection"
+        },
+        {
+          "include": "#PathSelection"
+        }
+      ]
+    },
+    "NakedSubSelection": {
+      "name": "meta.NakedSubSelection",
+      "patterns": [
+        {
+          "include": "#NamedSelection"
+        },
+        {
+          "include": "#StarSelection"
+        }
+      ]
+    },
+    "SubSelection": {
+      "name": "meta.SubSelection",
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        {
+          "include": "#NakedSubSelection"
+        }
+      ]
+    },
+    "NamedSelection": {
+      "name": "meta.NamedSelection",
+      "patterns": [
+        {
+          "include": "#NamedFieldSelection"
+        },
+        {
+          "include": "#NamedQuotedSelection"
+        },
+        {
+          "include": "#NamedPathOrGroupSelection"
+        }
+      ]
+    },
+    "NamedFieldSelection": {
+      "name": "meta.NamedFieldSelection",
+      "begin": "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*([a-zA-Z][0-9a-zA-Z_]*)",
+      "patterns": [
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    },
+    "NamedQuotedSelection": {
+      "name": "meta.NamedQuotedSelection",
+      "begin": "([a-zA-Z][0-9a-zA-Z_]*(:)\\s*(\"[^\"]*\"|'[^']*'))",
+      "patterns": [
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    },
+    "NamedPathOrGroupSelection": {
+      "name": "meta.NamedPathOrGroupSelection",
+      "begin": "([a-zA-Z][0-9a-zA-Z_]*(:)",
+      "patterns": [
+        {
+          "include": "#SubSelection"
+        },
+        {
+          "include": "#PathSelection"
+        }
+      ]
+    },
+    "PathSelection": {
+      "name": "meta.PathSelection",
+      "patterns": [
+        {
+          "include": "#VarPathWithSubSelection"
+        },
+        {
+          "include": "#KeyPathWithSubSelection"
+        }
+      ]
+    },
+    "VarPathWithSubSelection": {
+      "name": "meta.VarPathWithSubSelection",
+      "begin": "\\$([a-zA-Z][0-9a-zA-Z_]*)?",
+      "patterns": [
+        {
+          "include": "#PathStep"
+        },
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    },
+    "KeyPathWithSubSelection": {
+      "name": "meta.KeyPathWithSubSelection",
+      "begin": "([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')\\s*",
+      "patterns": [
+        {
+          "include": "#PathStep"
+        },
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    },
+    "PathStep": {
+      "name": "meta.PathStep",
+      "patterns": [
+        {
+          "match": "\\.([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')"
+        },
+        {
+          "match": "->([a-zA-Z][0-9a-zA-Z_]*)",
+          "patterns": [
+            {
+              "include": "#MethodArgs"
+            }
+          ]
+        }
+      ]
+    },
+    "MethodArgs": {
+      "name": "meta.MethodArgs",
+      "begin": "\\(",
+      "end": "\\)",
+      "patterns": [
+        {
+          "end": ",|(?=\\))",
+          "patterns": [
+            {
+              "include": "#JSLiteral"
+            }
+          ]
+        }
+      ]
+    },
+    "JSLiteral": {
+      "name": "meta.JSLiteral",
+      "patterns": [
+        {
+          "include": "#JSPrimitive"
+        },
+        {
+          "include": "#JSObject"
+        },
+        {
+          "include": "#JSArray"
+        },
+        {
+          "include": "#PathSelection"
+        }
+      ]
+    },
+    "JSPrimitive": {
+      "name": "meta.JSPrimitive",
+      "patterns": [
+        {
+          "match": "\"[^\"]*\"|'[^']*'"
+        },
+        {
+          "match": "-?(0|[1-9][0-9]*)(\\.[0-9]*)?"
+        },
+        {
+          "match": "true|false|null"
+        }
+      ]
+    },
+    "JSObject": {
+      "name": "meta.JSObject",
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        {
+          "end": ",|(?=\\})",
+          "patterns": [
+            {
+              "include": "#JSProperty"
+            }
+          ]
+        }
+      ]
+    },
+    "JSProperty": {
+      "name": "meta.JSProperty",
+      "begin": "([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')\\s*:",
+      "patterns": [
+        {
+          "include": "#JSLiteral"
+        }
+      ]
+    },
+    "JSArray": {
+      "name": "meta.JSArray",
+      "begin": "\\[",
+      "end": "\\]",
+      "patterns": [
+        {
+          "end": ",|(?=\\])",
+          "patterns": [
+            {
+              "include": "#JSLiteral"
+            }
+          ]
+        }
+      ]
+    },
+    "StarSelection": {
+      "name": "meta.StarSelection",
+      "begin": "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*\\*",
+      "patterns": [
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    }
+  }
+}

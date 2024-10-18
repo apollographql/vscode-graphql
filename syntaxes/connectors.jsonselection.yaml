@@ -1,0 +1,126 @@
+name: "GraphQL"
+scopeName: "source.connectors.jsonselection"
+patterns:
+  - include: "#JSONSelection"
+repository:
+  # JSONSelection        ::= NakedSubSelection | PathSelection
+  JSONSelection:
+    patterns:
+      - include: "#NakedSubSelection"
+      - include: "#PathSelection"
+  # NakedSubSelection    ::= NamedSelection* StarSelection?
+  NakedSubSelection:
+    patterns:
+      - include: "#NamedSelection"
+      - include: "#StarSelection"
+  # SubSelection         ::= "{" NakedSubSelection "}"
+  SubSelection:
+    begin: "\\{"
+    end: "\\}"
+    patterns:
+      - include: "#NakedSubSelection"
+  # NamedSelection       ::= NamedPathSelection | NamedFieldSelection | NamedQuotedSelection | NamedGroupSelection
+  NamedSelection:
+    patterns:
+      - include: "#NamedFieldSelection"
+      - include: "#NamedQuotedSelection"
+      - include: "#NamedPathOrGroupSelection"
+  # NamedPathSelection   ::= Alias PathSelection
+  # merged with NamedGroupSelection
+  # NamedFieldSelection  ::= Alias? Identifier SubSelection?
+  NamedFieldSelection:
+    begin: "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*([a-zA-Z][0-9a-zA-Z_]*)"
+    patterns:
+      - include: "#SubSelection"
+  # NamedQuotedSelection ::= Alias StringLiteral SubSelection?
+  NamedQuotedSelection:
+    begin: "([a-zA-Z][0-9a-zA-Z_]*(:)\\s*(\"[^\"]*\"|'[^']*'))"
+    patterns:
+      - include: "#SubSelection"
+  # NamedGroupSelection  ::= Alias SubSelection
+  NamedPathOrGroupSelection:
+    begin: "([a-zA-Z][0-9a-zA-Z_]*(:)"
+    patterns:
+      - include: "#SubSelection"
+      - include: "#PathSelection"
+  # Alias                ::= Identifier ":"
+  # PathSelection        ::= (VarPath | KeyPath) SubSelection?
+  PathSelection:
+    patterns:
+      - include: "#VarPathWithSubSelection"
+      - include: "#KeyPathWithSubSelection"
+  # VarPath              ::= "$" (NO_SPACE Identifier)? PathStep*
+  VarPathWithSubSelection:
+    begin: "\\$([a-zA-Z][0-9a-zA-Z_]*)?"
+    patterns:
+      - include: "#PathStep"
+      - include: "#SubSelection"
+  # KeyPath              ::= Key PathStep+
+  KeyPathWithSubSelection:
+    begin: "([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')\\s*"
+    patterns:
+      - include: "#PathStep"
+      - include: "#SubSelection"
+  # PathStep             ::= "." Key | "->" Identifier MethodArgs?
+  PathStep:
+    patterns:
+      - match: "\\.([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')"
+      - match: "->([a-zA-Z][0-9a-zA-Z_]*)"
+        patterns:
+          - include: "#MethodArgs"
+  # Key                  ::= Identifier | StringLiteral
+  # Identifier           ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
+  # StringLiteral        ::= "'" ("\\'" | [^'])* "'" | '"' ('\\"' | [^"])* '"'
+  # MethodArgs           ::= "(" (JSLiteral ("," JSLiteral)*)? ")"
+  MethodArgs:
+    begin: "\\("
+    end: "\\)"
+    patterns:
+      - end: ",|(?=\\))"
+        patterns:
+          - include: "#JSLiteral"
+  # JSLiteral            ::= JSPrimitive | JSObject | JSArray | PathSelection
+  JSLiteral:
+    patterns:
+      - include: "#JSPrimitive"
+      - include: "#JSObject"
+      - include: "#JSArray"
+      - include: "#PathSelection"
+  # JSPrimitive          ::= StringLiteral | JSNumber | "true" | "false" | "null"
+  JSPrimitive:
+    patterns:
+      - match: '"[^"]*"|''[^'']*'''
+      - match: "-?(0|[1-9][0-9]*)(\\.[0-9]*)?"
+      - match: "\\b(true|false|null)\\b"
+  # JSNumber             ::= "-"? (UnsignedInt ("." [0-9]*)? | "." [0-9]+)
+  # UnsignedInt          ::= "0" | [1-9] NO_SPACE [0-9]*
+  # JSObject             ::= "{" (JSProperty ("," JSProperty)*)? "}"
+  JSObject:
+    begin: "\\{"
+    end: "\\}"
+    patterns:
+      - end: ",|(?=\\})"
+        patterns:
+          - include: "#JSProperty"
+  # JSProperty           ::= Key ":" JSLiteral
+  JSProperty:
+    begin: "([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')\\s*:"
+    patterns:
+      - include: "#JSLiteral"
+  # JSArray              ::= "[" (JSLiteral ("," JSLiteral)*)? "]"
+  JSArray:
+    begin: "\\["
+    end: "\\]"
+    patterns:
+      - end: ",|(?=\\])"
+        patterns:
+          - include: "#JSLiteral"
+  # StarSelection        ::= Alias? "*" SubSelection?
+  StarSelection:
+    begin: "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*\\*"
+    patterns:
+      - include: "#SubSelection"
+  # NO_SPACE             ::= !SpacesOrComments
+  # SpacesOrComments     ::= (Spaces | Comment)+
+  # Spaces               ::= (" " | "\t" | "\r" | "\n")+
+  # Comment              ::= "#" [^\n]*

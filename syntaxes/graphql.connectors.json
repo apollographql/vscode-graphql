@@ -70,7 +70,7 @@
       ]
     },
     "connect-body-argument": {
-      "begin": "\\s*(selection)(?:\\s*(:))",
+      "begin": "\\s*(body)(?:\\s*(:))",
       "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
       "beginCaptures": {
         "1": { "name": "variable.parameter.graphql" },

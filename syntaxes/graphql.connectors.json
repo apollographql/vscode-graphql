@@ -1,0 +1,13 @@
+{
+  "scopeName": "inline.connectors.graphql",
+  "injectionSelector": "L:meta.embedded.block.directive.graphql",
+  "patterns": [{ "include": "#graphql-connect-directive" }],
+  "repository": {
+    "graphql-connect-directive": {
+      "match": "(@connect)",
+      "captures": {
+        "1": { "name": "entity.name.function.directive.connect.graphql" }
+      }
+    }
+  }
+}

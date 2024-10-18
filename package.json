@@ -169,6 +169,13 @@
       },
       {
         "injectTo": [
+          "source.graphql"
+        ],
+        "scopeName": "inline.connectors.graphql",
+        "path": "./syntaxes/graphql.connectors.json"
+      },
+      {
+        "injectTo": [
           "source.js",
           "source.ts",
           "source.jsx",

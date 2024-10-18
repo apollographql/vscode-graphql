@@ -1,13 +1,105 @@
 {
   "scopeName": "inline.connectors.graphql",
-  "injectionSelector": "L:meta.embedded.block.directive.graphql",
-  "patterns": [{ "include": "#graphql-connect-directive" }],
+  "injectionSelector": "L:meta.embedded.block.directive.graphql -string -comment",
+  "patterns": [{ "include": "#connect-directive" }],
   "repository": {
-    "graphql-connect-directive": {
-      "match": "(@connect)",
-      "captures": {
-        "1": { "name": "entity.name.function.directive.connect.graphql" }
-      }
+    "connect-directive": {
+      "begin": "((@)\\s*(connect))",
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.directive.connect.graphql"
+        }
+      },
+      "patterns": [
+        { "include": "#connect-arguments" },
+        { "include": "source.graphql#graphql-comment" },
+        { "include": "source.graphql#literal-quasi-embedded" },
+        { "include": "source.graphql#graphql-skip-newlines" }
+      ]
+    },
+    "connect-arguments": {
+      "name": "meta.arguments.connect.graphql",
+      "begin": "\\s*(\\()",
+      "end": "\\s*(\\))",
+      "beginCaptures": {
+        "1": { "name": "meta.brace.round.directive.graphql" }
+      },
+      "endCaptures": {
+        "1": { "name": "meta.brace.round.directive.graphql" }
+      },
+      "patterns": [
+        { "include": "source.graphql#graphql-comment" },
+        { "include": "#connect-selection-argument" },
+        { "include": "#connect-body-argument" },
+        { "include": "source.graphql#graphql-argument" },
+        { "include": "source.graphql#literal-quasi-embedded" }
+      ]
+    },
+    "connect-selection-argument": {
+      "begin": "\\s*(selection)(?:\\s*(:))",
+      "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
+      "beginCaptures": {
+        "1": { "name": "variable.parameter.graphql" },
+        "2": { "name": "punctuation.colon.graphql" }
+      },
+      "endCaptures": {
+        "3": { "name": "punctuation.comma.graphql" }
+      },
+      "patterns": [
+        {
+          "begin": "\\s*+((\"))",
+          "end": "\\s*+(?:((\"))|(\n))",
+          "beginCaptures": {
+            "1": { "name": "string.quoted.double.graphql" },
+            "2": { "name": "punctuation.definition.string.begin.graphql" }
+          },
+          "endCaptures": {
+            "1": { "name": "string.quoted.double.graphql" },
+            "2": { "name": "punctuation.definition.string.end.graphql" },
+            "3": { "name": "invalid.illegal.newline.graphql" }
+          },
+          "patterns": [
+            { "include": "source.graphql#graphql-field" },
+            { "include": "source.graphql#graphql-comma" }
+          ]
+        },
+        { "include": "source.graphql#graphql-comment" },
+        { "include": "source.graphql#graphql-skip-newlines" }
+      ]
+    },
+    "connect-body-argument": {
+      "begin": "\\s*(selection)(?:\\s*(:))",
+      "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
+      "beginCaptures": {
+        "1": { "name": "variable.parameter.graphql" },
+        "2": { "name": "punctuation.colon.graphql" }
+      },
+      "endCaptures": {
+        "3": { "name": "punctuation.comma.graphql" }
+      },
+      "patterns": [
+        {
+          "begin": "\\s*+((\"))",
+          "end": "\\s*+(?:((\"))|(\n))",
+          "beginCaptures": {
+            "1": { "name": "string.quoted.double.graphql" },
+            "2": { "name": "punctuation.definition.string.begin.graphql" }
+          },
+          "endCaptures": {
+            "1": { "name": "string.quoted.double.graphql" },
+            "2": { "name": "punctuation.definition.string.end.graphql" },
+            "3": { "name": "invalid.illegal.newline.graphql" }
+          },
+          "patterns": [
+            { "include": "source.graphql#graphql-field" },
+            { "include": "source.graphql#graphql-comma" }
+          ]
+        },
+        { "include": "source.graphql#graphql-comment" },
+        { "include": "source.graphql#graphql-skip-newlines" }
+      ]
     }
   }
 }

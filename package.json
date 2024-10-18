@@ -260,11 +260,6 @@
         "url": "./schemas/apollo.config.schema.json"
       },
       {
-        "fileMatch": "apollo-router.yaml",
-        "_url": "https://github.com/apollographql/router-template/raw/main/.apollo/router_config_schema.json",
-        "url": "./schemas/router_config_schema.json"
-      },
-      {
         "fileMatch": "supergraph.yaml",
         "url": "./schemas/supergraph_config_schema.json"
       }

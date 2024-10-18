@@ -4,14 +4,31 @@
       "$ref": "#/definitions/baseConfig"
     },
     {
-      "type": "object",
-      "properties": {
-        "client": {
-          "$ref": "#/definitions/clientConfig"
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "client": {
+              "$ref": "#/definitions/clientConfig"
+            }
+          },
+          "required": [
+            "client"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "rover": {
+              "$ref": "#/definitions/roverConfig"
+            }
+          },
+          "required": [
+            "rover"
+          ],
+          "additionalProperties": false
         }
-      },
-      "required": [
-        "client"
       ]
     }
   ],
@@ -146,6 +163,36 @@
       "additionalProperties": false,
       "description": "Configuration for a Client project."
     },
+    "roverConfig": {
+      "type": "object",
+      "properties": {
+        "bin": {
+          "type": "string",
+          "description": "The path to your Rover binary. If omitted, will look in PATH."
+        },
+        "profile": {
+          "type": "string",
+          "description": "The name of the profile to use."
+        },
+        "supergraphConfig": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The path to your `supergraph.yaml` file. \nDefaults to a `supergraph.yaml` in the folder of your `apollo.config.json`, if there is one."
+        },
+        "extraArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Extra arguments to pass to the Rover CLI."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration for a federated project."
+    },
     "engineConfig": {
       "type": "object",
       "properties": {
@@ -172,6 +219,9 @@
         },
         "client": {
           "description": "Configuration for a Client project."
+        },
+        "rover": {
+          "description": "Configuration for a federated project."
         },
         "service": {
           "description": "This option is no longer supported, please remove it from your configuration file."

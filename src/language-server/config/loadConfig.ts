@@ -121,9 +121,11 @@ export async function loadConfig({
 
   let { config, filepath } = loadedConfig;
 
-  return parseApolloConfig(config, URI.file(resolve(filepath)), {
+  const finalConfig = parseApolloConfig(config, URI.file(resolve(filepath)), {
     apiKey,
     serviceName: nameFromKey,
     configPath: dirname(filepath),
   });
+  await finalConfig.verify();
+  return finalConfig;
 }

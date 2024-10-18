@@ -1,23 +1,7 @@
-let { loadConfig } = require("../");
-let { ClientConfig, RoverConfig } = require("../config");
+import { loadConfig } from "../";
+import { ClientConfig, RoverConfig } from "../config";
 import * as path from "path";
 import * as fs from "fs";
-
-async function withFeatureFlags(flags: string, fn: () => void) {
-  const FF = process.env.APOLLO_FEATURE_FLAGS;
-  try {
-    process.env.APOLLO_FEATURE_FLAGS = flags;
-    jest.resetModules();
-    ({ loadConfig } = require("../"));
-    ({ ClientConfig, RoverConfig } = require("../config"));
-    return await fn();
-  } finally {
-    process.env.APOLLO_FEATURE_FLAGS = FF;
-    jest.resetModules();
-    ({ loadConfig } = require("../"));
-    ({ ClientConfig, RoverConfig } = require("../config"));
-  }
-}
 
 const makeNestedDir = (dir: string) => {
   if (fs.existsSync(dir)) return;
@@ -109,25 +93,24 @@ Object {
 `);
     });
 
-    it("loads with rover defaults from different dir", () =>
-      withFeatureFlags("rover", async () => {
-        writeFilesToDir(dir, {
-          "apollo.config.js": `
+    it("loads with rover defaults from different dir", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.js": `
           module.exports = {
             rover: {
             }
           }
         `,
+      });
+      fs.mkdirSync(`${dir}/bin`);
+      fs.writeFileSync(`${dir}/bin/rover`, "", { mode: 0o755 });
+      let oldPath = process.env.PATH;
+      process.env.PATH = `${dir}/bin:${oldPath}`;
+      try {
+        const config = await loadConfig({
+          configPath: dirPath,
         });
-        fs.mkdirSync(`${dir}/bin`);
-        fs.writeFileSync(`${dir}/bin/rover`, "", { mode: 0o755 });
-        let oldPath = process.env.PATH;
-        process.env.PATH = `${dir}/bin:${oldPath}`;
-        try {
-          const config = await loadConfig({
-            configPath: dirPath,
-          });
-          expect(config?.rawConfig).toMatchInlineSnapshot(`
+        expect(config?.rawConfig).toMatchInlineSnapshot(`
 Object {
   "engine": Object {
     "endpoint": "https://graphql.api.apollographql.com/api/graphql",
@@ -138,10 +121,10 @@ Object {
   },
 }
 `);
-        } finally {
-          process.env.PATH = oldPath;
-        }
-      }));
+      } finally {
+        process.env.PATH = oldPath;
+      }
+    });
 
     it("[deprecated] loads config from package.json", async () => {
       writeFilesToDir(dir, {
@@ -280,7 +263,6 @@ client:
 
       await loadConfig({
         configPath: dirPath,
-        requireConfig: true, // this is what we're testing
       });
 
       expect(spy).toHaveBeenCalledWith(
@@ -299,7 +281,7 @@ client:
       }).catch((e: any) => e);
 
       expect(error.message).toMatch(
-        /Config needs to contain a 'client' field./i,
+        /Config needs to contain either 'client' or 'rover' fields/i,
       );
     });
   });
@@ -374,18 +356,17 @@ client:
       expect(config).toBeInstanceOf(ClientConfig);
     });
 
-    it("infers rover projects from config", () =>
-      withFeatureFlags("rover", async () => {
-        writeFilesToDir(dir, {
-          "apollo.config.js": `module.exports = { rover: { bin: "/usr/bin/env" } }`,
-        });
+    it("infers rover projects from config", async () => {
+      writeFilesToDir(dir, {
+        "apollo.config.js": `module.exports = { rover: { bin: "/usr/bin/env" } }`,
+      });
 
-        const config = await loadConfig({
-          configPath: dirPath,
-        });
+      const config = await loadConfig({
+        configPath: dirPath,
+      });
 
-        expect(config).toBeInstanceOf(RoverConfig);
-      }));
+      expect(config).toBeInstanceOf(RoverConfig);
+    });
   });
 
   describe("service name", () => {

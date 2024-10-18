@@ -1,26 +1,33 @@
-name: "GraphQL"
-scopeName: "source.connectors.jsonselection"
+# use 'js-yaml' to convert to json
+# npx js-yaml syntaxes/connectors.jsonselection.yaml >| syntaxes/connectors.jsonselection.json
+name: "Apollo Connectors JSONSelection"
+scopeName: "inline.connectors.jsonselection.graphql"
+injectionSelector: "L:meta.embedded.block.jsonselection.graphql -string -comment"
 patterns:
   - include: "#JSONSelection"
 repository:
   # JSONSelection        ::= NakedSubSelection | PathSelection
   JSONSelection:
+    name: "meta.JSONSelection"
     patterns:
       - include: "#NakedSubSelection"
       - include: "#PathSelection"
   # NakedSubSelection    ::= NamedSelection* StarSelection?
   NakedSubSelection:
+    name: "meta.NakedSubSelection"
     patterns:
       - include: "#NamedSelection"
       - include: "#StarSelection"
   # SubSelection         ::= "{" NakedSubSelection "}"
   SubSelection:
+    name: "meta.SubSelection"
     begin: "\\{"
     end: "\\}"
     patterns:
       - include: "#NakedSubSelection"
   # NamedSelection       ::= NamedPathSelection | NamedFieldSelection | NamedQuotedSelection | NamedGroupSelection
   NamedSelection:
+    name: "meta.NamedSelection"
     patterns:
       - include: "#NamedFieldSelection"
       - include: "#NamedQuotedSelection"
@@ -29,16 +36,19 @@ repository:
   # merged with NamedGroupSelection
   # NamedFieldSelection  ::= Alias? Identifier SubSelection?
   NamedFieldSelection:
+    name: "meta.NamedFieldSelection"
     begin: "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*([a-zA-Z][0-9a-zA-Z_]*)"
     patterns:
       - include: "#SubSelection"
   # NamedQuotedSelection ::= Alias StringLiteral SubSelection?
   NamedQuotedSelection:
+    name: "meta.NamedQuotedSelection"
     begin: "([a-zA-Z][0-9a-zA-Z_]*(:)\\s*(\"[^\"]*\"|'[^']*'))"
     patterns:
       - include: "#SubSelection"
   # NamedGroupSelection  ::= Alias SubSelection
   NamedPathOrGroupSelection:
+    name: "meta.NamedPathOrGroupSelection"
     begin: "([a-zA-Z][0-9a-zA-Z_]*(:)"
     patterns:
       - include: "#SubSelection"
@@ -46,23 +56,27 @@ repository:
   # Alias                ::= Identifier ":"
   # PathSelection        ::= (VarPath | KeyPath) SubSelection?
   PathSelection:
+    name: "meta.PathSelection"
     patterns:
       - include: "#VarPathWithSubSelection"
       - include: "#KeyPathWithSubSelection"
   # VarPath              ::= "$" (NO_SPACE Identifier)? PathStep*
   VarPathWithSubSelection:
+    name: "meta.VarPathWithSubSelection"
     begin: "\\$([a-zA-Z][0-9a-zA-Z_]*)?"
     patterns:
       - include: "#PathStep"
       - include: "#SubSelection"
   # KeyPath              ::= Key PathStep+
   KeyPathWithSubSelection:
+    name: "meta.KeyPathWithSubSelection"
     begin: "([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')\\s*"
     patterns:
       - include: "#PathStep"
       - include: "#SubSelection"
   # PathStep             ::= "." Key | "->" Identifier MethodArgs?
   PathStep:
+    name: "meta.PathStep"
     patterns:
       - match: "\\.([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')"
       - match: "->([a-zA-Z][0-9a-zA-Z_]*)"
@@ -73,6 +87,7 @@ repository:
   # StringLiteral        ::= "'" ("\\'" | [^'])* "'" | '"' ('\\"' | [^"])* '"'
   # MethodArgs           ::= "(" (JSLiteral ("," JSLiteral)*)? ")"
   MethodArgs:
+    name: "meta.MethodArgs"
     begin: "\\("
     end: "\\)"
     patterns:
@@ -81,6 +96,7 @@ repository:
           - include: "#JSLiteral"
   # JSLiteral            ::= JSPrimitive | JSObject | JSArray | PathSelection
   JSLiteral:
+    name: "meta.JSLiteral"
     patterns:
       - include: "#JSPrimitive"
       - include: "#JSObject"
@@ -88,14 +104,16 @@ repository:
       - include: "#PathSelection"
   # JSPrimitive          ::= StringLiteral | JSNumber | "true" | "false" | "null"
   JSPrimitive:
+    name: "meta.JSPrimitive"
     patterns:
       - match: '"[^"]*"|''[^'']*'''
       - match: "-?(0|[1-9][0-9]*)(\\.[0-9]*)?"
-      - match: "\\b(true|false|null)\\b"
+      - match: "true|false|null"
   # JSNumber             ::= "-"? (UnsignedInt ("." [0-9]*)? | "." [0-9]+)
   # UnsignedInt          ::= "0" | [1-9] NO_SPACE [0-9]*
   # JSObject             ::= "{" (JSProperty ("," JSProperty)*)? "}"
   JSObject:
+    name: "meta.JSObject"
     begin: "\\{"
     end: "\\}"
     patterns:
@@ -104,11 +122,13 @@ repository:
           - include: "#JSProperty"
   # JSProperty           ::= Key ":" JSLiteral
   JSProperty:
+    name: "meta.JSProperty"
     begin: "([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')\\s*:"
     patterns:
       - include: "#JSLiteral"
   # JSArray              ::= "[" (JSLiteral ("," JSLiteral)*)? "]"
   JSArray:
+    name: "meta.JSArray"
     begin: "\\["
     end: "\\]"
     patterns:
@@ -117,6 +137,7 @@ repository:
           - include: "#JSLiteral"
   # StarSelection        ::= Alias? "*" SubSelection?
   StarSelection:
+    name: "meta.StarSelection"
     begin: "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*\\*"
     patterns:
       - include: "#SubSelection"

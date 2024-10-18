@@ -176,6 +176,13 @@
       },
       {
         "injectTo": [
+          "source.graphql"
+        ],
+        "scopeName": "inline.connectors.jsonselection.graphql",
+        "path": "./syntaxes/connectors.jsonselection.json"
+      },
+      {
+        "injectTo": [
           "source.js",
           "source.ts",
           "source.jsx",

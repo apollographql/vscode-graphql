@@ -258,6 +258,10 @@
       {
         "fileMatch": "apollo.config.yaml",
         "url": "./schemas/apollo.config.schema.json"
+      },
+      {
+        "fileMatch": "supergraph.yaml",
+        "url": "./schemas/supergraph_config_schema.json"
       }
     ],
     "commands": [

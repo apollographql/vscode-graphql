@@ -32,6 +32,7 @@ import { GraphQLProject, DocumentUri, GraphQLProjectConfig } from "./base";
 import throttle from "lodash.throttle";
 import { FileSet } from "../fileSet";
 import { getSupportedExtensions } from "../utilities/languageIdForExtension";
+import { Debug } from "../utilities";
 
 const fileAssociations: { [extension: string]: string } = {
   ".graphql": "graphql",
@@ -90,6 +91,11 @@ export abstract class GraphQLInternalProject
         ...this.getRelativeLocalSchemaFilePaths(),
       ],
     });
+
+    Debug.info("intializing project with config file " + config.configURI);
+    Debug.info("includes: [" + includes.join(", ") + "]");
+    Debug.info("excludes: [" + excludes.join(", ") + "]");
+    Debug.info("found files: '" + this.fileSet.allFiles().join("','") + "'");
 
     this.schemaProvider = schemaProviderFromConfig(config, clientIdentity);
     const { engine } = config;

@@ -48,6 +48,7 @@ const fileAssociations: { [extension: string]: string } = {
   ".re": "reason",
   ".ex": "elixir",
   ".exs": "elixir",
+  ".ipynb": "python",
 };
 
 export interface GraphQLInternalProjectConfig extends GraphQLProjectConfig {

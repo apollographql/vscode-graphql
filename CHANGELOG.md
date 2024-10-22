@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.3.6
+
+### Patch Changes
+
+- [#216](https://github.com/apollographql/vscode-graphql/pull/216) [`1add31e0`](https://github.com/apollographql/vscode-graphql/commit/1add31e0e9bc2da92ea7c3a1c65206cc5d95bb68) Thanks [@phryneas](https://github.com/phryneas)! - Add JSON schema for `supergraph.yaml`.
+
 ## 2.3.5
 
 ### Patch Changes

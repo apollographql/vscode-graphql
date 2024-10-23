@@ -1,10 +1,12 @@
 # use 'js-yaml' to convert to json
 # npx js-yaml syntaxes/connectors.jsonselection.yaml >| syntaxes/connectors.jsonselection.json
 name: "Apollo Connectors JSONSelection"
-scopeName: "inline.connectors.jsonselection.graphql"
-injectionSelector: "L:meta.embedded.block.jsonselection.graphql -string -comment"
+scopeName: "source.apollo.jsonselection"
 patterns:
-  - include: "#JSONSelection"
+  - include: "#NamedSelection"
+  - include: "source.graphql#graphql-skip-newlines"
+  # should be
+#  - include: "#JSONSelection"
 repository:
   # JSONSelection        ::= NakedSubSelection | PathSelection
   JSONSelection:
@@ -20,9 +22,15 @@ repository:
       - include: "#StarSelection"
   # SubSelection         ::= "{" NakedSubSelection "}"
   SubSelection:
-    name: "meta.SubSelection"
-    begin: "\\{"
-    end: "\\}"
+    contentName: "meta.SubSelection"
+    begin: "({)"
+    end: "(})"
+    beginCaptures:
+      "1":
+        name: "punctuation.SubSelection.begin"
+    endCaptures:
+      "1":
+        name: "punctuation.SubSelection.end"
     patterns:
       - include: "#NakedSubSelection"
   # NamedSelection       ::= NamedPathSelection | NamedFieldSelection | NamedQuotedSelection | NamedGroupSelection
@@ -30,14 +38,22 @@ repository:
     name: "meta.NamedSelection"
     patterns:
       - include: "#NamedFieldSelection"
-      - include: "#NamedQuotedSelection"
-      - include: "#NamedPathOrGroupSelection"
+  #      - include: "#NamedQuotedSelection"
+  #      - include: "#NamedPathOrGroupSelection"
   # NamedPathSelection   ::= Alias PathSelection
   # merged with NamedGroupSelection
   # NamedFieldSelection  ::= Alias? Identifier SubSelection?
   NamedFieldSelection:
     name: "meta.NamedFieldSelection"
     begin: "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*([a-zA-Z][0-9a-zA-Z_]*)"
+    beginCaptures:
+      "1":
+        name: "variable.NamedFieldSelection.alias"
+      "2":
+        name: "punctuation.colon.NamedFieldSelection"
+      "3":
+        name: "variable.NamedFieldSelection.identifier"
+    end: "(?=.)"
     patterns:
       - include: "#SubSelection"
   # NamedQuotedSelection ::= Alias StringLiteral SubSelection?

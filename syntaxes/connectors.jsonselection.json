@@ -3,15 +3,22 @@
   "scopeName": "source.apollo.jsonselection",
   "patterns": [
     {
-      "include": "#JSONSelection"
+      "include": "#NamedSelection"
+    },
+    {
+      "include": "source.graphql#graphql-skip-newlines"
     }
   ],
   "repository": {
     "JSONSelection": {
       "name": "meta.JSONSelection",
       "patterns": [
-        { "include": "SubSelection" },
-        { "include": "source.graphql#graphql-selection-set" }
+        {
+          "include": "#NakedSubSelection"
+        },
+        {
+          "include": "#PathSelection"
+        }
       ]
     },
     "NakedSubSelection": {
@@ -26,9 +33,19 @@
       ]
     },
     "SubSelection": {
-      "name": "meta.SubSelection",
-      "begin": "\\{",
-      "end": "\\}",
+      "contentName": "meta.SubSelection",
+      "begin": "({)",
+      "end": "(})",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.SubSelection.begin"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.SubSelection.end"
+        }
+      },
       "patterns": [
         {
           "include": "#NakedSubSelection"
@@ -40,18 +57,24 @@
       "patterns": [
         {
           "include": "#NamedFieldSelection"
-        },
-        {
-          "include": "#NamedQuotedSelection"
-        },
-        {
-          "include": "#NamedPathOrGroupSelection"
         }
       ]
     },
     "NamedFieldSelection": {
       "name": "meta.NamedFieldSelection",
       "begin": "([a-zA-Z][0-9a-zA-Z_]*(:))?\\s*([a-zA-Z][0-9a-zA-Z_]*)",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.NamedFieldSelection.alias"
+        },
+        "2": {
+          "name": "punctuation.colon.NamedFieldSelection"
+        },
+        "3": {
+          "name": "variable.NamedFieldSelection.identifier"
+        }
+      },
+      "end": "(?=.)",
       "patterns": [
         {
           "include": "#SubSelection"

@@ -155,6 +155,13 @@
         "configuration": "./graphql.configuration.json"
       },
       {
+        "id": "apollo.jsonselection",
+        "filenames": [
+          "test.apollo.jsonselection"
+        ],
+        "configuration": "./apollo.jsonselection.configuration.json"
+      },
+      {
         "id": "jsonc",
         "filenames": [
           "apollo.config.json"
@@ -168,18 +175,19 @@
         "path": "./syntaxes/graphql.json"
       },
       {
-        "injectTo": [
-          "source.graphql"
-        ],
-        "scopeName": "inline.connectors.graphql",
-        "path": "./syntaxes/graphql.connectors.json"
+        "language": "apollo.jsonselection",
+        "scopeName": "source.apollo.jsonselection",
+        "path": "./syntaxes/connectors.jsonselection.json"
       },
       {
         "injectTo": [
           "source.graphql"
         ],
-        "scopeName": "inline.connectors.jsonselection.graphql",
-        "path": "./syntaxes/connectors.jsonselection.json"
+        "scopeName": "inline.connectors.graphql",
+        "path": "./syntaxes/graphql.connectors.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.jsonselection.graphql": "apollo.jsonselection"
+        }
       },
       {
         "injectTo": [

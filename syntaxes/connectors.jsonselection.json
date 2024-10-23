@@ -1,7 +1,6 @@
 {
   "name": "Apollo Connectors JSONSelection",
-  "scopeName": "inline.connectors.jsonselection.graphql",
-  "injectionSelector": "L:meta.embedded.block.jsonselection.graphql -string -comment",
+  "scopeName": "source.apollo.jsonselection",
   "patterns": [
     {
       "include": "#JSONSelection"
@@ -11,12 +10,8 @@
     "JSONSelection": {
       "name": "meta.JSONSelection",
       "patterns": [
-        {
-          "include": "#NakedSubSelection"
-        },
-        {
-          "include": "#PathSelection"
-        }
+        { "include": "SubSelection" },
+        { "include": "source.graphql#graphql-selection-set" }
       ]
     },
     "NakedSubSelection": {

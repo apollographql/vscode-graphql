@@ -18,6 +18,9 @@
         },
         {
           "include": "#NamedSelection"
+        },
+        {
+          "include": "#Comment"
         }
       ]
     },
@@ -38,6 +41,9 @@
       "patterns": [
         {
           "include": "#NamedSelection"
+        },
+        {
+          "include": "#Comment"
         }
       ]
     },
@@ -356,6 +362,15 @@
           "name": "punctuation.comma.LitArray.separator"
         }
       ]
+    },
+    "Comment": {
+      "name": "comment.line.jsonselection",
+      "match": "(\\s*)(#).*",
+      "captures": {
+        "1": {
+          "name": "punctuation.whitespace.comment.leading.jsonselection"
+        }
+      }
     },
     "JSONSelectionString": {
       "contentName": "string.quoted.JSONSelectionString",

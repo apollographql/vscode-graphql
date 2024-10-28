@@ -12,6 +12,7 @@ repository:
     patterns:
       - include: "#PathSelection"
       - include: "#NamedSelection"
+      - include: "#Comment"
   # SubSelection         ::= "{" NamedSelection* "}"
   SubSelection:
     name: "meta.SubSelection"
@@ -25,6 +26,7 @@ repository:
         name: "punctuation.SubSelection.close"
     patterns:
       - include: "#NamedSelection"
+      - include: "#Comment"
   # NamedSelection       ::= NamedPathSelection | PathWithSubSelection | NamedFieldSelection | NamedGroupSelection
   NamedSelection:
     name: "meta.NamedSelection"
@@ -232,6 +234,12 @@ repository:
   # SpacesOrComments     ::= (Spaces | Comment)+
   # Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+
   # Comment              ::= "#" [^\n]*
+  Comment:
+    name: "comment.line.jsonselection"
+    match: "(\\s*)(#).*"
+    captures:
+      "1":
+        name: "punctuation.whitespace.comment.leading.jsonselection"
 
   # additional rules used for strings, e.g. in `POST: "/foo/bar/{$id}"`
   JSONSelectionString:

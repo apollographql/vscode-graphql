@@ -32,13 +32,30 @@
       "patterns": [
         { "include": "source.graphql#graphql-comment" },
         { "include": "#connect-jsonselection-argument" },
+        {
+          "begin": "\\s*(http)(?:\\s*(:))",
+          "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
+          "beginCaptures": {
+            "1": { "name": "variable.parameter.graphql" },
+            "2": { "name": "punctuation.colon.graphql" }
+          },
+          "endCaptures": {
+            "3": { "name": "punctuation.comma.graphql" }
+          },
+          "patterns": [
+            { "include": "#connect-arguments" },
+            { "include": "source.graphql#graphql-comment" },
+            { "include": "source.graphql#literal-quasi-embedded" },
+            { "include": "source.graphql#graphql-skip-newlines" }
+          ]
+        },
         { "include": "source.graphql#graphql-argument" },
         { "include": "source.graphql#literal-quasi-embedded" }
       ]
     },
     "connect-jsonselection-argument": {
       "name": "meta.argument.connect.jsonselection.graphql",
-      "begin": "\\s*(selection)(?:\\s*(:))",
+      "begin": "\\s*(selection|body)(?:\\s*(:))",
       "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
       "beginCaptures": {
         "1": { "name": "variable.parameter.graphql" },

@@ -14,7 +14,7 @@
       "name": "meta.JSONSelection",
       "patterns": [
         {
-          "include": "#VarPath"
+          "include": "#PathSelection"
         },
         {
           "include": "#NamedSelection"
@@ -108,6 +108,9 @@
     "PathWithOrWithoutSubSelection": {
       "patterns": [
         {
+          "include": "#ExprPath"
+        },
+        {
           "include": "#VarPath"
         },
         {
@@ -115,9 +118,6 @@
         },
         {
           "include": "#AtPath"
-        },
-        {
-          "include": "#ExprPath"
         }
       ]
     },

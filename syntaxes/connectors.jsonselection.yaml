@@ -10,8 +10,7 @@ repository:
   JSONSelection:
     name: "meta.JSONSelection"
     patterns:
-      - include: "#VarPath" #temp
-      #- include: "#PathSelection"
+      - include: "#PathSelection"
       - include: "#NamedSelection"
   # SubSelection         ::= "{" NamedSelection* "}"
   SubSelection:
@@ -73,10 +72,10 @@ repository:
       - include: "#PathWithOrWithoutSubSelection"
   PathWithOrWithoutSubSelection:
     patterns:
+      - include: "#ExprPath"
       - include: "#VarPath"
       - include: "#KeyPath"
       - include: "#AtPath"
-      - include: "#ExprPath"
   # VarPath              ::= "$" (NO_SPACE Identifier)? PathStep*
   VarPath:
     begin: "(\\$)([a-zA-Z][0-9a-zA-Z_]*)?(?!\\w)"

@@ -51,10 +51,16 @@
       "name": "meta.NamedSelection",
       "patterns": [
         {
+          "include": "#PathWithSubSelection"
+        },
+        {
           "include": "#NamedFieldSelection"
         },
         {
           "include": "#NamedPathSelection"
+        },
+        {
+          "include": "#NamedGroupSelection"
         }
       ]
     },

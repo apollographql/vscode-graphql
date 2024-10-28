@@ -32,6 +32,7 @@
       "patterns": [
         { "include": "source.graphql#graphql-comment" },
         { "include": "#connect-jsonselection-argument" },
+        { "include": "#connect-string-jsonselection-argument" },
         {
           "begin": "\\s*(http)(?:\\s*(:))",
           "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
@@ -83,6 +84,23 @@
             }
           ]
         },
+        { "include": "source.graphql#graphql-skip-newlines" }
+      ]
+    },
+    "connect-string-jsonselection-argument": {
+      "name": "meta.argument.connect.string.jsonselection.graphql",
+      "contentName": "meta.embedded.block.string.jsonselection.graphql",
+      "begin": "\\s*(GET|POST)(?:\\s*(:))",
+      "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|[\\)}]))|\\s*(,)",
+      "beginCaptures": {
+        "1": { "name": "variable.parameter.graphql" },
+        "2": { "name": "punctuation.colon.graphql" }
+      },
+      "endCaptures": {
+        "3": { "name": "punctuation.comma.graphql" }
+      },
+      "patterns": [
+        { "include": "source.apollo.jsonselection#JSONSelectionString" },
         { "include": "source.graphql#graphql-skip-newlines" }
       ]
     }

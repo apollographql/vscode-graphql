@@ -232,3 +232,31 @@ repository:
   # SpacesOrComments     ::= (Spaces | Comment)+
   # Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+
   # Comment              ::= "#" [^\n]*
+
+  # additional rules used for strings, e.g. in `POST: "/foo/bar/{$id}"`
+  JSONSelectionString:
+    contentName: string.quoted.JSONSelectionString
+    begin: '(("))'
+    beginCaptures:
+      "1":
+        name: "string.quoted.double.graphql"
+      "2":
+        name: "punctuation.definition.string.begin.graphql"
+    end: '(("))'
+    endCaptures:
+      "1":
+        name: "string.quoted.double.graphql"
+      "2":
+        name": "punctuation.definition.string.end.graphql"
+    patterns:
+      - name: "meta.JSONSelectionString.embedded"
+        begin: "\\s*({)"
+        beginCaptures:
+          "1":
+            name: "punctuation.JSONSelectionString.open"
+        end: "\\s*(})"
+        endCaptures:
+          "1":
+            name: "punctuation.JSONSelectionString.close"
+        patterns:
+          - include: "#PathSelection"

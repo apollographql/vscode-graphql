@@ -29,7 +29,9 @@
     "format": "prettier --write .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:extension": "node src/__e2e__/runTests.js",
-    "test:textmate": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
+    "test:textmate": "npm run test:textmate-ts && npm run test:textmate-jsonselection",
+    "test:textmate-ts": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
+    "test:textmate-jsonselection": "npx vscode-tmgrammar-snap -s source.apollo.jsonselection src/__tests__/fixtures/textmate/*.jsonselection",
     "codegen": "graphql-codegen",
     "vscode:prepublish": "npm run build:production"
   },

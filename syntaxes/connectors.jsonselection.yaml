@@ -39,7 +39,7 @@ repository:
       - include: "#NamedGroupSelection"
   # NamedPathSelection   ::= Alias PathSelection
   NamedPathSelection:
-    begin: "\\b([a-zA-Z][0-9a-zA-Z_]*)\\s*(:)"
+    begin: "\\b([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:)"
     beginCaptures:
       "1":
         name: "string.unquoted.NamedPathSelection.alias"
@@ -51,7 +51,7 @@ repository:
       - include: "#PathSelection"
   # NamedFieldSelection  ::= Alias? Key SubSelection?
   NamedFieldSelection:
-    begin: "\\b(?:([a-zA-Z][0-9a-zA-Z_]*)\\s*(:))?\\s*([a-zA-Z][0-9a-zA-Z_]*)\\b(?!\\s*:)"
+    begin: "\\b(?:([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:))?\\s*([a-zA-Z_][0-9a-zA-Z_]*)\\b(?!\\s*:)"
     beginCaptures:
       "1":
         name: "string.unquoted.NamedFieldSelection.alias"
@@ -82,7 +82,7 @@ repository:
       - include: "#AtPath"
   # VarPath              ::= "$" (NO_SPACE Identifier)? PathStep*
   VarPath:
-    begin: "(\\$)([a-zA-Z][0-9a-zA-Z_]*)?(?!\\w)"
+    begin: "(\\$)([a-zA-Z_][0-9a-zA-Z_]*)?(?!\\w)"
     beginCaptures:
       "1":
         name: "variable.VarPath.dollar"
@@ -94,7 +94,7 @@ repository:
       - include: "#PathStep"
   # KeyPath              ::= Key PathStep+
   KeyPath:
-    begin: '([a-zA-Z][0-9a-zA-Z_]*|"[^"]*"|''[^'']*'')'
+    begin: '([a-zA-Z_][0-9a-zA-Z_]*|"[^"]*"|''[^'']*'')'
     beginCaptures:
       "1":
         name: "variable.KeyPath.key.identifier"
@@ -135,7 +135,7 @@ repository:
       - include: "#PathStep"
   # PathStep             ::= "." Key | "->" Identifier MethodArgs?
   PathStep:
-    begin: "(\\.)([a-zA-Z][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')|(->)([a-zA-Z][0-9a-zA-Z_]*)"
+    begin: "(\\.)([a-zA-Z_][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')|(->)([a-zA-Z_][0-9a-zA-Z_]*)"
     end: "(?=.)"
     applyEndPatternLast: 1
     beginCaptures:
@@ -207,7 +207,7 @@ repository:
   # LitProperty          ::= Key ":" LitExpr
   LitProperty:
     name: "meta.LitProperty"
-    begin: "\\b([a-zA-Z][0-9a-zA-Z_]*)\\s*(:)\\s*"
+    begin: "\\b([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:)\\s*"
     beginCaptures:
       "1":
         name: "variable.LitProperty.key"

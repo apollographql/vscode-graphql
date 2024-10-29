@@ -348,9 +348,9 @@
 #                      ^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
 #                            ^ source.apollo.jsonselection
 >__typename: $("Product")
-#^^ source.apollo.jsonselection
-#  ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^^ source.apollo.jsonselection
+#^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#          ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#           ^ source.apollo.jsonselection
 #            ^ source.apollo.jsonselection variable.ExprPath.dollar
 #             ^ source.apollo.jsonselection meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.open
 #              ^^^^^^^^^ source.apollo.jsonselection meta.ExprPathArgs string.quoted.LitString
@@ -414,9 +414,9 @@
 ># $->echo("give me this string"), or wrapping the input value.
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >__typename: $->echo("Book")
-#^^ source.apollo.jsonselection
-#  ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^^ source.apollo.jsonselection
+#^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#          ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#           ^ source.apollo.jsonselection
 #            ^ source.apollo.jsonselection variable.ExprPath.dollar
 #             ^^ source.apollo.jsonselection punctuation.PathStep.arrow
 #               ^^^^ source.apollo.jsonselection variable.PathStep.identifier
@@ -515,9 +515,9 @@
 ># [<default>] array as the final argument guarantees a default value.
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >__typename: kind->match(
-#^^ source.apollo.jsonselection
-#  ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^^ source.apollo.jsonselection
+#^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#          ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#           ^ source.apollo.jsonselection
 #            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 #                ^^ source.apollo.jsonselection
 #                  ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
@@ -550,9 +550,9 @@
 ># easy, since the last pair can be [true, <default>].
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >__typename: kind->matchIf(
-#^^ source.apollo.jsonselection
-#  ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^^ source.apollo.jsonselection
+#^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#          ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#           ^ source.apollo.jsonselection
 #            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 #                ^^ source.apollo.jsonselection
 #                  ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key

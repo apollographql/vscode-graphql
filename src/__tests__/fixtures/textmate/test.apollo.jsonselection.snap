@@ -2,134 +2,156 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >
 >id
-#^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >name
-#^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >abc: some.nested.path { a b c }
-#^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#   ^^ source.apollo.jsonselection
-#     ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#         ^ source.apollo.jsonselection variable.PathStep.dot
-#          ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                ^ source.apollo.jsonselection variable.PathStep.dot
-#                 ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                     ^^^ source.apollo.jsonselection
-#                        ^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                         ^ source.apollo.jsonselection
-#                          ^ source.apollo.jsonselection variable.NamedFieldSelection.key
-#                           ^ source.apollo.jsonselection
-#                            ^ source.apollo.jsonselection variable.NamedFieldSelection.key
-#                             ^^ source.apollo.jsonselection
+#^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#   ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#    ^ source.apollo.jsonselection
+#     ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#         ^ source.apollo.jsonselection
+#          ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^ source.apollo.jsonselection
+#                 ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                     ^ source.apollo.jsonselection meta.SubSelection
+#                      ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.open
+#                       ^ source.apollo.jsonselection meta.SubSelection
+#                        ^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                         ^ source.apollo.jsonselection meta.SubSelection
+#                          ^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                           ^ source.apollo.jsonselection meta.SubSelection
+#                            ^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                             ^ source.apollo.jsonselection meta.SubSelection
+#                              ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.close
 >id
-#^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >name
-#^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >some.nested.path { a b c }
-#^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#    ^ source.apollo.jsonselection variable.PathStep.dot
-#     ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#           ^ source.apollo.jsonselection variable.PathStep.dot
-#            ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                ^^^ source.apollo.jsonselection
-#                   ^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                    ^ source.apollo.jsonselection
-#                     ^ source.apollo.jsonselection variable.NamedFieldSelection.key
-#                      ^ source.apollo.jsonselection
-#                       ^ source.apollo.jsonselection variable.NamedFieldSelection.key
-#                        ^^ source.apollo.jsonselection
+#^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#    ^ source.apollo.jsonselection
+#     ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#           ^ source.apollo.jsonselection
+#            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^ source.apollo.jsonselection meta.SubSelection
+#                 ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.open
+#                  ^ source.apollo.jsonselection meta.SubSelection
+#                   ^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                    ^ source.apollo.jsonselection meta.SubSelection
+#                     ^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                      ^ source.apollo.jsonselection meta.SubSelection
+#                       ^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                        ^ source.apollo.jsonselection meta.SubSelection
+#                         ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.close
 >names: {
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#     ^^^ source.apollo.jsonselection
+#^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#     ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#      ^^ source.apollo.jsonselection
 >  first: firstName
 #^^ source.apollo.jsonselection
-#  ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection
-#         ^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#  ^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#       ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#        ^ source.apollo.jsonselection
+#         ^^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >  last: lastName
 #^^ source.apollo.jsonselection
-#  ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^ source.apollo.jsonselection
-#        ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#  ^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#       ^ source.apollo.jsonselection
+#        ^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >}
 #^ source.apollo.jsonselection
 ># Also allowed:
 #^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >firstName
-#^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >lastName
-#^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >postID
-#^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >title
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >author: {
-#^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^^ source.apollo.jsonselection
+#^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#       ^^ source.apollo.jsonselection
 >  id: authorID
 #^^ source.apollo.jsonselection
-#  ^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#    ^^ source.apollo.jsonselection
-#      ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#  ^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#    ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#     ^ source.apollo.jsonselection
+#      ^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >  name: authorName
 #^^ source.apollo.jsonselection
-#  ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^ source.apollo.jsonselection
-#        ^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#  ^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#       ^ source.apollo.jsonselection
+#        ^^^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >}
 #^ source.apollo.jsonselection
 >      title
 #^^^^^^ source.apollo.jsonselection
-#      ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#      ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >      year: publication.year
 #^^^^^^ source.apollo.jsonselection
-#      ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^^ source.apollo.jsonselection
-#            ^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                       ^ source.apollo.jsonselection variable.PathStep.dot
-#                        ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#      ^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#          ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#           ^ source.apollo.jsonselection
+#            ^^^^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                       ^ source.apollo.jsonselection
+#                        ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >      authorName: author.name
 #^^^^^^ source.apollo.jsonselection
-#      ^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                ^^ source.apollo.jsonselection
-#                  ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                        ^ source.apollo.jsonselection variable.PathStep.dot
-#                         ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#      ^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#                ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#                 ^ source.apollo.jsonselection
+#                  ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                        ^ source.apollo.jsonselection
+#                         ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >id
-#^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >created
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >model
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >
 ># The { role content } SubSelection is mandatory so the output keys
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 ># can be statically determined:
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >choices->first.message { role content }
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#         ^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#              ^ source.apollo.jsonselection variable.PathStep.dot
-#               ^^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                      ^^^ source.apollo.jsonselection
-#                         ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                             ^ source.apollo.jsonselection
-#                              ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
-#                                     ^^ source.apollo.jsonselection
+#^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#       ^^ source.apollo.jsonselection
+#         ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#              ^ source.apollo.jsonselection
+#               ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                      ^ source.apollo.jsonselection meta.SubSelection
+#                       ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.open
+#                        ^ source.apollo.jsonselection meta.SubSelection
+#                         ^^^^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                             ^ source.apollo.jsonselection meta.SubSelection
+#                              ^^^^^^^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                                     ^ source.apollo.jsonselection meta.SubSelection
+#                                      ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.close
 >
 ># Multiple PathWithSubSelections are allowed in the same SubSelection:
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >choices->last.message { lastContent: content }
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#         ^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#             ^ source.apollo.jsonselection variable.PathStep.dot
-#              ^^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                     ^^^ source.apollo.jsonselection
-#                        ^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                                   ^^ source.apollo.jsonselection
-#                                     ^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                                            ^^ source.apollo.jsonselection
+#^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#       ^^ source.apollo.jsonselection
+#         ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#             ^ source.apollo.jsonselection
+#              ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                     ^ source.apollo.jsonselection meta.SubSelection
+#                      ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.open
+#                       ^ source.apollo.jsonselection meta.SubSelection
+#                        ^^^^^^^^^^^ source.apollo.jsonselection meta.SubSelection string.unquoted.NamedFieldSelection.alias
+#                                   ^ source.apollo.jsonselection meta.SubSelection punctuation.colon.NamedFieldSelection
+#                                    ^ source.apollo.jsonselection meta.SubSelection
+#                                     ^^^^^^^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                                            ^ source.apollo.jsonselection meta.SubSelection
+#                                             ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.close
 >      # For some reason /users/{$args.id} returns an object with name
 #^^^^^^ source.apollo.jsonselection comment.line.jsonselection punctuation.whitespace.comment.leading.jsonselection
 #      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
@@ -138,95 +160,113 @@
 #      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >      id: $args.id
 #^^^^^^ source.apollo.jsonselection
-#      ^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#        ^^ source.apollo.jsonselection
+#      ^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#        ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#         ^ source.apollo.jsonselection
 #          ^ source.apollo.jsonselection variable.ExprPath.dollar
-#           ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#               ^ source.apollo.jsonselection variable.PathStep.dot
-#                ^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#           ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#               ^ source.apollo.jsonselection
+#                ^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >      name
 #^^^^^^ source.apollo.jsonselection
-#      ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#      ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >      email
 #^^^^^^ source.apollo.jsonselection
-#      ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#      ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >id name friends: friend_ids { id: $ }
-#^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 #  ^ source.apollo.jsonselection
 #   ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 #       ^ source.apollo.jsonselection
-#        ^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#               ^^ source.apollo.jsonselection
-#                 ^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                           ^^^ source.apollo.jsonselection
-#                              ^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                                ^^ source.apollo.jsonselection
-#                                  ^ source.apollo.jsonselection variable.ExprPath.dollar
-#                                   ^^ source.apollo.jsonselection
+#        ^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#               ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#                ^ source.apollo.jsonselection
+#                 ^^^^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                           ^ source.apollo.jsonselection meta.SubSelection
+#                            ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.open
+#                             ^ source.apollo.jsonselection meta.SubSelection
+#                              ^^ source.apollo.jsonselection meta.SubSelection string.unquoted.NamedPathSelection.alias
+#                                ^ source.apollo.jsonselection meta.SubSelection punctuation.colon.NamedPathSelection
+#                                 ^ source.apollo.jsonselection meta.SubSelection
+#                                  ^ source.apollo.jsonselection meta.SubSelection variable.ExprPath.dollar
+#                                   ^ source.apollo.jsonselection meta.SubSelection
+#                                    ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.close
 >items: data.nested.items { id name }
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#     ^^ source.apollo.jsonselection
-#       ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#           ^ source.apollo.jsonselection variable.PathStep.dot
-#            ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                  ^ source.apollo.jsonselection variable.PathStep.dot
-#                   ^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                        ^^^ source.apollo.jsonselection
-#                           ^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                             ^ source.apollo.jsonselection
-#                              ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
-#                                  ^^ source.apollo.jsonselection
+#^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#     ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#      ^ source.apollo.jsonselection
+#       ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#           ^ source.apollo.jsonselection
+#            ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                  ^ source.apollo.jsonselection
+#                   ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                        ^ source.apollo.jsonselection meta.SubSelection
+#                         ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.open
+#                          ^ source.apollo.jsonselection meta.SubSelection
+#                           ^^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                             ^ source.apollo.jsonselection meta.SubSelection
+#                              ^^^^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                                  ^ source.apollo.jsonselection meta.SubSelection
+#                                   ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.close
 >firstItem: data.nested.items->first { id name }
-#^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#         ^^ source.apollo.jsonselection
-#           ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#               ^ source.apollo.jsonselection variable.PathStep.dot
-#                ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                      ^ source.apollo.jsonselection variable.PathStep.dot
-#                       ^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                            ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                              ^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                                   ^^^ source.apollo.jsonselection
-#                                      ^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                                        ^ source.apollo.jsonselection
-#                                         ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
-#                                             ^^ source.apollo.jsonselection
+#^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#         ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#          ^ source.apollo.jsonselection
+#           ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#               ^ source.apollo.jsonselection
+#                ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                      ^ source.apollo.jsonselection
+#                       ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                            ^^ source.apollo.jsonselection
+#                              ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                                   ^ source.apollo.jsonselection meta.SubSelection
+#                                    ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.open
+#                                     ^ source.apollo.jsonselection meta.SubSelection
+#                                      ^^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                                        ^ source.apollo.jsonselection meta.SubSelection
+#                                         ^^^^ source.apollo.jsonselection meta.SubSelection variable.NamedFieldSelection.key
+#                                             ^ source.apollo.jsonselection meta.SubSelection
+#                                              ^ source.apollo.jsonselection meta.SubSelection punctuation.SubSelection.close
 >firstItemName: data.nested.items->first.name
-#^^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#             ^^ source.apollo.jsonselection
-#               ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                   ^ source.apollo.jsonselection variable.PathStep.dot
-#                    ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                          ^ source.apollo.jsonselection variable.PathStep.dot
-#                           ^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                                  ^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                                       ^ source.apollo.jsonselection variable.PathStep.dot
-#                                        ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#^^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#             ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#              ^ source.apollo.jsonselection
+#               ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                   ^ source.apollo.jsonselection
+#                    ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                          ^ source.apollo.jsonselection
+#                           ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                                ^^ source.apollo.jsonselection
+#                                  ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                                       ^ source.apollo.jsonselection
+#                                        ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >$.data { id name }
 #^ source.apollo.jsonselection variable.ExprPath.dollar
 # ^ source.apollo.jsonselection variable.PathStep.dot
 #  ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
 #      ^^^ source.apollo.jsonselection
-#         ^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#         ^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 #           ^ source.apollo.jsonselection
 #            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 #                ^^ source.apollo.jsonselection
 >id: data.id
-#^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#  ^^ source.apollo.jsonselection
-#    ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#        ^ source.apollo.jsonselection variable.PathStep.dot
-#         ^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#  ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#   ^ source.apollo.jsonselection
+#    ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#        ^ source.apollo.jsonselection
+#         ^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >name: data.name
-#^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#    ^^ source.apollo.jsonselection
-#      ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^ source.apollo.jsonselection variable.PathStep.dot
-#           ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#    ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#     ^ source.apollo.jsonselection
+#      ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#          ^ source.apollo.jsonselection
+#           ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >all: $.first->and($.second)->and($.third)
-#^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#   ^^ source.apollo.jsonselection
+#^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#   ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#    ^ source.apollo.jsonselection
 #     ^ source.apollo.jsonselection variable.ExprPath.dollar
 #      ^ source.apollo.jsonselection variable.PathStep.dot
 #       ^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -245,76 +285,68 @@
 #                                   ^^^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                                        ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >wrapped: field->echo({ fieldValue: @ })
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection
-#         ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#              ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                ^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                    ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                     ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject punctuation.LitObject.open
-#                      ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject
-#                       ^^^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty variable.LitProperty.key
-#                                 ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty punctuation.colon.LitProperty
-#                                  ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty
-#                                   ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty variable.AtPath.at
-#                                    ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject
-#                                     ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject punctuation.LitObject.close
-#                                      ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#       ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#        ^ source.apollo.jsonselection
+#         ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#              ^^ source.apollo.jsonselection
+#                ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                    ^^^ source.apollo.jsonselection
+#                       ^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#                                 ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#                                  ^ source.apollo.jsonselection
+#                                   ^ source.apollo.jsonselection variable.AtPath.at
+#                                    ^^^ source.apollo.jsonselection
 >children: parent->echo([@.child1, @.child2, @.child3])
-#^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#        ^^ source.apollo.jsonselection
-#          ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                  ^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                      ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                       ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.open
-#                        ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.AtPath.at
-#                         ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.dot
-#                          ^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.key.identifier
-#                                ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.comma.LitArray.separator
-#                                 ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#                                  ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.AtPath.at
-#                                   ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.dot
-#                                    ^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.key.identifier
-#                                          ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.comma.LitArray.separator
-#                                           ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#                                            ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.AtPath.at
-#                                             ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.dot
-#                                              ^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.key.identifier
-#                                                    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.close
-#                                                     ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#        ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#         ^ source.apollo.jsonselection
+#          ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^^ source.apollo.jsonselection
+#                  ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                      ^^ source.apollo.jsonselection
+#                        ^ source.apollo.jsonselection variable.AtPath.at
+#                         ^ source.apollo.jsonselection variable.PathStep.dot
+#                          ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#                                ^^ source.apollo.jsonselection
+#                                  ^ source.apollo.jsonselection variable.AtPath.at
+#                                   ^ source.apollo.jsonselection variable.PathStep.dot
+#                                    ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#                                          ^^ source.apollo.jsonselection
+#                                            ^ source.apollo.jsonselection variable.AtPath.at
+#                                             ^ source.apollo.jsonselection variable.PathStep.dot
+#                                              ^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#                                                    ^^ source.apollo.jsonselection
 >doubled: numbers->map({ value: @->mul(2) })
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection
-#         ^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                  ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                     ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                      ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject punctuation.LitObject.open
-#                       ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject
-#                        ^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty variable.LitProperty.key
-#                             ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty punctuation.colon.LitProperty
-#                              ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty
-#                               ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty variable.AtPath.at
-#                                ^^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty punctuation.PathStep.arrow
-#                                  ^^^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty variable.PathStep.identifier
-#                                     ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                                      ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty meta.MethodArgs constant.numeric.LitNumber
-#                                       ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty meta.MethodArgs punctuation.brace.round.MethodArgs.close
-#                                        ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject
-#                                         ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject punctuation.LitObject.close
-#                                          ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#       ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#        ^ source.apollo.jsonselection
+#         ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^^ source.apollo.jsonselection
+#                  ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                     ^^^ source.apollo.jsonselection
+#                        ^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#                             ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#                              ^ source.apollo.jsonselection
+#                               ^ source.apollo.jsonselection variable.AtPath.at
+#                                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
+#                                  ^^^ source.apollo.jsonselection variable.PathStep.identifier
+#                                     ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
+#                                      ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
+#                                       ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#                                        ^^^ source.apollo.jsonselection
 >types: values->map(@->typeof)
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#     ^^ source.apollo.jsonselection
-#       ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#             ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#               ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                  ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                   ^ source.apollo.jsonselection meta.MethodArgs variable.AtPath.at
-#                    ^^ source.apollo.jsonselection meta.MethodArgs punctuation.PathStep.arrow
-#                      ^^^^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.identifier
-#                            ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#     ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#      ^ source.apollo.jsonselection
+#       ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#             ^^ source.apollo.jsonselection
+#               ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                  ^ source.apollo.jsonselection
+#                   ^ source.apollo.jsonselection variable.AtPath.at
+#                    ^^ source.apollo.jsonselection punctuation.PathStep.arrow
+#                      ^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#                            ^ source.apollo.jsonselection
 >__typename: $("Product")
 #^^ source.apollo.jsonselection
 #  ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
@@ -324,15 +356,17 @@
 #              ^^^^^^^^^ source.apollo.jsonselection meta.ExprPathArgs string.quoted.LitString
 #                       ^ source.apollo.jsonselection meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.close
 >condition: $(true)
-#^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#         ^^ source.apollo.jsonselection
+#^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#         ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#          ^ source.apollo.jsonselection
 #           ^ source.apollo.jsonselection variable.ExprPath.dollar
 #            ^ source.apollo.jsonselection meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.open
 #             ^^^^ source.apollo.jsonselection meta.ExprPathArgs constant.language.LitPrimitive
 #                 ^ source.apollo.jsonselection meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.close
 >alphabetSlice: $("abcdefghijklmnopqrstuvwxyz")->slice($args.start, $args.end)
-#^^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#             ^^ source.apollo.jsonselection
+#^^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#             ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#              ^ source.apollo.jsonselection
 #               ^ source.apollo.jsonselection variable.ExprPath.dollar
 #                ^ source.apollo.jsonselection meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.open
 #                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection meta.ExprPathArgs string.quoted.LitString
@@ -352,26 +386,27 @@
 #                                                                         ^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                                                                            ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >suffix: results.slice($(-1)->mul($args.suffixLength))
-#^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^ source.apollo.jsonselection
-#        ^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#               ^ source.apollo.jsonselection variable.PathStep.dot
-#                ^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
-#                     ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                      ^ source.apollo.jsonselection meta.MethodArgs variable.ExprPath.dollar
-#                       ^ source.apollo.jsonselection meta.MethodArgs meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.open
-#                        ^ source.apollo.jsonselection meta.MethodArgs meta.ExprPathArgs
-#                         ^ source.apollo.jsonselection meta.MethodArgs meta.ExprPathArgs constant.numeric.LitNumber
-#                          ^ source.apollo.jsonselection meta.MethodArgs meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.close
-#                           ^^ source.apollo.jsonselection meta.MethodArgs punctuation.PathStep.arrow
-#                             ^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.identifier
-#                                ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                                 ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs variable.ExprPath.dollar
-#                                  ^^^^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs variable.KeyPath.key.identifier
-#                                      ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs variable.PathStep.dot
-#                                       ^^^^^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs variable.PathStep.key.identifier
-#                                                   ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs punctuation.brace.round.MethodArgs.close
-#                                                    ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#       ^ source.apollo.jsonselection
+#        ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#               ^ source.apollo.jsonselection
+#                ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                     ^ source.apollo.jsonselection
+#                      ^ source.apollo.jsonselection variable.ExprPath.dollar
+#                       ^ source.apollo.jsonselection meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.open
+#                        ^ source.apollo.jsonselection meta.ExprPathArgs
+#                         ^ source.apollo.jsonselection meta.ExprPathArgs constant.numeric.LitNumber
+#                          ^ source.apollo.jsonselection meta.ExprPathArgs punctuation.brace.round.ExprPathArgs.close
+#                           ^^ source.apollo.jsonselection punctuation.PathStep.arrow
+#                             ^^^ source.apollo.jsonselection variable.PathStep.identifier
+#                                ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
+#                                 ^ source.apollo.jsonselection meta.MethodArgs variable.ExprPath.dollar
+#                                  ^^^^ source.apollo.jsonselection meta.MethodArgs variable.KeyPath.key.identifier
+#                                      ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.dot
+#                                       ^^^^^^^^^^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
+#                                                   ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#                                                    ^ source.apollo.jsonselection
 ># The ->echo method returns its first input argument as-is, ignoring
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 ># the input data. Useful for embedding literal values, as in
@@ -389,21 +424,18 @@
 #                    ^^^^^^ source.apollo.jsonselection meta.MethodArgs string.quoted.LitString
 #                          ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >wrapped: field->echo({ fieldValue: @ })
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection
-#         ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#              ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                ^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                    ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                     ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject punctuation.LitObject.open
-#                      ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject
-#                       ^^^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty variable.LitProperty.key
-#                                 ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty punctuation.colon.LitProperty
-#                                  ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty
-#                                   ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject meta.LitProperty variable.AtPath.at
-#                                    ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject
-#                                     ^ source.apollo.jsonselection meta.MethodArgs meta.LitObject punctuation.LitObject.close
-#                                      ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#       ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#        ^ source.apollo.jsonselection
+#         ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#              ^^ source.apollo.jsonselection
+#                ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                    ^^^ source.apollo.jsonselection
+#                       ^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#                                 ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#                                  ^ source.apollo.jsonselection
+#                                   ^ source.apollo.jsonselection variable.AtPath.at
+#                                    ^^^ source.apollo.jsonselection
 >
 ># Returns the type of the data as a string, e.g. "object", "array",
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
@@ -412,11 +444,12 @@
 ># "object" in JavaScript but "null" for our purposes.
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >typeOfValue: value->typeof
-#^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#           ^^ source.apollo.jsonselection
-#             ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                  ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                    ^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#           ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#            ^ source.apollo.jsonselection
+#             ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                  ^^ source.apollo.jsonselection
+#                    ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >
 ># When invoked against an array, ->map evaluates its first argument
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
@@ -429,46 +462,49 @@
 ># result without wrapping it in an array.
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >doubled: numbers->map(@->mul(2))
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection
-#         ^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                  ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                     ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                      ^ source.apollo.jsonselection meta.MethodArgs variable.AtPath.at
-#                       ^^ source.apollo.jsonselection meta.MethodArgs punctuation.PathStep.arrow
-#                         ^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.identifier
-#                            ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                             ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs constant.numeric.LitNumber
-#                              ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs punctuation.brace.round.MethodArgs.close
-#                               ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#       ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#        ^ source.apollo.jsonselection
+#         ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^^ source.apollo.jsonselection
+#                  ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                     ^ source.apollo.jsonselection
+#                      ^ source.apollo.jsonselection variable.AtPath.at
+#                       ^^ source.apollo.jsonselection punctuation.PathStep.arrow
+#                         ^^^ source.apollo.jsonselection variable.PathStep.identifier
+#                            ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
+#                             ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
+#                              ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#                               ^ source.apollo.jsonselection
 >types: values->map(@->typeof)
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#     ^^ source.apollo.jsonselection
-#       ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#             ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#               ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                  ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                   ^ source.apollo.jsonselection meta.MethodArgs variable.AtPath.at
-#                    ^^ source.apollo.jsonselection meta.MethodArgs punctuation.PathStep.arrow
-#                      ^^^^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.identifier
-#                            ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#     ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#      ^ source.apollo.jsonselection
+#       ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#             ^^ source.apollo.jsonselection
+#               ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                  ^ source.apollo.jsonselection
+#                   ^ source.apollo.jsonselection variable.AtPath.at
+#                    ^^ source.apollo.jsonselection punctuation.PathStep.arrow
+#                      ^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#                            ^ source.apollo.jsonselection
 >
 ># Returns true if the data is deeply equal to the first argument, false
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 ># otherwise. Equality is solely value-based (all JSON), no references.
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >isObject: value->typeof->eq("object")
-#^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#        ^^ source.apollo.jsonselection
-#          ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#               ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                 ^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                       ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                         ^^ source.apollo.jsonselection variable.PathStep.identifier
-#                           ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                            ^^^^^^^^ source.apollo.jsonselection meta.MethodArgs string.quoted.LitString
-#                                    ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#        ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#         ^ source.apollo.jsonselection
+#          ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#               ^^ source.apollo.jsonselection
+#                 ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                       ^^ source.apollo.jsonselection
+#                         ^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                           ^ source.apollo.jsonselection
+#                            ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                                    ^ source.apollo.jsonselection
 >
 ># Takes any number of pairs [candidate, value], and returns value for
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
@@ -482,35 +518,28 @@
 #^^ source.apollo.jsonselection
 #  ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
 #          ^^ source.apollo.jsonselection
-#            ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                  ^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                       ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
+#            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^^ source.apollo.jsonselection
+#                  ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                       ^ source.apollo.jsonselection
 >    ["dog", "Canine"],
-#^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.open
-#     ^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#          ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.comma.LitArray.separator
-#           ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#            ^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#                    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.close
-#                     ^ source.apollo.jsonselection meta.MethodArgs punctuation.comma.MethodArgs.separator
+#^^^^^ source.apollo.jsonselection
+#     ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#          ^^ source.apollo.jsonselection
+#            ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                    ^^ source.apollo.jsonselection
 >    ["cat", "Feline"],
-#^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.open
-#     ^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#          ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.comma.LitArray.separator
-#           ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#            ^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#                    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.close
-#                     ^ source.apollo.jsonselection meta.MethodArgs punctuation.comma.MethodArgs.separator
+#^^^^^ source.apollo.jsonselection
+#     ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#          ^^ source.apollo.jsonselection
+#            ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                    ^^ source.apollo.jsonselection
 >    ["Exotic"]
-#^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.open
-#     ^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#             ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.close
+#^^^^^ source.apollo.jsonselection
+#     ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#             ^ source.apollo.jsonselection
 >)
-#^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^ source.apollo.jsonselection
 >
 ># Like ->match, but expects the first element of each pair to evaluate
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
@@ -524,56 +553,49 @@
 #^^ source.apollo.jsonselection
 #  ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
 #          ^^ source.apollo.jsonselection
-#            ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                  ^^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                         ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
+#            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^^ source.apollo.jsonselection
+#                  ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                         ^ source.apollo.jsonselection
 >    [@->eq("dog"), "Canine"],
-#^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.open
-#     ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.AtPath.at
-#      ^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.PathStep.arrow
-#        ^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.identifier
-#          ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#           ^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray meta.MethodArgs string.quoted.LitString
-#                ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray meta.MethodArgs punctuation.brace.round.MethodArgs.close
-#                 ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.comma.LitArray.separator
-#                  ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#                   ^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#                           ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.close
-#                            ^ source.apollo.jsonselection meta.MethodArgs punctuation.comma.MethodArgs.separator
+#^^^^^ source.apollo.jsonselection
+#     ^ source.apollo.jsonselection variable.AtPath.at
+#      ^^ source.apollo.jsonselection punctuation.PathStep.arrow
+#        ^^ source.apollo.jsonselection variable.PathStep.identifier
+#          ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
+#           ^^^^^ source.apollo.jsonselection meta.MethodArgs string.quoted.LitString
+#                ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#                 ^^ source.apollo.jsonselection
+#                   ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                           ^^ source.apollo.jsonselection
 >    [@->eq("cat"), "Feline"],
-#^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.open
-#     ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.AtPath.at
-#      ^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.PathStep.arrow
-#        ^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray variable.PathStep.identifier
-#          ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#           ^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray meta.MethodArgs string.quoted.LitString
-#                ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray meta.MethodArgs punctuation.brace.round.MethodArgs.close
-#                 ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.comma.LitArray.separator
-#                  ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#                   ^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#                           ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.close
-#                            ^ source.apollo.jsonselection meta.MethodArgs punctuation.comma.MethodArgs.separator
+#^^^^^ source.apollo.jsonselection
+#     ^ source.apollo.jsonselection variable.AtPath.at
+#      ^^ source.apollo.jsonselection punctuation.PathStep.arrow
+#        ^^ source.apollo.jsonselection variable.PathStep.identifier
+#          ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
+#           ^^^^^ source.apollo.jsonselection meta.MethodArgs string.quoted.LitString
+#                ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#                 ^^ source.apollo.jsonselection
+#                   ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                           ^^ source.apollo.jsonselection
 >    [true, "Exotic"]
-#^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#    ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.open
-#     ^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray constant.language.LitPrimitive
-#         ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.comma.LitArray.separator
-#          ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray
-#           ^^^^^^^^ source.apollo.jsonselection meta.MethodArgs meta.LitArray string.quoted.LitString
-#                   ^ source.apollo.jsonselection meta.MethodArgs meta.LitArray punctuation.LitArray.close
+#^^^^^ source.apollo.jsonselection
+#     ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#         ^^ source.apollo.jsonselection
+#           ^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                   ^ source.apollo.jsonselection
 >)
-#^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^ source.apollo.jsonselection
 >
 ># Arithmetic methods, supporting both integers and floating point values,
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 ># similar to JavaScript.
 #^^^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >sum: $.a->add($.b)->add($.c)
-#^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#   ^^ source.apollo.jsonselection
+#^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#   ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#    ^ source.apollo.jsonselection
 #     ^ source.apollo.jsonselection variable.ExprPath.dollar
 #      ^ source.apollo.jsonselection variable.PathStep.dot
 #       ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -592,8 +614,9 @@
 #                          ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                           ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >difference: $.a->sub($.b)->sub($.c)
-#^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^^ source.apollo.jsonselection
+#^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#          ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#           ^ source.apollo.jsonselection
 #            ^ source.apollo.jsonselection variable.ExprPath.dollar
 #             ^ source.apollo.jsonselection variable.PathStep.dot
 #              ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -612,8 +635,9 @@
 #                                 ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                                  ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >product: $.a->mul($.b, $.c)
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection
+#^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#       ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#        ^ source.apollo.jsonselection
 #         ^ source.apollo.jsonselection variable.ExprPath.dollar
 #          ^ source.apollo.jsonselection variable.PathStep.dot
 #           ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -630,8 +654,9 @@
 #                         ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                          ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >quotient: $.a->div($.b)
-#^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#        ^^ source.apollo.jsonselection
+#^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#        ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#         ^ source.apollo.jsonselection
 #          ^ source.apollo.jsonselection variable.ExprPath.dollar
 #           ^ source.apollo.jsonselection variable.PathStep.dot
 #            ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -643,8 +668,9 @@
 #                     ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                      ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >remainder: $.a->mod($.b)
-#^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#         ^^ source.apollo.jsonselection
+#^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#         ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#          ^ source.apollo.jsonselection
 #           ^ source.apollo.jsonselection variable.ExprPath.dollar
 #            ^ source.apollo.jsonselection variable.PathStep.dot
 #             ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -659,78 +685,72 @@
 ># Array/string methods
 #^^^^^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >first: list->first
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#     ^^ source.apollo.jsonselection
-#       ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#           ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#             ^^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#     ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#      ^ source.apollo.jsonselection
+#       ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#           ^^ source.apollo.jsonselection
+#             ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >last: list->last
-#^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#    ^^ source.apollo.jsonselection
-#      ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#          ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#            ^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#    ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#     ^ source.apollo.jsonselection
+#      ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#          ^^ source.apollo.jsonselection
+#            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >index3: list->get(3)
-#^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^ source.apollo.jsonselection
-#        ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#            ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#              ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                 ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                  ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
-#                   ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#       ^ source.apollo.jsonselection
+#        ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#            ^^ source.apollo.jsonselection
+#              ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                 ^^^ source.apollo.jsonselection
 >secondToLast: list->get(-2)
-#^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#            ^^ source.apollo.jsonselection
-#              ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                  ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                    ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                       ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                        ^ source.apollo.jsonselection meta.MethodArgs
-#                         ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
-#                          ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#            ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#             ^ source.apollo.jsonselection
+#              ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                  ^^ source.apollo.jsonselection
+#                    ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                       ^^^^ source.apollo.jsonselection
 >slice: list->slice(0, 5)
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#     ^^ source.apollo.jsonselection
-#       ^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#           ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#             ^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                  ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                   ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
-#                    ^ source.apollo.jsonselection meta.MethodArgs punctuation.comma.MethodArgs.separator
-#                     ^ source.apollo.jsonselection meta.MethodArgs
-#                      ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
-#                       ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#     ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#      ^ source.apollo.jsonselection
+#       ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#           ^^ source.apollo.jsonselection
+#             ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                  ^^^^^^ source.apollo.jsonselection
 >substring: string->slice(2, 5)
-#^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#         ^^ source.apollo.jsonselection
-#           ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                 ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                   ^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                        ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                         ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
-#                          ^ source.apollo.jsonselection meta.MethodArgs punctuation.comma.MethodArgs.separator
-#                           ^ source.apollo.jsonselection meta.MethodArgs
-#                            ^ source.apollo.jsonselection meta.MethodArgs constant.numeric.LitNumber
-#                             ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#         ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#          ^ source.apollo.jsonselection
+#           ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                 ^^ source.apollo.jsonselection
+#                   ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                        ^^^^^^ source.apollo.jsonselection
 >arraySize: array->size
-#^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#         ^^ source.apollo.jsonselection
-#           ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                  ^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#         ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#          ^ source.apollo.jsonselection
+#           ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                ^^ source.apollo.jsonselection
+#                  ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >stringLength: string->size
-#^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#            ^^ source.apollo.jsonselection
-#              ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                    ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                      ^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#            ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#             ^ source.apollo.jsonselection
+#              ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                    ^^ source.apollo.jsonselection
+#                      ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >
 ># Object methods
 #^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >aValue: $->echo({ a: 123 })->get("a")
-#^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^ source.apollo.jsonselection
+#^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#       ^ source.apollo.jsonselection
 #        ^ source.apollo.jsonselection variable.ExprPath.dollar
 #         ^^ source.apollo.jsonselection punctuation.PathStep.arrow
 #           ^^^^ source.apollo.jsonselection variable.PathStep.identifier
@@ -750,87 +770,95 @@
 #                                 ^^^ source.apollo.jsonselection meta.MethodArgs string.quoted.LitString
 #                                    ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >hasKey: object->has("key")
-#^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^ source.apollo.jsonselection
-#        ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#              ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                   ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                    ^^^^^ source.apollo.jsonselection meta.MethodArgs string.quoted.LitString
-#                         ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#       ^ source.apollo.jsonselection
+#        ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#              ^^ source.apollo.jsonselection
+#                ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                   ^ source.apollo.jsonselection
+#                    ^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                         ^ source.apollo.jsonselection
 >hasAB: object->has("a")->and(object->has("b"))
-#^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#     ^^ source.apollo.jsonselection
-#       ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#             ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#               ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                  ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                   ^^^ source.apollo.jsonselection meta.MethodArgs string.quoted.LitString
-#                      ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
-#                       ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                         ^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                            ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                             ^^^^^^ source.apollo.jsonselection meta.MethodArgs variable.KeyPath.key.identifier
-#                                   ^^ source.apollo.jsonselection meta.MethodArgs punctuation.PathStep.arrow
-#                                     ^^^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.identifier
-#                                        ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs punctuation.brace.round.MethodArgs.open
-#                                         ^^^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs string.quoted.LitString
-#                                            ^ source.apollo.jsonselection meta.MethodArgs meta.MethodArgs punctuation.brace.round.MethodArgs.close
-#                                             ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
+#^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#     ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#      ^ source.apollo.jsonselection
+#       ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#             ^^ source.apollo.jsonselection
+#               ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                  ^ source.apollo.jsonselection
+#                   ^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                      ^^^ source.apollo.jsonselection
+#                         ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                            ^ source.apollo.jsonselection
+#                             ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                                   ^^ source.apollo.jsonselection
+#                                     ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                                        ^ source.apollo.jsonselection
+#                                         ^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#                                            ^^ source.apollo.jsonselection
 >numberOfProperties: object->size
-#^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                  ^^ source.apollo.jsonselection
-#                    ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                          ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                            ^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^^^^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#                  ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#                   ^ source.apollo.jsonselection
+#                    ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                          ^^ source.apollo.jsonselection
+#                            ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >keys: object->keys
-#^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#    ^^ source.apollo.jsonselection
-#      ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#            ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#              ^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#    ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#     ^ source.apollo.jsonselection
+#      ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#            ^^ source.apollo.jsonselection
+#              ^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >values: object->values
-#^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#      ^^ source.apollo.jsonselection
-#        ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#              ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                ^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
+#^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#      ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#       ^ source.apollo.jsonselection
+#        ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#              ^^ source.apollo.jsonselection
+#                ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >entries: object->entries
-#^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#       ^^ source.apollo.jsonselection
-#         ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#               ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                 ^^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
->keysFromEntries: object->entries.key
-#^^^^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
+#^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#       ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#        ^ source.apollo.jsonselection
+#         ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 #               ^^ source.apollo.jsonselection
-#                 ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                       ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                         ^^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                                ^ source.apollo.jsonselection variable.PathStep.dot
-#                                 ^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#                 ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+>keysFromEntries: object->entries.key
+#^^^^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#               ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#                ^ source.apollo.jsonselection
+#                 ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                       ^^ source.apollo.jsonselection
+#                         ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                                ^ source.apollo.jsonselection
+#                                 ^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >valuesFromEntries: object->entries.value
-#^^^^^^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                 ^^ source.apollo.jsonselection
-#                   ^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#                         ^^ source.apollo.jsonselection punctuation.PathStep.arrow
-#                           ^^^^^^^ source.apollo.jsonselection variable.PathStep.identifier
-#                                  ^ source.apollo.jsonselection variable.PathStep.dot
-#                                   ^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
+#^^^^^^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedFieldSelection.alias
+#                 ^ source.apollo.jsonselection punctuation.colon.NamedFieldSelection
+#                  ^ source.apollo.jsonselection
+#                   ^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                         ^^ source.apollo.jsonselection
+#                           ^^^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
+#                                  ^ source.apollo.jsonselection
+#                                   ^^^^^ source.apollo.jsonselection variable.NamedFieldSelection.key
 >
 ># Logical methods
 #^^^^^^^^^^^^^^^^^ source.apollo.jsonselection comment.line.jsonselection
 >negation: $.condition->not
-#^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#        ^^ source.apollo.jsonselection
+#^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#        ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#         ^ source.apollo.jsonselection
 #          ^ source.apollo.jsonselection variable.ExprPath.dollar
 #           ^ source.apollo.jsonselection variable.PathStep.dot
 #            ^^^^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
 #                     ^^ source.apollo.jsonselection punctuation.PathStep.arrow
 #                       ^^^ source.apollo.jsonselection variable.PathStep.identifier
 >bangBang: $.condition->not->not
-#^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#        ^^ source.apollo.jsonselection
+#^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#        ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#         ^ source.apollo.jsonselection
 #          ^ source.apollo.jsonselection variable.ExprPath.dollar
 #           ^ source.apollo.jsonselection variable.PathStep.dot
 #            ^^^^^^^^^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -839,8 +867,9 @@
 #                          ^^ source.apollo.jsonselection punctuation.PathStep.arrow
 #                            ^^^ source.apollo.jsonselection variable.PathStep.identifier
 >disjunction: $.a->or($.b)->or($.c)
-#^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#           ^^ source.apollo.jsonselection
+#^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#           ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#            ^ source.apollo.jsonselection
 #             ^ source.apollo.jsonselection variable.ExprPath.dollar
 #              ^ source.apollo.jsonselection variable.PathStep.dot
 #               ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -859,8 +888,9 @@
 #                                ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                                 ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >conjunction: $.a->and($.b, $.c)
-#^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#           ^^ source.apollo.jsonselection
+#^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#           ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#            ^ source.apollo.jsonselection
 #             ^ source.apollo.jsonselection variable.ExprPath.dollar
 #              ^ source.apollo.jsonselection variable.PathStep.dot
 #               ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -877,8 +907,9 @@
 #                             ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                              ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >aImpliesB: $.a->not->or($.b)
-#^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#         ^^ source.apollo.jsonselection
+#^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#         ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#          ^ source.apollo.jsonselection
 #           ^ source.apollo.jsonselection variable.ExprPath.dollar
 #            ^ source.apollo.jsonselection variable.PathStep.dot
 #             ^ source.apollo.jsonselection variable.PathStep.key.identifier
@@ -892,8 +923,9 @@
 #                          ^ source.apollo.jsonselection meta.MethodArgs variable.PathStep.key.identifier
 #                           ^ source.apollo.jsonselection meta.MethodArgs punctuation.brace.round.MethodArgs.close
 >excludedMiddle: $.toBe->or($.toBe->not)->eq(true)
-#^^^^^^^^^^^^^^ source.apollo.jsonselection variable.KeyPath.key.identifier
-#              ^^ source.apollo.jsonselection
+#^^^^^^^^^^^^^^ source.apollo.jsonselection string.unquoted.NamedPathSelection.alias
+#              ^ source.apollo.jsonselection punctuation.colon.NamedPathSelection
+#               ^ source.apollo.jsonselection
 #                ^ source.apollo.jsonselection variable.ExprPath.dollar
 #                 ^ source.apollo.jsonselection variable.PathStep.dot
 #                  ^^^^ source.apollo.jsonselection variable.PathStep.key.identifier

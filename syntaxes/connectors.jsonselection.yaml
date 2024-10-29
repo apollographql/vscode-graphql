@@ -1,5 +1,7 @@
 # use 'js-yaml' to convert to json
 # npx js-yaml syntaxes/connectors.jsonselection.yaml >| syntaxes/connectors.jsonselection.json
+# fswatch -0 syntaxes/connectors.jsonselection.yaml | xargs -0 -I {} bash -c "npx js-yaml {} > syntaxes/connectors.jsonselection.json && echo saved" \;
+# based on https://github.com/apollographql/router/blob/next/apollo-federation/src/sources/connect/json_selection/README.md
 name: "Apollo Connectors JSONSelection"
 scopeName: "source.apollo.jsonselection"
 patterns:
@@ -10,8 +12,8 @@ repository:
   JSONSelection:
     name: "meta.JSONSelection"
     patterns:
-      - include: "#PathSelection"
       - include: "#NamedSelection"
+      - include: "#PathSelection"
       - include: "#Comment"
   # SubSelection         ::= "{" NamedSelection* "}"
   SubSelection:
@@ -31,9 +33,9 @@ repository:
   NamedSelection:
     name: "meta.NamedSelection"
     patterns:
-      - include: "#PathWithSubSelection"
       - include: "#NamedFieldSelection"
       - include: "#NamedPathSelection"
+      - include: "#PathWithSubSelection"
       - include: "#NamedGroupSelection"
   # NamedPathSelection   ::= Alias PathSelection
   NamedPathSelection:

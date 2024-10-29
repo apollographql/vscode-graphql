@@ -14,10 +14,10 @@
       "name": "meta.JSONSelection",
       "patterns": [
         {
-          "include": "#PathSelection"
+          "include": "#NamedSelection"
         },
         {
-          "include": "#NamedSelection"
+          "include": "#PathSelection"
         },
         {
           "include": "#Comment"
@@ -51,13 +51,13 @@
       "name": "meta.NamedSelection",
       "patterns": [
         {
-          "include": "#PathWithSubSelection"
-        },
-        {
           "include": "#NamedFieldSelection"
         },
         {
           "include": "#NamedPathSelection"
+        },
+        {
+          "include": "#PathWithSubSelection"
         },
         {
           "include": "#NamedGroupSelection"

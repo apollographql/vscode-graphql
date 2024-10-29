@@ -2,6 +2,7 @@
 # npx js-yaml syntaxes/connectors.jsonselection.yaml >| syntaxes/connectors.jsonselection.json
 # fswatch -0 syntaxes/connectors.jsonselection.yaml | xargs -0 -I {} bash -c "npx js-yaml {} > syntaxes/connectors.jsonselection.json && echo saved" \;
 # based on https://github.com/apollographql/router/blob/next/apollo-federation/src/sources/connect/json_selection/README.md
+# yaml-language-server: $schema=https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
 name: "Apollo Connectors JSONSelection"
 scopeName: "source.apollo.jsonselection"
 patterns:

@@ -90,7 +90,7 @@
     "connect-string-jsonselection-argument": {
       "name": "meta.argument.connect.string.jsonselection.graphql",
       "contentName": "meta.embedded.block.string.jsonselection.graphql",
-      "begin": "\\s*(GET|POST)(?:\\s*(:))",
+      "begin": "\\s*(GET|POST|PUT|PATCH|DELETE)(?:\\s*(:))",
       "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|[\\)}]))|\\s*(,)",
       "beginCaptures": {
         "1": { "name": "variable.parameter.graphql" },

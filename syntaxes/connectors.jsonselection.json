@@ -120,10 +120,10 @@
     "PathWithOrWithoutSubSelection": {
       "patterns": [
         {
-          "include": "#VarPath"
+          "include": "#ExprPath"
         },
         {
-          "include": "#ExprPath"
+          "include": "#VarPath"
         },
         {
           "include": "#KeyPath"
@@ -137,10 +137,10 @@
       "begin": "(\\$)([a-zA-Z_][0-9a-zA-Z_]*)?(?!\\w)",
       "beginCaptures": {
         "1": {
-          "name": "variable.language.VarPath.dollar"
+          "name": "variable.VarPath.dollar"
         },
         "2": {
-          "name": "variable.language.VarPath.identifier"
+          "name": "variable.VarPath.identifier"
         }
       },
       "end": "(?=.)",
@@ -170,7 +170,7 @@
       "begin": "(\\@)",
       "beginCaptures": {
         "1": {
-          "name": "variable.language.AtPath.at"
+          "name": "variable.AtPath.at"
         }
       },
       "end": "(?=.)",
@@ -185,7 +185,7 @@
       "begin": "(\\$)",
       "beginCaptures": {
         "1": {
-          "name": "variable.language.ExprPath.dollar"
+          "name": "variable.ExprPath.dollar"
         }
       },
       "end": "(?=.)",
@@ -404,13 +404,13 @@
           "begin": "\\s*({)",
           "beginCaptures": {
             "1": {
-              "name": "punctuation.JSONSelectionString.open"
+              "name": "constant.language.JSONSelectionString.open"
             }
           },
           "end": "\\s*(})",
           "endCaptures": {
             "1": {
-              "name": "punctuation.JSONSelectionString.close"
+              "name": "constant.language.JSONSelectionString.close"
             }
           },
           "patterns": [

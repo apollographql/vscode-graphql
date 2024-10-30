@@ -395,7 +395,7 @@
           "name": "string.quoted.double.graphql"
         },
         "2": {
-          "name\"": "punctuation.definition.string.end.graphql"
+          "name": "punctuation.definition.string.end.graphql"
         }
       },
       "patterns": [

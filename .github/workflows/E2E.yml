@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  test:
+  e2e:
     name: Run E2E tests
     runs-on: ubuntu-latest
     strategy:
@@ -30,3 +30,15 @@ jobs:
       - run: xvfb-run -a npm run test:extension
         env:
           VSCODE_VERSION: "${{ matrix.version }}"
+  test:
+    name: Run other tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+      - run: npm install
+      - run: npm run build:production
+      - run: yarn test
+      - run: yarn test:textmate

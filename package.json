@@ -161,7 +161,7 @@
       {
         "id": "apollo.connectors.mapping",
         "aliases": [
-          "Apollo Connectors Mapping Syntax"
+          "[Apollo Connectors Mapping Syntax]"
         ],
         "filenames": [
           "test.apollo.jsonselection"

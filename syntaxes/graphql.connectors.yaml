@@ -1,8 +1,10 @@
 scopeName: source.apollo.connectors.graphql
+# inject these rules into source.graphql#graphql-directive, before all other patterns (:L), ignoring strings and comments
 injectionSelector: L:meta.embedded.block.directive.graphql -string -comment
 patterns:
   - include: "#connect-directive"
 repository:
+  # if we encounter a `@connect` directive, move forward into this set of rules, otherwise it will just follow the default graphql rules
   connect-directive:
     begin: ((@)\s*(connect))
     end: (?=.)
@@ -15,6 +17,7 @@ repository:
       - include: source.graphql#graphql-comment
       - include: source.graphql#literal-quasi-embedded
       - include: source.graphql#graphql-skip-newlines
+  # a variation of source.graphql#graphql-arguments
   connect-arguments:
     name: meta.arguments.connect.graphql
     begin: \s*(\()
@@ -27,11 +30,19 @@ repository:
         name: meta.brace.round.directive.graphql
     patterns:
       - include: source.graphql#graphql-comment
+      # this was added
       - include: "#connect-jsonselection-argument"
+      # this was added
       - include: "#connect-argument-http"
+      # this was added
       - include: "#connect-string-jsonselection-argument"
+      # this is also present in the original source.graphql#graphql-arguments, but as an inlined pattern
+      # moved into it's own rule here for readability
       - include: "#graphql-argument"
       - include: source.graphql#literal-quasi-embedded
+  # based to #graphql-argument, but only matching `selection` arguments
+  # with a sub-pattern to match """ blocks and embed the
+  # source.apollo.connectors.mapping grammar into those
   connect-jsonselection-argument:
     name: meta.argument.connect.jsonselection.graphql
     begin: \s*(selection)(?:\s*(:))
@@ -61,6 +72,7 @@ repository:
         patterns:
           - include: source.apollo.connectors.mapping
       - include: source.graphql#graphql-skip-newlines
+  # based to #graphql-argument, but only matching `http` arguments
   connect-argument-http:
     name: meta.argument.connect.http.graphql
     begin: \s*(http)\s*(:)
@@ -74,9 +86,12 @@ repository:
       "3":
         name: punctuation.comma.graphql
     patterns:
+      # we know that the child of this can not be a full #graphql-value, but only an object
+      # and we want to look for connectors-specific keys inside of that
       - include: "#http-object-value"
       - include: source.graphql#graphql-comment
       - include: source.graphql#literal-quasi-embedded
+  # based on source.graphql#graphql-object-value
   http-object-value:
     patterns:
       - name: meta.objectvalues.connect.http.graphql
@@ -89,10 +104,14 @@ repository:
           "1":
             name: meta.brace.curly.graphql
         patterns:
+          # this was added for GET/POST/PUT/PATCH/DELETE
           - include: "#connect-string-jsonselection-argument"
+          # this was added for body
           - include: "#http-object-jsonselection-property"
+          # original child patterns of source.graphql#graphql-object-value
           - include: source.graphql#graphql-object-field
           - include: source.graphql#graphql-value
+  # handling for @connect(http: { body: """ ... """ })
   http-object-jsonselection-property:
     name: meta.argument.connect.body.jsonselection.graphql
     begin: \s*(body)\s*(:)\s*(("""))
@@ -113,6 +132,7 @@ repository:
         name: punctuation.definition.string.end.graphql
     patterns:
       - include: source.apollo.connectors.mapping
+  # handling for @connect(GET: " ... ")
   connect-string-jsonselection-argument:
     name: meta.argument.connect.string.jsonselection.graphql
     contentName: meta.embedded.block.string.jsonselection.graphql
@@ -129,6 +149,7 @@ repository:
     patterns:
       - include: source.apollo.connectors.mapping#JSONSelectionString
       - include: source.graphql#graphql-skip-newlines
+  # repeating an inlined pattern that's found within source.graphql#graphql-arguments here to only have minimal changes to graphql.json
   graphql-argument:
     begin: "\\s*([_A-Za-z][_0-9A-Za-z]*)(?:\\s*(:))"
     end: "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)"

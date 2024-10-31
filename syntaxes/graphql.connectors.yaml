@@ -30,7 +30,7 @@ repository:
       - include: "#connect-jsonselection-argument"
       - include: "#connect-argument-http"
       - include: "#connect-string-jsonselection-argument"
-      - include: source.graphql#graphql-argument
+      - include: "#graphql-argument"
       - include: source.graphql#literal-quasi-embedded
   connect-jsonselection-argument:
     name: meta.argument.connect.jsonselection.graphql
@@ -129,3 +129,18 @@ repository:
     patterns:
       - include: source.apollo.connectors.mapping#JSONSelectionString
       - include: source.graphql#graphql-skip-newlines
+  graphql-argument:
+    begin: "\\s*([_A-Za-z][_0-9A-Za-z]*)(?:\\s*(:))"
+    end: "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)"
+    beginCaptures:
+      "1":
+        name: variable.parameter.graphql
+      "2":
+        name: punctuation.colon.graphql
+    endCaptures:
+      "3":
+        name: punctuation.comma.graphql
+    patterns:
+      - include: "source.graphql#graphql-value"
+      - include: "source.graphql#graphql-comment"
+      - include: "source.graphql#graphql-skip-newlines"

@@ -21,6 +21,7 @@
     "watch": "rimraf lib; npm-run-all -p watch:*",
     "watch:esbuild": "npm run build -- --watch",
     "watch:tsc": "npm run typecheck -- --watch",
+    "watch:textmate-yaml": "fswatch syntaxes/*.yaml | sed -u -e 's/\\.yaml$//' | xargs -I {} bash -c \"npx js-yaml {}.yaml > {}.json && echo {}\"",
     "sampleWorkspace:run": "node src/__e2e__/mockServer.js",
     "changeset-version": "changeset version && npm i",
     "changeset-publish": "npm run build -- --production && changeset publish",
@@ -159,6 +160,9 @@
       },
       {
         "id": "apollo.jsonselection",
+        "aliases": [
+          "Apollo Connectors Mapping Syntax"
+        ],
         "filenames": [
           "test.apollo.jsonselection"
         ],
@@ -186,7 +190,7 @@
         "injectTo": [
           "source.graphql"
         ],
-        "scopeName": "inline.connectors.graphql",
+        "scopeName": "source.apollo.connectors.graphql",
         "path": "./syntaxes/graphql.connectors.json",
         "embeddedLanguages": {
           "meta.embedded.block.jsonselection.graphql": "apollo.jsonselection",

@@ -1,5 +1,5 @@
 {
-  "scopeName": "inline.connectors.graphql",
+  "scopeName": "source.apollo.connectors.graphql",
   "injectionSelector": "L:meta.embedded.block.directive.graphql -string -comment",
   "patterns": [
     {

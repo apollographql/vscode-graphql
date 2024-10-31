@@ -106,7 +106,7 @@
           },
           "patterns": [
             {
-              "include": "source.apollo.jsonselection"
+              "include": "source.apollo.connectors.mapping"
             }
           ]
         },
@@ -205,7 +205,7 @@
       },
       "patterns": [
         {
-          "include": "source.apollo.jsonselection"
+          "include": "source.apollo.connectors.mapping"
         }
       ]
     },
@@ -229,7 +229,7 @@
       },
       "patterns": [
         {
-          "include": "source.apollo.jsonselection#JSONSelectionString"
+          "include": "source.apollo.connectors.mapping#JSONSelectionString"
         },
         {
           "include": "source.graphql#graphql-skip-newlines"

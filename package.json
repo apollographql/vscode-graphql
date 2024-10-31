@@ -32,7 +32,7 @@
     "test:extension": "node src/__e2e__/runTests.js",
     "test:textmate": "npm run test:textmate-ts && npm run test:textmate-jsonselection && npm run test:textmate-graphql-jsonselection",
     "test:textmate-ts": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
-    "test:textmate-jsonselection": "npx vscode-tmgrammar-snap -s source.apollo.jsonselection src/__tests__/fixtures/textmate/*.jsonselection",
+    "test:textmate-jsonselection": "npx vscode-tmgrammar-snap -s source.apollo.connectors.mapping src/__tests__/fixtures/textmate/*.jsonselection",
     "test:textmate-graphql-jsonselection": "npx vscode-tmgrammar-snap -s source.graphql src/__tests__/fixtures/textmate/*.graphql",
     "codegen": "graphql-codegen",
     "vscode:prepublish": "npm run build:production"
@@ -159,7 +159,7 @@
         "configuration": "./graphql.configuration.json"
       },
       {
-        "id": "apollo.jsonselection",
+        "id": "apollo.connectors.mapping",
         "aliases": [
           "Apollo Connectors Mapping Syntax"
         ],
@@ -182,8 +182,8 @@
         "path": "./syntaxes/graphql.json"
       },
       {
-        "language": "apollo.jsonselection",
-        "scopeName": "source.apollo.jsonselection",
+        "language": "apollo.connectors.mapping",
+        "scopeName": "source.apollo.connectors.mapping",
         "path": "./syntaxes/connectors.jsonselection.json"
       },
       {
@@ -193,8 +193,8 @@
         "scopeName": "source.apollo.connectors.graphql",
         "path": "./syntaxes/graphql.connectors.json",
         "embeddedLanguages": {
-          "meta.embedded.block.jsonselection.graphql": "apollo.jsonselection",
-          "meta.embedded.block.string.jsonselection.graphql": "apollo.jsonselection"
+          "meta.embedded.block.jsonselection.graphql": "apollo.connectors.mapping",
+          "meta.embedded.block.string.jsonselection.graphql": "apollo.connectors.mapping"
         }
       },
       {

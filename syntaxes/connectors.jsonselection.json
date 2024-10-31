@@ -1,6 +1,7 @@
 {
-  "name": "Apollo Connectors JSONSelection",
-  "scopeName": "source.apollo.jsonselection",
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Apollo Connectors Mapping Syntax",
+  "scopeName": "source.apollo.connectors.mapping",
   "patterns": [
     {
       "include": "#JSONSelection"

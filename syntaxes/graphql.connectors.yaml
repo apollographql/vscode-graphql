@@ -59,7 +59,7 @@ repository:
           "2":
             name: punctuation.definition.string.end.graphql
         patterns:
-          - include: source.apollo.jsonselection
+          - include: source.apollo.connectors.mapping
       - include: source.graphql#graphql-skip-newlines
   connect-argument-http:
     name: meta.argument.connect.http.graphql
@@ -112,7 +112,7 @@ repository:
       "2":
         name: punctuation.definition.string.end.graphql
     patterns:
-      - include: source.apollo.jsonselection
+      - include: source.apollo.connectors.mapping
   connect-string-jsonselection-argument:
     name: meta.argument.connect.string.jsonselection.graphql
     contentName: meta.embedded.block.string.jsonselection.graphql
@@ -127,5 +127,5 @@ repository:
       "3":
         name: punctuation.comma.graphql
     patterns:
-      - include: source.apollo.jsonselection#JSONSelectionString
+      - include: source.apollo.connectors.mapping#JSONSelectionString
       - include: source.graphql#graphql-skip-newlines

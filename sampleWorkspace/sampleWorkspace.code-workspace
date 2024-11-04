@@ -23,6 +23,9 @@
     },
     {
       "path": "../src/language-server/__tests__/fixtures/documents"
+    },
+    {
+      "path": "../src/__tests__/fixtures"
     }
   ],
   "settings": {}

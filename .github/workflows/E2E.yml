@@ -25,7 +25,8 @@ jobs:
       - run: npm install
       - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
         shell: bash
-      - run: |
+      - name: Install & Configure Rover (Linux)
+        run: |
           expect <<EOF
           spawn ./node_modules/.bin/rover config auth --profile VSCode-E2E
           expect "Copy the key and paste it into the prompt below."
@@ -33,15 +34,19 @@ jobs:
           expect eof
           EOF
         if: runner.os == 'Linux'
-      - run: |
+      - name: Install Rover (Windows)
+        run: ./node_modules/.bin/rover.cmd --version
+        if: runner.os != 'Linux'
+      - name: Configure Rover (Windows)
+        run: |
           [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
-          Start-Process -FilePath ./node_modules/.bin/rover
+          Start-Process -FilePath ./node_modules/.bin/rover.cmd -ArgumentList "config","auth","--profile","VSCode-E2E"
 
           Start-Sleep -m 1000
 
           [System.Windows.Forms.SendKeys]::SendWait("test")
           [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
-        if: runner.os != 'Linux'
+        if: runner.os == 'Windows'
         shell: powershell
       - run: npm run build:production
       - run: xvfb-run -a npm run test:extension
@@ -51,4 +56,4 @@ jobs:
       - run: npm run test:extension
         env:
           VSCODE_VERSION: "${{ matrix.version }}"
-        if: runner.os != 'Linux'
+        if: runner.os == 'Windows'

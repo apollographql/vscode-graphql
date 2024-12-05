@@ -17,6 +17,7 @@ jobs:
             os: "windows-latest"
     steps:
       - run: sudo apt update && sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb expect
+        if: runner.os == 'Linux'
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:

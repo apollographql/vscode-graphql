@@ -7,10 +7,14 @@ on:
 jobs:
   test:
     name: Run E2E tests
-    runs-on: ubuntu-latest
+    runs-on: "${{ matrix.os }}"
     strategy:
       matrix:
         version: ["1.90.0", "stable", "insiders"]
+        os: [ubuntu-latest]
+        include:
+          - version: "stable"
+            os: "windows-latest"
     steps:
       - run: sudo apt update && sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb expect
       - uses: actions/checkout@v4

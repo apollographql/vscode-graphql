@@ -23,8 +23,8 @@ jobs:
         with:
           cache: "npm"
       - run: npm install
-      - run: npm run build:production
       - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
+        shell: bash
       - run: |
           expect <<EOF
           spawn ./node_modules/.bin/rover config auth --profile VSCode-E2E
@@ -32,6 +32,13 @@ jobs:
           send -- "test\n"
           expect eof
           EOF
+        shell: bash
+      - run: npm run build:production
       - run: xvfb-run -a npm run test:extension
         env:
           VSCODE_VERSION: "${{ matrix.version }}"
+        if: runner.os == 'Linux'
+      - run: npm run test:extension
+        env:
+          VSCODE_VERSION: "${{ matrix.version }}"
+        if: runner.os != 'Linux'

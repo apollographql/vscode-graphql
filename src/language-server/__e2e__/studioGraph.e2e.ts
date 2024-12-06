@@ -63,13 +63,13 @@ test("wrong token", async () => {
 
     // currently, this logs twice, along with a full stracktrace, but no indication of where it came from
     // this should be improved on.
-    expect(output).toContain(
+    expect(output.replace(/\s/g, "")).toContain(
       `
 [GraphQL error]: HTTP fetch failed from 'kotlin': 406: Not Acceptable
 [GraphQL error]: Invalid credentials provided
 ApolloError: HTTP fetch failed from 'kotlin': 406: Not Acceptable
 Invalid credentials provided
-    at new ApolloError`.trim(),
+    at new ApolloError`.replace(/\s/g, ""),
     );
   } finally {
     await mocks.loadDefaultMocks(baseUri);

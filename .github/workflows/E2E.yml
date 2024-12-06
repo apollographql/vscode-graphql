@@ -7,26 +7,63 @@ on:
 jobs:
   test:
     name: Run E2E tests
-    runs-on: ubuntu-latest
+    runs-on: "${{ matrix.os }}"
     strategy:
       matrix:
         version: ["1.90.0", "stable", "insiders"]
+        os: [ubuntu-latest]
+        include:
+          - version: "stable"
+            os: "windows-latest"
     steps:
       - run: sudo apt update && sudo apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb expect
+        if: runner.os == 'Linux'
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           cache: "npm"
       - run: npm install
-      - run: npm run build:production
       - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
-      - run: |
+        shell: bash
+      - name: Install & Configure Rover (Linux)
+        run: |
           expect <<EOF
           spawn ./node_modules/.bin/rover config auth --profile VSCode-E2E
           expect "Copy the key and paste it into the prompt below."
           send -- "test\n"
           expect eof
           EOF
-      - run: xvfb-run -a npm run test:extension
+        if: runner.os == 'Linux'
+      - name: Install Rover (Windows)
+        run: ./node_modules/.bin/rover.cmd --version
+        if: runner.os == 'Windows'
+      - name: Configure Rover (Windows)
+        run: |
+          [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+          Start-Process -FilePath ./node_modules/.bin/rover.cmd -ArgumentList "config","auth","--profile","VSCode-E2E"
+
+          Start-Sleep -m 1000
+
+          [System.Windows.Forms.SendKeys]::SendWait("test")
+          [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+        if: runner.os == 'Windows'
+        shell: powershell
+      - name: Adjust configuration (Windows)
+        run: |
+          sed -i -e 's/\(bin:.*\)/\1.exe/' sampleWorkspace/rover/apollo.config.yaml
+          cat sampleWorkspace/rover/apollo.config.yaml
+          # for some reason, windows seems to ignore the jest.e2e.config.js file
+          echo "module.exports = require('./jest.e2e.config')" > jest.config.ts
+        shell: bash
+        if: runner.os == 'Windows'
+      - run: npm run build:production
+      - name: "Run Extension E2E tests (Linux)"
+        run: xvfb-run -a npm run test:extension
         env:
           VSCODE_VERSION: "${{ matrix.version }}"
+        if: runner.os == 'Linux'
+      - name: "Run Extension E2E tests (Windows)"
+        run: npm run test:extension
+        env:
+          VSCODE_VERSION: "${{ matrix.version }}"
+        if: runner.os == 'Windows'

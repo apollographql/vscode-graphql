@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.4.0
+
+### Minor Changes
+
+- [#236](https://github.com/apollographql/vscode-graphql/pull/236) [`9a4403db`](https://github.com/apollographql/vscode-graphql/commit/9a4403db7b8f9cb03638d83a7e3c29dd3c3077b7) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Add support for GraphQL in Notebook cells
+
+### Patch Changes
+
+- [#240](https://github.com/apollographql/vscode-graphql/pull/240) [`3dfd9ac0`](https://github.com/apollographql/vscode-graphql/commit/3dfd9ac08a20ff92cafb398f1a8c71e5f7d03519) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug handling windows path separators in `FileSet` instances.
+
 ## 2.3.6
 
 ### Patch Changes

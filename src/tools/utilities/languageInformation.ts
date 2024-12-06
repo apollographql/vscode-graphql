@@ -30,7 +30,7 @@ export const minimumKnownExtensions: Record<
   typescriptreact: [".tsx"],
   vue: [".vue"],
   svelte: [".svelte"],
-  python: [".py"],
+  python: [".py", ".ipynb"],
   ruby: [".rb"],
   dart: [".dart"],
   reason: [".re"],

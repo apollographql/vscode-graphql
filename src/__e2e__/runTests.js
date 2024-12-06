@@ -18,7 +18,6 @@ async function main() {
     const TEST_PORT = 7096;
     process.env.APOLLO_ENGINE_ENDPOINT = "http://localhost:7096/apollo";
     process.env.MOCK_SERVER_PORT = String(TEST_PORT);
-    process.env.APOLLO_FEATURE_FLAGS = "rover";
     disposables.push(
       ...(await Promise.all([
         runMockServer(TEST_PORT, false, loadDefaultMocks),
@@ -29,6 +28,7 @@ async function main() {
     const exitCode = await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
+      version: process.env.VSCODE_VERSION || "stable",
       launchArgs: [
         "--disable-extensions",
         `${extensionDevelopmentPath}/sampleWorkspace/sampleWorkspace.code-workspace`,

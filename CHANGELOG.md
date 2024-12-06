@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## 2.4.0
+
+### Minor Changes
+
+- [#236](https://github.com/apollographql/vscode-graphql/pull/236) [`9a4403db`](https://github.com/apollographql/vscode-graphql/commit/9a4403db7b8f9cb03638d83a7e3c29dd3c3077b7) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Add support for GraphQL in Notebook cells
+
+### Patch Changes
+
+- [#240](https://github.com/apollographql/vscode-graphql/pull/240) [`3dfd9ac0`](https://github.com/apollographql/vscode-graphql/commit/3dfd9ac08a20ff92cafb398f1a8c71e5f7d03519) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug handling windows path separators in `FileSet` instances.
+
+## 2.3.6
+
+### Patch Changes
+
+- [#216](https://github.com/apollographql/vscode-graphql/pull/216) [`1add31e0`](https://github.com/apollographql/vscode-graphql/commit/1add31e0e9bc2da92ea7c3a1c65206cc5d95bb68) Thanks [@phryneas](https://github.com/phryneas)! - Add JSON schema for `supergraph.yaml`.
+
+## 2.3.5
+
+### Patch Changes
+
+- [#226](https://github.com/apollographql/vscode-graphql/pull/226) [`57c51c81`](https://github.com/apollographql/vscode-graphql/commit/57c51c81ec56d68c2226f0b169ed849fcbdaad55) Thanks [@yesmeck](https://github.com/yesmeck)! - Fixes config files being unable to load in old VSCode versions
+
+## 2.3.4
+
+### Patch Changes
+
+- [#224](https://github.com/apollographql/vscode-graphql/pull/224) [`b7d300f7`](https://github.com/apollographql/vscode-graphql/commit/b7d300f7d44138ef656bf5e5359dc284d41b78e2) Thanks [@phryneas](https://github.com/phryneas)! - Fix a situation where config files using `require` would not be imported as CommonJS.
+
+## 2.3.3
+
+### Patch Changes
+
+- [#191](https://github.com/apollographql/vscode-graphql/pull/191) [`2e56f42d`](https://github.com/apollographql/vscode-graphql/commit/2e56f42d172a7ec8afd003f056aeabac9eab1789) Thanks [@svc-secops](https://github.com/svc-secops)! - Chores: update various dependencies (#181, #191, #217, #218)
+
 ## 2.3.2
 
 ### Patch Changes

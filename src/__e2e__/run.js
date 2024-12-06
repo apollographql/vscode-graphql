@@ -9,6 +9,12 @@ async function run() {
     .alias("help", "h")
     .options(yargsOptions).argv;
 
+  console.log("running", {
+    ...argv,
+    config: path.join(root, "jest.e2e.config.js"),
+    runInBand: true,
+  });
+
   const results = await runCLI(
     {
       ...argv,

@@ -17,3 +17,5 @@ module.exports = {
   },
   prettierPath: null,
 };
+
+console.log("jest.e2e.config.js", module.exports);

@@ -48,10 +48,9 @@ export function startServer(port: number) {
     if (serverState.port === port) {
       // nothing to do
       return;
-    } else {
-      // changing port, stop the old server
-      serverState.disposable.dispose();
     }
+    // changing port, stop the old server
+    serverState.disposable.dispose();
   }
   serverState = state;
   let wss: WebSocketServer | null = new WebSocketServer({ port });

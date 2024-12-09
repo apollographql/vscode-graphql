@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.11.8",
-    "@apollo/client-devtools-vscode": "^4.18.17",
+    "@apollo/client-devtools-vscode": "https://pkg.pr.new/apollographql/apollo-client-devtools/@apollo/client-devtools-vscode@a9505f7",
     "@apollo/subgraph": "2.9.1",
     "@graphql-tools/schema": "10.0.6",
     "@wry/equality": "0.5.7",

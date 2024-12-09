@@ -44,14 +44,13 @@ export function startServer(port: number) {
       sendToDevTools({ type: "port.changed", port, listening: false });
     }),
   };
-  if (serverState) {
-    if (serverState.port === port) {
-      // nothing to do
-      return;
-    }
-    // changing port, stop the old server
-    serverState.disposable.dispose();
+
+  if (serverState?.port === port) {
+    // nothing to do
+    return;
   }
+  // changing port, stop the old server
+  serverState?.disposable.dispose();
   serverState = state;
   let wss: WebSocketServer | null = new WebSocketServer({ port });
   wss.on("listening", () => {

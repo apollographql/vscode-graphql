@@ -394,6 +394,20 @@ export async function activate(
     }),
   );
 
+  Debug.traceLevel = workspace
+    .getConfiguration("apollographql")
+    .get("trace.server");
+  context.subscriptions.push(
+    workspace.onDidChangeConfiguration((event) => {
+      const affected = event.affectsConfiguration("apollographql.trace.server");
+      if (affected) {
+        Debug.traceLevel = workspace
+          .getConfiguration("apollographql")
+          .get("trace.server");
+      }
+    }),
+  );
+
   await client.start();
   return {
     outputChannel,

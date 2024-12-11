@@ -9,10 +9,22 @@ export const devtoolsEvents = new EventEmitter<{
   fromDevTools: [unknown];
 }>();
 devtoolsEvents.addListener("toDevTools", (msg) => {
-  Debug.info("WS > DevTools: " + JSON.stringify(msg));
+  Debug.traceMessage(
+    `WS > DevTools: ${
+      msg && typeof msg === "object" && "type" in msg ? msg.type : "unknown"
+    }`,
+    "WS > DevTools: %o",
+    msg,
+  );
 });
 devtoolsEvents.addListener("fromDevTools", (msg) => {
-  Debug.info("DevTools > WS: " + JSON.stringify(msg));
+  Debug.traceMessage(
+    `DevTools > WS: ${
+      msg && typeof msg === "object" && "type" in msg ? msg.type : "unknown"
+    }`,
+    "DevTools > WS: %o",
+    msg,
+  );
 });
 
 let id = 1;

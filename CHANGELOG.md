@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.0
+
+### Minor Changes
+
+- [#188](https://github.com/apollographql/vscode-graphql/pull/188) [`595784f0`](https://github.com/apollographql/vscode-graphql/commit/595784f057de18d987768fa1aaa8c37a5fa802c7) Thanks [@phryneas](https://github.com/phryneas)! - Adds experimental integration of the Apollo Client DevTools
+
 ## 2.4.0
 
 ### Minor Changes

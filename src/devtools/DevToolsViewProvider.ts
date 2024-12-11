@@ -1,5 +1,34 @@
 import * as vscode from "vscode";
-import { devtoolsEvents } from "./server";
+import { devtoolsEvents, sendToDevTools, serverState } from "./server";
+
+type ActorMessage = { type: "actor"; message: unknown };
+
+export function isActorMessage(message: any): message is ActorMessage {
+  return message && message.type === "actor";
+}
+
+type DevToolsOpenCommandMessage = {
+  type: "vscode:executeCommand";
+  command: string;
+  arguments?: unknown[];
+};
+
+export function isDevToolsExecuteCommandMessage(
+  message: any,
+): message is DevToolsOpenCommandMessage {
+  return message && message.type === "vscode:executeCommand";
+}
+
+type DevToolsOpenExternalMessage = {
+  type: "vscode:openExternal";
+  uri: string;
+};
+
+export function isDevToolsOpenExternalMessage(
+  message: any,
+): message is DevToolsOpenExternalMessage {
+  return message && message.type === "vscode:openExternal";
+}
 
 export class DevToolsViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "vscode-apollo-client-devtools";
@@ -20,16 +49,40 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
       panel.webview,
       this._extensionUri,
     );
-
-    panel.webview.onDidReceiveMessage((data) => {
-      devtoolsEvents.emit("fromDevTools", data);
-    });
+    const panelDisposables: vscode.Disposable[] = [];
+    panel.webview.onDidReceiveMessage(
+      (data) => {
+        if (data.source === "apollo-client-devtools") {
+          devtoolsEvents.emit("fromDevTools", data);
+        }
+        if (data.source === "vscode-panel") {
+          if (data.type === "mounted") {
+            sendToDevTools({
+              type: "initializePanel",
+              initialContext: {
+                port:
+                  serverState?.port ||
+                  vscode.workspace
+                    .getConfiguration("apollographql")
+                    .get("devTools.serverPort", 0),
+                listening: !!serverState?.port,
+              },
+            });
+          }
+        }
+      },
+      this,
+      panelDisposables,
+    );
     function forwardToDevTools(data: unknown) {
       panel.webview.postMessage(data);
     }
     devtoolsEvents.addListener("toDevTools", forwardToDevTools);
     panel.onDidDispose(() => {
       devtoolsEvents.removeListener("toDevTools", forwardToDevTools);
+      for (const disposable of panelDisposables) {
+        disposable.dispose();
+      }
     });
   }
 
@@ -107,11 +160,9 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
     </script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script nonce="${nonce}">
-      window.originalPostMessage({
-        id: 123,
-        source: "apollo-client-devtools",
-        type: "actor",
-        message: { type: "initializePanel" },
+      window.postMessage({
+        source: "vscode-panel",
+        type: "mounted",
       });
     </script>
   </body>

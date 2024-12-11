@@ -1,4 +1,6 @@
 import { OutputChannel } from "vscode";
+import { TraceValues } from "vscode-languageclient";
+import { format } from "node:util";
 
 /**
  * for errors (and other logs in debug mode) we want to print
@@ -19,6 +21,21 @@ export class Debug {
 
   public static SetOutputConsole(outputConsole: OutputChannel) {
     this.outputConsole = outputConsole;
+  }
+
+  private static _traceLevel: Exclude<TraceValues, "compact"> = "off";
+  public static get traceLevel(): TraceValues {
+    return Debug._traceLevel;
+  }
+  public static set traceLevel(value: TraceValues | undefined) {
+    console.log("setting trace level to", value);
+    if (value === "compact") {
+      // we do not handle "compact" and it's not possible to set in settings, but it doesn't hurt to at least map
+      // it to another value
+      this._traceLevel = "messages";
+    } else {
+      this._traceLevel = value || "off";
+    }
   }
 
   /**
@@ -53,6 +70,28 @@ export class Debug {
   public static warning(message: string, _stack?: string) {
     if (!this.outputConsole) return;
     this.outputConsole.appendLine(`[WARN] ${message}`);
+  }
+
+  public static traceMessage(
+    short: string,
+    verbose = short,
+    ...verboseParams: any[]
+  ) {
+    if (!this.outputConsole) return;
+    if (Debug.traceLevel === "verbose") {
+      this.outputConsole.appendLine(
+        `[Trace] ${format(verbose, ...verboseParams)}`,
+      );
+    } else if (Debug.traceLevel === "messages") {
+      this.outputConsole.appendLine(`[Trace] ${short}`);
+    }
+  }
+
+  public static traceVerbose(message: string, ...params: any[]) {
+    if (!this.outputConsole) return;
+    if (Debug.traceLevel === "verbose") {
+      this.outputConsole.appendLine(`[Trace] ${format(message, ...params)}`);
+    }
   }
 
   /**

@@ -156,7 +156,7 @@ export class DevToolsViewProvider implements vscode.WebviewViewProvider {
         return vscode.postMessage(...args);
       };
 
-      window.addEventListener("message", (event) => { console.debug(event); });
+      // window.addEventListener("message", (event) => { console.debug(event); });
     </script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
     <script nonce="${nonce}">

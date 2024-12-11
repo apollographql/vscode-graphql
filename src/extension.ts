@@ -8,10 +8,10 @@ import {
   DecorationOptions,
   commands,
   QuickPickItem,
-  Disposable,
   OutputChannel,
   MarkdownString,
   Range,
+  env,
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
@@ -27,6 +27,13 @@ import {
   printStatsToClientOutputChannel,
 } from "./utils";
 import { Debug } from "./debug";
+import {
+  DevToolsViewProvider,
+  isActorMessage,
+  isDevToolsExecuteCommandMessage,
+  isDevToolsOpenExternalMessage,
+} from "./devtools/DevToolsViewProvider";
+import { devtoolsEvents, serverState, startServer } from "./devtools/server";
 
 const { version } = require("../package.json");
 
@@ -156,6 +163,17 @@ export async function activate(
         });
       } else {
         statusBar.showLoadedState({ hasActiveTextEditor });
+      }
+
+      const containsClientConfig = response.some(
+        (item) => item && !isError(item) && "client" in item,
+      );
+      if (containsClientConfig) {
+        commands.executeCommand(
+          "setContext",
+          "vscode-apollo.hasClientProject",
+          true,
+        );
       }
     } else {
       Debug.error(
@@ -328,6 +346,67 @@ export async function activate(
       return uri.query;
     },
   });
+
+  const provider = new DevToolsViewProvider(context.extensionUri);
+  context.subscriptions.push(
+    window.registerWebviewViewProvider(DevToolsViewProvider.viewType, provider),
+  );
+
+  function devToolsEventListener(event: unknown) {
+    if (!isActorMessage(event)) return;
+    const message = event.message;
+    if (isDevToolsExecuteCommandMessage(message)) {
+      commands.executeCommand(message.command, ...(message.arguments || []));
+    }
+    if (isDevToolsOpenExternalMessage(message)) {
+      env.openExternal(
+        // if we `Uri.parse` here, we end up with something that somehow double-encodes some things like `#`
+        // interestingly enough, the implementation of `openExternal` also allows for strings to be passed in
+        // directly, and that works - so we just pass in the string directly
+        message.uri as any as Uri,
+      );
+    }
+  }
+  devtoolsEvents.addListener("fromDevTools", devToolsEventListener);
+  context.subscriptions.push({
+    dispose: () =>
+      devtoolsEvents.removeListener("fromDevTools", devToolsEventListener),
+  });
+
+  context.subscriptions.push(
+    commands.registerCommand("apollographql/startDevToolsServer", () => {
+      const port = workspace
+        .getConfiguration("apollographql")
+        .get("devTools.serverPort", 0);
+      startServer(port);
+    }),
+  );
+  context.subscriptions.push({
+    dispose() {
+      if (serverState) {
+        serverState.disposable.dispose();
+      }
+    },
+  });
+  context.subscriptions.push(
+    commands.registerCommand("apollographql/stopDevToolsServer", () => {
+      serverState?.disposable.dispose();
+    }),
+  );
+
+  Debug.traceLevel = workspace
+    .getConfiguration("apollographql")
+    .get("trace.server");
+  context.subscriptions.push(
+    workspace.onDidChangeConfiguration((event) => {
+      const affected = event.affectsConfiguration("apollographql.trace.server");
+      if (affected) {
+        Debug.traceLevel = workspace
+          .getConfiguration("apollographql")
+          .get("trace.server");
+      }
+    }),
+  );
 
   await client.start();
   return {

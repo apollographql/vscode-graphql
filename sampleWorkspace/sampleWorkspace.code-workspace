@@ -25,5 +25,8 @@
       "path": "../src/language-server/__tests__/fixtures/documents"
     }
   ],
-  "settings": {}
+  "settings": {
+    "apollographql.devTools.showPanel": "detect",
+    "apollographql.devTools.serverPort": 7095
+  }
 }

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.2
+
+### Patch Changes
+
+- [#248](https://github.com/apollographql/vscode-graphql/pull/248) [`93ba6ebb`](https://github.com/apollographql/vscode-graphql/commit/93ba6ebb272d9146a1ead99f28db41cb00e69394) Thanks [@phryneas](https://github.com/phryneas)! - DevTools: Fix outdated import name in ClientNotFoundModal
+
 ## 2.5.1
 
 ### Patch Changes

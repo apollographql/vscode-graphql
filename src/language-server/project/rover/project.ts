@@ -194,6 +194,7 @@ export class RoverProject extends GraphQLProject {
         "pipe",
         Debug.traceLevel >= TraceLevel.verbose ? "inherit" : "ignore",
       ],
+      windowsHide: true,
     });
     this.child = child;
     const reader = new StreamMessageReader(child.stdout);

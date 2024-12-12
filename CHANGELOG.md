@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.1
+
+### Patch Changes
+
+- [#243](https://github.com/apollographql/vscode-graphql/pull/243) [`694807c4`](https://github.com/apollographql/vscode-graphql/commit/694807c462f5595c1f4e37ab10ca1fa5d692a4ee) Thanks [@phryneas](https://github.com/phryneas)! - [Windows, LSP]: Prevent a console window from opening for the Rover LSP process
+
 ## 2.5.0
 
 ### Minor Changes

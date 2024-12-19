@@ -1,32 +1,32 @@
 {
   "folders": [
     {
-      "path": "localSchema"
+      "path": "localSchema",
     },
     {
-      "path": "clientSchema"
+      "path": "clientSchema",
     },
     {
-      "path": "spotifyGraph"
+      "path": "spotifyGraph",
     },
     {
-      "path": "httpSchema"
+      "path": "httpSchema",
     },
     {
-      "path": "localSchemaArray"
+      "path": "localSchemaArray",
     },
     {
-      "path": "rover"
+      "path": "rover",
     },
     {
-      "path": "configFileTypes"
+      "path": "configFileTypes",
     },
     {
-      "path": "../src/language-server/__tests__/fixtures/documents"
-    }
+      "path": "../src/language-server/__tests__/fixtures/documents",
+    },
   ],
   "settings": {
     "apollographql.devTools.showPanel": "detect",
-    "apollographql.devTools.serverPort": 7095
-  }
+    "apollographql.devTools.serverPort": 7095,
+  },
 }

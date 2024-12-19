@@ -71,15 +71,15 @@ export class GraphQLWorkspace {
           clientIdentity,
         })
       : isRoverConfig(config)
-      ? new RoverProject({
-          config,
-          loadingHandler: this.LanguageServerLoadingHandler,
-          configFolderURI: URI.parse(folder.uri),
-          capabilities: this.capabilities!, // TODO?
-        })
-      : (() => {
-          throw new Error("Impossible config!");
-        })();
+        ? new RoverProject({
+            config,
+            loadingHandler: this.LanguageServerLoadingHandler,
+            configFolderURI: URI.parse(folder.uri),
+            capabilities: this.capabilities!, // TODO?
+          })
+        : (() => {
+            throw new Error("Impossible config!");
+          })();
 
     project.onDiagnostics((params) => {
       this._onDiagnostics && this._onDiagnostics(params);

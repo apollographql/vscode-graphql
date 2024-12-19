@@ -39,8 +39,8 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
     const documents = path
       ? [this.loadFileAndGetDocument(path)]
       : paths
-      ? paths.map(this.loadFileAndGetDocument, this)
-      : undefined;
+        ? paths.map(this.loadFileAndGetDocument, this)
+        : undefined;
 
     if (!documents)
       throw new Error(
@@ -73,8 +73,8 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
       const __schema = parsed.data
         ? parsed.data.__schema
         : parsed.__schema
-        ? parsed.__schema
-        : parsed;
+          ? parsed.__schema
+          : parsed;
 
       const schema = buildClientSchema({ __schema });
       return parse(printSchema(schema));
@@ -105,8 +105,8 @@ export class FileSchemaProvider implements GraphQLSchemaProvider {
     const SDLs = path
       ? [this.loadFileAndGetSDL(path)]
       : paths
-      ? paths.map(this.loadFileAndGetSDL, this)
-      : undefined;
+        ? paths.map(this.loadFileAndGetSDL, this)
+        : undefined;
 
     if (!SDLs || SDLs.filter((s) => !Boolean(s)).length > 0)
       return Debug.error(

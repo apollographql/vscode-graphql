@@ -5,7 +5,7 @@
 </p>
 <h1>Apollo GraphQL for VS Code</h1>
 
-[![Visual Studio Marketplace Version (including pre-releases)](https://img.shields.io/visual-studio-marketplace/v/apollographql.vscode-apollo)](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/apollographql.vscode-apollo)](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) [![Build Status](https://circleci.com/gh/apollographql/vscode-graphql.svg?style=svg)](https://circleci.com/gh/apollographql/vscode-graphql) [![Join the community](https://img.shields.io/discourse/status?label=Join%20the%20community&server=https%3A%2F%2Fcommunity.apollographql.com)](https://community.apollographql.com) [![Join our Discord server](https://img.shields.io/discord/1022972389463687228.svg?color=7389D8&labelColor=6A7EC2&logo=discord&logoColor=ffffff&style=flat-square)](https://discord.gg/graphos)
+[![Visual Studio Marketplace Version (including pre-releases)](https://img.shields.io/visual-studio-marketplace/v/apollographql.vscode-apollo)](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/apollographql.vscode-apollo)](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) [![Build Status](https://circleci.com/gh/apollographql/vscode-graphql.svg?style=svg)](https://circleci.com/gh/apollographql/vscode-graphql) [![Join the community](https://img.shields.io/discourse/status?label=Join%20the%20community&server=https%3A%2F%2Fcommunity.apollographql.com)](https://community.apollographql.com)
 
 </div>
 

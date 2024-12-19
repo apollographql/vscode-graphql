@@ -63,7 +63,7 @@
     "vscode-uri": "3.0.8",
     "which": "4.0.0",
     "ws": "8.18.0",
-    "zod": "3.23.8",
+    "zod": "3.24.1",
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {

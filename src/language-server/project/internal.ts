@@ -252,8 +252,8 @@ export abstract class GraphQLInternalProject
       localSchemaFile === undefined
         ? []
         : Array.isArray(localSchemaFile)
-        ? localSchemaFile
-        : [localSchemaFile]
+          ? localSchemaFile
+          : [localSchemaFile]
     ).map((filePath) =>
       path.relative(this.rootURI.fsPath, path.join(process.cwd(), filePath)),
     );

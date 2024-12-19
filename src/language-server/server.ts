@@ -87,8 +87,8 @@ workspace.onConfigFilesFound(async (params) => {
       !value
         ? value
         : value instanceof Error || isValidationError(value)
-        ? { message: value.message, stack: value.stack }
-        : value,
+          ? { message: value.message, stack: value.stack }
+          : value,
     ),
   );
 });
@@ -181,18 +181,16 @@ documents.onDidChangeContent((params) => {
   project.documentDidChange(params.document);
 });
 
-documents.onDidOpen(
-  (params) =>
-    workspace
-      .projectForFile(params.document.uri, params.document.languageId)
-      ?.onDidOpen?.(params),
+documents.onDidOpen((params) =>
+  workspace
+    .projectForFile(params.document.uri, params.document.languageId)
+    ?.onDidOpen?.(params),
 );
 
-documents.onDidClose(
-  (params) =>
-    workspace
-      .projectForFile(params.document.uri, params.document.languageId)
-      ?.onDidClose?.(params),
+documents.onDidClose((params) =>
+  workspace
+    .projectForFile(params.document.uri, params.document.languageId)
+    ?.onDidClose?.(params),
 );
 
 connection.onDidChangeWatchedFiles((params) => {

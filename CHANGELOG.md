@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## 2.5.2
+
+### Patch Changes
+
+- [#248](https://github.com/apollographql/vscode-graphql/pull/248) [`93ba6ebb`](https://github.com/apollographql/vscode-graphql/commit/93ba6ebb272d9146a1ead99f28db41cb00e69394) Thanks [@phryneas](https://github.com/phryneas)! - DevTools: Fix outdated import name in ClientNotFoundModal
+
+## 2.5.1
+
+### Patch Changes
+
+- [#243](https://github.com/apollographql/vscode-graphql/pull/243) [`694807c4`](https://github.com/apollographql/vscode-graphql/commit/694807c462f5595c1f4e37ab10ca1fa5d692a4ee) Thanks [@phryneas](https://github.com/phryneas)! - [Windows, LSP]: Prevent a console window from opening for the Rover LSP process
+
+## 2.5.0
+
+### Minor Changes
+
+- [#188](https://github.com/apollographql/vscode-graphql/pull/188) [`595784f0`](https://github.com/apollographql/vscode-graphql/commit/595784f057de18d987768fa1aaa8c37a5fa802c7) Thanks [@phryneas](https://github.com/phryneas)! - Adds experimental integration of the Apollo Client DevTools
+
+## 2.4.0
+
+### Minor Changes
+
+- [#236](https://github.com/apollographql/vscode-graphql/pull/236) [`9a4403db`](https://github.com/apollographql/vscode-graphql/commit/9a4403db7b8f9cb03638d83a7e3c29dd3c3077b7) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Add support for GraphQL in Notebook cells
+
+### Patch Changes
+
+- [#240](https://github.com/apollographql/vscode-graphql/pull/240) [`3dfd9ac0`](https://github.com/apollographql/vscode-graphql/commit/3dfd9ac08a20ff92cafb398f1a8c71e5f7d03519) Thanks [@phryneas](https://github.com/phryneas)! - Fix a bug handling windows path separators in `FileSet` instances.
+
+## 2.3.6
+
+### Patch Changes
+
+- [#216](https://github.com/apollographql/vscode-graphql/pull/216) [`1add31e0`](https://github.com/apollographql/vscode-graphql/commit/1add31e0e9bc2da92ea7c3a1c65206cc5d95bb68) Thanks [@phryneas](https://github.com/phryneas)! - Add JSON schema for `supergraph.yaml`.
+
 ## 2.3.5
 
 ### Patch Changes

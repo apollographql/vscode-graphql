@@ -48,6 +48,7 @@ const fileAssociations: { [extension: string]: string } = {
   ".re": "reason",
   ".ex": "elixir",
   ".exs": "elixir",
+  ".ipynb": "python",
 };
 
 export interface GraphQLInternalProjectConfig extends GraphQLProjectConfig {
@@ -251,8 +252,8 @@ export abstract class GraphQLInternalProject
       localSchemaFile === undefined
         ? []
         : Array.isArray(localSchemaFile)
-        ? localSchemaFile
-        : [localSchemaFile]
+          ? localSchemaFile
+          : [localSchemaFile]
     ).map((filePath) =>
       path.relative(this.rootURI.fsPath, path.join(process.cwd(), filePath)),
     );

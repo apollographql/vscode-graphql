@@ -12,9 +12,7 @@
               "$ref": "#/definitions/clientConfig"
             }
           },
-          "required": [
-            "client"
-          ],
+          "required": ["client"],
           "additionalProperties": false
         },
         {
@@ -24,9 +22,7 @@
               "$ref": "#/definitions/roverConfig"
             }
           },
-          "required": [
-            "rover"
-          ],
+          "required": ["rover"],
           "additionalProperties": false
         }
       ]
@@ -67,9 +63,7 @@
                   "description": "Skip SSL validation. May be required for self-signed certificates."
                 }
               },
-              "required": [
-                "url"
-              ],
+              "required": ["url"],
               "additionalProperties": false,
               "description": "Configuration for using a local schema from a URL."
             },
@@ -97,9 +91,7 @@
                   "description": "Path to a local schema file to use as GraphQL Schema for this project. Can be a string or an array of strings to merge multiple partial schemas into one."
                 }
               },
-              "required": [
-                "localSchemaFile"
-              ],
+              "required": ["localSchemaFile"],
               "additionalProperties": false,
               "description": "Configuration for using a local schema from a file."
             }
@@ -127,10 +119,7 @@
           "items": {
             "type": "string"
           },
-          "default": [
-            "**/node_modules",
-            "**/__tests__"
-          ],
+          "default": ["**/node_modules", "**/__tests__"],
           "description": "Files to exclude from this project. The Apollo GraphQL extension will not provide IntelliSense-like features in these files."
         },
         "tagName": {
@@ -157,9 +146,7 @@
           "description": "This option is no longer supported, please remove it from your configuration file."
         }
       },
-      "required": [
-        "service"
-      ],
+      "required": ["service"],
       "additionalProperties": false,
       "description": "Configuration for a Client project."
     },
@@ -175,10 +162,7 @@
           "description": "The name of the profile to use."
         },
         "supergraphConfig": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": ["string", "null"],
           "description": "The path to your `supergraph.yaml` file. \nDefaults to a `supergraph.yaml` in the folder of your `apollo.config.json`, if there is one."
         },
         "extraArgs": {

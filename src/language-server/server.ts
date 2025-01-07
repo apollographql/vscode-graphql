@@ -87,8 +87,8 @@ workspace.onConfigFilesFound(async (params) => {
       !value
         ? value
         : value instanceof Error || isValidationError(value)
-        ? { message: value.message, stack: value.stack }
-        : value,
+          ? { message: value.message, stack: value.stack }
+          : value,
     ),
   );
 });
@@ -157,13 +157,14 @@ connection.onInitialized(async () => {
 });
 
 const documents = new TextDocuments(TextDocument);
+const schemes = ["file", "vscode-notebook-cell"];
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);
 
-function isFile(uri: string) {
-  return URI.parse(uri).scheme === "file";
+function isEnabledDocument(uri: string) {
+  return schemes.includes(URI.parse(uri).scheme);
 }
 
 documents.onDidChangeContent((params) => {
@@ -173,26 +174,23 @@ documents.onDidChangeContent((params) => {
   );
   if (!project) return;
 
-  // Only watch changes to files
-  if (!isFile(params.document.uri)) {
+  if (!isEnabledDocument(params.document.uri)) {
     return;
   }
 
   project.documentDidChange(params.document);
 });
 
-documents.onDidOpen(
-  (params) =>
-    workspace
-      .projectForFile(params.document.uri, params.document.languageId)
-      ?.onDidOpen?.(params),
+documents.onDidOpen((params) =>
+  workspace
+    .projectForFile(params.document.uri, params.document.languageId)
+    ?.onDidOpen?.(params),
 );
 
-documents.onDidClose(
-  (params) =>
-    workspace
-      .projectForFile(params.document.uri, params.document.languageId)
-      ?.onDidClose?.(params),
+documents.onDidClose((params) =>
+  workspace
+    .projectForFile(params.document.uri, params.document.languageId)
+    ?.onDidClose?.(params),
 );
 
 connection.onDidChangeWatchedFiles((params) => {
@@ -213,8 +211,7 @@ connection.onDidChangeWatchedFiles((params) => {
       continue;
     }
 
-    // Only watch changes to files
-    if (!isFile(uri)) {
+    if (!isEnabledDocument(uri)) {
       continue;
     }
 

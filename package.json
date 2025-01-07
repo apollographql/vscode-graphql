@@ -2,7 +2,7 @@
   "name": "vscode-apollo",
   "displayName": "Apollo GraphQL",
   "description": "Rich editor support for GraphQL client and server development that seamlessly integrates with the Apollo platform",
-  "version": "2.3.5",
+  "version": "2.5.2",
   "referenceID": "87197759-7617-40d0-b32e-46d378e907c7",
   "author": "Apollo GraphQL <opensource@apollographql.com>",
   "license": "MIT",
@@ -41,12 +41,13 @@
     "vscode": "^1.90.0"
   },
   "dependencies": {
-    "@apollo/client": "3.11.8",
-    "@apollo/subgraph": "2.9.1",
-    "@graphql-tools/schema": "10.0.6",
+    "@apollo/client": "3.12.3",
+    "@apollo/client-devtools-vscode": "4.19.1",
+    "@apollo/subgraph": "2.9.3",
+    "@graphql-tools/schema": "10.0.13",
     "@wry/equality": "0.5.7",
     "cosmiconfig": "9.0.0",
-    "dotenv": "16.4.5",
+    "dotenv": "16.4.7",
     "fractional-indexing": "2.1.0",
     "glob": "11.0.0",
     "graphql": "16.9.0",
@@ -54,55 +55,55 @@
     "graphql-tag": "2.12.6",
     "jsonc-parser": "^3.3.1",
     "lodash.debounce": "4.0.8",
-    "lodash.merge": "4.6.2",
     "lodash.throttle": "4.1.1",
     "lz-string": "1.5.0",
     "minimatch": "10.0.1",
     "moment": "2.30.1",
     "semver": "7.6.3",
-    "undici": "6.19.8",
+    "undici": "6.21.0",
     "vscode-languageclient": "9.0.1",
     "vscode-languageserver": "9.0.1",
     "vscode-languageserver-textdocument": "1.0.12",
     "vscode-uri": "3.0.8",
-    "which": "4.0.0",
-    "zod": "3.23.8",
+    "which": "5.0.0",
+    "ws": "8.18.0",
+    "zod": "3.24.1",
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
-    "@apollo/rover": "0.27.0-alpha.0",
-    "@changesets/changelog-github": "0.4.8",
-    "@changesets/cli": "2.26.2",
-    "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/typescript-operations": "^4.2.3",
-    "@types/jest": "29.5.13",
+    "@apollo/rover": "0.27.0-preview.0",
+    "@changesets/changelog-github": "0.5.0",
+    "@changesets/cli": "2.27.10",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/typescript-operations": "4.2.3",
+    "@types/jest": "29.5.14",
     "@types/lodash.debounce": "4.0.9",
     "@types/lodash.merge": "4.6.9",
-    "@types/lodash.throttle": "^4.1.9",
+    "@types/lodash.throttle": "4.1.9",
     "@types/node": "20.14.10",
     "@types/vscode": "1.90.0",
     "@typescript-eslint/eslint-plugin": "6.9.1",
     "@typescript-eslint/parser": "6.9.1",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1",
-    "@wry/trie": "^0.5.0",
-    "esbuild": "^0.23.0",
+    "@vscode/test-cli": "0.0.10",
+    "@vscode/test-electron": "2.4.1",
+    "@wry/trie": "0.5.0",
+    "esbuild": "0.23.0",
     "eslint": "8.52.0",
-    "eslint-config-prettier": "9.0.0",
-    "eslint-plugin-prettier": "5.0.1",
-    "graphql-http": "^1.22.1",
-    "import-fresh": "^3.3.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "graphql-http": "1.22.1",
+    "import-fresh": "3.3.0",
     "jest": "29.7.0",
     "jest-environment-node": "29.7.0",
-    "memfs": "4.11.2",
-    "npm-run-all": "^4.1.5",
-    "prettier": "3.0.3",
+    "memfs": "4.15.0",
+    "npm-run-all": "4.1.5",
+    "prettier": "3.4.2",
     "rimraf": "6.0.1",
-    "ts-jest": "29.1.2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.3",
-    "vscode-tmgrammar-test": "^0.1.3",
-    "zod-to-json-schema": "^3.23.3"
+    "ts-jest": "29.2.5",
+    "ts-node": "10.9.2",
+    "typescript": "5.5.3",
+    "vscode-tmgrammar-test": "0.1.3",
+    "zod-to-json-schema": "3.23.3"
   },
   "publisher": "apollographql",
   "categories": [
@@ -141,6 +142,23 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "Show a \"Run in Studio\" button to the right of Operation Signatures.",
+          "scope": "window"
+        },
+        "apollographql.devTools.showPanel": {
+          "type": "string",
+          "enum": [
+            "always",
+            "never",
+            "detect"
+          ],
+          "default": "never",
+          "markdownDescription": "[Experimental Feature] If the Apollo Client DevTools panel should be shown. If set to `detect`, the panel will only be shown if a configuration file with a client project is found in the workspace.",
+          "scope": "window"
+        },
+        "apollographql.devTools.serverPort": {
+          "type": "number",
+          "default": 7095,
+          "markdownDescription": "The Apollo Client DevTools server port. The server will be started as soon as you start using the DevTools panels.",
           "scope": "window"
         }
       }
@@ -288,6 +306,10 @@
       {
         "fileMatch": "apollo.config.yaml",
         "url": "./schemas/apollo.config.schema.json"
+      },
+      {
+        "fileMatch": "supergraph.yaml",
+        "url": "./schemas/supergraph_config_schema.json"
       }
     ],
     "commands": [
@@ -305,8 +327,40 @@
         "command": "apollographql/showStats",
         "title": "Show Status",
         "category": "Apollo"
+      },
+      {
+        "command": "apollographql/startDevToolsServer",
+        "title": "Start Apollo Client DevTools Server",
+        "category": "Apollo",
+        "when": "config.apollographql.devTools.showPanel=='always' || (config.apollographql.devTools.showPanel=='detect' && vscode-apollo.hasClientProject)"
+      },
+      {
+        "command": "apollographql/stopDevToolsServer",
+        "title": "Stop Apollo Client DevTools Server",
+        "category": "Apollo",
+        "when": "config.apollographql.devTools.showPanel=='always' || (config.apollographql.devTools.showPanel=='detect' && vscode-apollo.hasClientProject)"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "client-devtools",
+          "title": "Apollo Client DevTools",
+          "icon": "images/apollo.svg"
+        }
+      ]
+    },
+    "views": {
+      "client-devtools": [
+        {
+          "type": "webview",
+          "id": "vscode-apollo-client-devtools",
+          "name": "Apollo Client DevTools",
+          "icon": "images/apollo.svg",
+          "when": "config.apollographql.devTools.showPanel=='always' || (config.apollographql.devTools.showPanel=='detect' && vscode-apollo.hasClientProject)"
+        }
+      ]
+    }
   },
   "galleryBanner": {
     "color": "#1d127d",

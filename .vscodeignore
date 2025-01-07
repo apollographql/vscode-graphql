@@ -25,3 +25,6 @@ sampleWorkspace
 renovate.json
 images/**/*.gif
 images/marketplace
+.yalc
+yalc.lock
+start-ac.mjs

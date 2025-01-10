@@ -1,0 +1,137 @@
+# Examples from https://github.com/apollographql/router/blob/next/apollo-federation/src/sources/connect/json_selection/README.md
+
+id
+name
+abc: some.nested.path { a b c }
+id
+name
+some.nested.path { a b c }
+names: {
+  first: firstName
+  last: lastName
+}
+# Also allowed:
+firstName
+lastName
+postID
+title
+author: {
+  id: authorID
+  name: authorName
+}
+      title
+      year: publication.year
+      authorName: author.name
+id
+created
+model
+
+# The { role content } SubSelection is mandatory so the output keys
+# can be statically determined:
+choices->first.message { role content }
+
+# Multiple PathWithSubSelections are allowed in the same SubSelection:
+choices->last.message { lastContent: content }
+      # For some reason /users/{$args.id} returns an object with name
+      # and email but no id, so we inject the id manually:
+      id: $args.id
+      name
+      email
+id name friends: friend_ids { id: $ }
+items: data.nested.items { id name }
+firstItem: data.nested.items->first { id name }
+firstItemName: data.nested.items->first.name
+$.data { id name }
+id: data.id
+name: data.name
+all: $.first->and($.second)->and($.third)
+wrapped: field->echo({ fieldValue: @ })
+children: parent->echo([@.child1, @.child2, @.child3])
+doubled: numbers->map({ value: @->mul(2) })
+types: values->map(@->typeof)
+__typename: $("Product")
+condition: $(true)
+alphabetSlice: $("abcdefghijklmnopqrstuvwxyz")->slice($args.start, $args.end)
+suffix: results.slice($(-1)->mul($args.suffixLength))
+# The ->echo method returns its first input argument as-is, ignoring
+# the input data. Useful for embedding literal values, as in
+# $->echo("give me this string"), or wrapping the input value.
+__typename: $->echo("Book")
+wrapped: field->echo({ fieldValue: @ })
+
+# Returns the type of the data as a string, e.g. "object", "array",
+# "string", "number", "boolean", or "null". Note that `typeof null` is
+# "object" in JavaScript but "null" for our purposes.
+typeOfValue: value->typeof
+
+# When invoked against an array, ->map evaluates its first argument
+# against each element of the array, binding the element values to `@`,
+# and returns an array of the results. When invoked against a non-array,
+# ->map evaluates its first argument against that value and returns the
+# result without wrapping it in an array.
+doubled: numbers->map(@->mul(2))
+types: values->map(@->typeof)
+
+# Returns true if the data is deeply equal to the first argument, false
+# otherwise. Equality is solely value-based (all JSON), no references.
+isObject: value->typeof->eq("object")
+
+# Takes any number of pairs [candidate, value], and returns value for
+# the first candidate that equals the input data. If none of the
+# pairs match, a runtime error is reported, but a single-element
+# [<default>] array as the final argument guarantees a default value.
+__typename: kind->match(
+    ["dog", "Canine"],
+    ["cat", "Feline"],
+    ["Exotic"]
+)
+
+# Like ->match, but expects the first element of each pair to evaluate
+# to a boolean, returning the second element of the first pair whose
+# first element is true. This makes providing a final catch-all case
+# easy, since the last pair can be [true, <default>].
+__typename: kind->matchIf(
+    [@->eq("dog"), "Canine"],
+    [@->eq("cat"), "Feline"],
+    [true, "Exotic"]
+)
+
+# Arithmetic methods, supporting both integers and floating point values,
+# similar to JavaScript.
+sum: $.a->add($.b)->add($.c)
+difference: $.a->sub($.b)->sub($.c)
+product: $.a->mul($.b, $.c)
+quotient: $.a->div($.b)
+remainder: $.a->mod($.b)
+
+# Array/string methods
+first: list->first
+last: list->last
+index3: list->get(3)
+secondToLast: list->get(-2)
+slice: list->slice(0, 5)
+substring: string->slice(2, 5)
+arraySize: array->size
+stringLength: string->size
+
+# Object methods
+aValue: $->echo({ a: 123 })->get("a")
+hasKey: object->has("key")
+hasAB: object->has("a")->and(object->has("b"))
+numberOfProperties: object->size
+keys: object->keys
+values: object->values
+entries: object->entries
+keysFromEntries: object->entries.key
+valuesFromEntries: object->entries.value
+
+# Logical methods
+negation: $.condition->not
+bangBang: $.condition->not->not
+disjunction: $.a->or($.b)->or($.c)
+conjunction: $.a->and($.b, $.c)
+aImpliesB: $.a->not->or($.b)
+excludedMiddle: $.toBe->or($.toBe->not)->eq(true)
+
+# Tests from https://github.com/apollographql/router/blob/next/apollo-federation/src/sources/connect/url_template.rs
+

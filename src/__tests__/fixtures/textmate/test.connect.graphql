@@ -1,0 +1,24 @@
+type Query {
+  post(id: ID!): Post
+    @connect(
+      source: "jsonPlaceholder"
+      http: {
+        GET: "/posts/{$args.id}"
+        POST: "/posts/{$args.id}"
+        PATCH: "/posts/{$args.id}"
+        DELETE: "/posts/{$args.id}"
+        PUT: "/posts/{$args.id}"
+        body: """
+        listing: {
+          title: $args.input.title
+        }
+        """
+      }
+      selection: """
+      foo: bar
+      $.root {
+        a
+      }
+      """
+    )
+}

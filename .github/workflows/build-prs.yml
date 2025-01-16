@@ -10,6 +10,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: "npm"
+      - run: npm config set engine-strict=false
       - run: npm install
       - run: echo PKG_VERSION="$(git show --no-patch --format=0.0.0-build-%ct.pr-${{ github.event.pull_request.number }}.commit-%h)" >> $GITHUB_ENV
       - run: npm pkg set "version=${{ env.PKG_VERSION }}"

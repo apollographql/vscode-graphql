@@ -48,6 +48,8 @@ jobs:
         with:
           node-version: 18.x
 
+      - run: npm config set engine-strict=false
+
       - name: Install dependencies
         run: npm ci
 

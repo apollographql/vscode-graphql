@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [#270](https://github.com/apollographql/vscode-graphql/pull/270) [`efdbe28a`](https://github.com/apollographql/vscode-graphql/commit/efdbe28a22fd9f309ebea34df9c7bb0716f9e729) Thanks [@github-actions](https://github.com/apps/github-actions)! - Republish 1.20.x to Marketplace
+- [#270](https://github.com/apollographql/vscode-graphql/pull/270) [`efdbe28a`](https://github.com/apollographql/vscode-graphql/commit/efdbe28a22fd9f309ebea34df9c7bb0716f9e729) Thanks [@github-actions](https://github.com/apps/github-actions)! - Republish 1.20 to Marketplace
 
 ## 1.20.0
 

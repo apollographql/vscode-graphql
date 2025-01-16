@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - v1.x
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -61,6 +62,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Attach VSX to GitHub release
+        if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'
+        run: |
+          npx -y @vscode/vsce package --out "vscode-apollo-$VERSION.vsix"
+          gh release upload "v$VERSION" "vscode-apollo-$VERSION.vsix"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{steps.changesets.outputs.publishedPackages[0].version}}
+
+      - name: Publish to Open VSX Registry
+        if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'
+        uses: HaaLeo/publish-vscode-extension@v1
+        with:
+          pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          baseContentUrl: https://raw.githubusercontent.com/apollographql/vscode-graphql
+
       - name: Publish to Visual Studio Marketplace
         if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'
         uses: HaaLeo/publish-vscode-extension@v1
@@ -86,7 +103,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "A new version of `vscode-apollo` was released: <https://github.com/apollographql/vscode-apollo/releases/tag/v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}|v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}> :rocket:"
+                    "text": "A new version of `vscode-apollo` was released: <https://github.com/apollographql/vscode-graphql/releases/tag/v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}|v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}> :rocket:"
                   }
                 }
               ]

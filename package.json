@@ -18,7 +18,7 @@
     "build": "tsc --build tsconfig.build.json",
     "build:clean": "npm run build -- --clean",
     "watch": "npm run build -- --watch",
-    "postinstall": "npx vscode-install",
+    "postinstall": "curl https://raw.githubusercontent.com/Microsoft/vscode/c6e592b2b5770e40a98cb9c2715a8ef89aec3d74/src/vs/vscode.d.ts -o node_modules/vscode/vscode.d.ts",
     "changeset-version": "changeset version && npm ci --ignore-scripts",
     "changeset-publish": "npm run build && changeset publish",
     "typecheck": "tsc --noEmit",

@@ -71,7 +71,7 @@ jobs:
           gh release upload "v$VERSION" "vscode-apollo-$VERSION.vsix"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{steps.changesets.outputs.publishedPackages[0].version}}
+          VERSION: ${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}
 
       - name: Publish to Open VSX Registry
         if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'

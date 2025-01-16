@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.20.2
+
+### Patch Changes
+
+- [`9ac0de95`](https://github.com/apollographql/vscode-graphql/commit/9ac0de95771b0781170def04bfd86b00b11e2324) Thanks [@phryneas](https://github.com/phryneas)! - Adjustments to fix Release process
+
 ## 1.20.1
 
 ### Patch Changes

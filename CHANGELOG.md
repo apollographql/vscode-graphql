@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.3
+
+### Patch Changes
+
+- [#254](https://github.com/apollographql/vscode-graphql/pull/254) [`2b0dd90`](https://github.com/apollographql/vscode-graphql/commit/2b0dd9092e4e27fb00bb279a837d29ec2f730bdb) Thanks [@phryneas](https://github.com/phryneas)! - remove unused direct dependency on `lodash.merge`
+
 ## 2.5.2
 
 ### Patch Changes

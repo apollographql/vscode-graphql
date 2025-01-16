@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.4
+
+### Patch Changes
+
+- [#267](https://github.com/apollographql/vscode-graphql/pull/267) [`8706670`](https://github.com/apollographql/vscode-graphql/commit/8706670810493c3574ecc66f9262e8fd025604dc) Thanks [@phryneas](https://github.com/phryneas)! - Adjustments to fix Release process
+
 ## 2.5.3
 
 ### Patch Changes

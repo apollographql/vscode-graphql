@@ -2,4 +2,4 @@
 "vscode-apollo": patch
 ---
 
-Various dependency udpates, republish 1.x to Marketplace
+Republish 1.20.x to Marketplace

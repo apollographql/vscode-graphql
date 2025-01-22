@@ -203,7 +203,7 @@ export class GraphQLClientProject extends GraphQLInternalProject {
 
     if (this.allIncludedFiles().length === 0) {
       console.warn(
-        "⚠️  It looks like there are 0 files associated with this Apollo Project. " +
+        `⚠️  It looks like there are 0 files associated with Apollo Project: "${this.displayName}". ` +
           "This may be because you don't have any files yet, or your includes/excludes " +
           "fields are configured incorrectly, and Apollo can't find your files. " +
           "For help configuring Apollo projects, see this guide: https://go.apollo.dev/t/config",

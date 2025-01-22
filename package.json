@@ -21,6 +21,7 @@
     "watch": "rimraf lib; npm-run-all -p watch:*",
     "watch:esbuild": "npm run build -- --watch",
     "watch:tsc": "npm run typecheck -- --watch",
+    "watch:textmate-yaml": "fswatch syntaxes/*.yaml | sed -u -e 's/\\.yaml$//' | xargs -I {} bash -c \"npx js-yaml {}.yaml > {}.json && echo {}\"",
     "sampleWorkspace:run": "node src/__e2e__/mockServer.js",
     "changeset-version": "changeset version && npm i",
     "changeset-publish": "npm run build -- --production && changeset publish",
@@ -29,7 +30,10 @@
     "format": "prettier --write .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:extension": "node src/__e2e__/runTests.js",
-    "test:textmate": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
+    "test:textmate": "npm run test:textmate-ts && npm run test:textmate-jsonselection && npm run test:textmate-graphql-jsonselection",
+    "test:textmate-ts": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
+    "test:textmate-jsonselection": "npx vscode-tmgrammar-snap -s source.apollo.connectors.mapping src/__tests__/fixtures/textmate/*.jsonselection",
+    "test:textmate-graphql-jsonselection": "npx vscode-tmgrammar-snap -s source.graphql src/__tests__/fixtures/textmate/*.graphql",
     "codegen": "graphql-codegen",
     "vscode:prepublish": "npm run build:production"
   },
@@ -173,6 +177,16 @@
         "configuration": "./graphql.configuration.json"
       },
       {
+        "id": "apollo.connectors.mapping",
+        "aliases": [
+          "[Apollo Connectors Mapping Syntax]"
+        ],
+        "filenames": [
+          "test.apollo.jsonselection"
+        ],
+        "configuration": "./apollo.jsonselection.configuration.json"
+      },
+      {
         "id": "jsonc",
         "filenames": [
           "apollo.config.json"
@@ -184,6 +198,22 @@
         "language": "graphql",
         "scopeName": "source.graphql",
         "path": "./syntaxes/graphql.json"
+      },
+      {
+        "language": "apollo.connectors.mapping",
+        "scopeName": "source.apollo.connectors.mapping",
+        "path": "./syntaxes/connectors.jsonselection.json"
+      },
+      {
+        "injectTo": [
+          "source.graphql"
+        ],
+        "scopeName": "source.apollo.connectors.graphql",
+        "path": "./syntaxes/graphql.connectors.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.jsonselection.graphql": "apollo.connectors.mapping",
+          "meta.embedded.block.string.jsonselection.graphql": "apollo.connectors.mapping"
+        }
       },
       {
         "injectTo": [

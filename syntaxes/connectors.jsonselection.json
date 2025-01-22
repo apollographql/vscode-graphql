@@ -1,0 +1,426 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Apollo Connectors Mapping Syntax",
+  "scopeName": "source.apollo.connectors.mapping",
+  "patterns": [
+    {
+      "include": "#JSONSelection"
+    },
+    {
+      "include": "source.graphql#graphql-skip-newlines"
+    }
+  ],
+  "repository": {
+    "JSONSelection": {
+      "name": "meta.JSONSelection",
+      "patterns": [
+        {
+          "include": "#NamedSelection"
+        },
+        {
+          "include": "#PathSelection"
+        },
+        {
+          "include": "#Comment"
+        }
+      ]
+    },
+    "SubSelection": {
+      "name": "meta.SubSelection",
+      "begin": "\\s*({)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.SubSelection.open"
+        }
+      },
+      "end": "\\s*(})",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.SubSelection.close"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#NamedSelection"
+        },
+        {
+          "include": "#Comment"
+        }
+      ]
+    },
+    "NamedSelection": {
+      "name": "meta.NamedSelection",
+      "patterns": [
+        {
+          "include": "#NamedFieldSelection"
+        },
+        {
+          "include": "#NamedPathSelection"
+        },
+        {
+          "include": "#PathWithSubSelection"
+        },
+        {
+          "include": "#NamedGroupSelection"
+        }
+      ]
+    },
+    "NamedPathSelection": {
+      "begin": "\\b([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:)",
+      "beginCaptures": {
+        "1": {
+          "name": "string.unquoted.NamedPathSelection.alias"
+        },
+        "2": {
+          "name": "punctuation.colon.NamedPathSelection"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathSelection"
+        }
+      ]
+    },
+    "NamedFieldSelection": {
+      "begin": "\\b(?:([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:))?\\s*([a-zA-Z_][0-9a-zA-Z_]*)\\b(?!\\s*:)",
+      "beginCaptures": {
+        "1": {
+          "name": "string.unquoted.NamedFieldSelection.alias"
+        },
+        "2": {
+          "name": "punctuation.colon.NamedFieldSelection"
+        },
+        "3": {
+          "name": "variable.NamedFieldSelection.key"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    },
+    "PathSelection": {
+      "patterns": [
+        {
+          "include": "#PathWithOrWithoutSubSelection"
+        }
+      ]
+    },
+    "PathWithSubSelection": {
+      "patterns": [
+        {
+          "include": "#PathWithOrWithoutSubSelection"
+        }
+      ]
+    },
+    "PathWithOrWithoutSubSelection": {
+      "patterns": [
+        {
+          "include": "#VarPath"
+        },
+        {
+          "include": "#ExprPath"
+        },
+        {
+          "include": "#KeyPath"
+        },
+        {
+          "include": "#AtPath"
+        }
+      ]
+    },
+    "VarPath": {
+      "begin": "(\\$)([a-zA-Z_][0-9a-zA-Z_]*)?(?!\\w)",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.language.VarPath.dollar"
+        },
+        "2": {
+          "name": "variable.language.VarPath.identifier"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathStep"
+        }
+      ]
+    },
+    "KeyPath": {
+      "begin": "([a-zA-Z_][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.KeyPath.key.identifier"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathStep"
+        }
+      ]
+    },
+    "AtPath": {
+      "begin": "(\\@)",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.language.AtPath.at"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathStep"
+        }
+      ]
+    },
+    "ExprPath": {
+      "begin": "(\\$)",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.language.ExprPath.dollar"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "name": "meta.ExprPathArgs",
+          "begin": "([(])",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.brace.round.ExprPathArgs.open"
+            }
+          },
+          "end": "([)])",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.brace.round.ExprPathArgs.close"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#LitExpr"
+            }
+          ]
+        },
+        {
+          "include": "#PathStep"
+        }
+      ]
+    },
+    "PathStep": {
+      "begin": "(\\.)([a-zA-Z_][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')|(->)([a-zA-Z_][0-9a-zA-Z_]*)",
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "beginCaptures": {
+        "1": {
+          "name": "variable.PathStep.dot"
+        },
+        "2": {
+          "name": "variable.PathStep.key.identifier"
+        },
+        "3": {
+          "name": "punctuation.PathStep.arrow"
+        },
+        "4": {
+          "name": "variable.PathStep.identifier"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#MethodArgs"
+        }
+      ]
+    },
+    "MethodArgs": {
+      "name": "meta.MethodArgs",
+      "begin": "([(])",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.brace.round.MethodArgs.open"
+        }
+      },
+      "end": "([)])",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.brace.round.MethodArgs.close"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#LitExpr"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.comma.MethodArgs.separator"
+        }
+      ]
+    },
+    "LitExpr": {
+      "patterns": [
+        {
+          "include": "#LitPrimitive"
+        },
+        {
+          "include": "#LitObject"
+        },
+        {
+          "include": "#LitArray"
+        },
+        {
+          "include": "#PathSelection"
+        }
+      ]
+    },
+    "LitPrimitive": {
+      "patterns": [
+        {
+          "include": "#LitString"
+        },
+        {
+          "include": "#LitNumber"
+        },
+        {
+          "match": "\\b(true|false|null)\\b",
+          "name": "constant.language.LitPrimitive"
+        }
+      ]
+    },
+    "LitString": {
+      "name": "string.quoted.LitString",
+      "match": "(\")([^\"]*)(\")|(')([^']*)(')"
+    },
+    "LitNumber": {
+      "name": "constant.numeric.LitNumber",
+      "match": "\\b-?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)\\b"
+    },
+    "LitObject": {
+      "name": "meta.LitObject",
+      "begin": "\\s*({)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.LitObject.open"
+        }
+      },
+      "end": "\\s*(})",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.LitObject.close"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#LitProperty"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.comma.LitObject.separator"
+        }
+      ]
+    },
+    "LitProperty": {
+      "name": "meta.LitProperty",
+      "begin": "\\b([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:)\\s*",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.LitProperty.key"
+        },
+        "2": {
+          "name": "punctuation.colon.LitProperty"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#LitExpr"
+        }
+      ]
+    },
+    "LitArray": {
+      "name": "meta.LitArray",
+      "begin": "\\s*(\\[)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.LitArray.open"
+        }
+      },
+      "end": "\\s*(\\])",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.LitArray.close"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#LitExpr"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.comma.LitArray.separator"
+        }
+      ]
+    },
+    "Comment": {
+      "name": "comment.line.jsonselection",
+      "match": "(\\s*)(#).*",
+      "captures": {
+        "1": {
+          "name": "punctuation.whitespace.comment.leading.jsonselection"
+        }
+      }
+    },
+    "JSONSelectionString": {
+      "contentName": "string.quoted.JSONSelectionString",
+      "begin": "((\"))",
+      "beginCaptures": {
+        "1": {
+          "name": "string.quoted.double.graphql"
+        },
+        "2": {
+          "name": "punctuation.definition.string.begin.graphql"
+        }
+      },
+      "end": "((\"))",
+      "endCaptures": {
+        "1": {
+          "name": "string.quoted.double.graphql"
+        },
+        "2": {
+          "name": "punctuation.definition.string.end.graphql"
+        }
+      },
+      "patterns": [
+        {
+          "name": "meta.JSONSelectionString.embedded",
+          "begin": "\\s*({)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.JSONSelectionString.open"
+            }
+          },
+          "end": "\\s*(})",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.JSONSelectionString.close"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#PathSelection"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

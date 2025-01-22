@@ -342,7 +342,14 @@
       }
     },
     "graphql-directive": {
-      "begin": "\\s*((@)\\s*([_A-Za-z][_0-9A-Za-z]*))",
+      "contentName": "meta.embedded.block.directive.graphql",
+      "begin": "\\s*(?=@)",
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [{ "include": "#graphql-directive-body" }]
+    },
+    "graphql-directive-body": {
+      "begin": "((@)\\s*([_A-Za-z][_0-9A-Za-z]*))",
       "end": "(?=.)",
       "applyEndPatternLast": 1,
       "beginCaptures": {

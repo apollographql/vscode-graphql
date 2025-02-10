@@ -13,26 +13,31 @@ Thanks to its strongly typed schema and query language, GraphQL has the potentia
 
 ![demo](https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/jump-to-def.gif)
 
-The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience for developing apps with Apollo.
+The extension provides:
 
-- Add [syntax highlighting](#syntax-highlighting) for GraphQL files and gql templates inside JavaScript files
-- Get instant feedback and [intelligent autocomplete](#intelligent-autocomplete) for fields, arguments, types, and variables as you write queries
-- Manage client-side schema alongside remote schema
-- See [performance information](#performance-insights) inline with your query definitions
-- Extra features to help you with [supergraph editing](#supergraph-editing)
-- Validate field and argument usage in operations
-- [Navigate projects more easily](#navigating-projects) with jump-to and peek-at definitions
-- Manage [client-only](#client-only-schemas) schemas
+- [Syntax highlighting](#syntax-highlighting) for GraphQL files and `gql` templates in JavaScript
+- Real-time feedback, including [intelligent autocomplete](#intelligent-autocomplete) for fields, arguments, types, and variables as you write queries
+- Client-side and remote schema management, including [client-only](#client-only-schemas) schemas
+- Inline [performance information](#performance-insights) and [supergraph editing](#supergraph-editing) tool
+- [Streamlined project navigation](#navigating-projects) with jump-to and peek-at definitions
 - [Switch graph variants](#graph-variant-switching) to work with schemas running on different environments
+
+> [!TIP]
+> Starting with version 2.3.3, the extension also works with Apollo Connectors. [Learn more.](#developing-connectors)
 
 <h2 id="getting-started">Getting started</h2>
 
-The VS Code plugin must be linked to a published or local schema. To do so, create an `apollo.config.json` file at the root of the project.
+
+The VS Code extension must be linked to a published or local schema via a configuration file.
+
+<h3 id="configuration">Configuration</h3>
+
+The VS Code extension requires a `apollo.config.json` configuration file at the root of the project.
 Alternatively, you can create a `yaml`, `cjs`, `mjs`, or `ts` file with the same configuration.
 
-For the contents of this configuration file, select one of these options:
+Select one of the options below to define the contents of this configuration file.
 
-<h3>Configure extension for client development with schemas published to Apollo GraphOS</h3>
+<h4>Configure extension for client development with schemas published to Apollo GraphOS</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -70,7 +75,7 @@ Afterward, reload VS Code. The Apollo integration will connect to GraphOS Studio
 
 </details>
 
-<h3>Configure extension for supergraph schema development</h3>
+<h4>Configure extension for supergraph schema development</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -107,7 +112,7 @@ Afterward, reload VS Code. The Apollo extension will start using Rover to help y
 
 </details>
 
-<h3 id="local-schemas">Configure extension for client development with introspection from a locally running service</h3>
+<h4 id="local-schemas">Configure extension for client development with introspection from a locally running service</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -130,7 +135,7 @@ Linking to local schemas won't provide all extension features, such as switching
 
 </details>
 
-<h3 id="local-schema-files">Configure extension for client development with local schema files</h3>
+<h4 id="local-schema-files">Configure extension for client development with local schema files</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -153,7 +158,7 @@ To link to a local schema file, add the following to the `apollo.config.json` fi
 
 </details>
 
-<h3 id="client-only-schemas">Bonus: Adding client-only schemas</h3>
+<h4 id="client-only-schemas">Bonus: Adding client-only schemas</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -242,6 +247,34 @@ Navigating large codebases can be difficult, but the Apollo GraphQL extension ma
 <h3 id="graph-variant-switching">Schema tag switching</h3>
 
 Apollo supports publishing multiple versions ([variants](https://www.apollographql.com/docs/graphos/graphs/#variants)) of a schema. This is useful for developing on a future development schema and preparing your clients to conform to that schema. To switch between graph variants, open the Command Palette (`cmd + shift + p` on mac), search "Apollo" and choose the "Apollo: Select Schema Tag" option.
+
+<h3 id="developing-connectors">Developing Connectors</h3>
+
+Starting with version 2.3.3, the Apollo GraphQL VS Code extension can give you fast feedback on your Apollo Connectors in VS Code. Through it, you can get the _same_ validations that composition provides, with errors and hints highlighted in your schema file on each save.
+
+<h4 id="prerequisites">Prerequisites</h4>
+
+These composition-based diagnostics are powered by Rover. You'll need Rover version 0.27.0 or later [installed](/rover/getting-started) to use composition-based diagnostics.
+
+<h4 id="connector-configuration">Connector Configuration</h4>
+
+By default, you need two files in the root of your project to enable connector validations in VS Code:
+
+1. An `apollo.config.yaml` file containing `rover: {}`
+2. A `supergraph.yaml` file that's the
+   [configuration file](/rover/commands/supergraphs#yaml-configuration-file)
+   used for `rover dev`, `rover supergraph compose`, and this VS Code extension.
+   1. Make sure to set the composition version to {products.federation.version("connectors").version}.
+   2. Make sure every file you want feedback on is included in the `subgraphs` section.
+
+> [!TIP]
+> You can use a different location for your `supergraph.yaml` by setting the `rover.supergraphConfig` option in
+`apollo.config.yaml`, like this:
+
+```yaml title="apollo.config.yaml"
+rover:
+  supergraphConfig: path/to/supergraph.yaml
+```
 
 <h2 id="troubleshooting">Troubleshooting</h2>
 

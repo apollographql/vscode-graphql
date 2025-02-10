@@ -13,6 +13,8 @@ Thanks to its strongly typed schema and query language, GraphQL has the potentia
 
 ![demo](https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/jump-to-def.gif)
 
+The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience for developing apps with Apollo.
+
 The extension provides:
 
 - [Syntax highlighting](#syntax-highlighting) for GraphQL files and `gql` templates in JavaScript
@@ -287,6 +289,30 @@ Sometimes, errors will appear as a notification at the bottom of your editor. Ot
 <img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/stats.gif"  alt="Clicking the status bar icon to open the output pane">
 
 If problems persist or the error messages are unhelpful, open an [issue](https://github.com/apollographql/vscode-graphql/issues) in the `vscode-graphql` repository.
+
+<h3 id="reloading-extension">Reloading the extension</h3>
+
+If you aren't seeing diagnostics, try reloading the extension by running the `Apollo: Reload schema` command from the command palette.
+
+<h3 id="turn-on-autosave">Turn on autosave</h3>
+
+Most diagnostics will only appear when you save your schema file.
+If you enable autosave in VS Code, you'll see feedback each time you finish typing.
+
+<h3 id="double-check-rover-version">Double-check your Rover version</h3>
+
+If you aren't seeing diagnostics for Apollo Connectors, run `rover --version` in a terminal to ensure you have version 0.27.0 or later.
+You can also specify a path to a specific Rover binary in your `apollo.config.yaml` file:
+
+```yaml title="apollo.config.yaml"
+rover:
+  bin: /path/to/rover
+```
+
+<h3 id="debug-logging">Debug logging</h3>
+
+If the extension isn't working as expected, you can set the apollographql.trace.server setting to verbose in your VS Code settings.
+This setting adds detailed logs to the output panel of the extension, which can aid in debugging.
 
 <h2 id="additional-apollo-config-options">Additional Apollo config options</h2>
 

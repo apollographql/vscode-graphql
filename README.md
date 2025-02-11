@@ -24,8 +24,7 @@ The extension provides:
 - [Streamlined project navigation](#navigating-projects) with jump-to and peek-at definitions
 - [Switch graph variants](#graph-variant-switching) to work with schemas running on different environments
 
-> [!TIP]
-> Starting with version 2.3.3, the extension also works with Apollo Connectors. [Learn more.](#developing-connectors)
+Starting with version 2.3.3, the extension also works with Apollo Connectors. [Learn more.](#developing-connectors)
 
 <h2 id="getting-started">Getting started</h2>
 
@@ -269,8 +268,7 @@ By default, you need two files in the root of your project to enable connector v
    1. Make sure to set the composition version to {products.federation.version("connectors").version}.
    2. Make sure every file you want feedback on is included in the `subgraphs` section.
 
-> [!TIP]
-> You can use a different location for your `supergraph.yaml` by setting the `rover.supergraphConfig` option in
+You can use a different location for your `supergraph.yaml` by setting the `rover.supergraphConfig` option in
 `apollo.config.yaml`, like this:
 
 ```yaml title="apollo.config.yaml"

@@ -279,29 +279,34 @@ rover:
 
 <h3 id="devtools">(Experimental) Apollo Client DevTools in your IDE</h3>
 
-The Apollo VSCode extension ships with an instance of the Apollo Client Devtools.
-You can use it to remotely debug your client, which makes it possible to also debug React Native and node applications.
+The Apollo VSCode extension ships with an instance of the [Apollo Client Devtools](https://chromewebstore.google.com/detail/apollo-client-devtools/jdkknkkbebbapilgoeccciglkfbmbnfm).
+You can use it to remotely debug your client, making it easier to debug React Native and Node.js applications.
 
-* Set the "Apollographql > Dev Tools: Show Panel" setting to "detect" or "always" in the VS code settings dialog.
-* In your code base, install the `@apollo/client-devtools-vscode` package:
-```sh
-npm install @apollo/client-devtools-vscode
-```
-* After initializing your `ApolloClient` instance, call `connectApolloClientToVSCodeDevTools` with your client instance.
-```js
-import { connectApolloClientToVSCodeDevTools } from "@apollo/client-devtools-vscode";
+To configure it, follow these steps:
 
-const client = new ApolloClient({ /* ... */ });
+1. In the VS code settings dialog, set the **Apollographql > Dev Tools: Show Panel** setting to `detect` or `always`.
+1. In your code base, install the `@apollo/client-devtools-vscode` package:
 
-// we recommend wrapping this statement in a check for e.g. process.env.NODE_ENV === "development"
-const devtoolsRegistration = connectApolloClientToVSCodeDevTools(
-  client,
-  // the default port of the VSCode DevTools is 7095
-  "ws://localhost:7095",
-);
-```
-* Open the "Apollo Client DevTools" panel in VS Code.
-* Start your application. It should automatically connect to the DevTools.
+    ```sh
+    npm install @apollo/client-devtools-vscode
+    ```
+
+1. After initializing your `ApolloClient` instance, call `connectApolloClientToVSCodeDevTools` with your client instance.
+
+    ```js
+    import { connectApolloClientToVSCodeDevTools } from "@apollo/client-devtools-vscode";
+
+    const client = new ApolloClient({ /* ... */ });
+
+    // We recommend wrapping this statement in a check for e.g. process.env.NODE_ENV === "development"
+    const devtoolsRegistration = connectApolloClientToVSCodeDevTools(
+      client,
+      // the default port of the VSCode DevTools is 7095
+      "ws://localhost:7095",
+    );
+    ```
+1. Open the **Apollo Client DevTools** panel in VS Code.
+1. Start your application. It should automatically connect to the DevTools.
 
 <h2 id="troubleshooting">Troubleshooting</h2>
 

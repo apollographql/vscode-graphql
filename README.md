@@ -23,6 +23,7 @@ The extension provides:
 - Inline [performance information](#performance-insights) and [supergraph editing](#supergraph-editing) tool
 - [Streamlined project navigation](#navigating-projects) with jump-to and peek-at definitions
 - [Switch graph variants](#graph-variant-switching) to work with schemas running on different environments
+- (Experimental) [Apollo Client DevTools](#devtools) in your IDE
 
 Starting with version 2.3.3, the extension also works with Apollo Connectors. [Learn more.](#developing-connectors)
 
@@ -275,6 +276,32 @@ You can use a different location for your `supergraph.yaml` by setting the `rove
 rover:
   supergraphConfig: path/to/supergraph.yaml
 ```
+
+<h3 id="devtools">(Experimental) Apollo Client DevTools in your IDE</h3>
+
+The Apollo VSCode extension ships with an instance of the Apollo Client Devtools.
+You can use it to remotely debug your client, which makes it possible to also debug React Native and node applications.
+
+* Set the "Apollographql > Dev Tools: Show Panel" setting to "detect" or "always" in the VS code settings dialog.
+* In your code base, install the `@apollo/client-devtools-vscode` package:
+```sh
+npm install @apollo/client-devtools-vscode
+```
+* After initializing your `ApolloClient` instance, call `connectApolloClientToVSCodeDevTools` with your client instance.
+```js
+import { connectApolloClientToVSCodeDevTools } from "@apollo/client-devtools-vscode";
+
+const client = new ApolloClient({ /* ... */ });
+
+// we recommend wrapping this statement in a check for e.g. process.env.NODE_ENV === "development"
+const devtoolsRegistration = connectApolloClientToVSCodeDevTools(
+  client,
+  // the default port of the VSCode DevTools is 7095
+  "ws://localhost:7095",
+);
+```
+* Open the "Apollo Client DevTools" panel in VS Code.
+* Start your application. It should automatically connect to the DevTools.
 
 <h2 id="troubleshooting">Troubleshooting</h2>
 

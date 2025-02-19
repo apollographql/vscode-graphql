@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.5.5
+
+### Patch Changes
+
+- [#280](https://github.com/apollographql/vscode-graphql/pull/280) [`ce6b4a8`](https://github.com/apollographql/vscode-graphql/commit/ce6b4a840d94c95efa19b645077230c422f0616e) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Fix an issue where adding a new Apollo configuration file would not be detected
+
+- [#278](https://github.com/apollographql/vscode-graphql/pull/278) [`ff969e6`](https://github.com/apollographql/vscode-graphql/commit/ff969e6d64b6aa8ed865215d71344c41e85da19f) Thanks [@Meschreiber](https://github.com/Meschreiber)! - Update README/Marketplace page
+
 ## 2.5.4
 
 ### Patch Changes

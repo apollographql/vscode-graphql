@@ -15,24 +15,31 @@ Thanks to its strongly typed schema and query language, GraphQL has the potentia
 
 The Apollo GraphQL extension for VS Code brings an all-in-one tooling experience for developing apps with Apollo.
 
-- Add [syntax highlighting](#syntax-highlighting) for GraphQL files and gql templates inside JavaScript files
-- Get instant feedback and [intelligent autocomplete](#intelligent-autocomplete) for fields, arguments, types, and variables as you write queries
-- Manage client-side schema alongside remote schema
-- See [performance information](#performance-insights) inline with your query definitions
-- Extra features to help you with [supergraph editing](#supergraph-editing)
-- Validate field and argument usage in operations
-- [Navigate projects more easily](#navigating-projects) with jump-to and peek-at definitions
-- Manage [client-only](#client-only-schemas) schemas
+The extension provides:
+
+- [Syntax highlighting](#syntax-highlighting) for GraphQL files and `gql` templates in JavaScript
+- Real-time feedback, including [intelligent autocomplete](#intelligent-autocomplete) for fields, arguments, types, and variables as you write queries
+- Client-side and remote schema management, including [client-only](#client-only-schemas) schemas
+- Inline [performance information](#performance-insights) and [supergraph editing](#supergraph-editing) tool
+- [Streamlined project navigation](#navigating-projects) with jump-to and peek-at definitions
 - [Switch graph variants](#graph-variant-switching) to work with schemas running on different environments
+- (Experimental) [Apollo Client DevTools](#devtools) in your IDE
+
+Starting with version 2.3.3, the extension also works with Apollo Connectors. [Learn more.](#developing-connectors)
 
 <h2 id="getting-started">Getting started</h2>
 
-The VS Code plugin must be linked to a published or local schema. To do so, create an `apollo.config.json` file at the root of the project.
+
+The VS Code extension must be linked to a published or local schema via a configuration file.
+
+<h3 id="configuration">Configuration</h3>
+
+The VS Code extension requires a `apollo.config.json` configuration file at the root of the project.
 Alternatively, you can create a `yaml`, `cjs`, `mjs`, or `ts` file with the same configuration.
 
-For the contents of this configuration file, select one of these options:
+Select one of the options below to define the contents of this configuration file.
 
-<h3>Configure extension for client development with schemas published to Apollo GraphOS</h3>
+<h4>Configure extension for client development with schemas published to Apollo GraphOS</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -70,7 +77,7 @@ Afterward, reload VS Code. The Apollo integration will connect to GraphOS Studio
 
 </details>
 
-<h3>Configure extension for supergraph schema development</h3>
+<h4>Configure extension for supergraph schema development</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -107,7 +114,7 @@ Afterward, reload VS Code. The Apollo extension will start using Rover to help y
 
 </details>
 
-<h3 id="local-schemas">Configure extension for client development with introspection from a locally running service</h3>
+<h4 id="local-schemas">Configure extension for client development with introspection from a locally running service</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -130,7 +137,7 @@ Linking to local schemas won't provide all extension features, such as switching
 
 </details>
 
-<h3 id="local-schema-files">Configure extension for client development with local schema files</h3>
+<h4 id="local-schema-files">Configure extension for client development with local schema files</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -153,7 +160,7 @@ To link to a local schema file, add the following to the `apollo.config.json` fi
 
 </details>
 
-<h3 id="client-only-schemas">Bonus: Adding client-only schemas</h3>
+<h4 id="client-only-schemas">Bonus: Adding client-only schemas</h4>
 <details>
 <summary>
 <i>Expand for instructions.</i>
@@ -243,6 +250,64 @@ Navigating large codebases can be difficult, but the Apollo GraphQL extension ma
 
 Apollo supports publishing multiple versions ([variants](https://www.apollographql.com/docs/graphos/graphs/#variants)) of a schema. This is useful for developing on a future development schema and preparing your clients to conform to that schema. To switch between graph variants, open the Command Palette (`cmd + shift + p` on mac), search "Apollo" and choose the "Apollo: Select Schema Tag" option.
 
+<h3 id="developing-connectors">Developing Connectors</h3>
+
+Starting with version 2.3.3, the Apollo GraphQL VS Code extension can give you fast feedback on your Apollo Connectors in VS Code. Through it, you can get the _same_ validations that composition provides, with errors and hints highlighted in your schema file on each save.
+
+<h4 id="prerequisites">Prerequisites</h4>
+
+These composition-based diagnostics are powered by Rover. You'll need Rover version 0.27.0 or later [installed](/rover/getting-started) to use composition-based diagnostics.
+
+<h4 id="connector-configuration">Connector Configuration</h4>
+
+By default, you need two files in the root of your project to enable connector validations in VS Code:
+
+1. An `apollo.config.yaml` file containing `rover: {}`
+2. A `supergraph.yaml` file that's the
+   [configuration file](/rover/commands/supergraphs#yaml-configuration-file)
+   used for `rover dev`, `rover supergraph compose`, and this VS Code extension.
+   1. Make sure to set the composition version to {products.federation.version("connectors").version}.
+   2. Make sure every file you want feedback on is included in the `subgraphs` section.
+
+You can use a different location for your `supergraph.yaml` by setting the `rover.supergraphConfig` option in
+`apollo.config.yaml`, like this:
+
+```yaml title="apollo.config.yaml"
+rover:
+  supergraphConfig: path/to/supergraph.yaml
+```
+
+<h3 id="devtools">(Experimental) Apollo Client DevTools in your IDE</h3>
+
+The Apollo VSCode extension ships with an instance of the [Apollo Client Devtools](https://chromewebstore.google.com/detail/apollo-client-devtools/jdkknkkbebbapilgoeccciglkfbmbnfm).
+You can use it to remotely debug your client, making it easier to debug React Native and Node.js applications.
+
+To configure it, follow these steps:
+
+1. In the VS code settings dialog, set the **Apollographql > Dev Tools: Show Panel** setting to `detect` or `always`.
+1. In your code base, install the `@apollo/client-devtools-vscode` package:
+
+    ```sh
+    npm install @apollo/client-devtools-vscode
+    ```
+
+1. After initializing your `ApolloClient` instance, call `connectApolloClientToVSCodeDevTools` with your client instance.
+
+    ```js
+    import { connectApolloClientToVSCodeDevTools } from "@apollo/client-devtools-vscode";
+
+    const client = new ApolloClient({ /* ... */ });
+
+    // We recommend wrapping this statement in a check for e.g. process.env.NODE_ENV === "development"
+    const devtoolsRegistration = connectApolloClientToVSCodeDevTools(
+      client,
+      // the default port of the VSCode DevTools is 7095
+      "ws://localhost:7095",
+    );
+    ```
+1. Open the **Apollo Client DevTools** panel in VS Code.
+1. Start your application. It should automatically connect to the DevTools.
+
 <h2 id="troubleshooting">Troubleshooting</h2>
 
 The most common errors are configuration errors, like a missing `.env` file or incorrect service information in the `apollo.config.json` file. Please see [the Apollo config docs](https://www.apollographql.com/docs/devtools/apollo-config/) for more configuration guidance.
@@ -254,6 +319,30 @@ Sometimes, errors will appear as a notification at the bottom of your editor. Ot
 <img src="https://raw.githubusercontent.com/apollographql/vscode-graphql/main/images/marketplace/stats.gif"  alt="Clicking the status bar icon to open the output pane">
 
 If problems persist or the error messages are unhelpful, open an [issue](https://github.com/apollographql/vscode-graphql/issues) in the `vscode-graphql` repository.
+
+<h3 id="reloading-extension">Reloading the extension</h3>
+
+If you aren't seeing diagnostics, try reloading the extension by running the `Apollo: Reload schema` command from the command palette.
+
+<h3 id="turn-on-autosave">Turn on autosave</h3>
+
+Most diagnostics will only appear when you save your schema file.
+If you enable autosave in VS Code, you'll see feedback each time you finish typing.
+
+<h3 id="double-check-rover-version">Double-check your Rover version</h3>
+
+If you aren't seeing diagnostics for Apollo Connectors, run `rover --version` in a terminal to ensure you have version 0.27.0 or later.
+You can also specify a path to a specific Rover binary in your `apollo.config.yaml` file:
+
+```yaml title="apollo.config.yaml"
+rover:
+  bin: /path/to/rover
+```
+
+<h3 id="debug-logging">Debug logging</h3>
+
+If the extension isn't working as expected, you can set the apollographql.trace.server setting to verbose in your VS Code settings.
+This setting adds detailed logs to the output panel of the extension, which can aid in debugging.
 
 <h2 id="additional-apollo-config-options">Additional Apollo config options</h2>
 

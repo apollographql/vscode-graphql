@@ -52,9 +52,8 @@ export function getLanguageServerClient(
     documentSelector: supportedLanguageIds,
     synchronize: {
       fileEvents: [
-        workspace.createFileSystemWatcher(
-          "**/{.env?(.local),apollo.config.{json,yml,yaml}}",
-        ),
+        workspace.createFileSystemWatcher("**/{.env?(.local)}"),
+        workspace.createFileSystemWatcher("**/apollo.config.{json,yml,yaml}"),
         workspace.createFileSystemWatcher(
           "**/*{" + supportedExtensions.join(",") + "}",
         ),

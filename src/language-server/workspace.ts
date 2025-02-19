@@ -228,12 +228,12 @@ export class GraphQLWorkspace {
         folder: { uri: folderUri } as WorkspaceFolder,
       });
 
+      this.reloadService();
       const existingProjects = this.projectsByFolderUri.get(folderUri) || [];
       this.projectsByFolderUri.set(folderUri, [
         ...existingProjects,
         newProject,
       ]);
-      this.reloadService();
     }
   }
 

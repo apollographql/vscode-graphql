@@ -485,6 +485,19 @@
         "1": { "name": "constant.language.null.graphql" }
       }
     },
+    "graphql-block-string-value": {
+      "contentName": "string.quoted.triple.block.graphql",
+      "begin": "\\s*+((\"\"\"))",
+      "end": "\\s*+((\"\"\"))",
+      "beginCaptures": {
+        "1": { "name": "string.quoted.triple.block.graphql" },
+        "2": { "name": "punctuation.definition.string.begin.graphql" }
+      },
+      "endCaptures": {
+        "1": { "name": "string.quoted.triple.block.graphql" },
+        "2": { "name": "punctuation.definition.string.end.graphql" }
+      }
+    },
     "graphql-string-value": {
       "contentName": "string.quoted.double.graphql",
       "begin": "\\s*+((\"))",
@@ -553,6 +566,7 @@
       "patterns": [
         { "include": "#graphql-variable-name" },
         { "include": "#graphql-float-value" },
+        { "include": "#graphql-block-string-value" },
         { "include": "#graphql-string-value" },
         { "include": "#graphql-boolean-value" },
         { "include": "#graphql-null-value" },

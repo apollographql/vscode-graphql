@@ -413,11 +413,11 @@
 #^^^ source.ts variable.other.readwrite.ts
 >(
 #^ source.ts meta.brace.round.ts
->  `query { test }`
+>  `query Q11 { test }`
 #^^ source.ts
 #  ^ source.ts string.template.ts punctuation.definition.string.template.begin.ts
-#   ^^^^^^^^^^^^^^ source.ts string.template.ts
-#                 ^ source.ts string.template.ts punctuation.definition.string.template.end.ts
+#   ^^^^^^^^^^^^^^^^^^ source.ts string.template.ts
+#                     ^ source.ts string.template.ts punctuation.definition.string.template.end.ts
 >  )
 #^^ source.ts
 #  ^ source.ts meta.brace.round.ts

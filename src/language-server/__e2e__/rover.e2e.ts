@@ -1,9 +1,4 @@
 import { test as origTest } from "@jest/globals";
-import { load } from "js-yaml";
-import { readFileSync } from "node:fs";
-import { execFileSync } from "node:child_process";
-import { join } from "node:path";
-import { ParsedApolloConfigFormat } from "../config";
 import { TextEditor } from "vscode";
 import {
   closeAllEditors,

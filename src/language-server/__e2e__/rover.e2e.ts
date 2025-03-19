@@ -1,4 +1,3 @@
-import { test as origTest } from "@jest/globals";
 import { TextEditor } from "vscode";
 import {
   closeAllEditors,
@@ -10,12 +9,6 @@ import {
   getFullSemanticTokens,
   getDefinitions,
 } from "./utils";
-
-let test = origTest.skip;
-if (process.platform === "win32") {
-  console.info("Skipping rover E2E tests in Windows");
-  test = origTest.skip;
-}
 
 let editor: TextEditor;
 let getPosition: GetPositionFn;

@@ -73,11 +73,47 @@ test("completion", async () => {
 [
   {
     "detail": undefined,
+    "label": "@authenticated",
+  },
+  {
+    "detail": undefined,
     "label": "@deprecated",
   },
   {
     "detail": undefined,
     "label": "@external",
+  },
+  {
+    "detail": undefined,
+    "label": "@inaccessible",
+  },
+  {
+    "detail": undefined,
+    "label": "@override(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@policy(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@provides(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@requires(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@requiresScopes(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@shareable",
+  },
+  {
+    "detail": undefined,
+    "label": "@tag(…)",
   },
   {
     "detail": undefined,
@@ -102,18 +138,6 @@ test("completion", async () => {
   {
     "detail": undefined,
     "label": "@federation__tag(…)",
-  },
-  {
-    "detail": undefined,
-    "label": "@override(…)",
-  },
-  {
-    "detail": undefined,
-    "label": "@requires(…)",
-  },
-  {
-    "detail": undefined,
-    "label": "@shareable",
   },
 ]
 `);

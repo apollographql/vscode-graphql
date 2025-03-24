@@ -1,0 +1,4 @@
+subgraphs:
+  subgraph:
+    schema:
+      file: src/test.graphql

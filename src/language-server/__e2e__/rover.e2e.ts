@@ -1,9 +1,4 @@
 import { test as origTest } from "@jest/globals";
-import { load } from "js-yaml";
-import { readFileSync } from "node:fs";
-import { execFileSync } from "node:child_process";
-import { join } from "node:path";
-import { ParsedApolloConfigFormat } from "../config";
 import { TextEditor } from "vscode";
 import {
   closeAllEditors,
@@ -16,31 +11,7 @@ import {
   getDefinitions,
 } from "./utils";
 
-// we want to skip these tests unless the user running them has a rover config profile named "VSCode-E2E"
 let test = origTest.skip;
-try {
-  const roverProjectDir = join(__dirname, "../../../sampleWorkspace/rover");
-  const config = load(
-    readFileSync(join(roverProjectDir, "apollo.config.yaml"), "utf-8"),
-  ) as ParsedApolloConfigFormat;
-  const roverBin = join(roverProjectDir, config.rover!.bin);
-  const result = execFileSync(roverBin, [
-    "config",
-    "list",
-    "--format=json",
-  ]).toString("utf8");
-  const parsed = JSON.parse(result);
-  if (parsed.data.profiles.includes("VSCode-E2E")) {
-    test = origTest;
-  }
-} catch (e) {}
-if (test === origTest.skip) {
-  console.info(
-    "Skipping rover E2E tests: no profile with the name 'VSCode-E2E'\n" +
-      "You can create one by running `rover config auth --profile VSCode-E2E`",
-  );
-}
-
 if (process.platform === "win32") {
   console.info("Skipping rover E2E tests in Windows");
   test = origTest.skip;
@@ -73,11 +44,47 @@ test("completion", async () => {
 [
   {
     "detail": undefined,
+    "label": "@authenticated",
+  },
+  {
+    "detail": undefined,
     "label": "@deprecated",
   },
   {
     "detail": undefined,
     "label": "@external",
+  },
+  {
+    "detail": undefined,
+    "label": "@inaccessible",
+  },
+  {
+    "detail": undefined,
+    "label": "@override(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@policy(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@provides(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@requires(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@requiresScopes(…)",
+  },
+  {
+    "detail": undefined,
+    "label": "@shareable",
+  },
+  {
+    "detail": undefined,
+    "label": "@tag(…)",
   },
   {
     "detail": undefined,
@@ -102,18 +109,6 @@ test("completion", async () => {
   {
     "detail": undefined,
     "label": "@federation__tag(…)",
-  },
-  {
-    "detail": undefined,
-    "label": "@override(…)",
-  },
-  {
-    "detail": undefined,
-    "label": "@requires(…)",
-  },
-  {
-    "detail": undefined,
-    "label": "@shareable",
   },
 ]
 `);

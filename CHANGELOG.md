@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.6
+
+### Patch Changes
+
+- [#282](https://github.com/apollographql/vscode-graphql/pull/282) [`52017e3`](https://github.com/apollographql/vscode-graphql/commit/52017e3479cfe8c07d19fa52c2ebe10f65de766c) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Improve syntax highlighting for GraphQL block strings
+
 ## 2.5.5
 
 ### Patch Changes

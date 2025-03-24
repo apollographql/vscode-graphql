@@ -83,7 +83,7 @@
     "@vscode/test-cli": "0.0.10",
     "@vscode/test-electron": "2.4.1",
     "@wry/trie": "0.5.0",
-    "esbuild": "0.23.0",
+    "esbuild": "0.25.0",
     "eslint": "8.52.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",

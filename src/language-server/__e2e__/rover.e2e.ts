@@ -40,11 +40,11 @@ test("completion", async () => {
     "label": "@authenticated",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@deprecated",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@external",
   },
   {
@@ -52,7 +52,7 @@ test("completion", async () => {
     "label": "@inaccessible",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@override(…)",
   },
   {
@@ -64,7 +64,7 @@ test("completion", async () => {
     "label": "@provides(…)",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@requires(…)",
   },
   {
@@ -72,7 +72,7 @@ test("completion", async () => {
     "label": "@requiresScopes(…)",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@shareable",
   },
   {
@@ -80,23 +80,23 @@ test("completion", async () => {
     "label": "@tag(…)",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@federation__authenticated",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@federation__inaccessible",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@federation__policy(…)",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@federation__provides(…)",
   },
   {
-    "detail": undefined,
+    "detail": "",
     "label": "@federation__requiresScopes(…)",
   },
   {

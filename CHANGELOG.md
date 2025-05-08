@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.5.6
+
+### Patch Changes
+
+- [#290](https://github.com/apollographql/vscode-graphql/pull/290) [`84d0503`](https://github.com/apollographql/vscode-graphql/commit/84d05030c253c0b8c3c26dc273527a33ac5e7129) Thanks [@Jephuff](https://github.com/Jephuff)! - Fix subgraph detection on windows
+
+- [#282](https://github.com/apollographql/vscode-graphql/pull/282) [`52017e3`](https://github.com/apollographql/vscode-graphql/commit/52017e3479cfe8c07d19fa52c2ebe10f65de766c) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Improve syntax highlighting for GraphQL block strings
+
 ## 2.5.5
 
 ### Patch Changes

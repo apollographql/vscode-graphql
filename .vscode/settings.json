@@ -2,7 +2,9 @@
 {
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.rulers": [110],
+  "editor.rulers": [
+    110
+  ],
   "editor.wordWrapColumn": 110,
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
@@ -12,5 +14,8 @@
     "node_modules": false
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "debug.node.autoAttach": "on"
+  "debug.node.autoAttach": "on",
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json": "/syntaxes/*.yaml"
+  }
 }

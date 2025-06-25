@@ -317,6 +317,11 @@
           "id": "client-devtools",
           "title": "Apollo Client DevTools",
           "icon": "images/apollo.svg"
+        },
+        {
+          "id": "apollo-connector",
+          "title": "Apollo Connectors",
+          "icon": "images/apollo.svg"
         }
       ]
     },
@@ -328,6 +333,14 @@
           "name": "Apollo Client DevTools",
           "icon": "images/apollo.svg",
           "when": "config.apollographql.devTools.showPanel=='always' || (config.apollographql.devTools.showPanel=='detect' && vscode-apollo.hasClientProject)"
+        }
+      ],
+      "apollo-connector": [
+        {
+          "type": "webview",
+          "id": "vscode-apollo-connector",
+          "name": "Connector",
+          "icon": "images/IconRun.svg"
         }
       ]
     }

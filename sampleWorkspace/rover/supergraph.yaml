@@ -1,4 +1,5 @@
 subgraphs:
   subgraph:
+    routing_url: http://localhost
     schema:
       file: src/test.graphql

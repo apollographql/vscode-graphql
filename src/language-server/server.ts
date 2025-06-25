@@ -8,6 +8,7 @@ import {
   SymbolInformation,
   FileEvent,
   SetTraceNotification,
+  ExecuteCommandParams,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { type QuickPickItem } from "vscode";
@@ -134,7 +135,10 @@ connection.onInitialize(
         },
         codeActionProvider: true,
         executeCommandProvider: {
-          commands: [],
+          commands: [
+            "apollographql.runConnector",
+            "apollographql.registerConnector"
+          ],
         },
         textDocumentSync: TextDocumentSyncKind.Full,
       },
@@ -286,6 +290,25 @@ connection.onCodeLens(
       []) satisfies Parameters<typeof connection.onCodeLens>[0],
   ),
 );
+
+connection.onExecuteCommand(debounceHandler(async (params: ExecuteCommandParams) => {
+  if (params.command === "apollographql.runConnector") {
+    // Show the connector panel with the connector ID and URI
+    try {
+      const connectorId = params.arguments?.[0] as string | undefined;
+      const uri = params.arguments?.[1] as string | undefined;
+
+      await connection.sendRequest(Requests.ShowConnectorPanel, {
+        connectorId,
+        uri,
+      });
+    } catch (error) {
+      connection.window.showErrorMessage(
+        "Failed to show connector panel: " + (error instanceof Error ? error.message : String(error))
+      );
+    }
+  }
+}));
 
 connection.onCodeAction(
   debounceHandler(

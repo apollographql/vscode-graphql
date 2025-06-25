@@ -12,6 +12,9 @@ import {
   MarkdownString,
   Range,
   env,
+  WorkspaceEdit,
+  Position,
+  languages,
 } from "vscode";
 import StatusBar from "./statusBar";
 import { getLanguageServerClient } from "./languageServerClient";
@@ -33,6 +36,7 @@ import {
   isDevToolsExecuteCommandMessage,
   isDevToolsOpenExternalMessage,
 } from "./devtools/DevToolsViewProvider";
+import { ConnectorViewProvider } from "./connector/ConnectorViewProvider";
 import { devtoolsEvents, serverState, startServer } from "./devtools/server";
 
 const { version } = require("../package.json");
@@ -352,6 +356,16 @@ export async function activate(
     window.registerWebviewViewProvider(DevToolsViewProvider.viewType, provider),
   );
 
+  const connectorProvider = new ConnectorViewProvider(context.extensionUri);
+  context.subscriptions.push(
+    window.registerWebviewViewProvider(ConnectorViewProvider.viewType, connectorProvider),
+  );
+
+  // Handle RegisterConnector notifications from the language server
+  client.onNotification(LSNotifications.RegisterConnector, (params) => {
+    connectorProvider.addConnector(params.id, params.uri);
+  });
+
   function devToolsEventListener(event: unknown) {
     if (!isActorMessage(event)) return;
     const message = event.message;
@@ -407,6 +421,18 @@ export async function activate(
       }
     }),
   );
+
+  // Handle ShowConnectorPanel requests from the language server
+  client.onRequest(LSRequests.ShowConnectorPanel, async (params) => {
+    // Show the connector panel by focusing the specific view
+    await commands.executeCommand('vscode-apollo-connector.focus');
+    connectorProvider.show();
+
+    // If we have connector details, populate them in the panel
+    if (params.connectorId || params.uri) {
+      connectorProvider.populateConnector(params.connectorId, params.uri);
+    }
+  });
 
   await client.start();
   return {

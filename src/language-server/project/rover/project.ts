@@ -22,9 +22,11 @@ import {
   ProtocolRequestType0,
   ServerCapabilities,
   SemanticTokensRegistrationType,
-  SemanticTokensOptions,
-  SemanticTokensRegistrationOptions,
   DefinitionRequest,
+  CodeLens,
+  CodeLensParams,
+  ServerRequestHandler,
+  Command,
 } from "vscode-languageserver/node";
 import cp from "node:child_process";
 import { GraphQLProjectConfig } from "../base";
@@ -38,6 +40,9 @@ import { extname } from "node:path";
 import type { FileExtension } from "../../../tools/utilities/languageInformation";
 import { Debug } from "../../utilities";
 import { TraceLevel } from "src/language-server/utilities/debug";
+import { DirectiveDefinitionNode, DirectiveNode, Kind } from "graphql";
+import { rangeForASTNode } from "src/language-server/utilities/source";
+import { extractGraphQLDocuments, GraphQLDocument } from "src/language-server/document";
 
 export function isRoverConfig(config: ApolloConfig): config is RoverConfig {
   return config instanceof RoverConfig;
@@ -67,9 +72,11 @@ export class RoverProject extends GraphQLProject {
   private disposed = false;
   readonly capabilities: ClientCapabilities;
   roverCapabilities?: ServerCapabilities;
+  private vscodeConnection?: VSCodeConnection;
   get displayName(): string {
     return "Rover Project";
   }
+  protected documentsByFile: Map<DocumentUri, GraphQLDocument[]>;
   private documents = new DocumentSynchronization(
     this.sendNotification.bind(this),
     this.sendRequest.bind(this),
@@ -80,6 +87,7 @@ export class RoverProject extends GraphQLProject {
     super(options);
     this.config = options.config;
     this.capabilities = options.capabilities;
+    this.documentsByFile = new Map();
   }
 
   initialize() {
@@ -109,6 +117,87 @@ export class RoverProject extends GraphQLProject {
 
     return this._connection;
   }
+
+  onCodeLens?: ServerRequestHandler<CodeLensParams, CodeLens[] | null | undefined, CodeLens[], void> | undefined = async ({
+    textDocument: { uri },
+  }) => {
+    // Wait for the project to be fully initialized, so we always provide code lenses for open files, even
+    // if we receive the request before the project is ready.
+    await this.whenReady;
+
+    const documents = this.documentsByFile.get(uri);
+    if (!documents) return [];
+
+    let codeLenses: CodeLens[] = [];
+
+    const getUri = (directive: DirectiveNode): string | undefined => {
+      const httpArg = directive.arguments?.find(
+        (arg) => arg.name.value === "http"
+      );
+      if (!httpArg || httpArg.value.kind !== "ObjectValue") {
+        return undefined;
+      }
+      const getField = httpArg.value.fields.find(
+        (field) => field.name.value === "GET"
+      );
+      if (!getField || getField.value.kind !== "StringValue") {
+        return undefined;
+      }
+      return getField.value.value; // Extract the actual string value from StringValueNode
+    }
+
+    for (const document of documents) {
+      if (!document.ast) continue;
+
+      for (const definition of document.ast.definitions) {
+        if (definition.kind === Kind.OBJECT_TYPE_DEFINITION) {
+          for (const directive of definition.directives ?? []) {
+            let uri = getUri(directive);
+            let id = `${definition.name.value}@connect`;
+            if (uri) {
+              codeLenses.push({
+                range: rangeForASTNode(directive),
+                command: Command.create(
+                  "$(testing-run-icon) Run Connector",
+                  "apollographql.runConnector",
+                  id,
+                  uri,
+                ),
+              });
+
+              // Register this connector with the extension
+              if (this.vscodeConnection) {
+                this.vscodeConnection.sendNotification("apollographql/registerConnector", { id, uri });
+              }
+            }
+          }
+          for (const field of definition.fields ?? []) {
+            for (const directive of field.directives ?? []) {
+              let uri = getUri(directive);
+              let id = `${definition.name.value}.${field.name.value}@connect`;
+              if (uri) {
+                codeLenses.push({
+                  range: rangeForASTNode(directive),
+                  command: Command.create(
+                    "$(testing-run-icon) Run Connector",
+                    "apollographql.runConnector",
+                    id,
+                    uri,
+                  ),
+                });
+
+                // Register this connector with the extension
+                if (this.vscodeConnection) {
+                  this.vscodeConnection.sendNotification("apollographql/registerConnector", { id, uri });
+                }
+              }
+            }
+        }
+      }
+      }
+    }
+    return codeLenses;
+  };
 
   private async sendNotification<P, RO>(
     type: ProtocolNotificationType<P, RO>,
@@ -285,6 +374,15 @@ export class RoverProject extends GraphQLProject {
     this.documents.onDidCloseTextDocument(params);
 
   async documentDidChange(document: TextDocument) {
+    const documents = extractGraphQLDocuments(
+          document,
+          this.config.client && this.config.client.tagName,
+    );
+    if (documents) {
+      this.documentsByFile.set(document.uri, documents);
+    } else {
+      this.documentsByFile.delete(document.uri);
+    }
     return this.documents.documentDidChange(document);
   }
 
@@ -337,6 +435,9 @@ export class RoverProject extends GraphQLProject {
   };
 
   async onVSCodeConnectionInitialized(connection: VSCodeConnection) {
+    // Store the connection for registering connectors
+    this.vscodeConnection = connection;
+
     // Report the actual capabilities of the upstream LSP to VSCode.
     // It is important to actually "ask" the LSP for this, because the capabilities
     // also define the semantic token legend, which is needed to interpret the tokens.

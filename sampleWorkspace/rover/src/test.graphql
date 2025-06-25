@@ -1,15 +1,40 @@
 extend schema
   @link(
-    url: "https://specs.apollo.dev/federation/v2.8"
+    url: "https://specs.apollo.dev/federation/v2.11"
     import: ["@key", "@override", "@requires", "@external", "@shareable"]
   )
+  @link(url: "https://specs.apollo.dev/connect/v0.2", import: ["@connect", "@source"])
 
 type Query {
-  a: A
+  users: [User] @connect(
+    http: {GET: "https://jsonplaceholder.typicode.com/users"}
+    selection: "id name username "
+  )
+
+  user(id: ID!): User @connect(
+    http: {GET: "https://jsonplaceholder.typicode.com/users/{$args.id}"}
+    selection: "id name username"
+  )
 }
 
-type A @key(fields: "a") {
-  a: ID @override(from: "DNE")
-  b: String! @requires(fields: "c") @shareable
-  c: String! @external
+type User
+  @connect(
+    http: {
+      GET: "https://jsonplaceholder.typicode.com/posts",
+      queryParams: "userId: $batch.id"
+    }
+    selection: "posts: {id title body} id: userId"
+  )
+{
+  id: ID!
+  name: String!
+  username: String!
+  posts: [Post]
 }
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+}
+

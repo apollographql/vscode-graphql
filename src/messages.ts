@@ -37,6 +37,11 @@ export const LanguageServerRequests = {
   FileStats: new RequestType<{ uri: string }, ProjectStats, unknown>(
     "apollographql/fileStats",
   ),
+  ShowConnectorPanel: new RequestType<
+    { connectorId?: string; uri?: string },
+    void,
+    unknown
+  >("apollographql/showConnectorPanel"),
 };
 
 /**
@@ -72,4 +77,8 @@ export const LanguageServerNotifications = {
     message: string;
     stack?: string;
   }>("serverDebugMessage"),
+  RegisterConnector: new NotificationType<{
+    id: string;
+    uri: string;
+  }>("apollographql/registerConnector"),
 };

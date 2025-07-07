@@ -1,7 +1,7 @@
 # use 'js-yaml' to convert to json
 # npx js-yaml syntaxes/connectors.jsonselection.yaml >| syntaxes/connectors.jsonselection.json
 # fswatch -0 syntaxes/connectors.jsonselection.yaml | xargs -0 -I {} bash -c "npx js-yaml {} > syntaxes/connectors.jsonselection.json && echo saved" \;
-# based on https://github.com/apollographql/router/blob/next/apollo-federation/src/sources/connect/json_selection/README.md
+# based on https://github.com/apollographql/router/blob/b0a89c223bb5813239474b336cf335ab4fb586cb/apollo-federation/src/sources/connect/json_selection/README.md
 $schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
 name: "Apollo Connectors Mapping Syntax"
 scopeName: "source.apollo.jsonselection"

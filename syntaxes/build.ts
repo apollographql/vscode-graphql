@@ -60,9 +60,9 @@ async function build(filename: string) {
             typeof value === "string" &&
             (key === "begin" || key === "end" || key === "match")
           ) {
-            return value.replace(
+            const regexString = value.replace(
               /\{\{(\w+)\}\}/g,
-              (_, variableName: string) => {
+              function replacer(_, variableName: string) {
                 if (!(variableName in variables)) {
                   throw new Error(
                     "Variable not found: " +
@@ -71,9 +71,14 @@ async function build(filename: string) {
                       Object.keys(variables).join(", "),
                   );
                 }
-                return variables[variableName];
+                return verify(
+                  variables[variableName].replace(/\{\{(\w+)\}\}/g, replacer),
+                  "variable " + variableName,
+                );
               },
             );
+
+            return verify(regexString, key);
           }
           return value;
         },
@@ -82,6 +87,16 @@ async function build(filename: string) {
 
     await writeFile(format({ dir, name, ext: ".json" }), output, "utf8");
   } catch (err) {
-    console.error(`Error building ${filename}:`, err);
+    console.error(`Error building ${filename}:\n`, err);
   }
+}
+function verify(regexString: string, context: string) {
+  try {
+    new RegExp(regexString);
+  } catch (err) {
+    throw new Error(
+      `Invalid regex: ${regexString} in context: ${context}\n${err}`,
+    );
+  }
+  return regexString;
 }

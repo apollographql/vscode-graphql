@@ -8,7 +8,15 @@ patterns:
   - include: "source.graphql#graphql-skip-newlines"
 variables:
   identifier: "[a-zA-Z_][0-9a-zA-Z_]*"
-  string: '"[^"]*"|''[^'']*'''
+  # prettier-ignore
+  string: "(?:\"[^\"]*\"|'[^']*')"
+  key: "(?:{{identifier}}|{{string}})"
+  alias: "{{key}}\\s*:"
+  varPathMatch: "[$]"
+  keyPathMatch: "{{key}}\\s[?]? {{pathStepMatch}} [?]?"
+  pathStepMatch: "(?:[.]{{key}}|->{{identifier}})"
+  atPathMatch: "@"
+  exprPathMatch: "$[(]"
 repository:
   # JSONSelection        ::= PathSelection | NamedSelection*
   JSONSelection:
@@ -31,45 +39,12 @@ repository:
     patterns:
       - include: "#NamedSelection"
       - include: "#Comment"
-  # NamedSelection       ::= NamedPathSelection | PathWithSubSelection | NamedFieldSelection | NamedGroupSelection
+  # NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
   NamedSelection:
     name: "meta.NamedSelection"
     patterns:
-      - include: "#NamedFieldSelection"
-      - include: "#NamedPathSelection"
-      - include: "#PathWithSubSelection"
-      - include: "#NamedGroupSelection"
-  # NamedPathSelection   ::= Alias PathSelection
-  NamedPathSelection:
-    begin: "\\b([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:)"
-    beginCaptures:
-      "1":
-        name: "string.unquoted.NamedPathSelection.alias"
-      "2":
-        name: "punctuation.colon.NamedPathSelection"
-    end: "(?=.)"
-    applyEndPatternLast: 1
-    patterns:
-      - include: "#PathSelection"
-  # NamedFieldSelection  ::= Alias? Key SubSelection?
-  NamedFieldSelection:
-    begin: "\\b(?:([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:))?\\s*([a-zA-Z_][0-9a-zA-Z_]*)\\b(?!\\s*:)"
-    beginCaptures:
-      "1":
-        name: "string.unquoted.NamedFieldSelection.alias"
-      "2":
-        name: "punctuation.colon.NamedFieldSelection"
-      "3":
-        name: "variable.NamedFieldSelection.key"
-    end: "(?=.)"
-    applyEndPatternLast: 1
-    patterns:
-      - include: "#SubSelection"
-  # NamedGroupSelection  ::= Alias SubSelection
   # Alias                ::= Key ":"
   # Path                 ::= VarPath | KeyPath | AtPath | ExprPath
-  # PathSelection        ::= Path SubSelection?
-  # PathWithSubSelection ::= Path SubSelection
   PathSelection:
     patterns:
       - include: "#PathWithOrWithoutSubSelection"
@@ -77,14 +52,18 @@ repository:
     patterns:
       - include: "#PathWithOrWithoutSubSelection"
   PathWithOrWithoutSubSelection:
+    name: "meta.Path"
+    begin: "(?={{varPathMatch}}|{{keyPathMatch}}|{{atPathMatch}}|{{exprPathMatch}})"
+    end: "(?=.)"
     patterns:
       - include: "#VarPath"
-      - include: "#ExprPath"
       - include: "#KeyPath"
       - include: "#AtPath"
-  # VarPath              ::= "$" (NO_SPACE Identifier)? PathStep*
+      - include: "#ExprPath"
+  # PathSelection        ::= Path SubSelection?
+  # VarPath              ::= "$" (NO_SPACE Identifier)? PathTail
   VarPath:
-    begin: "(\\$)([a-zA-Z_][0-9a-zA-Z_]*)?(?!\\w)"
+    begin: "([$])({{identifier}})?(?!\\w)"
     beginCaptures:
       "1":
         name: "variable.language.VarPath.dollar"
@@ -93,30 +72,32 @@ repository:
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
-      - include: "#PathStep"
-  # KeyPath              ::= Key PathStep+
+      - include: "#PathTail"
+  # KeyPath              ::= Key NonEmptyPathTail
   KeyPath:
-    begin: '([a-zA-Z_][0-9a-zA-Z_]*|"[^"]*"|''[^'']*'')'
+    begin: '({{key}})\s*(?={{pathStepMatch}})'
     beginCaptures:
       "1":
         name: "variable.KeyPath.key.identifier"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
-      - include: "#PathStep"
-  # AtPath               ::= "@" PathStep*
+      # "nonEmpty" part already covered through `(?={{pathStepMatch}})` in `begin`
+      #- include: "#NonEmptyPathTail"
+      - include: "#PathTail"
+  # AtPath               ::= "@" PathTail
   AtPath:
-    begin: "(\\@)"
+    begin: "(@)"
     beginCaptures:
       "1":
         name: "variable.language.AtPath.at"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
-      - include: "#PathStep"
-  # ExprPath             ::= "$(" LitExpr ")" PathStep*
+      - include: "#PathTail"
+  # ExprPath             ::= "$(" LitExpr ")" PathTail
   ExprPath:
-    begin: "(\\$)"
+    begin: "([$])(?=[(])"
     beginCaptures:
       "1":
         name: "variable.language.ExprPath.dollar"
@@ -135,9 +116,28 @@ repository:
         patterns:
           - include: "#LitExpr"
       - include: "#PathStep"
+  # PathTail             ::= "?"? (PathStep "?"?)*
+  PathTail:
+    name: "meta.PathTail"
+    begin: "([?])?\\s*{{pathStepMatch}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#NonEmptyPathTail"
+  PathStepMaybOptionallyChained:
+    name: "meta.PathStepMaybOptionallyChained"
+    begin: "(?=[.])({{key}})|(->)({{identifier}})"
+    end: "([?])?"
+    endCaptures:
+      "1":
+        name: "variable.PathStepMaybOptionallyChained.dot"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#PathStep"
+  # NonEmptyPathTail     ::= "?"? (PathStep "?"?)+
   # PathStep             ::= "." Key | "->" Identifier MethodArgs?
   PathStep:
-    begin: "(\\.)({{identifier}}|{{string}})|(->)({{identifier}})"
+    begin: "([.])({{key}})|(->)({{identifier}})"
     end: "(?=.)"
     applyEndPatternLast: 1
     beginCaptures:
@@ -168,13 +168,13 @@ repository:
       - include: "#LitExpr"
       - match: ","
         name: "punctuation.comma.MethodArgs.separator"
-  # LitExpr              ::= LitPrimitive | LitObject | LitArray | PathSelection
+  # LitExpr              ::= LitPath | LitOpChain | LitPrimitive | LitObject | LitArray | PathSelection
+  # changed to:
+  # LitExpr              ::= LitPrimitivePathOrChain | LitObjectPathOrChain  | LitArrayPathOrChain | PathSelection
   LitExpr:
-    patterns:
-      - include: "#LitPrimitive"
-      - include: "#LitObject"
-      - include: "#LitArray"
-      - include: "#PathSelection"
+    patterns: [] #TODO
+  # LitPath              ::= (LitPrimitive | LitObject | LitArray) NonEmptyPathTail
+  # LitOpChain           ::= LitExpr LitOp LitExpr
   # LitPrimitive         ::= LitString | LitNumber | "true" | "false" | "null"
   LitPrimitive:
     patterns:
@@ -190,7 +190,7 @@ repository:
   # LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
   LitNumber:
     name: "constant.numeric.LitNumber"
-    match: "\\b-?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)\\b"
+    match: "\\b-?([0-9]+([.][0-9]*)?|[.][0-9]+)\\b"
   # LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
   LitObject:
     name: "meta.LitObject"
@@ -234,6 +234,10 @@ repository:
       - include: "#LitExpr"
       - match: ","
         name: "punctuation.comma.LitArray.separator"
+  # LitOp                ::= "??" | "?!" | "&&" | "||" | "==" | "!=" | "<" | "<=" | ">" | ">=" | +" | "-" | "*" | "/" | "%"
+  LitOp:
+    match: "([?][?]|[?][!]|&&|[|][|]|==|!=|<|<=|>|>=|[+]|-|[*]|/|%)"
+    name: "keyword.operator.LitOp"
   # NO_SPACE             ::= !SpacesOrComments
   # SpacesOrComments     ::= (Spaces | Comment)+
   # Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+

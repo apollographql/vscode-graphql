@@ -1,13 +1,14 @@
-# use 'js-yaml' to convert to json
-# npx js-yaml syntaxes/connectors.jsonselection.yaml >| syntaxes/connectors.jsonselection.json
-# fswatch -0 syntaxes/connectors.jsonselection.yaml | xargs -0 -I {} bash -c "npx js-yaml {} > syntaxes/connectors.jsonselection.json && echo saved" \;
+# Run `npm run watch:textmate-yaml` while working on this file.
 # based on https://github.com/apollographql/router/blob/b0a89c223bb5813239474b336cf335ab4fb586cb/apollo-federation/src/sources/connect/json_selection/README.md
 $schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
 name: "Apollo Connectors Mapping Syntax"
-scopeName: "source.apollo.jsonselection"
+scopeName: "source.apollo.connectors.mapping"
 patterns:
   - include: "#JSONSelection"
   - include: "source.graphql#graphql-skip-newlines"
+variables:
+  identifier: "[a-zA-Z_][0-9a-zA-Z_]*"
+  string: '"[^"]*"|''[^'']*'''
 repository:
   # JSONSelection        ::= PathSelection | NamedSelection*
   JSONSelection:
@@ -136,7 +137,7 @@ repository:
       - include: "#PathStep"
   # PathStep             ::= "." Key | "->" Identifier MethodArgs?
   PathStep:
-    begin: "(\\.)([a-zA-Z_][0-9a-zA-Z_]*|\"[^\"]*\"|'[^']*')|(->)([a-zA-Z_][0-9a-zA-Z_]*)"
+    begin: "(\\.)({{identifier}}|{{string}})|(->)({{identifier}})"
     end: "(?=.)"
     applyEndPatternLast: 1
     beginCaptures:
@@ -208,7 +209,7 @@ repository:
   # LitProperty          ::= Key ":" LitExpr
   LitProperty:
     name: "meta.LitProperty"
-    begin: "\\b([a-zA-Z_][0-9a-zA-Z_]*)\\s*(:)\\s*"
+    begin: "\\b({{identifier}})\\s*(:)\\s*"
     beginCaptures:
       "1":
         name: "variable.LitProperty.key"

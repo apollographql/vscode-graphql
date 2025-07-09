@@ -1,0 +1,125 @@
+# AWS REST Connector
+
+This connector currently enables the following features using AWS REST APIs:
+
+- Lambda
+  - [Invoke Function](# https://docs.aws.amazon.com/lambda/latest/api/API_Invoke.html) - requires [lambda:InvokeFunction](https://docs.aws.amazon.com/IAM/latest/UserGuide/list_awslambda.html) permission
+- DynamoDB
+  - [GetItem](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html) - requires dynamodb:GetItem or AmazonDynamoDBReadOnlyAccess for your instance
+
+## Prerequisites
+
+To use the `.graphql` files in this folder without modifying them, you must have AWS resources that mirror how the connectors are designed.
+You can also modify the schema files to work with your existing resources. For example, you change the Lambda URL to have one of your function names in it and modify the selection to match what your Lambda returns.
+
+### DynamoDB prerequisites
+
+These prerequisites apply if you want to use the `dynamodb.graphql` schema file as-is.
+
+1. Create a table called `product-catalog`.
+2. Create items in that table that contain an `id`_(string)_, `name`_(string)_, `description`_(string)_ and `image` _(string)_.
+
+### Lambda prerequisites
+
+These prerequisites apply if you want to use the `lambda.graphql` schema file as-is.
+
+1. Create a Lambda named "products" and have it return a body of products like this:
+
+    ```
+    return {
+      statusCode: 200,
+      body: [{
+        "id": "RANQi6AZkUXCbZ",
+        "name": "OG Olive Putter - Blade",
+        "description": "The traditional Block in a blade shape is made from a solid block of Olive wood. The head weight is approximately 360 grams with the addition of pure tungsten weights. Paired with a walnut center-line and white accents colors.",
+        "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9102_3119483fac.png"
+      }],
+    };
+    ```
+
+1. Create a Lambda named `product-price` and have it return a price object based on the incoming `product_id`:
+
+    ```
+    const id = event.product_id;
+    const prices = [{
+      id: "RANQi6AZkUXCbZ",
+      price: {
+        default_price: 49900,
+        is_active: true,
+        currency: "usd",
+        billing_schema: "per_unit",
+        recurring: {
+          interval: 0,
+          interval_count: 3,
+        },
+      },
+    }]
+    return prices.find((p) => p.id == id);
+    ```
+
+## Getting started
+
+1. If you haven't already, [create a new graph in GraphOS](https://www.apollographql.com/docs/graphos/get-started/guides/rest#step-1-set-up-your-graphql-api). Once you get to the **Set up your local development environment** modal in the [Create a graph](https://www.apollographql.com/docs/graphos/get-started/guides/rest#create-a-graph) section:
+    - Copy the `supergraph.yaml` and `router.yaml` files from this folder instead of the `supergraph.yaml` provided by the modal.
+    - Instead of downloading the example schema provided by the modal, copy the schema files you want to use for this connector—`dynamodb.graphql` and/or `lambda.graphql`
+      - *Note: If you only want to one of the schema files, you need to modify the `supergraph.yaml` file to only contain the respective schema file .*
+1. Set up a user in your IAM AWS Console and give them the appropriate permissions. You'll need to then set the proper environment variables for [Sigv4 authentication](https://www.apollographql.com/docs/graphos/routing/security/subgraph-authentication#default-chain-authentication) - _see docs for `AWS_ROLE_ARN` configuration_:
+
+    ```
+    # AWS Lambda - requires [InvokeFunction](https://docs.aws.amazon.com/lambda/latest/api/API_Invoke.html) permission
+    # DynamoDB - requires [GetItem](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html) permission
+
+    export AWS_ACCESS_KEY_ID=....
+    export AWS_SECRET_ACCESS_KEY=....
+    ```
+
+    _Note: You can look at the `router.yaml` file to see config options for Sigv4 in the comments._
+
+1. Run `rover dev` to start the local development session:
+
+    ```
+    APOLLO_KEY=service:My-Graph-s1ff1u:•••••••••••••••••••••• \
+      APOLLO_GRAPH_REF=My-Graph-s1ff1u@main \
+      rover dev --supergraph-config supergraph.yaml --router-config router.yaml
+    ```
+
+You’re all set! Open up http://localhost:4000 to query your graph using Apollo Sandbox.
+
+### Adding to an existing graph in GraphOS
+
+1. Ensure you set up Sigv4 for your hosted router and configure the `router.yaml` as outlined in the [docs](https://www.apollographql.com/docs/graphos/routing/security/subgraph-authentication#default-chain-authentication).
+
+1. Then, to add these connectors to an existing graph, publish the schema files to your graph ref using `rover subgraph publish`:
+
+  ```
+  APOLLO_KEY=service:My-Graph-s1ff1u:•••••••••••••••••••••• \
+    rover subgraph publish My-Graph-s1ff1u@main --name Lambda --schema lambda.graphql --routing-url http://lambda
+  ```
+
+## Additional Setup for VS Code Task runner
+
+Edit your `.vscode/settings.json` to include the following keys:
+
+```
+{
+  "terminal.integrated.profiles.osx": {
+    "graphos": {
+      "path": "zsh",
+      "args": ["-l"],
+      "env": {
+        "API_KEY": "",
+        "APOLLO_KEY": "",
+        ...
+      }
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "graphos"
+}
+```
+
+Once you've set this up, you can execute the `Tasks: Run Task` command in VS Code to run the `rover dev` task.
+Alternatively, you can open a new terminal window in VS Code with the `graphos` profile, then run `rover dev --supergraph-config supergraph.yaml --router-config router.yaml`.
+
+## Contributing
+
+You can contribute any AWS resources to this project. The functionality should be isolated to a `.graphql` file that represents the AWS resource. You can use the current modules in this folder as examples to work with. 

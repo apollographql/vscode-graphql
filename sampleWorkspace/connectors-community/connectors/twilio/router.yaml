@@ -1,0 +1,6 @@
+#this value should be a Base64 encoded string comprised of your twilioAcctID:authToken
+connectors:
+  subgraphs:
+    messages:
+      $config:
+        apiKey: ${env.twilioKey}

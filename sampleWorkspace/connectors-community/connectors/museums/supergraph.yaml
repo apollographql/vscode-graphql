@@ -1,0 +1,10 @@
+subgraphs:
+  aic:
+    routing_url: http://aic
+    schema:
+      file: chicagoArt.graphql
+  met:
+    routing_url: http://met
+    schema:
+      file: metMuseum.graphql
+federation_version: =2.11.0

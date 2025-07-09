@@ -1,0 +1,21 @@
+supergraph:
+  listen: 0.0.0.0:${env.PORT:-4000}
+
+headers:
+  all:
+    request:
+      - propagate:
+          matching: .*
+telemetry:
+  instrumentation:
+    spans:
+      mode: spec_compliant
+
+connectors:
+  subgraphs:
+    heygen-avatars:
+      $config:
+        apiKey: ${env.HEYGEN_API_KEY}
+    heygen-photo-avatars:
+      $config:
+        apiKey: ${env.HEYGEN_API_KEY}

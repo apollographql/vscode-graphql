@@ -1,0 +1,10 @@
+federation_version: =2.11.0
+subgraphs:
+  tint-accounts:
+    routing_url: http://accounts
+    schema:
+      file: accounts.graphql
+  tint-social-feeds:
+    routing_url: http://tint-social-feeds
+    schema:
+      file: social-feeds.graphql

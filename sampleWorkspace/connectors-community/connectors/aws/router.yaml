@@ -1,0 +1,54 @@
+supergraph:
+  listen: 0.0.0.0:${env.PORT:-4000}
+
+headers:
+  all:
+    request:
+      - propagate:
+          matching: .*
+telemetry:
+  instrumentation:
+    spans: 
+      mode: spec_compliant
+connectors:
+    preview_connect_v0_2: true
+authentication:
+  connector:
+    sources:
+      aws-lambda.lambda:
+        aws_sig_v4:
+          default_chain:
+            # You can also set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as environment variables
+            # Docs: https://www.apollographql.com/docs/graphos/routing/security/subgraph-authentication#default-chain-authentication
+            profile_name: "default" #name of profile in .aws/configuration file
+            region: "us-east-1"
+            service_name: "lambda"
+            # assume_role:
+            #   role_arn: "arn:aws:iam::{accountId}:role/{roleName}"
+            #   session_name: "connector"
+      aws-dynamodb.dynamodb:
+        aws_sig_v4:
+          default_chain:
+            # You can also set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as environment variables
+            # Docs: https://www.apollographql.com/docs/graphos/routing/security/subgraph-authentication#default-chain-authentication
+            profile_name: "default" #name of profile in .aws/configuration file
+            region: "us-east-1"
+            service_name: "dynamodb"
+            # assume_role:
+            #   role_arn: "arn:aws:iam::{accountId}:role/{roleName}"
+            #   session_name: "connector"
+
+## If you want to override the url to use dynamic urls based on environment variables
+# connectors:
+#   subgraphs:
+#     dynamodb: # The name of the subgraph
+#       sources:
+#         address: # Refers to @source(name: "v1")
+#           override_url: ${env.DYNAMODB_URL:-https://dynamodb.us-east-1.amazonaws.com}
+#       # $config: #<- if you wanted to have environment variables used in schema file (i.e. {$config.apiKey})
+#       #   apiKey: ${env.API_KEY}
+#     lambda:
+#       sources:
+#         lambda:
+#           override_url: ${env.LAMBDA_URL:-https://lambda.us-east-1.amazonaws.com}
+

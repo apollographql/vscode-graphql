@@ -1,0 +1,14 @@
+federation_version: =2.11.0
+subgraphs:
+  addresses:
+    routing_url: http://addresses
+    schema:
+      file: addresses.graphql
+  customer:
+    routing_url: http://customer
+    schema:
+      file: customer.graphql
+  products:
+    routing_url: http://products
+    schema:
+      file: products.graphql

@@ -1,0 +1,53 @@
+{
+  "statusCode": 200,
+  "body": [
+    {
+      "id": "RANQi6AZkUXCbZ",
+      "name": "OG Olive Putter - Blade",
+      "description": "The traditional Block in a blade shape is made from a solid block of Olive wood. The head weight is approximately 360 grams with the addition of pure tungsten weights. Paired with a walnut center-line and white accents colors.",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9102_3119483fac.png"
+    },
+    {
+      "id": "RANYrWRy876AA5",
+      "name": "Butter Knife Olive Putter- Blade",
+      "description": "The traditional Block in a extremely thin blade shape (~1\") is made from a solid block of Olive wood. The head weight is approximately 330 grams with the addition of pure tungsten weights.",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9104_97c221e79c.png"
+    },
+    {
+      "id": "RANb0l4hEX1P5h",
+      "name": "Purple Heart Putter - Mallet",
+      "description": "The traditional Block in a mallet shape is made from a solid block of Purple Heart wood. The head weight is approximately 350 grams with the addition of pure tungsten weights. Paired with a cherrywood center-line.",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9107_a64354f144.png"
+    },
+    {
+      "id": "R8Thrlp7oTghTr",
+      "name": "Purple Heart Putter - Blade",
+      "description": "The traditional Block in a blade shape is made from a solid block of Purple Heart wood. The head weight is approximately 350 grams with the addition of pure tungsten weights. Paired with a cherrywood center-line and white accents colors.",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_8808_028b0dc74f.png"
+    },
+    {
+      "id": "RANfaXNYj1y69D",
+      "name": "Purple Heart Putter - Mallet - Hardwood Hosel",
+      "description": "The traditional Block in a mallet shape is made from a solid block of Purple Heart wood. It also features an offset hardwood hosel lathed for a perfect fit. The head weight is approximately 350 grams with the addition of pure tungsten weights. Paired with a accents of your choice.",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9108_cb1db8a258.png"
+    },
+    {
+      "id": "RANhWQ2gr4Nddk",
+      "name": "Bubinga Single-Step Putter - Blade",
+      "description": "The traditional Block in a blade shape that is made from a solid block of Bubinga wood. The head weight is approximately 350 grams with the addition of pure tungsten weights. Paired with a olivewood center-line and white accents colors.",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9113_fdd623c915.png"
+    },
+    {
+      "id": "RANj7kJZbpaST9",
+      "name": "Creamy Purple Heart Putter - Mallet",
+      "description": "The traditional Block in a mallet shape that is made from a solid block of Purple Heart wood. The head weight is approximately 350 grams with the addition of pure tungsten weights. Paired with a cherrywood center-line and cream accents colors paired with drip for the weights.",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9114_b81c1a597c.png"
+    },
+    {
+      "id": "RANlyfWstQOkdx",
+      "name": "Adjustable Walnut Putter - Mallet",
+      "description": "The prototype Block in a mallet shape that is made from a solid block of Walnut wood. The head weight is approximately 350 grams with the addition of pure tungsten weights. Paired with a cherrywood center-line and teal accents colors. It includes two adjustable weights to dial in the swingweight for your personal preference",
+      "image": "https://keynote-strapi-production.up.railway.app/uploads/thumbnail_IMG_9115_75fddf436a.png"
+    }
+  ]
+}

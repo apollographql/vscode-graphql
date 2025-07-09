@@ -24,7 +24,7 @@ repository:
   # JSONSelection        ::= PathSelection | NamedSelection*
   JSONSelection:
     patterns:
-      # - include: "#NamedSelection"
+      - include: "#NamedSelection"
       - include: "#PathSelection"
       - include: "#Comment"
   # SubSelection         ::= "{" NamedSelection* "}"
@@ -41,10 +41,9 @@ repository:
       - include: "#NamedSelection"
       - include: "#Comment"
   # NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
-  NamedSelection:
-    patterns: []
   # Alias                ::= Key ":"
   # Path                 ::= VarPath | KeyPath | AtPath | ExprPath
+  # PathSelection        ::= Path SubSelection?
   PathSelection:
     begin: "(?={{varPathMatch}}|{{keyPathMatch}}|{{atPathMatch}}|{{exprPathMatch}})"
     end: "(?=.)"
@@ -54,7 +53,38 @@ repository:
       - include: "#VarPath"
       - include: "#KeyPath"
       - include: "#AtPath"
-  # PathSelection        ::= Path SubSelection?
+  NamedSelection:
+    patterns:
+      - begin: "({{key}})\\s*(:)\\s*{{#PathSelection.begin}}"
+        beginCaptures:
+          "1":
+            name: "variable.selection.alias.identifier"
+          "2":
+            name: "punctuation.colon.alias"
+        end: "(?=.)"
+        applyEndPatternLast: 1
+        patterns:
+          - include: "#PathSelection"
+      - begin: "([.][.][.])\\s*{{#PathSelection.begin}}"
+        beginCaptures:
+          "1":
+            name: "keyword.operator.spread"
+        end: "(?=.)"
+        applyEndPatternLast: 1
+        patterns:
+          - include: "#PathSelection"
+      - include: "#PathSelection"
+      - begin: "({{key}})\\s*(:)\\s*(?={{#SubSelection.begin}})"
+        beginCaptures:
+          "1":
+            name: "variable.selection.alias.identifier"
+          "2":
+            name: "punctuation.colon.alias"
+        end: "(?=.)"
+        applyEndPatternLast: 1
+        patterns:
+          - include: "#SubSelection"
+
   # VarPath              ::= "$" (NO_SPACE Identifier)? PathTail
   VarPath:
     begin: "([$])({{identifier}})?(?!\\w)"

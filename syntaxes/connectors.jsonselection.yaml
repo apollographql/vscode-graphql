@@ -13,8 +13,9 @@ variables:
   key: "(?:{{identifier}}|{{string}})"
   alias: "{{key}}\\s*:"
   varPathMatch: "[$]"
-  keyPathMatch: "{{key}}\\s[?]? {{pathStepMatch}} [?]?"
+  keyPathMatch: "({{key}})(?={{pathTailMatch}})"
   pathStepMatch: "(?:[.]{{key}}|->{{identifier}})"
+  pathTailMatch: "\\s*(?:[?])?(?=\\s*{{pathStepMatch}})"
   atPathMatch: "@"
   exprPathMatch: "$[(]"
 repository:
@@ -53,10 +54,10 @@ repository:
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
+      - include: "#ExprPath" # needs higher priority that `VarPath`
       - include: "#VarPath"
       - include: "#KeyPath"
       - include: "#AtPath"
-      - include: "#ExprPath"
   # PathSelection        ::= Path SubSelection?
   # VarPath              ::= "$" (NO_SPACE Identifier)? PathTail
   VarPath:
@@ -72,14 +73,14 @@ repository:
       - include: "#PathTail"
   # KeyPath              ::= Key NonEmptyPathTail
   KeyPath:
-    begin: '({{key}})\s*(?={{pathStepMatch}})'
+    begin: "({{key}})(?={{pathTailMatch}})"
     beginCaptures:
       "1":
         name: "variable.path.key.identifier"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
-      # "nonEmpty" part already covered through `(?={{pathStepMatch}})` in `begin`
+      # "nonEmpty" part already covered through `(?={{pathTailMatch}})` in `begin`
       #- include: "#NonEmptyPathTail"
       - include: "#PathTail"
   # AtPath               ::= "@" PathTail
@@ -113,61 +114,87 @@ repository:
           - include: "#LitExpr"
       - include: "#PathStep"
   # PathTail             ::= "?"? (PathStep "?"?)*
+  # optional chaining moved into `PathStep` later
   PathTail:
-    begin: "([?])?\\s*{{pathStepMatch}}"
-    end: "(?=.)"
-    applyEndPatternLast: 1
-    patterns:
-      - include: "#PathStepMaybOptionallyChained"
-  PathStepMaybOptionallyChained:
-    begin: "(?=[.])({{key}})|(->)({{identifier}})"
-    end: "([?])?"
-    endCaptures:
+    begin: "([?])?(?=\\s*{{pathStepMatch}})"
+    beginCaptures:
       "1":
-        name: "variable.dot"
+        name: "variable.question.mark"
+    end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
       - include: "#PathStep"
   # NonEmptyPathTail     ::= "?"? (PathStep "?"?)+
   # PathStep             ::= "." Key | "->" Identifier MethodArgs?
-  PathStep:
-    begin: "([.])({{key}})|(->)({{identifier}})"
-    end: "(?=.)"
-    applyEndPatternLast: 1
-    beginCaptures:
+  # changed to and added optional chaining that would usually live in `PathTail`|`NonEmptyPathTail`:
+  # PathStepDotAccess    ::= "." Key "?"?
+  # PathStepArrowMethodArgs ::= "->" Identifier MethodArgs "?"?
+  # PathStepArrowAccess  ::= "->" Identifier "?"?
+  # PathStep             ::= PathStepDotAccess | PathStepArrowMethodArgs | PathStepArrowAccess
+  PathStepDotAccess:
+    match: "([.])({{key}})([?]?)"
+    captures:
       "1":
         name: "variable.dot"
       "2":
         name: "variable.key.identifier"
       "3":
-        name: "punctuation.arrow"
-      "4":
-        name: "variable.identifier"
-    patterns:
-      - include: "#MethodArgs"
-  # Key                  ::= Identifier | LitString
-  # Identifier           ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
-  # MethodArgs           ::= "(" (LitExpr ("," LitExpr)* ","?)? ")"
-  MethodArgs:
-    begin: "([(])"
+        name: "variable.question.mark"
+  PathStepArrowMethodArgs:
+    begin: "(->)({{identifier}})([(])"
+    end: "([)])([?]?)"
+    applyEndPatternLast: 1
     beginCaptures:
       "1":
+        name: "punctuation.arrow"
+      "2":
+        name: "variable.identifier"
+      "3":
         name: "punctuation.brace.round.args.open"
-    end: "([)])"
     endCaptures:
       "1":
         name: "punctuation.brace.round.args.close"
+      "2":
+        name: "variable.question.mark"
     patterns:
       - include: "#LitExpr"
       - match: ","
         name: "punctuation.comma.args.separator"
+  PathStepArrowAccess:
+    match: "(->)({{identifier}})([?]?)"
+    captures:
+      "1":
+        name: "punctuation.arrow"
+      "2":
+        name: "variable.key.identifier"
+      "3":
+        name: "variable.question.mark"
+  PathStep:
+    patterns:
+      - include: "#PathStepDotAccess"
+      - include: "#PathStepArrowMethodArgs"
+      - include: "#PathStepArrowAccess"
+  # Key (in variables)                 ::= Identifier | LitString
+  # Identifier (in variables)          ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
+  # MethodArgs (inlined into PathStepArrowMethodArgs)            ::= "(" (LitExpr ("," LitExpr)* ","?)? ")"
   # LitExpr              ::= LitPath | LitOpChain | LitPrimitive | LitObject | LitArray | PathSelection
-  # changed to:
-  # LitExpr              ::= LitPrimitivePathOrChain | LitObjectPathOrChain  | LitArrayPathOrChain | PathSelection
+  # LitOpChainTail              ::= LitOp LitExpr
   LitExpr:
-    patterns: [] #TODO
+    patterns:
+      # - include: "#LitPath"
+      # - include: "#LitOpChain"
+      - include: "#LitPrimitive"
+      - include: "#LitObject"
+      - include: "#LitArray"
+      - include: "#PathSelection"
   # LitPath              ::= (LitPrimitive | LitObject | LitArray) NonEmptyPathTail
   # LitOpChain           ::= LitExpr LitOp LitExpr
+  # changed to
+  # LitOpChain           ::= LitPrimitivePathOrChain | LitObjectPathOrChain | LitArrayPathOrChain
+  # LitPrimitivePathOrChain ::= LitPrimitive LitOpChainTail*
+  # LitObjectPathOrChain    ::= LitObject LitOpChainTail*
+  # LitArrayPathOrChain     ::= LitArray LitOpChainTail*
+  # LitOpChainTail          ::= LitOp LitExpr
   # LitPrimitive         ::= LitString | LitNumber | "true" | "false" | "null"
   LitPrimitive:
     patterns:

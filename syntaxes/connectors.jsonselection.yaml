@@ -20,29 +20,26 @@ variables:
 repository:
   # JSONSelection        ::= PathSelection | NamedSelection*
   JSONSelection:
-    name: "meta.JSONSelection"
     patterns:
-      - include: "#NamedSelection"
+      # - include: "#NamedSelection"
       - include: "#PathSelection"
       - include: "#Comment"
   # SubSelection         ::= "{" NamedSelection* "}"
   SubSelection:
-    name: "meta.SubSelection"
     begin: "\\s*({)"
     beginCaptures:
       "1":
-        name: "punctuation.SubSelection.open"
+        name: "punctuation.selection.open"
     end: "\\s*(})"
     endCaptures:
       "1":
-        name: "punctuation.SubSelection.close"
+        name: "punctuation.selection.close"
     patterns:
       - include: "#NamedSelection"
       - include: "#Comment"
   # NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
   NamedSelection:
-    name: "meta.NamedSelection"
-    patterns:
+    patterns: []
   # Alias                ::= Key ":"
   # Path                 ::= VarPath | KeyPath | AtPath | ExprPath
   PathSelection:
@@ -52,9 +49,9 @@ repository:
     patterns:
       - include: "#PathWithOrWithoutSubSelection"
   PathWithOrWithoutSubSelection:
-    name: "meta.Path"
     begin: "(?={{varPathMatch}}|{{keyPathMatch}}|{{atPathMatch}}|{{exprPathMatch}})"
     end: "(?=.)"
+    applyEndPatternLast: 1
     patterns:
       - include: "#VarPath"
       - include: "#KeyPath"
@@ -66,9 +63,9 @@ repository:
     begin: "([$])({{identifier}})?(?!\\w)"
     beginCaptures:
       "1":
-        name: "variable.language.VarPath.dollar"
+        name: "variable.language.path.dollar"
       "2":
-        name: "variable.language.VarPath.identifier"
+        name: "variable.language.path.identifier"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -78,7 +75,7 @@ repository:
     begin: '({{key}})\s*(?={{pathStepMatch}})'
     beginCaptures:
       "1":
-        name: "variable.KeyPath.key.identifier"
+        name: "variable.path.key.identifier"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -90,7 +87,7 @@ repository:
     begin: "(@)"
     beginCaptures:
       "1":
-        name: "variable.language.AtPath.at"
+        name: "variable.language.path.at"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -100,37 +97,34 @@ repository:
     begin: "([$])(?=[(])"
     beginCaptures:
       "1":
-        name: "variable.language.ExprPath.dollar"
+        name: "variable.language.path.dollar"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
-      - name: "meta.ExprPathArgs"
-        begin: "([(])"
+      - begin: "([(])"
         beginCaptures:
           "1":
-            name: "punctuation.brace.round.ExprPathArgs.open"
+            name: "punctuation.brace.round.args.open"
         end: "([)])"
         endCaptures:
           "1":
-            name: "punctuation.brace.round.ExprPathArgs.close"
+            name: "punctuation.brace.round.args.close"
         patterns:
           - include: "#LitExpr"
       - include: "#PathStep"
   # PathTail             ::= "?"? (PathStep "?"?)*
   PathTail:
-    name: "meta.PathTail"
     begin: "([?])?\\s*{{pathStepMatch}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
-      - include: "#NonEmptyPathTail"
+      - include: "#PathStepMaybOptionallyChained"
   PathStepMaybOptionallyChained:
-    name: "meta.PathStepMaybOptionallyChained"
     begin: "(?=[.])({{key}})|(->)({{identifier}})"
     end: "([?])?"
     endCaptures:
       "1":
-        name: "variable.PathStepMaybOptionallyChained.dot"
+        name: "variable.dot"
     applyEndPatternLast: 1
     patterns:
       - include: "#PathStep"
@@ -142,32 +136,31 @@ repository:
     applyEndPatternLast: 1
     beginCaptures:
       "1":
-        name: "variable.PathStep.dot"
+        name: "variable.dot"
       "2":
-        name: "variable.PathStep.key.identifier"
+        name: "variable.key.identifier"
       "3":
-        name: "punctuation.PathStep.arrow"
+        name: "punctuation.arrow"
       "4":
-        name: "variable.PathStep.identifier"
+        name: "variable.identifier"
     patterns:
       - include: "#MethodArgs"
   # Key                  ::= Identifier | LitString
   # Identifier           ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
   # MethodArgs           ::= "(" (LitExpr ("," LitExpr)* ","?)? ")"
   MethodArgs:
-    name: "meta.MethodArgs"
     begin: "([(])"
     beginCaptures:
       "1":
-        name: "punctuation.brace.round.MethodArgs.open"
+        name: "punctuation.brace.round.args.open"
     end: "([)])"
     endCaptures:
       "1":
-        name: "punctuation.brace.round.MethodArgs.close"
+        name: "punctuation.brace.round.args.close"
     patterns:
       - include: "#LitExpr"
       - match: ","
-        name: "punctuation.comma.MethodArgs.separator"
+        name: "punctuation.comma.args.separator"
   # LitExpr              ::= LitPath | LitOpChain | LitPrimitive | LitObject | LitArray | PathSelection
   # changed to:
   # LitExpr              ::= LitPrimitivePathOrChain | LitObjectPathOrChain  | LitArrayPathOrChain | PathSelection
@@ -184,60 +177,57 @@ repository:
         name: "constant.language.LitPrimitive"
   # LitString            ::= "'" ("\\'" | [^'])* "'" | '"' ('\\"' | [^"])* '"'
   LitString:
-    name: "string.quoted.LitString"
+    name: "string.quoted"
     # prettier-ignore
     match: "(\")([^\"]*)(\")|(')([^']*)(')"
   # LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
   LitNumber:
-    name: "constant.numeric.LitNumber"
+    name: "constant.numeric"
     match: "\\b-?([0-9]+([.][0-9]*)?|[.][0-9]+)\\b"
   # LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
   LitObject:
-    name: "meta.LitObject"
     begin: "\\s*({)"
     beginCaptures:
       "1":
-        name: "punctuation.LitObject.open"
+        name: "punctuation.object.open"
     end: "\\s*(})"
     endCaptures:
       "1":
-        name: "punctuation.LitObject.close"
+        name: "punctuation.object.close"
     patterns:
       - include: "#LitProperty"
       - match: ","
-        name: "punctuation.comma.LitObject.separator"
+        name: "punctuation.comma.object.separator"
   # LitProperty          ::= Key ":" LitExpr
   LitProperty:
-    name: "meta.LitProperty"
     begin: "\\b({{identifier}})\\s*(:)\\s*"
     beginCaptures:
       "1":
-        name: "variable.LitProperty.key"
+        name: "variable.property.key"
       "2":
-        name: "punctuation.colon.LitProperty"
+        name: "punctuation.colon.property"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
       - include: "#LitExpr"
   # LitArray             ::= "[" (LitExpr ("," LitExpr)* ","?)? "]"
   LitArray:
-    name: "meta.LitArray"
     begin: "\\s*(\\[)"
     beginCaptures:
       "1":
-        name: "punctuation.LitArray.open"
+        name: "punctuation.array.open"
     end: "\\s*(\\])"
     endCaptures:
       "1":
-        name: "punctuation.LitArray.close"
+        name: "punctuation.array.close"
     patterns:
       - include: "#LitExpr"
       - match: ","
-        name: "punctuation.comma.LitArray.separator"
+        name: "punctuation.comma.array.separator"
   # LitOp                ::= "??" | "?!" | "&&" | "||" | "==" | "!=" | "<" | "<=" | ">" | ">=" | +" | "-" | "*" | "/" | "%"
   LitOp:
     match: "([?][?]|[?][!]|&&|[|][|]|==|!=|<|<=|>|>=|[+]|-|[*]|/|%)"
-    name: "keyword.operator.LitOp"
+    name: "keyword.operator"
   # NO_SPACE             ::= !SpacesOrComments
   # SpacesOrComments     ::= (Spaces | Comment)+
   # Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+
@@ -251,7 +241,7 @@ repository:
 
   # additional rules used for strings, e.g. in `POST: "/foo/bar/{$id}"`
   JSONSelectionString:
-    contentName: string.quoted.JSONSelectionString
+    contentName: string.quoted
     begin: '(("))'
     beginCaptures:
       "1":
@@ -265,14 +255,15 @@ repository:
       "2":
         name: "punctuation.definition.string.end.graphql"
     patterns:
-      - name: "meta.JSONSelectionString.embedded"
-        begin: "\\s*({)"
+      - begin: "\\s*({)"
+        contentName: "embedded"
+        debugName: "embedded"
         beginCaptures:
           "1":
-            name: "punctuation.JSONSelectionString.open"
+            name: "punctuation.embedded.open"
         end: "\\s*(})"
         endCaptures:
           "1":
-            name: "punctuation.JSONSelectionString.close"
+            name: "punctuation.embedded.close"
         patterns:
           - include: "#PathSelection"

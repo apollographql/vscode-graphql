@@ -31,5 +31,20 @@
   "settings": {
     "apollographql.devTools.showPanel": "detect",
     "apollographql.devTools.serverPort": 7095,
+    "editor.tokenColorCustomizations": {
+     "textMateRules": [
+        {
+          "scope": [ "meta.repository" ],
+          "settings": { "fontStyle": "underline" }
+        },
+        {
+          "scope": ["meta.repository.Comment.identifier"],
+          "settings": {
+            "foreground": "#ffffff17",
+            "fontStyle": ""
+          }
+        }
+      ]
+    },
   },
 }

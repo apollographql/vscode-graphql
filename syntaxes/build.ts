@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { parseArgs, styleText, inspect } from "node:util";
+import { parseArgs, styleText } from "node:util";
 import {
   watch as nodeWatch,
   readdir,
@@ -7,16 +7,34 @@ import {
   writeFile,
 } from "node:fs/promises";
 import yaml from "js-yaml";
-import { format, join, parse } from "node:path";
-import * as path from "node:path";
+import { format, parse } from "node:path";
+
+const dir = import.meta.dirname;
 const {
-  values: { watch },
+  values: { watch, debug, snapshot, highlight },
+  positionals,
 } = parseArgs({
   options: {
     watch: { type: "boolean", default: false },
+    debug: {
+      type: "boolean",
+      default: false,
+      description: "pattern names will be concatenated with the pattern path",
+    },
+    highlight: {
+      type: "boolean",
+      default: true,
+      description:
+        "(in `debug` or `snapshot`) add a low-priority `variable` property to the pattern to visibly distinguish all matches",
+    },
+    snapshot: {
+      type: "boolean",
+      default: false,
+      description: "pattern names will be replaced with the pattern path",
+    },
   },
+  allowPositionals: true,
 });
-const dir = import.meta.dirname;
 
 const colors = {
   variable: "red",
@@ -27,10 +45,20 @@ const colors = {
   filename: ["blue", "underline"],
 } satisfies Record<string, Parameters<typeof styleText>[0]>;
 
+const files = new Set<string>();
+
 for (const filename of await readdir(dir)) {
-  if (filename.endsWith(".yaml")) {
-    await build(filename);
+  if (positionals.length > 0) {
+    if (positionals.includes(parse(filename).base)) {
+      files.add(filename);
+    }
+  } else if (filename.endsWith(".yaml")) {
+    files.add(filename);
   }
+}
+
+for (const filename of files) {
+  await build(filename);
 }
 
 if (watch) {
@@ -40,7 +68,7 @@ if (watch) {
       for await (const event of watcher) {
         if (event.eventType === "rename" || event.eventType === "change") {
           const filename = event.filename;
-          if (filename.endsWith(".yaml")) {
+          if (files.has(filename)) {
             await build(filename);
           }
         }
@@ -70,6 +98,36 @@ async function build(filename: string) {
           const currentPath = (paths.get(this) || []).concat(key);
           if (value && typeof value === "object" && key !== "") {
             paths.set(value, currentPath);
+          }
+          if (debug || snapshot) {
+            // attach the respository pattern name for debugging
+            if (
+              typeof value === "object" &&
+              value !== null &&
+              currentPath[0] === "repository" &&
+              // top-level patterns
+              (currentPath.length == 2 ||
+                // nested inline patterns
+                (currentPath.length > 2 &&
+                  currentPath.at(-2) === "patterns" &&
+                  typeof value === "object" &&
+                  !("include" in value)))
+            ) {
+              const debugPath =
+                "debugName" in value
+                  ? currentPath.slice(0, -1).concat(value.debugName)
+                  : currentPath;
+              delete value.debugName;
+              if (snapshot) {
+                // in snapshot mode we only are interested in the pattern names, not colorization details
+                delete value.name;
+              }
+              value.name =
+                (value.name ?? "meta") + "." + pathToString(debugPath, false);
+              if (highlight) {
+                value.name += ".identifier";
+              }
+            }
           }
           if (typeof value === "string") {
             if (key === "begin" || key === "end" || key === "match") {
@@ -126,13 +184,11 @@ function verify(regexString: string, context: string) {
   }
   return regexString;
 }
-function pathToString(path: string[]) {
-  return styleText(
-    colors.path,
-    path.reduce(
-      (acc, part) =>
-        acc + (isFinite(+part) ? "[" + part + "]" : (acc ? "." : "") + part),
-      "",
-    ),
+function pathToString(path: string[], colorize = true) {
+  const text = path.reduce(
+    (acc, part) =>
+      acc + (isFinite(+part) ? "[" + part + "]" : (acc ? "." : "") + part),
+    "",
   );
+  return colorize ? styleText(colors.path, text) : text;
 }

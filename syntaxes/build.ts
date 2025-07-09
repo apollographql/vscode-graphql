@@ -133,7 +133,6 @@ async function build(filename: string) {
                 function replacer(_, reference: string) {
                   let replaced: string;
                   const patternMatch = /^(#\w+)\.(\w+)/.exec(reference);
-                  console.log({ reference, patternMatch });
                   if (patternMatch) {
                     const [, pattern, key] = patternMatch;
                     const patternObject = knownPatterns.get(pattern);
@@ -143,7 +142,6 @@ async function build(filename: string) {
                           ` accessed from ${pathToString(currentPath)}`,
                       );
                     }
-                    console.log({ pattern, key, patternObject });
                     replaced = patternObject[key];
                   } else {
                     if (!(reference in variables)) {

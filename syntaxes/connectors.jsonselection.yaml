@@ -11,6 +11,8 @@ variables:
   # prettier-ignore
   string: "(?:\"[^\"]*\"|'[^']*')"
   key: "(?:{{identifier}}|{{string}})"
+  operator: "(?:[?][?]|[?][!]|&&|[|][|]|==|!=|<|<=|(?<!-)>|(?<!-)>=|[+]|-(?!>)|[*]|/|%)"
+  operatorCharacter: "[?!&|=<>*/%+-]"
   alias: "{{key}}\\s*:"
   varPathMatch: "[$]"
   keyPathMatch: "({{key}})(?={{pathTailMatch}})"
@@ -44,12 +46,6 @@ repository:
   # Alias                ::= Key ":"
   # Path                 ::= VarPath | KeyPath | AtPath | ExprPath
   PathSelection:
-    patterns:
-      - include: "#PathWithOrWithoutSubSelection"
-  PathWithSubSelection:
-    patterns:
-      - include: "#PathWithOrWithoutSubSelection"
-  PathWithOrWithoutSubSelection:
     begin: "(?={{varPathMatch}}|{{keyPathMatch}}|{{atPathMatch}}|{{exprPathMatch}})"
     end: "(?=.)"
     applyEndPatternLast: 1
@@ -178,23 +174,38 @@ repository:
   # Identifier (in variables)          ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
   # MethodArgs (inlined into PathStepArrowMethodArgs)            ::= "(" (LitExpr ("," LitExpr)* ","?)? ")"
   # LitExpr              ::= LitPath | LitOpChain | LitPrimitive | LitObject | LitArray | PathSelection
-  # LitOpChainTail              ::= LitOp LitExpr
   LitExpr:
     patterns:
-      # - include: "#LitPath"
       # - include: "#LitOpChain"
+      - include: "#LitOpChainCenter"
+      # - include: "#LitPath"
+      - include: "#LitPathTail"
       - include: "#LitPrimitive"
       - include: "#LitObject"
       - include: "#LitArray"
       - include: "#PathSelection"
   # LitPath              ::= (LitPrimitive | LitObject | LitArray) NonEmptyPathTail
+  # changed to
+  # LitPathTail              ::= NonEmptyPathTail
+  # but ensures that it's not the first `LitExpr` by doing a negative lookbehind for `(`, which would indicate we're the first entry in a `ExprPath`.
+  LitPathTail:
+    begin: "(?<![(])(?={{pathTailMatch}})"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      # "nonEmpty" part already covered through `(?={{pathTailMatch}})` in `begin`
+      #- include: "#NonEmptyPathTail"
+      - include: "#PathTail"
   # LitOpChain           ::= LitExpr LitOp LitExpr
   # changed to
-  # LitOpChain           ::= LitPrimitivePathOrChain | LitObjectPathOrChain | LitArrayPathOrChain
-  # LitPrimitivePathOrChain ::= LitPrimitive LitOpChainTail*
-  # LitObjectPathOrChain    ::= LitObject LitOpChainTail*
-  # LitArrayPathOrChain     ::= LitArray LitOpChainTail*
-  # LitOpChainTail          ::= LitOp LitExpr
+  # LitOpChainCenter          ::= LitOp
+  # as `MethodArgs` might match `LitExpr` more than once anyways.
+  # Does lookarounds to ensure that it's in the middle of an expression, i.e. not at the start or end.
+  LitOpChainCenter:
+    match: "(?<![(]|{{operatorCharacter}})({{operator}})(?!\\s*(?:{{operatorCharacter}}|[)]))"
+    captures:
+      "1":
+        name: "keyword.operator"
   # LitPrimitive         ::= LitString | LitNumber | "true" | "false" | "null"
   LitPrimitive:
     patterns:
@@ -265,9 +276,7 @@ repository:
       - match: ","
         name: "punctuation.comma.array.separator"
   # LitOp                ::= "??" | "?!" | "&&" | "||" | "==" | "!=" | "<" | "<=" | ">" | ">=" | +" | "-" | "*" | "/" | "%"
-  LitOp:
-    match: "([?][?]|[?][!]|&&|[|][|]|==|!=|<|<=|>|>=|[+]|-|[*]|/|%)"
-    name: "keyword.operator"
+  # inlined into `LitOpChainCenter`
   # NO_SPACE             ::= !SpacesOrComments
   # SpacesOrComments     ::= (Spaces | Comment)+
   # Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+

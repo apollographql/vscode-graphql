@@ -207,10 +207,23 @@ repository:
     name: "string.quoted"
     # prettier-ignore
     match: "(\")([^\"]*)(\")|(')([^']*)(')"
+    captures:
+      "1":
+        name: "punctuation.definition.string.begin.graphql"
+      "2":
+        name: "string.quoted.double.graphql"
+      "3":
+        name: "punctuation.definition.string.end.graphql"
+      "4":
+        name: "punctuation.definition.string.begin.graphql"
+      "5":
+        name: "string.quoted.single.graphql"
+      "6":
+        name: "punctuation.definition.string.end.graphql"
   # LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
   LitNumber:
     name: "constant.numeric"
-    match: "\\b-?([0-9]+([.][0-9]*)?|[.][0-9]+)\\b"
+    match: "(-?)([0-9]+([.][0-9]*)?|[.][0-9]+)"
   # LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
   LitObject:
     begin: "\\s*({)"

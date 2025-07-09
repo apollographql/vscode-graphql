@@ -1,0 +1,6 @@
+federation_version: =2.11.0
+subgraphs:
+  contacts:
+    routing_url: http://contacts
+    schema:
+      file: contacts.graphql

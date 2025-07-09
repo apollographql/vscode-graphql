@@ -1,0 +1,18 @@
+federation_version: =2.11.0
+subgraphs:
+  games:
+    routing_url: http://games
+    schema:
+      file: games.graphql
+  locations:
+    routing_url: http://locations
+    schema:
+      file: locations.graphql
+  moves:
+    routing_url: http://moves
+    schema:
+      file: moves.graphql
+  pokemon:
+    routing_url: http://pokemon
+    schema:
+      file: pokemon.graphql

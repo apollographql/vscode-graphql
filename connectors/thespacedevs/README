@@ -1,0 +1,46 @@
+# The Space Devs Launch Library REST Connector
+
+This connector currently covers [The Space Devs Launch Library REST API](https://ll.thespacedevs.com/).
+
+## Prerequisites
+
+The Space Devs is a free to access API that enforces their own rate limits; all the API data is available at no cost for up to 15 requests per hour.
+
+## Additional Setup for VS Code Task runner
+
+Edit your `.vscode/settings.json` to include the following keys:
+
+```
+{
+  "terminal.integrated.profiles.osx": {
+    "graphos": {
+      "path": "zsh",
+      "args": ["-l"],
+      "env": {
+        "API_KEY": "",
+        "APOLLO_KEY": "",
+        ...
+      }
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "graphos"
+}
+```
+
+Once you've set this up, you can execute the `Tasks: Run Task` command in VS Code to run the `rover dev` task.
+Alternatively, you can open a new terminal window in VS Code with the `graphos` profile, then run `rover dev --supergraph-config supergraph.yaml --router-config router.yaml`.
+
+## Contributing
+
+
+The following schema modules can be added to this connector:
+
+- Example 1
+- Example 2
+
+To contribute them, make sure to:
+
+1. Add a schema designed for the module as a new `.graphql` file.
+2. Update the `router.yaml` and `supergraph.yaml` files accordingly.
+
+See [REST API reference]() for other modules that can be implemented. You can use the current modules in this folder as examples to work with. 

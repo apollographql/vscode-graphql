@@ -1,0 +1,6 @@
+subgraphs:
+  earthquakes:
+    routing_url: http://localhost:4000
+    schema:
+      file: earthquakes.graphql
+federation_version: =2.11.0

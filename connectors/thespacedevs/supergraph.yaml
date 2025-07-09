@@ -1,0 +1,77 @@
+federation_version: =2.11.0
+subgraphs:
+  agencies:
+    routing_url: http://agencies
+    schema:
+      file: agencies.graphql
+  api-throttle:
+    routing_url: http://api-throttle
+    schema:
+      file: api-throttle.graphql
+  astronauts:
+    routing_url: http://astronauts
+    schema:
+      file: astronauts.graphql
+  celestial-bodies:
+    routing_url: http://celestial-bodies
+    schema:
+      file: celestial-bodies.graphql
+  docking-events:
+    routing_url: http://docking-events
+    schema:
+      file: docking-events.graphql
+  launches:
+    routing_url: http://launches
+    schema:
+      file: launches.graphql
+
+# 6 down
+# 12 more to go
+  # expeditions:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # landings:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # launcher_configurations:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # launchers:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # locations:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # mission_patches:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # pads:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # payloads:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # programs:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # space_stations:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # spacecraft:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql
+  # spacewalks:
+  #   routing_url: http://launches
+  #   schema:
+  #     file: launches.graphql

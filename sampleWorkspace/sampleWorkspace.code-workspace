@@ -1,31 +1,34 @@
 {
   "folders": [
     {
-      "path": "localSchema",
+      "path": "localSchema"
     },
     {
-      "path": "clientSchema",
+      "path": "clientSchema"
     },
     {
-      "path": "spotifyGraph",
+      "path": "spotifyGraph"
     },
     {
-      "path": "httpSchema",
+      "path": "httpSchema"
     },
     {
-      "path": "localSchemaArray",
+      "path": "localSchemaArray"
     },
     {
-      "path": "rover",
+      "path": "rover"
     },
     {
-      "path": "configFileTypes",
+      "path": "configFileTypes"
     },
     {
       "path": "../src/language-server/__tests__/fixtures/documents"
     },
     {
       "path": "../src/__tests__/fixtures"
+    },
+    {
+      "path": "connectors-community/connectors"
     }
   ],
   "settings": {

@@ -1,24 +1,73 @@
+# SYNTAX TEST "source.graphql"
+
 type Query {
   post(id: ID!): Post
     @connect(
       source: "jsonPlaceholder"
+#             ^^^^^^^^^^^^^^^^^^       - repository.JSONSelectionString      
       http: {
-        GET: "/posts/{$args.id}"
-        POST: "/posts/{$args.id}"
-        PATCH: "/posts/{$args.id}"
-        DELETE: "/posts/{$args.id}"
-        PUT: "/posts/{$args.id}"
-        body: """
+        GET:    "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                        ^^^^^^^^^     embedded
+#               ^^^^^^^^^          ^^  - embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        POST:   "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                        ^^^^^^^^^     embedded
+#               ^^^^^^^^^          ^^  - embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        PATCH:  "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                        ^^^^^^^^^     embedded
+#               ^^^^^^^^^          ^^  - embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        DELETE: "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                        ^^^^^^^^^     embedded
+#               ^^^^^^^^^          ^^  - embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        PUT:    "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                        ^^^^^^^^^     embedded
+#               ^^^^^^^^^          ^^  - embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        body: """ 
+# ^^^^^^^^^^^^^^^                      - meta.embedded.block.jsonselection.graphql
+#                ^^^^^^^^^^^^^^^^^^^^^ meta.embedded.block.jsonselection.graphql
         listing: {
+#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#       ^^^^^^^                        repository.NamedSelection.patterns.3.beginCaptures.1
+#                ^                     repository.SubSelection
           title: $args.input.title
+#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ repository.SubSelection
+#         ^^^^^                        repository.NamedSelection.patterns.0.beginCaptures.1
+#                ^^^^^^^^^^^^^^^^^     repository.VarPath
         }
-        """
+#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<--------                             repository.SubSelection
+        """ 
+#^^^^^^^                               meta.embedded.block.jsonselection.graphql
+#       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.jsonselection.graphql
       }
-      selection: """
+      selection: """  
+# ^^^^^^^^^^^^^^^^^^                   - meta.embedded.block.jsonselection.graphql
+#                   ^^^^^^^^^^^^^^^^^^ meta.embedded.block.jsonselection.graphql
       foo: bar
+#<------------------------------------ meta.embedded.block.jsonselection.graphql
       $.root {
+#<------------------------------------ meta.embedded.block.jsonselection.graphql
         a
+#<------------------------------------ meta.embedded.block.jsonselection.graphql
       }
-      """
+#<------------------------------------ meta.embedded.block.jsonselection.graphql
+      """ 
+#^^^^^                                 meta.embedded.block.jsonselection.graphql
+#     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.jsonselection.graphql
     )
 }

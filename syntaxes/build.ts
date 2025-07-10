@@ -242,7 +242,10 @@ function verify(regexString: string, context: string) {
 function pathToString(path: string[], colorize = true) {
   const text = path.reduce(
     (acc, part) =>
-      acc + (isFinite(+part) ? "[" + part + "]" : (acc ? "." : "") + part),
+      acc +
+      (colorize && isFinite(+part)
+        ? "[" + part + "]"
+        : (acc ? "." : "") + part),
     "",
   );
   return colorize ? styleText(colors.path, text) : text;

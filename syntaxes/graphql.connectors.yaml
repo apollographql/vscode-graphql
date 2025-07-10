@@ -114,6 +114,7 @@ repository:
   # handling for @connect(http: { body: """ ... """ })
   http-object-jsonselection-property:
     name: meta.argument.connect.body.jsonselection.graphql
+    contentName: meta.embedded.block.jsonselection.graphql
     begin: \s*(body)\s*(:)\s*(("""))
     end: (("""))
     beginCaptures:
@@ -135,7 +136,7 @@ repository:
   # handling for @connect(GET: " ... ")
   connect-string-jsonselection-argument:
     name: meta.argument.connect.string.jsonselection.graphql
-    contentName: meta.embedded.block.string.jsonselection.graphql
+    contentName: meta.embedded.string.jsonselection.graphql
     begin: \s*(GET|POST|PUT|PATCH|DELETE)(?:\s*(:))
     end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|[\)}]))|\s*(,)
     beginCaptures:

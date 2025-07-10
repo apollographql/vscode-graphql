@@ -84,7 +84,23 @@ repository:
         applyEndPatternLast: 1
         patterns:
           - include: "#SubSelection"
-
+      # added back even though it's not part of the current spec: NamedFieldSelection
+      - include: "#NamedFieldSelection"
+  # temporarily added back
+  # NamedFieldSelection  ::= Alias? Key SubSelection?
+  NamedFieldSelection:
+    begin: "(?:({{key}})\\s*(:)\\s*)?({{key}})"
+    beginCaptures:
+      "1":
+        name: "variable.selection.alias.identifier"
+      "2":
+        name: "punctuation.colon.alias"
+      "3":
+        name: "variable.selection.field.identifier"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#SubSelection"
   # VarPath              ::= "$" (NO_SPACE Identifier)? PathTail
   VarPath:
     begin: "([$])({{identifier}})?(?!\\w)"

@@ -71,6 +71,21 @@ repository:
             name: punctuation.definition.string.end.graphql
         patterns:
           - include: source.apollo.connectors.mapping
+      - contentName: meta.embedded.line.jsonselection.graphql
+        begin: (("))
+        end: (("))
+        beginCaptures:
+          "1":
+            name: string.quoted.double.graphql
+          "2":
+            name: punctuation.definition.string.begin.graphql
+        endCaptures:
+          "1":
+            name: string.quoted.double.graphql
+          "2":
+            name: punctuation.definition.string.end.graphql
+        patterns:
+          - include: source.apollo.connectors.mapping
       - include: source.graphql#graphql-comment
       - include: source.graphql#graphql-skip-newlines
   # based to #graphql-argument, but only matching `http` arguments

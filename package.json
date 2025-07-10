@@ -214,6 +214,7 @@
         "path": "./syntaxes/graphql.connectors.json",
         "embeddedLanguages": {
           "meta.embedded.block.jsonselection.graphql": "apollo.connectors.mapping",
+          "meta.embedded.line.jsonselection.graphql": "apollo.connectors.mapping",
           "meta.embedded.block.string.jsonselection.graphql": "apollo.connectors.mapping"
         }
       },

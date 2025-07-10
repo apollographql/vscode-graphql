@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: "npm"
-      - run: npm install
+      - run: npm ci
       - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
         shell: bash
       - name: Install & Configure Rover (Linux)
@@ -75,7 +75,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: "npm"
-      - run: npm install
+      - run: npm ci
       - run: npm run build:production
       - run: yarn test
       - run: yarn test:textmate

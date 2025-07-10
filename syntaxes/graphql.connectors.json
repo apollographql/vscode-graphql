@@ -3,12 +3,12 @@
   "injectionSelector": "L:meta.embedded.block.directive.graphql -string -comment",
   "patterns": [
     {
-      "include": "#connect-directive"
+      "include": "#connector-directive"
     }
   ],
   "repository": {
-    "connect-directive": {
-      "begin": "((@)\\s*(connect))",
+    "connector-directive": {
+      "begin": "((@)\\s*(connect|source))",
       "end": "(?=.)",
       "applyEndPatternLast": 1,
       "beginCaptures": {
@@ -18,7 +18,7 @@
       },
       "patterns": [
         {
-          "include": "#connect-arguments"
+          "include": "#connector-arguments"
         },
         {
           "include": "source.graphql#graphql-comment"
@@ -31,7 +31,7 @@
         }
       ]
     },
-    "connect-arguments": {
+    "connector-arguments": {
       "name": "meta.arguments.connect.graphql",
       "begin": "\\s*(\\()",
       "end": "\\s*(\\))",
@@ -50,13 +50,13 @@
           "include": "source.graphql#graphql-comment"
         },
         {
-          "include": "#connect-jsonselection-argument"
+          "include": "#connector-jsonselection-argument"
         },
         {
-          "include": "#connect-argument-http"
+          "include": "#connector-argument-http"
         },
         {
-          "include": "#connect-string-jsonselection-argument"
+          "include": "#connector-string-jsonselection-argument"
         },
         {
           "include": "#graphql-argument"
@@ -66,7 +66,7 @@
         }
       ]
     },
-    "connect-jsonselection-argument": {
+    "connector-jsonselection-argument": {
       "name": "meta.argument.connect.jsonselection.graphql",
       "begin": "\\s*(selection)(?:\\s*(:))",
       "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
@@ -144,7 +144,7 @@
         }
       ]
     },
-    "connect-argument-http": {
+    "connector-argument-http": {
       "name": "meta.argument.connect.http.graphql",
       "begin": "\\s*(http)\\s*(:)",
       "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
@@ -191,7 +191,10 @@
           },
           "patterns": [
             {
-              "include": "#connect-string-jsonselection-argument"
+              "include": "#connector-string-jsonselection-argument"
+            },
+            {
+              "include": "#connector-array-jsonselection-headers"
             },
             {
               "include": "#http-object-jsonselection-property"
@@ -276,7 +279,92 @@
         }
       ]
     },
-    "connect-string-jsonselection-argument": {
+    "connector-array-jsonselection-headers": {
+      "name": "meta.connect.headers",
+      "begin": "\\s*((headers))(?:\\s*(:))",
+      "beginCaptures": {
+        "1": {
+          "name": "string.unquoted.graphql"
+        },
+        "2": {
+          "name": "variable.object.key.graphql"
+        }
+      },
+      "end": "(?<=\\])",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "name": "meta.listvalues.graphql",
+          "begin": "(\\[)",
+          "end": "(])",
+          "beginCaptures": {
+            "1": {
+              "name": "meta.brace.square.graphql"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "meta.brace.square.graphql"
+            }
+          },
+          "patterns": [
+            {
+              "name": "meta.objectvalues.graphql",
+              "begin": "\\s*({)",
+              "end": "\\s*(})",
+              "beginCaptures": {
+                "1": {
+                  "name": "meta.brace.curly.graphql"
+                }
+              },
+              "endCaptures": {
+                "1": {
+                  "name": "meta.brace.curly.graphql"
+                }
+              },
+              "patterns": [
+                {
+                  "begin": "(\\w+)\\s*(:)",
+                  "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|[\\)}]))|\\s*(,)",
+                  "beginCaptures": {
+                    "1": {
+                      "name": "variable.object.key.graphql"
+                    },
+                    "2": {
+                      "name": "punctuation.graphql"
+                    }
+                  },
+                  "patterns": [
+                    {
+                      "include": "source.apollo.connectors.mapping#JSONSelectionString"
+                    },
+                    {
+                      "include": "source.graphql#graphql-comment"
+                    },
+                    {
+                      "include": "source.graphql#graphql-skip-newlines"
+                    }
+                  ]
+                },
+                {
+                  "include": "source.graphql#graphql-comment"
+                },
+                {
+                  "include": "source.graphql#graphql-skip-newlines"
+                }
+              ]
+            },
+            {
+              "include": "source.graphql#graphql-comment"
+            },
+            {
+              "include": "source.graphql#graphql-skip-newlines"
+            }
+          ]
+        }
+      ]
+    },
+    "connector-string-jsonselection-argument": {
       "name": "meta.argument.connect.string.jsonselection.graphql",
       "contentName": "meta.embedded.string.jsonselection.graphql",
       "begin": "\\s*(GET|POST|PUT|PATCH|DELETE)(?:\\s*(:))",

@@ -2,23 +2,23 @@ scopeName: source.apollo.connectors.graphql
 # inject these rules into source.graphql#graphql-directive, before all other patterns (:L), ignoring strings and comments
 injectionSelector: L:meta.embedded.block.directive.graphql -string -comment
 patterns:
-  - include: "#connect-directive"
+  - include: "#connector-directive"
 repository:
-  # if we encounter a `@connect` directive, move forward into this set of rules, otherwise it will just follow the default graphql rules
-  connect-directive:
-    begin: ((@)\s*(connect))
+  # if we encounter a `@connect` or `@source` directive, move forward into this set of rules, otherwise it will just follow the default graphql rules
+  connector-directive:
+    begin: ((@)\s*(connect|source))
     end: (?=.)
     applyEndPatternLast: 1
     beginCaptures:
       "1":
         name: entity.name.function.directive.connect.graphql
     patterns:
-      - include: "#connect-arguments"
+      - include: "#connector-arguments"
       - include: source.graphql#graphql-comment
       - include: source.graphql#literal-quasi-embedded
       - include: source.graphql#graphql-skip-newlines
   # a variation of source.graphql#graphql-arguments
-  connect-arguments:
+  connector-arguments:
     name: meta.arguments.connect.graphql
     begin: \s*(\()
     end: \s*(\))
@@ -31,11 +31,11 @@ repository:
     patterns:
       - include: source.graphql#graphql-comment
       # this was added
-      - include: "#connect-jsonselection-argument"
+      - include: "#connector-jsonselection-argument"
       # this was added
-      - include: "#connect-argument-http"
+      - include: "#connector-argument-http"
       # this was added
-      - include: "#connect-string-jsonselection-argument"
+      - include: "#connector-string-jsonselection-argument"
       # this is also present in the original source.graphql#graphql-arguments, but as an inlined pattern
       # moved into it's own rule here for readability
       - include: "#graphql-argument"
@@ -43,7 +43,7 @@ repository:
   # based to #graphql-argument, but only matching `selection` arguments
   # with a sub-pattern to match """ blocks and embed the
   # source.apollo.connectors.mapping grammar into those
-  connect-jsonselection-argument:
+  connector-jsonselection-argument:
     name: meta.argument.connect.jsonselection.graphql
     begin: \s*(selection)(?:\s*(:))
     end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|\)))|\s*(,)
@@ -89,7 +89,7 @@ repository:
       - include: source.graphql#graphql-comment
       - include: source.graphql#graphql-skip-newlines
   # based to #graphql-argument, but only matching `http` arguments
-  connect-argument-http:
+  connector-argument-http:
     name: meta.argument.connect.http.graphql
     begin: \s*(http)\s*(:)
     end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|\)))|\s*(,)
@@ -121,9 +121,9 @@ repository:
             name: meta.brace.curly.graphql
         patterns:
           # this was added for GET/POST/PUT/PATCH/DELETE
-          - include: "#connect-string-jsonselection-argument"
+          - include: "#connector-string-jsonselection-argument"
           # this was added for headers
-          - include: "#connect-array-jsonselection-headers"
+          - include: "#connector-array-jsonselection-headers"
           # this was added for body
           - include: "#http-object-jsonselection-property"
           # original child patterns of source.graphql#graphql-object-value
@@ -173,16 +173,28 @@ repository:
         patterns:
           - include: source.apollo.connectors.mapping
   # handling for @connect(GET: " ... ")
-  connect-array-jsonselection-headers:
+  connector-array-jsonselection-headers:
     name: meta.connect.headers
-    begin: \s*(headers)(?:\s*(:))
-    end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|[\)}]))|\s*(,)
+    begin: \s*((headers))(?:\s*(:))
+    beginCaptures:
+      "1":
+        name: string.unquoted.graphql
+      "2":
+        name: variable.object.key.graphql
+    end: (?<=\])
+    applyEndPatternLast: 1
     patterns:
-      - name: meta.connect.headers.array
+      - name: meta.listvalues.graphql
         begin: (\[)
         end: (])
+        beginCaptures:
+          "1":
+            name: meta.brace.square.graphql
+        endCaptures:
+          "1":
+            name: meta.brace.square.graphql
         patterns:
-          - name: meta.connect.headers.object
+          - name: meta.objectvalues.graphql
             begin: \s*({)
             end: \s*(})
             beginCaptures:
@@ -192,18 +204,22 @@ repository:
               "1":
                 name: meta.brace.curly.graphql
             patterns:
-              - name: meta.connect.headers.valuePair
-                begin: \s*(\w+)\s*(:)
+              - begin: (\w+)\s*(:)
                 end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|[\)}]))|\s*(,)
+                beginCaptures:
+                  "1":
+                    name: variable.object.key.graphql
+                  "2":
+                    name: punctuation.graphql
                 patterns:
                   - include: source.apollo.connectors.mapping#JSONSelectionString
                   - include: source.graphql#graphql-comment
                   - include: source.graphql#graphql-skip-newlines
               - include: source.graphql#graphql-comment
-              - include: source.graphql#graphql-value
+              - include: source.graphql#graphql-skip-newlines
           - include: "source.graphql#graphql-comment"
           - include: source.graphql#graphql-skip-newlines
-  connect-string-jsonselection-argument:
+  connector-string-jsonselection-argument:
     name: meta.argument.connect.string.jsonselection.graphql
     contentName: meta.embedded.string.jsonselection.graphql
     begin: \s*(GET|POST|PUT|PATCH|DELETE)(?:\s*(:))

@@ -8,6 +8,7 @@ import {
 } from "node:fs/promises";
 import yaml from "js-yaml";
 import { format, parse } from "node:path";
+import * as path from "node:path";
 
 const dir = import.meta.dirname;
 const {
@@ -127,6 +128,9 @@ async function build(filename: string) {
               }
               value.name =
                 (value.name ?? "meta") + "." + pathToString(debugPath, false);
+            }
+            if (snapshot && currentPath[0] === "repository" && key === "name") {
+              return pathToString(currentPath.slice(0, -1), false);
             }
           }
           if (typeof value === "string") {

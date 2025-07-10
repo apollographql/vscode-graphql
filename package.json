@@ -33,8 +33,8 @@
     "test:extension": "node src/__e2e__/runTests.js",
     "test:textmate": "npm run test:textmate-ts && npm run test:textmate-jsonselection && npm run test:textmate-graphql-jsonselection",
     "test:textmate-ts": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
-    "test:textmate-jsonselection": "npx vscode-tmgrammar-snap -s source.apollo.connectors.mapping src/__tests__/fixtures/textmate/*.jsonselection",
-    "test:textmate-graphql-jsonselection": "npx vscode-tmgrammar-snap -s source.graphql src/__tests__/fixtures/textmate/*.graphql",
+    "test:textmate-jsonselection": "npm run build:textmate -- --snapshot connectors.jsonselection.json; npx vscode-tmgrammar-test src/__tests__/fixtures/textmate/*.jsonselection",
+    "test:textmate-graphql-jsonselection": "npm run build:textmate -- --snapshot connectors.jsonselection.json; npx vscode-tmgrammar-snap -s source.graphql src/__tests__/fixtures/textmate/*.graphql",
     "update-connectors-community": "git subtree pull --prefix sampleWorkspace/connectors-community https://github.com/apollographql/connectors-community.git main --squash",
     "codegen": "graphql-codegen",
     "vscode:prepublish": "npm run build:production"

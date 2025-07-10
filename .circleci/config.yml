@@ -75,6 +75,7 @@ workflows:
       - lint
       - typescript
       - test
+      - textmate
   security-scans:
     jobs:
       - secops/gitleaks:

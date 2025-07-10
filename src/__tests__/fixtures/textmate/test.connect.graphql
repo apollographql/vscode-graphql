@@ -4,7 +4,7 @@ type Query {
   post(id: ID!): Post
     @connect(
       source: "jsonPlaceholder"
-#             ^^^^^^^^^^^^^^^^^^       - repository.JSONSelectionString      
+#             ^^^^^^^^^^^^^^^^^^       - repository.JSONSelectionString
       http: {
         GET:    "/posts/{ $args.id }"
 #               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
@@ -36,7 +36,24 @@ type Query {
 #               ^^^^^^^^^          ^^  - embedded
 #                         ^^^^^^^^     repository.VarPath
 #               ^^^^^^^^^^        ^^^  - repository.VarPath
-        body: """ 
+        headers: [{ name: "Authorization", value: "Bearer {$config.apiKey}" }]
+#                         ^^^^^^^^^^^^^^^         ^^^^^^^^^^^^^^^^^^^^^^^^    repository.JSONSelectionString
+#                                                          ^^^^^^^^^^^^^^     embedded repository.VarPath   
+        headers: [
+          { name: "Authorization", value: "Bearer {$config.apiKey}" }
+#                 ^^^^^^^^^^^^^^^         ^^^^^^^^^^^^^^^^^^^^^^^^            repository.JSONSelectionString
+#                                                  ^^^^^^^^^^^^^^             embedded repository.VarPath
+        ]
+        headers: [
+          {
+            name: "Authorization",
+#                 ^^^^^^^^^^^^^^^            repository.JSONSelectionString
+            value: "Bearer {$config.apiKey}"
+#                  ^^^^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                           ^^^^^^^^^^^^^^   embedded repository.VarPath
+          }
+        ]
+        body: """  
 # ^^^^^^^^^^^^^^^                      - meta.embedded.block.jsonselection.graphql
 #                ^^^^^^^^^^^^^^^^^^^^^ meta.embedded.block.jsonselection.graphql
         listing: {
@@ -51,7 +68,7 @@ type Query {
         }
 #<------------------------------------ meta.embedded.block.jsonselection.graphql
 #<--------                             repository.SubSelection
-        """ 
+        """
 #^^^^^^^                               meta.embedded.block.jsonselection.graphql
 #       ^^^^^^^^^^^^^^^^^^^^^^^^^      - meta.embedded.block.jsonselection.graphql
       body: "foo: bar $.root { a }"
@@ -73,7 +90,7 @@ type Query {
 #<------------------------------------ meta.embedded.block.jsonselection.graphql
       }
 #<------------------------------------ meta.embedded.block.jsonselection.graphql
-      """ 
+      """
 #^^^^^                                 meta.embedded.block.jsonselection.graphql
 #     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.jsonselection.graphql
       selection: "foo: bar $.root { a }"

@@ -122,6 +122,8 @@ repository:
         patterns:
           # this was added for GET/POST/PUT/PATCH/DELETE
           - include: "#connect-string-jsonselection-argument"
+          # this was added for headers
+          - include: "#connect-array-jsonselection-headers"
           # this was added for body
           - include: "#http-object-jsonselection-property"
           # original child patterns of source.graphql#graphql-object-value
@@ -171,6 +173,36 @@ repository:
         patterns:
           - include: source.apollo.connectors.mapping
   # handling for @connect(GET: " ... ")
+  connect-array-jsonselection-headers:
+    name: meta.connect.headers
+    begin: \s*(headers)(?:\s*(:))
+    end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|[\)}]))|\s*(,)
+    patterns:
+      - name: meta.connect.headers.array
+        begin: (\[)
+        end: (])
+        patterns:
+          - name: meta.connect.headers.object
+            begin: \s*({)
+            end: \s*(})
+            beginCaptures:
+              "1":
+                name: meta.brace.curly.graphql
+            endCaptures:
+              "1":
+                name: meta.brace.curly.graphql
+            patterns:
+              - name: meta.connect.headers.valuePair
+                begin: \s*(\w+)\s*(:)
+                end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|[\)}]))|\s*(,)
+                patterns:
+                  - include: source.apollo.connectors.mapping#JSONSelectionString
+                  - include: source.graphql#graphql-comment
+                  - include: source.graphql#graphql-skip-newlines
+              - include: source.graphql#graphql-comment
+              - include: source.graphql#graphql-value
+          - include: "source.graphql#graphql-comment"
+          - include: source.graphql#graphql-skip-newlines
   connect-string-jsonselection-argument:
     name: meta.argument.connect.string.jsonselection.graphql
     contentName: meta.embedded.string.jsonselection.graphql

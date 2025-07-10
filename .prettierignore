@@ -2,4 +2,5 @@ src/language-server/graphqlTypes.ts
 src/language-server/__tests__/fixtures/documents/commentWithTemplate.ts
 schemas/*.json
 syntaxes/*.json
+src/__tests__/fixtures/textmate/*
 README.md

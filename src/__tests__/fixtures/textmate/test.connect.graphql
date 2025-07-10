@@ -53,15 +53,22 @@ type Query {
 #<--------                             repository.SubSelection
         """ 
 #^^^^^^^                               meta.embedded.block.jsonselection.graphql
-#       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.jsonselection.graphql
+#       ^^^^^^^^^^^^^^^^^^^^^^^^^      - meta.embedded.block.jsonselection.graphql
+      body: "foo: bar $.root { a }"
+#            ^^^^^^^^^^^^^^^^^^^^^     meta.embedded.line.jsonselection.graphql
+#^^^^^^^^^^^^                     ^    - meta.embedded.line.jsonselection.graphql
+#            ^^^^^^^^          ^       repository.NamedFieldSelection
+#                     ^^^^^^           repository.VarPath
       }
       selection: """  
 # ^^^^^^^^^^^^^^^^^^                   - meta.embedded.block.jsonselection.graphql
 #                   ^^^^^^^^^^^^^^^^^^ meta.embedded.block.jsonselection.graphql
       foo: bar
 #<------------------------------------ meta.embedded.block.jsonselection.graphql
+#     ^^^^^^^^                         repository.NamedFieldSelection
       $.root {
 #<------------------------------------ meta.embedded.block.jsonselection.graphql
+#     ^^^^^^                           repository.VarPath
         a
 #<------------------------------------ meta.embedded.block.jsonselection.graphql
       }
@@ -69,5 +76,10 @@ type Query {
       """ 
 #^^^^^                                 meta.embedded.block.jsonselection.graphql
 #     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.jsonselection.graphql
+      selection: "foo: bar $.root { a }"
+#                 ^^^^^^^^^^^^^^^^^^^^^    meta.embedded.line.jsonselection.graphql
+#^^^^^^^^^^^^^^^^^                     ^ - meta.embedded.line.jsonselection.graphql
+#                 ^^^^^^^^          ^    repository.NamedFieldSelection
+#                          ^^^^^^        repository.VarPath
     )
 }

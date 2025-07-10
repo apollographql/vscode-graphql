@@ -112,8 +112,8 @@
         },
         {
           "contentName": "meta.embedded.line.jsonselection.graphql",
-          "begin": "((\"))",
-          "end": "((\"))",
+          "begin": "(?<!\")((\"))(?!\")",
+          "end": "(?<!\")((\"))(?!\")",
           "beginCaptures": {
             "1": {
               "name": "string.quoted.double.graphql"
@@ -207,35 +207,72 @@
       ]
     },
     "http-object-jsonselection-property": {
-      "name": "meta.argument.connect.body.jsonselection.graphql",
-      "contentName": "meta.embedded.block.jsonselection.graphql",
-      "begin": "\\s*(body)\\s*(:)\\s*((\"\"\"))",
-      "end": "((\"\"\"))",
-      "beginCaptures": {
-        "1": {
-          "name": "variable.parameter.graphql"
-        },
-        "2": {
-          "name": "punctuation.colon.graphql"
-        },
-        "3": {
-          "name": "string.quoted.double.graphql"
-        },
-        "4": {
-          "name": "punctuation.definition.string.begin.graphql"
-        }
-      },
-      "endCaptures": {
-        "1": {
-          "name": "string.quoted.double.graphql"
-        },
-        "2": {
-          "name": "punctuation.definition.string.end.graphql"
-        }
-      },
       "patterns": [
         {
-          "include": "source.apollo.connectors.mapping"
+          "name": "meta.argument.connect.body.jsonselection.graphql",
+          "contentName": "meta.embedded.block.jsonselection.graphql",
+          "begin": "\\s*(body)\\s*(:)\\s*((\"\"\"))",
+          "end": "((\"\"\"))",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.parameter.graphql"
+            },
+            "2": {
+              "name": "punctuation.colon.graphql"
+            },
+            "3": {
+              "name": "string.quoted.double.graphql"
+            },
+            "4": {
+              "name": "punctuation.definition.string.begin.graphql"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "string.quoted.double.graphql"
+            },
+            "2": {
+              "name": "punctuation.definition.string.end.graphql"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.apollo.connectors.mapping"
+            }
+          ]
+        },
+        {
+          "name": "meta.argument.connect.line.jsonselection.graphql",
+          "contentName": "meta.embedded.line.jsonselection.graphql",
+          "begin": "\\s*(body)\\s*(:)\\s*(?<!\")((\"))(?!\")",
+          "end": "(?<!\")((\"))(?!\")",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.parameter.graphql"
+            },
+            "2": {
+              "name": "punctuation.colon.graphql"
+            },
+            "3": {
+              "name": "string.quoted.double.graphql"
+            },
+            "4": {
+              "name": "punctuation.definition.string.begin.graphql"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "string.quoted.double.graphql"
+            },
+            "2": {
+              "name": "punctuation.definition.string.end.graphql"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.apollo.connectors.mapping"
+            }
+          ]
         }
       ]
     },

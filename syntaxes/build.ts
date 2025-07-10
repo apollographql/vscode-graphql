@@ -186,7 +186,10 @@ async function build(filename: string) {
                           .join(", ")}`,
                     );
                   }
-                  return styles[reference];
+                  return styles[reference].replace(
+                    /\{\{\.([\w]+)\}\}/g,
+                    replacer,
+                  );
                 },
               );
             }

@@ -74,7 +74,7 @@
               "name": "variable.other.alias.property.identifier"
             },
             "2": {
-              "name": "{{.colon}}"
+              "name": "punctuation.colon.alias"
             }
           },
           "end": "(?=.)",
@@ -110,7 +110,7 @@
               "name": "variable.other.alias.property.identifier"
             },
             "2": {
-              "name": "{{.colon}}"
+              "name": "punctuation.colon.alias"
             }
           },
           "end": "(?=.)",
@@ -133,7 +133,7 @@
           "name": "variable.other.alias.property.identifier"
         },
         "2": {
-          "name": "{{.colon}}"
+          "name": "punctuation.colon.alias"
         },
         "3": {
           "name": "variable.other.constant.field.identifier"

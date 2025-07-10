@@ -7,6 +7,9 @@
       "include": "#JSONSelection"
     },
     {
+      "include": "#Comment"
+    },
+    {
       "include": "source.graphql#graphql-skip-newlines"
     }
   ],
@@ -337,6 +340,9 @@
         },
         {
           "include": "#PathSelection"
+        },
+        {
+          "include": "#Comment"
         }
       ]
     },
@@ -419,6 +425,9 @@
         {
           "match": ",",
           "name": "punctuation.separator.comma"
+        },
+        {
+          "include": "#Comment"
         }
       ]
     },

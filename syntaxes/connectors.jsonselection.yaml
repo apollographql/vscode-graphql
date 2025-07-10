@@ -37,6 +37,7 @@ name: "Apollo Connectors Mapping Syntax"
 scopeName: "source.apollo.connectors.mapping"
 patterns:
   - include: "#JSONSelection"
+  - include: "#Comment"
   - include: "source.graphql#graphql-skip-newlines"
 # can be referenced from `begin`, `end` or `match` properties like `{{identifier}}` or `{{key}}`
 # within those fields, it's also possible to reference evaluated earlier patterns like `{{#PathSelection.begin}}`
@@ -296,6 +297,7 @@ repository:
       - include: "#LitObject"
       - include: "#LitArray"
       - include: "#PathSelection"
+      - include: "#Comment"
   # LitPath              ::= (LitPrimitive | LitObject | LitArray) NonEmptyPathTail
   # changed to
   # LitPathTail              ::= NonEmptyPathTail
@@ -360,6 +362,7 @@ repository:
       - include: "#LitProperty"
       - match: ","
         name: "{{.comma}}"
+      - include: "#Comment"
   # LitProperty          ::= Key ":" LitExpr
   LitProperty:
     begin: "\\b({{identifier}})\\s*(:)\\s*"

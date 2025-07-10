@@ -111,6 +111,9 @@
           ]
         },
         {
+          "include": "source.graphql#graphql-comment"
+        },
+        {
           "include": "source.graphql#graphql-skip-newlines"
         }
       ]
@@ -231,6 +234,9 @@
       "patterns": [
         {
           "include": "source.apollo.connectors.mapping#JSONSelectionString"
+        },
+        {
+          "include": "source.graphql#graphql-comment"
         },
         {
           "include": "source.graphql#graphql-skip-newlines"

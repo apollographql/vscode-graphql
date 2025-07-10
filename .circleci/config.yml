@@ -64,10 +64,10 @@ jobs:
       - npm-install
       - run:
           name: Build TextMate Grammar
-          command: build:textmate
+          command: npm run build:textmate
       - run:
           name: Test TextMate Grammar
-          command: test:textmate
+          command: npm run test:textmate
 
 workflows:
   build-test-deploy:

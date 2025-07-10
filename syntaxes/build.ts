@@ -33,6 +33,8 @@ const {
 const colors = {
   variable: "red",
   availableVariable: "green",
+  style: "red",
+  availableStyle: "green",
   regex: "magenta",
   reference: "yellow",
   path: "blue",
@@ -82,8 +84,9 @@ async function build(filename: string) {
     const parsed = yaml.load(content, {
       filename,
     }) as Record<string, any>;
-    const variables = parsed.variables || {};
+    const { variables = {}, styles = {} } = parsed;
     delete parsed.variables;
+    delete parsed.styles;
     const paths = new Map<object, string[]>();
     const knownPatterns = new Map<string, object>();
     const output =
@@ -170,6 +173,22 @@ async function build(filename: string) {
                   `Include pattern not found: ${styleText(colors.reference, value)} at path ${pathToString(currentPath)}`,
                 );
               }
+            } else if (key === "name") {
+              return value.replace(
+                /\{\{\.([\w]+)\}\}/g,
+                function replacer(_, reference: string) {
+                  if (!(reference in styles)) {
+                    throw new Error(
+                      `Style not found: ${styleText(colors.style, reference)}` +
+                        ` accessed from ${pathToString(currentPath)}` +
+                        ` with available styles: ${Object.keys(styles)
+                          .map((v) => styleText(colors.availableStyle, v))
+                          .join(", ")}`,
+                    );
+                  }
+                  return styles[reference];
+                },
+              );
             }
           } else if (typeof value === "object" && value !== null) {
             if (isPattern) {

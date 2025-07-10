@@ -14,6 +14,9 @@
     "JSONSelection": {
       "patterns": [
         {
+          "include": "#NamedSelection"
+        },
+        {
           "include": "#PathSelection"
         },
         {
@@ -25,13 +28,13 @@
       "begin": "\\s*({)",
       "beginCaptures": {
         "1": {
-          "name": "punctuation.selection.open"
+          "name": "punctuation.brace.open"
         }
       },
       "end": "\\s*(})",
       "endCaptures": {
         "1": {
-          "name": "punctuation.selection.close"
+          "name": "punctuation.brace.close"
         }
       },
       "patterns": [
@@ -42,9 +45,6 @@
           "include": "#Comment"
         }
       ]
-    },
-    "NamedSelection": {
-      "patterns": []
     },
     "PathSelection": {
       "begin": "(?=[$]|((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))(?=\\s*(?:[?])?(?=\\s*(?:[.](?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*'))|->[a-zA-Z_][0-9a-zA-Z_]*)))|@|$[(])",
@@ -65,6 +65,88 @@
         }
       ]
     },
+    "NamedSelection": {
+      "patterns": [
+        {
+          "begin": "((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))\\s*(:)\\s*(?=[$]|((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))(?=\\s*(?:[?])?(?=\\s*(?:[.](?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*'))|->[a-zA-Z_][0-9a-zA-Z_]*)))|@|$[(])",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.other.alias.property.identifier"
+            },
+            "2": {
+              "name": "{{.colon}}"
+            }
+          },
+          "end": "(?=.)",
+          "applyEndPatternLast": 1,
+          "patterns": [
+            {
+              "include": "#PathSelection"
+            }
+          ]
+        },
+        {
+          "begin": "([.][.][.])\\s*(?=[$]|((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))(?=\\s*(?:[?])?(?=\\s*(?:[.](?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*'))|->[a-zA-Z_][0-9a-zA-Z_]*)))|@|$[(])",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.operator.spread"
+            }
+          },
+          "end": "(?=.)",
+          "applyEndPatternLast": 1,
+          "patterns": [
+            {
+              "include": "#PathSelection"
+            }
+          ]
+        },
+        {
+          "include": "#PathSelection"
+        },
+        {
+          "begin": "((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))\\s*(:)\\s*(?=\\s*({))",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.other.alias.property.identifier"
+            },
+            "2": {
+              "name": "{{.colon}}"
+            }
+          },
+          "end": "(?=.)",
+          "applyEndPatternLast": 1,
+          "patterns": [
+            {
+              "include": "#SubSelection"
+            }
+          ]
+        },
+        {
+          "include": "#NamedFieldSelection"
+        }
+      ]
+    },
+    "NamedFieldSelection": {
+      "begin": "(?:((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))\\s*(:)\\s*)?((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.alias.property.identifier"
+        },
+        "2": {
+          "name": "{{.colon}}"
+        },
+        "3": {
+          "name": "variable.other.constant.field.identifier"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    },
     "VarPath": {
       "begin": "([$])([a-zA-Z_][0-9a-zA-Z_]*)?(?!\\w)",
       "beginCaptures": {
@@ -72,7 +154,7 @@
           "name": "variable.language.path.dollar"
         },
         "2": {
-          "name": "variable.language.path.identifier"
+          "name": "variable.other.constant.field.identifier"
         }
       },
       "end": "(?=.)",
@@ -87,7 +169,7 @@
       "begin": "((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))(?=\\s*(?:[?])?(?=\\s*(?:[.](?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*'))|->[a-zA-Z_][0-9a-zA-Z_]*)))",
       "beginCaptures": {
         "1": {
-          "name": "variable.path.key.identifier"
+          "name": "variable.other.constant.field.identifier"
         }
       },
       "end": "(?=.)",
@@ -127,13 +209,13 @@
           "begin": "([(])",
           "beginCaptures": {
             "1": {
-              "name": "punctuation.brace.round.args.open"
+              "name": "punctuation.paren.open"
             }
           },
           "end": "([)])",
           "endCaptures": {
             "1": {
-              "name": "punctuation.brace.round.args.close"
+              "name": "punctuation.paren.close"
             }
           },
           "patterns": [
@@ -169,7 +251,7 @@
           "name": "variable.dot"
         },
         "2": {
-          "name": "variable.key.identifier"
+          "name": "variable.other.constant.field.identifier"
         },
         "3": {
           "name": "variable.question.mark"
@@ -182,18 +264,18 @@
       "applyEndPatternLast": 1,
       "beginCaptures": {
         "1": {
-          "name": "punctuation.arrow"
+          "name": "keyword.operator.arrow"
         },
         "2": {
-          "name": "variable.identifier"
+          "name": "entity.name.function"
         },
         "3": {
-          "name": "punctuation.brace.round.args.open"
+          "name": "punctuation.brace.open"
         }
       },
       "endCaptures": {
         "1": {
-          "name": "punctuation.brace.round.args.close"
+          "name": "punctuation.brace.close"
         },
         "2": {
           "name": "variable.question.mark"
@@ -205,7 +287,7 @@
         },
         {
           "match": ",",
-          "name": "punctuation.comma.args.separator"
+          "name": "punctuation.separator.comma"
         }
       ]
     },
@@ -213,10 +295,10 @@
       "match": "(->)([a-zA-Z_][0-9a-zA-Z_]*)([?]?)",
       "captures": {
         "1": {
-          "name": "punctuation.arrow"
+          "name": "keyword.operator.arrow"
         },
         "2": {
-          "name": "variable.key.identifier"
+          "name": "variable.other.constant.field.identifier"
         },
         "3": {
           "name": "variable.question.mark"
@@ -286,12 +368,11 @@
         },
         {
           "match": "\\b(true|false|null)\\b",
-          "name": "constant.language.LitPrimitive"
+          "name": "constant.language"
         }
       ]
     },
     "LitString": {
-      "name": "string.quoted",
       "match": "(\")([^\"]*)(\")|(')([^']*)(')",
       "captures": {
         "1": {
@@ -322,13 +403,13 @@
       "begin": "\\s*({)",
       "beginCaptures": {
         "1": {
-          "name": "punctuation.object.open"
+          "name": "punctuation.brace.open"
         }
       },
       "end": "\\s*(})",
       "endCaptures": {
         "1": {
-          "name": "punctuation.object.close"
+          "name": "punctuation.brace.close"
         }
       },
       "patterns": [
@@ -337,7 +418,7 @@
         },
         {
           "match": ",",
-          "name": "punctuation.comma.object.separator"
+          "name": "punctuation.separator.comma"
         }
       ]
     },
@@ -348,7 +429,7 @@
           "name": "variable.property.key"
         },
         "2": {
-          "name": "punctuation.colon.property"
+          "name": "punctuation.colon.alias"
         }
       },
       "end": "(?=.)",
@@ -363,13 +444,13 @@
       "begin": "\\s*(\\[)",
       "beginCaptures": {
         "1": {
-          "name": "punctuation.array.open"
+          "name": "punctuation.bracket.open"
         }
       },
       "end": "\\s*(\\])",
       "endCaptures": {
         "1": {
-          "name": "punctuation.array.close"
+          "name": "punctuation.bracket.close"
         }
       },
       "patterns": [
@@ -378,16 +459,18 @@
         },
         {
           "match": ",",
-          "name": "punctuation.comma.array.separator"
+          "name": "punctuation.separator.comma"
         }
       ]
     },
     "Comment": {
-      "name": "comment.line.jsonselection",
-      "match": "(\\s*)(#).*",
+      "match": "(\\s*)(#.*?)$",
       "captures": {
         "1": {
           "name": "punctuation.whitespace.comment.leading.jsonselection"
+        },
+        "2": {
+          "name": "comment.line.jsonselection"
         }
       }
     },

@@ -1,11 +1,45 @@
 # Run `npm run watch:textmate-yaml` while working on this file.
-# based on https://github.com/apollographql/router/blob/b0a89c223bb5813239474b336cf335ab4fb586cb/apollo-federation/src/sources/connect/json_selection/README.md
+# roughly based on this grammar:
+# ```ebnf
+# JSONSelection        ::= PathSelection | NamedSelection*
+# SubSelection         ::= "{" NamedSelection* "}"
+# NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
+# Alias                ::= Key ":"
+# Path                 ::= VarPath | KeyPath | AtPath | ExprPath
+# PathSelection        ::= Path SubSelection?
+# VarPath              ::= "$" (NO_SPACE Identifier)? PathTail
+# KeyPath              ::= Key NonEmptyPathTail
+# AtPath               ::= "@" PathTail
+# ExprPath             ::= "$(" LitExpr ")" PathTail
+# PathTail             ::= "?"? (PathStep "?"?)*
+# NonEmptyPathTail     ::= "?"? (PathStep "?"?)+
+# PathStep             ::= "." Key | "->" Identifier MethodArgs?
+# Key                  ::= Identifier | LitString
+# Identifier           ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
+# MethodArgs           ::= "(" (LitExpr ("," LitExpr)* ","?)? ")"
+# LitExpr              ::= LitPath | LitOpChain | LitPrimitive | LitObject | LitArray | PathSelection
+# LitPath              ::= (LitPrimitive | LitObject | LitArray) NonEmptyPathTail
+# LitOpChain           ::= LitExpr LitOp LitExpr
+# LitPrimitive         ::= LitString | LitNumber | "true" | "false" | "null"
+# LitString            ::= "'" ("\\'" | [^'])* "'" | '"' ('\\"' | [^"])* '"'
+# LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
+# LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
+# LitProperty          ::= Key ":" LitExpr
+# LitArray             ::= "[" (LitExpr ("," LitExpr)* ","?)? "]"
+# LitOp                ::= "??" | "?!" | "&&" | "||" | "==" | "!=" | "<" | "<=" | ">" | ">=" | +" | "-" | "*" | "/" | "%"
+# NO_SPACE             ::= !SpacesOrComments
+# SpacesOrComments     ::= (Spaces | Comment)+
+# Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+
+# Comment              ::= "#" [^\n]*
+# ```
 $schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
 name: "Apollo Connectors Mapping Syntax"
 scopeName: "source.apollo.connectors.mapping"
 patterns:
   - include: "#JSONSelection"
   - include: "source.graphql#graphql-skip-newlines"
+# can be referenced from `begin`, `end` or `match` properties like `{{identifier}}` or `{{key}}`
+# within those fields, it's also possible to reference evaluated earlier patterns like `{{#PathSelection.begin}}`
 variables:
   identifier: "[a-zA-Z_][0-9a-zA-Z_]*"
   # prettier-ignore
@@ -20,6 +54,38 @@ variables:
   pathTailMatch: "\\s*(?:[?])?(?=\\s*{{pathStepMatch}})"
   atPathMatch: "@"
   exprPathMatch: "$[(]"
+# can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
+styles:
+  alias: "variable.other.alias.property.identifier"
+  alias_colon: "{{.colon}}" # just an example - we can reference other styles here
+  colon: "punctuation.colon.alias"
+  field: "variable.other.constant.field.identifier"
+  property: "variable.property.key"
+  method: "entity.name.function"
+  arrow: "keyword.operator.arrow"
+  comma: "punctuation.separator.comma"
+  brace_open: "punctuation.brace.open" #{
+  brace_close: "punctuation.brace.close" #}
+  paren_open: "punctuation.paren.open" #(
+  paren_close: "punctuation.paren.close" #)
+  bracket_open: "punctuation.bracket.open" #[
+  bracket_close: "punctuation.bracket.close" #]
+  optional_chain: "variable.question.mark"
+  expr_dollar: "variable.language.path.dollar"
+  var_dollar: "variable.language.path.dollar"
+  at: "variable.language.path.at"
+  spread: "keyword.operator.spread"
+  dot: "variable.dot"
+  operator: "keyword.operator"
+  fixedPrimitive: "constant.language"
+  string_single: "string.quoted.single.graphql"
+  string_double: "string.quoted.double.graphql"
+  string_open: "punctuation.definition.string.begin.graphql"
+  string_close: "punctuation.definition.string.end.graphql"
+  number: "constant.numeric"
+  comment: "comment.line.jsonselection"
+  comment_leading_ws: "punctuation.whitespace.comment.leading.jsonselection"
+
 repository:
   # JSONSelection        ::= PathSelection | NamedSelection*
   JSONSelection:
@@ -32,11 +98,11 @@ repository:
     begin: "\\s*({)"
     beginCaptures:
       "1":
-        name: "punctuation.selection.open"
+        name: "{{.brace_open}}"
     end: "\\s*(})"
     endCaptures:
       "1":
-        name: "punctuation.selection.close"
+        name: "{{.brace_close}}"
     patterns:
       - include: "#NamedSelection"
       - include: "#Comment"
@@ -58,9 +124,9 @@ repository:
       - begin: "({{key}})\\s*(:)\\s*{{#PathSelection.begin}}"
         beginCaptures:
           "1":
-            name: "variable.selection.alias.identifier"
+            name: "{{.alias}}"
           "2":
-            name: "punctuation.colon.alias"
+            name: "{{.alias_colon}}"
         end: "(?=.)"
         applyEndPatternLast: 1
         patterns:
@@ -68,7 +134,7 @@ repository:
       - begin: "([.][.][.])\\s*{{#PathSelection.begin}}"
         beginCaptures:
           "1":
-            name: "keyword.operator.spread"
+            name: "{{.spread}}"
         end: "(?=.)"
         applyEndPatternLast: 1
         patterns:
@@ -77,9 +143,9 @@ repository:
       - begin: "({{key}})\\s*(:)\\s*(?={{#SubSelection.begin}})"
         beginCaptures:
           "1":
-            name: "variable.selection.alias.identifier"
+            name: "{{.alias}}"
           "2":
-            name: "punctuation.colon.alias"
+            name: "{{.alias_colon}}"
         end: "(?=.)"
         applyEndPatternLast: 1
         patterns:
@@ -92,11 +158,11 @@ repository:
     begin: "(?:({{key}})\\s*(:)\\s*)?({{key}})"
     beginCaptures:
       "1":
-        name: "variable.selection.alias.identifier"
+        name: "{{.alias}}"
       "2":
-        name: "punctuation.colon.alias"
+        name: "{{.alias_colon}}"
       "3":
-        name: "variable.selection.field.identifier"
+        name: "{{.field}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -106,9 +172,9 @@ repository:
     begin: "([$])({{identifier}})?(?!\\w)"
     beginCaptures:
       "1":
-        name: "variable.language.path.dollar"
+        name: "{{.var_dollar}}"
       "2":
-        name: "variable.language.path.identifier"
+        name: "{{.field}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -118,7 +184,7 @@ repository:
     begin: "({{key}})(?={{pathTailMatch}})"
     beginCaptures:
       "1":
-        name: "variable.path.key.identifier"
+        name: "{{.field}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -130,7 +196,7 @@ repository:
     begin: "(@)"
     beginCaptures:
       "1":
-        name: "variable.language.path.at"
+        name: "{{.at}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -140,18 +206,18 @@ repository:
     begin: "([$])(?=[(])"
     beginCaptures:
       "1":
-        name: "variable.language.path.dollar"
+        name: "{{.expr_dollar}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
       - begin: "([(])"
         beginCaptures:
           "1":
-            name: "punctuation.brace.round.args.open"
+            name: "{{.paren_open}}"
         end: "([)])"
         endCaptures:
           "1":
-            name: "punctuation.brace.round.args.close"
+            name: "{{.paren_close}}"
         patterns:
           - include: "#LitExpr"
       - include: "#PathStep"
@@ -161,7 +227,7 @@ repository:
     begin: "([?])?(?=\\s*{{pathStepMatch}})"
     beginCaptures:
       "1":
-        name: "variable.question.mark"
+        name: "{{.optional_chain}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -177,40 +243,40 @@ repository:
     match: "([.])({{key}})([?]?)"
     captures:
       "1":
-        name: "variable.dot"
+        name: "{{.dot}}"
       "2":
-        name: "variable.key.identifier"
+        name: "{{.field}}"
       "3":
-        name: "variable.question.mark"
+        name: "{{.optional_chain}}"
   PathStepArrowMethodArgs:
     begin: "(->)({{identifier}})([(])"
     end: "([)])([?]?)"
     applyEndPatternLast: 1
     beginCaptures:
       "1":
-        name: "punctuation.arrow"
+        name: "{{.arrow}}"
       "2":
-        name: "variable.identifier"
+        name: "{{.method}}"
       "3":
-        name: "punctuation.brace.round.args.open"
+        name: "{{.brace_open}}"
     endCaptures:
       "1":
-        name: "punctuation.brace.round.args.close"
+        name: "{{.brace_close}}"
       "2":
-        name: "variable.question.mark"
+        name: "{{.optional_chain}}"
     patterns:
       - include: "#LitExpr"
       - match: ","
-        name: "punctuation.comma.args.separator"
+        name: "{{.comma}}"
   PathStepArrowAccess:
     match: "(->)({{identifier}})([?]?)"
     captures:
       "1":
-        name: "punctuation.arrow"
+        name: "{{.arrow}}"
       "2":
-        name: "variable.key.identifier"
+        name: "{{.field}}"
       "3":
-        name: "variable.question.mark"
+        name: "{{.optional_chain}}"
   PathStep:
     patterns:
       - include: "#PathStepDotAccess"
@@ -251,58 +317,57 @@ repository:
     match: "(?<![(]|{{operatorCharacter}})({{operator}})(?!\\s*(?:{{operatorCharacter}}|[)]))"
     captures:
       "1":
-        name: "keyword.operator"
+        name: "{{.operator}}"
   # LitPrimitive         ::= LitString | LitNumber | "true" | "false" | "null"
   LitPrimitive:
     patterns:
       - include: "#LitString"
       - include: "#LitNumber"
       - match: "\\b(true|false|null)\\b"
-        name: "constant.language.LitPrimitive"
+        name: "{{.fixedPrimitive}}"
   # LitString            ::= "'" ("\\'" | [^'])* "'" | '"' ('\\"' | [^"])* '"'
   LitString:
-    name: "string.quoted"
     # prettier-ignore
     match: "(\")([^\"]*)(\")|(')([^']*)(')"
     captures:
       "1":
-        name: "punctuation.definition.string.begin.graphql"
+        name: "{{.string_open}}"
       "2":
-        name: "string.quoted.double.graphql"
+        name: "{{.string_double}}"
       "3":
-        name: "punctuation.definition.string.end.graphql"
+        name: "{{.string_close}}"
       "4":
-        name: "punctuation.definition.string.begin.graphql"
+        name: "{{.string_open}}"
       "5":
-        name: "string.quoted.single.graphql"
+        name: "{{.string_single}}"
       "6":
-        name: "punctuation.definition.string.end.graphql"
+        name: "{{.string_close}}"
   # LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
   LitNumber:
-    name: "constant.numeric"
+    name: "{{.number}}"
     match: "(-?)([0-9]+([.][0-9]*)?|[.][0-9]+)"
   # LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
   LitObject:
     begin: "\\s*({)"
     beginCaptures:
       "1":
-        name: "punctuation.object.open"
+        name: "{{.brace_open}}"
     end: "\\s*(})"
     endCaptures:
       "1":
-        name: "punctuation.object.close"
+        name: "{{.brace_close}}"
     patterns:
       - include: "#LitProperty"
       - match: ","
-        name: "punctuation.comma.object.separator"
+        name: "{{.comma}}"
   # LitProperty          ::= Key ":" LitExpr
   LitProperty:
     begin: "\\b({{identifier}})\\s*(:)\\s*"
     beginCaptures:
       "1":
-        name: "variable.property.key"
+        name: "{{.property}}"
       "2":
-        name: "punctuation.colon.property"
+        name: "{{.colon}}"
     end: "(?=.)"
     applyEndPatternLast: 1
     patterns:
@@ -312,15 +377,15 @@ repository:
     begin: "\\s*(\\[)"
     beginCaptures:
       "1":
-        name: "punctuation.array.open"
+        name: "{{.bracket_open}}"
     end: "\\s*(\\])"
     endCaptures:
       "1":
-        name: "punctuation.array.close"
+        name: "{{.bracket_close}}"
     patterns:
       - include: "#LitExpr"
       - match: ","
-        name: "punctuation.comma.array.separator"
+        name: "{{.comma}}"
   # LitOp                ::= "??" | "?!" | "&&" | "||" | "==" | "!=" | "<" | "<=" | ">" | ">=" | +" | "-" | "*" | "/" | "%"
   # inlined into `LitOpChainCenter`
   # NO_SPACE             ::= !SpacesOrComments
@@ -328,11 +393,12 @@ repository:
   # Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+
   # Comment              ::= "#" [^\n]*
   Comment:
-    name: "comment.line.jsonselection"
-    match: "(\\s*)(#).*"
+    match: "(\\s*)(#.*?)$"
     captures:
       "1":
-        name: "punctuation.whitespace.comment.leading.jsonselection"
+        name: "{{.comment_leading_ws}}"
+      "2":
+        name: "{{.comment}}"
 
   # additional rules used for strings, e.g. in `POST: "/foo/bar/{$id}"`
   JSONSelectionString:

@@ -492,38 +492,30 @@
     },
     "JSONSelectionString": {
       "contentName": "string.quoted",
-      "begin": "((\"))",
+      "begin": "(\")",
       "beginCaptures": {
         "1": {
-          "name": "string.quoted.double.graphql"
-        },
-        "2": {
-          "name": "punctuation.definition.string.begin.graphql"
+          "name": "string.quoted.double.graphql punctuation.definition.string.begin.graphql"
         }
       },
-      "end": "((\"))",
+      "end": "(\")",
       "endCaptures": {
         "1": {
-          "name": "string.quoted.double.graphql"
-        },
-        "2": {
-          "name": "punctuation.definition.string.end.graphql"
+          "name": "string.quoted.double.graphql punctuation.definition.string.end.graphql"
         }
       },
       "patterns": [
         {
           "begin": "\\s*({)",
-          "contentName": "embedded",
-          "debugName": "embedded",
           "beginCaptures": {
             "1": {
-              "name": "punctuation.embedded.open"
+              "name": "punctuation.section.embedded punctuation.brace.open"
             }
           },
           "end": "\\s*(})",
           "endCaptures": {
             "1": {
-              "name": "punctuation.embedded.close"
+              "name": "punctuation.section.embedded punctuation.brace.close"
             }
           },
           "patterns": [

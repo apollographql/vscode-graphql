@@ -417,28 +417,22 @@ repository:
   # additional rules used for strings, e.g. in `POST: "/foo/bar/{$id}"`
   JSONSelectionString:
     contentName: string.quoted
-    begin: '(("))'
+    begin: '(")'
     beginCaptures:
       "1":
-        name: "string.quoted.double.graphql"
-      "2":
-        name: "punctuation.definition.string.begin.graphql"
-    end: '(("))'
+        name: "string.quoted.double.graphql {{.string_open}}"
+    end: '(")'
     endCaptures:
       "1":
-        name: "string.quoted.double.graphql"
-      "2":
-        name: "punctuation.definition.string.end.graphql"
+        name: "string.quoted.double.graphql {{.string_close}}"
     patterns:
       - begin: "\\s*({)"
-        contentName: "embedded"
-        debugName: "embedded"
         beginCaptures:
           "1":
-            name: "punctuation.embedded.open"
+            name: "punctuation.section.embedded {{.brace_open}}"
         end: "\\s*(})"
         endCaptures:
           "1":
-            name: "punctuation.embedded.close"
+            name: "punctuation.section.embedded {{.brace_close}}"
         patterns:
           - include: "#PathSelection"

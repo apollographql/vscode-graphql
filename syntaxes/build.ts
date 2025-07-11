@@ -177,7 +177,7 @@ async function build(filename: string) {
                   `Include pattern not found: ${styleText(colors.reference, value)} at path ${pathToString(currentPath)}`,
                 );
               }
-            } else if (key === "name") {
+            } else if (key === "name" || key === "contentName") {
               return value.replace(
                 /\{\{\.([\w]+)\}\}/g,
                 function replacer(_, reference: string) {

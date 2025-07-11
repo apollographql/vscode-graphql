@@ -22,7 +22,7 @@ extend schema
 
   type User @key(fields: "id") {
     id: ID!
-    todos : [ToDo]
+    todos: [ToDo]
     @connect(
       source: "JSONPlaceholder"
       http: { GET: "/users/{$this.id}/todos" }

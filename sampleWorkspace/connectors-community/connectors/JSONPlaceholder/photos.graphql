@@ -23,7 +23,7 @@ extend schema
 
   type Album @key(fields: "id") {
     id: ID!
-    photos : [Photo]
+    photos: [Photo]
     @connect(
       source: "JSONPlaceholder"
       http: { GET: "/albums/{$this.id}/photos" }

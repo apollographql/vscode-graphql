@@ -23,7 +23,7 @@ extend schema
 
   type Post @key(fields: "id") {
     id: ID!
-    comments : [Comment]
+    comments: [Comment]
     @connect(
       source: "JSONPlaceholder"
       http: { GET: "/posts/{$this.id}/comments" }

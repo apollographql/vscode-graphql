@@ -60,10 +60,10 @@ variables:
   reservedMethod: "(?:typeof|matchIf|match_if|add|sub|mul|div|mod|has|get|keys|values|not)"
 # can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
 styles:
-  alias: "variable.other.alias.property.identifier"
+  alias: "string.unquoted.alias.graphql"
   alias_colon: "{{.colon}}" # just an example - we can reference other styles here
   colon: "punctuation.colon.alias"
-  field: "variable.other.constant.field.identifier"
+  field: "variable.graphql"
   property: "variable.property.key"
   method: "entity.name.function"
   builtinMethod: "keyword.builtin"

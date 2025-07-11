@@ -74,7 +74,7 @@
           "begin": "((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))\\s*(:)\\s*(?=[$]|((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))(?=\\s*(?:[?])?(?=\\s*(?:[.](?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*'))|->[a-zA-Z_][0-9a-zA-Z_]*)))|@|$[(])",
           "beginCaptures": {
             "1": {
-              "name": "variable.other.alias.property.identifier"
+              "name": "string.unquoted.alias.graphql"
             },
             "2": {
               "name": "punctuation.colon.alias"
@@ -110,7 +110,7 @@
           "begin": "((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))\\s*(:)\\s*(?=\\s*({))",
           "beginCaptures": {
             "1": {
-              "name": "variable.other.alias.property.identifier"
+              "name": "string.unquoted.alias.graphql"
             },
             "2": {
               "name": "punctuation.colon.alias"
@@ -133,13 +133,13 @@
       "begin": "(?:((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))\\s*(:)\\s*)?((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))",
       "beginCaptures": {
         "1": {
-          "name": "variable.other.alias.property.identifier"
+          "name": "string.unquoted.alias.graphql"
         },
         "2": {
           "name": "punctuation.colon.alias"
         },
         "3": {
-          "name": "variable.other.constant.field.identifier"
+          "name": "variable.graphql"
         }
       },
       "end": "(?=.)",
@@ -157,7 +157,7 @@
           "name": "variable.language.path.dollar"
         },
         "2": {
-          "name": "variable.other.constant.field.identifier"
+          "name": "variable.graphql"
         }
       },
       "end": "(?=.)",
@@ -172,7 +172,7 @@
       "begin": "((?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*')))(?=\\s*(?:[?])?(?=\\s*(?:[.](?:[a-zA-Z_][0-9a-zA-Z_]*|(?:\"[^\"]*\"|'[^']*'))|->[a-zA-Z_][0-9a-zA-Z_]*)))",
       "beginCaptures": {
         "1": {
-          "name": "variable.other.constant.field.identifier"
+          "name": "variable.graphql"
         }
       },
       "end": "(?=.)",
@@ -254,7 +254,7 @@
           "name": "variable.dot"
         },
         "2": {
-          "name": "variable.other.constant.field.identifier"
+          "name": "variable.graphql"
         },
         "3": {
           "name": "variable.question.mark"
@@ -304,7 +304,7 @@
           "name": "keyword.operator.arrow"
         },
         "2": {
-          "name": "variable.other.constant.field.identifier"
+          "name": "variable.graphql"
         },
         "3": {
           "name": "variable.question.mark"

@@ -434,6 +434,7 @@ repository:
         endCaptures:
           "1":
             name: "punctuation.section.embedded {{.brace_close}}"
+        contentName: meta.embedded.string.connectors.mapping.selectionstring.graphql
         debugName: "embedded"
         patterns:
           - include: "#PathSelection"

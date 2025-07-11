@@ -215,7 +215,7 @@
         "embeddedLanguages": {
           "meta.embedded.block.connectors.mapping.graphql": "apollo.connectors.mapping",
           "meta.embedded.line.connectors.mapping.graphql": "apollo.connectors.mapping",
-          "meta.embedded.block.string.connectors.mapping.graphql": "apollo.connectors.mapping"
+          "meta.embedded.string.connectors.mapping.selectionstring.graphql": "apollo.connectors.mapping"
         }
       },
       {

@@ -518,6 +518,7 @@
               "name": "punctuation.section.embedded punctuation.brace.close"
             }
           },
+          "contentName": "meta.embedded.string.connectors.mapping.selectionstring.graphql",
           "debugName": "embedded",
           "patterns": [
             {

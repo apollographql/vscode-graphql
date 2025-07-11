@@ -22,7 +22,7 @@
     "watch": "rimraf lib; npm-run-all -p watch:*",
     "watch:esbuild": "npm run build -- --watch",
     "watch:tsc": "npm run typecheck -- --watch",
-    "watch:textmate-yaml": "npm run build:textmate --debug --watch",
+    "watch:textmate-yaml": "npm run build:textmate -- --debug --watch",
     "sampleWorkspace:run": "node src/__e2e__/mockServer.js",
     "changeset-version": "changeset version && npm i",
     "changeset-publish": "npm run build -- --production && changeset publish",

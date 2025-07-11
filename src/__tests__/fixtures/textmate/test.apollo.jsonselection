@@ -78,8 +78,52 @@ asd->bar("asd")
 
 @->a("asd")
 #    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a("a'd")
+#    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a("asd\\")
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a("asd\"")
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a("asd\\\"")
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a("asd\\\\")
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a("as\"d
+#    ^^^^^^ repository.LitString
+#^^^^       - repository.LitString
+as\\d")
+#<----- repository.LitString
+#     ^ - repository.LitString
 @->a('asd')
 #    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a('a"d')
+#    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a('asd\\')
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a('asd\'')
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a('asd\\\'')
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a('asd\\\\')
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a('as\'d
+#    ^^^^^^ repository.LitString
+#^^^^       - repository.LitString
+as\\d')
+#<----- repository.LitString
+#     ^ - repository.LitString
 
 
 @->a(1)
@@ -90,7 +134,14 @@ asd->bar("asd")
 #    ^^^  repository.LitNumber
 @->a(-1.0)
 #    ^^^^  repository.LitNumber
-
+@->a(1.)
+#    ^^  repository.LitNumber
+@->a(-1.)
+#    ^^^  repository.LitNumber
+@->a(.0)
+#    ^^  repository.LitNumber
+@->a(-.0)
+#    ^^^  repository.LitNumber
 
 @->a(true)
 #    ^^^^  repository.LitPrimitive.patterns.2
@@ -113,12 +164,12 @@ asd->bar("asd")
 # ^^^^                      repository.LitProperty
 #     ^                     - repository.LitProperty
   b: "asd",
-#<--------------------------- repository.LitObject  
+#<--------------------------- repository.LitObject
 #    ^^^^^                  repository.LitString
 # ^^^^^^^^                  repository.LitProperty
 #         ^                 - repository.LitProperty
   c: { foo: 1, bar: "baz" }
-#<--------------------------- repository.LitObject  
+#<--------------------------- repository.LitObject
 })
 #<~                         repository.LitObject
 

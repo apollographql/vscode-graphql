@@ -483,10 +483,10 @@
       "match": "(\\s*)(#.*?)$",
       "captures": {
         "1": {
-          "name": "punctuation.whitespace.comment.leading.jsonselection"
+          "name": "punctuation.whitespace.comment.leading.connectors.mapping"
         },
         "2": {
-          "name": "comment.line.jsonselection"
+          "name": "comment.line.connectors.mapping"
         }
       }
     },
@@ -518,6 +518,7 @@
               "name": "punctuation.section.embedded punctuation.brace.close"
             }
           },
+          "debugName": "embedded",
           "patterns": [
             {
               "include": "#PathSelection"

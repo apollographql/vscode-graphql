@@ -8,41 +8,43 @@ type Query {
       http: {
         GET:    "/posts/{ $args.id }"
 #               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
-#                        ^^^^^^^^^     embedded
-#               ^^^^^^^^^          ^^  - embedded
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
 #                         ^^^^^^^^     repository.VarPath
 #               ^^^^^^^^^^        ^^^  - repository.VarPath
         POST:   "/posts/{ $args.id }"
 #               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
-#                        ^^^^^^^^^     embedded
-#               ^^^^^^^^^          ^^  - embedded
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
 #                         ^^^^^^^^     repository.VarPath
 #               ^^^^^^^^^^        ^^^  - repository.VarPath
         PATCH:  "/posts/{ $args.id }"
 #               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
-#                        ^^^^^^^^^     embedded
-#               ^^^^^^^^^          ^^  - embedded
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
 #                         ^^^^^^^^     repository.VarPath
 #               ^^^^^^^^^^        ^^^  - repository.VarPath
         DELETE: "/posts/{ $args.id }"
 #               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
-#                        ^^^^^^^^^     embedded
-#               ^^^^^^^^^          ^^  - embedded
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
 #                         ^^^^^^^^     repository.VarPath
 #               ^^^^^^^^^^        ^^^  - repository.VarPath
         PUT:    "/posts/{ $args.id }"
 #               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
-#                        ^^^^^^^^^     embedded
-#               ^^^^^^^^^          ^^  - embedded
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
 #                         ^^^^^^^^     repository.VarPath
 #               ^^^^^^^^^^        ^^^  - repository.VarPath
         headers: [{ name: "Authorization", value: "Bearer {$config.apiKey}" }]
 #                         ^^^^^^^^^^^^^^^         ^^^^^^^^^^^^^^^^^^^^^^^^    repository.JSONSelectionString
-#                                                          ^^^^^^^^^^^^^^     embedded repository.VarPath   
+#                                                         ^^^^^^^^^^^^^^^^    repository.JSONSelectionString.patterns.embedded
+#                                                          ^^^^^^^^^^^^^^     repository.VarPath
         headers: [
           { name: "Authorization", value: "Bearer {$config.apiKey}" }
 #                 ^^^^^^^^^^^^^^^         ^^^^^^^^^^^^^^^^^^^^^^^^            repository.JSONSelectionString
-#                                                  ^^^^^^^^^^^^^^             embedded repository.VarPath
+#                                                 ^^^^^^^^^^^^^^^^            repository.JSONSelectionString.patterns.embedded
+#                                                  ^^^^^^^^^^^^^^             repository.VarPath
         ]
         headers: [
           {
@@ -50,52 +52,52 @@ type Query {
 #                 ^^^^^^^^^^^^^^^            repository.JSONSelectionString
             value: "Bearer {$config.apiKey}"
 #                  ^^^^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
-#                           ^^^^^^^^^^^^^^   embedded repository.VarPath
+#                           ^^^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded repository.VarPath
           }
         ]
         body: """  
-# ^^^^^^^^^^^^^^^                      - meta.embedded.block.jsonselection.graphql
-#                ^^^^^^^^^^^^^^^^^^^^^ meta.embedded.block.jsonselection.graphql
+# ^^^^^^^^^^^^^^^                      - meta.embedded.block.connectors.mapping.graphql
+#                ^^^^^^^^^^^^^^^^^^^^^ meta.embedded.block.connectors.mapping.graphql
         listing: {
-#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
 #       ^^^^^^^                        repository.NamedSelection.patterns.3.beginCaptures.1
 #                ^                     repository.SubSelection
           title: $args.input.title
-#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
 #<------------------------------------ repository.SubSelection
 #         ^^^^^                        repository.NamedSelection.patterns.0.beginCaptures.1
 #                ^^^^^^^^^^^^^^^^^     repository.VarPath
         }
-#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
 #<--------                             repository.SubSelection
         """
-#^^^^^^^                               meta.embedded.block.jsonselection.graphql
-#       ^^^^^^^^^^^^^^^^^^^^^^^^^      - meta.embedded.block.jsonselection.graphql
+#^^^^^^^                               meta.embedded.block.connectors.mapping.graphql
+#       ^^^^^^^^^^^^^^^^^^^^^^^^^      - meta.embedded.block.connectors.mapping.graphql
       body: "foo: bar $.root { a }"
-#            ^^^^^^^^^^^^^^^^^^^^^     meta.embedded.line.jsonselection.graphql
-#^^^^^^^^^^^^                     ^    - meta.embedded.line.jsonselection.graphql
+#            ^^^^^^^^^^^^^^^^^^^^^     meta.embedded.line.connectors.mapping.graphql
+#^^^^^^^^^^^^                     ^    - meta.embedded.line.connectors.mapping.graphql
 #            ^^^^^^^^          ^       repository.NamedFieldSelection
 #                     ^^^^^^           repository.VarPath
       }
       selection: """  
-# ^^^^^^^^^^^^^^^^^^                   - meta.embedded.block.jsonselection.graphql
-#                   ^^^^^^^^^^^^^^^^^^ meta.embedded.block.jsonselection.graphql
+# ^^^^^^^^^^^^^^^^^^                   - meta.embedded.block.connectors.mapping.graphql
+#                   ^^^^^^^^^^^^^^^^^^ meta.embedded.block.connectors.mapping.graphql
       foo: bar
-#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
 #     ^^^^^^^^                         repository.NamedFieldSelection
       $.root {
-#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
 #     ^^^^^^                           repository.VarPath
         a
-#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
       }
-#<------------------------------------ meta.embedded.block.jsonselection.graphql
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
       """
-#^^^^^                                 meta.embedded.block.jsonselection.graphql
-#     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.jsonselection.graphql
+#^^^^^                                 meta.embedded.block.connectors.mapping.graphql
+#     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.connectors.mapping.graphql
       selection: "foo: bar $.root { a }"
-#                 ^^^^^^^^^^^^^^^^^^^^^    meta.embedded.line.jsonselection.graphql
-#^^^^^^^^^^^^^^^^^                     ^ - meta.embedded.line.jsonselection.graphql
+#                 ^^^^^^^^^^^^^^^^^^^^^    meta.embedded.line.connectors.mapping.graphql
+#^^^^^^^^^^^^^^^^^                     ^ - meta.embedded.line.connectors.mapping.graphql
 #                 ^^^^^^^^          ^    repository.NamedFieldSelection
 #                          ^^^^^^        repository.VarPath
     )

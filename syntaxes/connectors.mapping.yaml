@@ -89,8 +89,8 @@ styles:
   string_open: "punctuation.definition.string.begin.graphql"
   string_close: "punctuation.definition.string.end.graphql"
   number: "constant.numeric"
-  comment: "comment.line.jsonselection"
-  comment_leading_ws: "punctuation.whitespace.comment.leading.jsonselection"
+  comment: "comment.line.connectors.mapping"
+  comment_leading_ws: "punctuation.whitespace.comment.leading.connectors.mapping"
 
 repository:
   # JSONSelection        ::= PathSelection | NamedSelection*
@@ -434,5 +434,6 @@ repository:
         endCaptures:
           "1":
             name: "punctuation.section.embedded {{.brace_close}}"
+        debugName: "embedded"
         patterns:
           - include: "#PathSelection"

@@ -31,10 +31,10 @@
     "format": "prettier --write .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:extension": "node src/__e2e__/runTests.js",
-    "test:textmate": "npm run test:textmate-ts && npm run test:textmate-jsonselection && npm run test:textmate-graphql-jsonselection",
+    "test:textmate": "npm run test:textmate-ts && npm run test:textmate-connectors-mapping && npm run test:textmate-graphql-connectors-mapping",
     "test:textmate-ts": "npx vscode-tmgrammar-snap -s source.ts -g src/language-server/__tests__/fixtures/TypeScript.tmLanguage.json src/language-server/__tests__/fixtures/documents/*.ts",
-    "test:textmate-jsonselection": "npm run build:textmate -- --snapshot connectors.jsonselection.json; npx vscode-tmgrammar-test src/__tests__/fixtures/textmate/*.jsonselection",
-    "test:textmate-graphql-jsonselection": "npm run build:textmate -- --snapshot connectors.jsonselection.json; npx vscode-tmgrammar-test src/__tests__/fixtures/textmate/*.graphql",
+    "test:textmate-connectors-mapping": "npm run build:textmate -- --snapshot connectors.mapping.yaml; npx vscode-tmgrammar-test src/__tests__/fixtures/textmate/*.connectors.mapping",
+    "test:textmate-graphql-connectors-mapping": "npm run build:textmate -- --snapshot connectors.mapping.yaml; npx vscode-tmgrammar-test src/__tests__/fixtures/textmate/*.graphql",
     "update-connectors-community": "git subtree pull --prefix sampleWorkspace/connectors-community https://github.com/apollographql/connectors-community.git main --squash",
     "codegen": "graphql-codegen",
     "vscode:prepublish": "npm run build:production"
@@ -184,9 +184,9 @@
           "[Apollo Connectors Mapping Syntax]"
         ],
         "filenames": [
-          "test.apollo.jsonselection"
+          "test.apollo.connectors.mapping"
         ],
-        "configuration": "./apollo.jsonselection.configuration.json"
+        "configuration": "./apollo.connectors.mapping.configuration.json"
       },
       {
         "id": "jsonc",
@@ -204,7 +204,7 @@
       {
         "language": "apollo.connectors.mapping",
         "scopeName": "source.apollo.connectors.mapping",
-        "path": "./syntaxes/connectors.jsonselection.json"
+        "path": "./syntaxes/connectors.mapping.json"
       },
       {
         "injectTo": [
@@ -213,9 +213,9 @@
         "scopeName": "source.apollo.connectors.graphql",
         "path": "./syntaxes/graphql.connectors.json",
         "embeddedLanguages": {
-          "meta.embedded.block.jsonselection.graphql": "apollo.connectors.mapping",
-          "meta.embedded.line.jsonselection.graphql": "apollo.connectors.mapping",
-          "meta.embedded.block.string.jsonselection.graphql": "apollo.connectors.mapping"
+          "meta.embedded.block.connectors.mapping.graphql": "apollo.connectors.mapping",
+          "meta.embedded.line.connectors.mapping.graphql": "apollo.connectors.mapping",
+          "meta.embedded.block.string.connectors.mapping.graphql": "apollo.connectors.mapping"
         }
       },
       {

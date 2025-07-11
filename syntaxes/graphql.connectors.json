@@ -50,13 +50,13 @@
           "include": "source.graphql#graphql-comment"
         },
         {
-          "include": "#connector-jsonselection-argument"
+          "include": "#connector-connectors-mapping-argument"
         },
         {
           "include": "#connector-argument-http"
         },
         {
-          "include": "#connector-string-jsonselection-argument"
+          "include": "#connector-string-connectors-mapping-argument"
         },
         {
           "include": "#graphql-argument"
@@ -66,8 +66,8 @@
         }
       ]
     },
-    "connector-jsonselection-argument": {
-      "name": "meta.argument.connect.jsonselection.graphql",
+    "connector-connectors-mapping-argument": {
+      "name": "meta.argument.connect.connectors.mapping.graphql",
       "begin": "\\s*(selection)(?:\\s*(:))",
       "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
       "beginCaptures": {
@@ -85,7 +85,7 @@
       },
       "patterns": [
         {
-          "contentName": "meta.embedded.block.jsonselection.graphql",
+          "contentName": "meta.embedded.block.connectors.mapping.graphql",
           "begin": "((\"\"\"))",
           "end": "((\"\"\"))",
           "beginCaptures": {
@@ -111,7 +111,7 @@
           ]
         },
         {
-          "contentName": "meta.embedded.line.jsonselection.graphql",
+          "contentName": "meta.embedded.line.connectors.mapping.graphql",
           "begin": "(?<!\")((\"))(?!\")",
           "end": "(?<!\")((\"))(?!\")",
           "beginCaptures": {
@@ -191,13 +191,13 @@
           },
           "patterns": [
             {
-              "include": "#connector-string-jsonselection-argument"
+              "include": "#connector-string-connectors-mapping-argument"
             },
             {
-              "include": "#connector-array-jsonselection-headers"
+              "include": "#connector-array-connectors-mapping-headers"
             },
             {
-              "include": "#http-object-jsonselection-property"
+              "include": "#http-object-connectors-mapping-property"
             },
             {
               "include": "source.graphql#graphql-object-field"
@@ -209,11 +209,11 @@
         }
       ]
     },
-    "http-object-jsonselection-property": {
+    "http-object-connectors-mapping-property": {
       "patterns": [
         {
-          "name": "meta.argument.connect.body.jsonselection.graphql",
-          "contentName": "meta.embedded.block.jsonselection.graphql",
+          "name": "meta.argument.connect.body.connectors.mapping.graphql",
+          "contentName": "meta.embedded.block.connectors.mapping.graphql",
           "begin": "\\s*(body)\\s*(:)\\s*((\"\"\"))",
           "end": "((\"\"\"))",
           "beginCaptures": {
@@ -245,8 +245,8 @@
           ]
         },
         {
-          "name": "meta.argument.connect.line.jsonselection.graphql",
-          "contentName": "meta.embedded.line.jsonselection.graphql",
+          "name": "meta.argument.connect.line.connectors.mapping.graphql",
+          "contentName": "meta.embedded.line.connectors.mapping.graphql",
           "begin": "\\s*(body)\\s*(:)\\s*(?<!\")((\"))(?!\")",
           "end": "(?<!\")((\"))(?!\")",
           "beginCaptures": {
@@ -279,7 +279,7 @@
         }
       ]
     },
-    "connector-array-jsonselection-headers": {
+    "connector-array-connectors-mapping-headers": {
       "name": "meta.connect.headers",
       "begin": "\\s*((headers))(?:\\s*(:))",
       "beginCaptures": {
@@ -364,9 +364,9 @@
         }
       ]
     },
-    "connector-string-jsonselection-argument": {
-      "name": "meta.argument.connect.string.jsonselection.graphql",
-      "contentName": "meta.embedded.string.jsonselection.graphql",
+    "connector-string-connectors-mapping-argument": {
+      "name": "meta.argument.connect.string.connectors.mapping.graphql",
+      "contentName": "meta.embedded.string.connectors.mapping.graphql",
       "begin": "\\s*(GET|POST|PUT|PATCH|DELETE)(?:\\s*(:))",
       "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|[\\)}]))|\\s*(,)",
       "beginCaptures": {

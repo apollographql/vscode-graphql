@@ -77,6 +77,7 @@ if (watch) {
 }
 
 async function build(filename: string) {
+  const pathOverrides = new WeakMap<object, string[]>();
   console.log(`Building ${filename}...`);
   const { name, ext } = parse(filename);
 
@@ -115,13 +116,17 @@ async function build(filename: string) {
                 (currentPath.length > 2 &&
                   currentPath.at(-2) === "patterns" &&
                   typeof value === "object" &&
-                  !("include" in value)))
+                  !("include" in value)) ||
+                // anything with a `debugName` property
+                "debugName" in value)
             ) {
-              const debugPath =
-                "debugName" in value
-                  ? currentPath.slice(0, -1).concat(value.debugName)
-                  : currentPath;
-              delete value.debugName;
+              let debugPath = currentPath;
+              if ("debugName" in value) {
+                debugPath = currentPath.slice(0, -1).concat(value.debugName);
+                pathOverrides.set(value, debugPath);
+                delete value.debugName;
+              }
+
               if (snapshot) {
                 // in snapshot mode we only are interested in the pattern names, not colorization details
                 delete value.name;
@@ -130,7 +135,10 @@ async function build(filename: string) {
                 (value.name ?? "meta") + "." + pathToString(debugPath, false);
             }
             if (snapshot && currentPath[0] === "repository" && key === "name") {
-              return pathToString(currentPath.slice(0, -1), false);
+              return pathToString(
+                pathOverrides.get(this) || currentPath.slice(0, -1),
+                false,
+              );
             }
           }
           if (typeof value === "string") {

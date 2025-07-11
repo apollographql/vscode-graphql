@@ -56,6 +56,8 @@ variables:
   atPathMatch: "@"
   exprPathMatch: "$[(]"
   notEscaped: "(?<![\\\\])(?:[\\\\]{2})*"
+  builtinMethod: "(?:echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt)"
+  reservedMethod: "(?:typeof|matchIf|match_if|add|sub|mul|div|mod|has|get|keys|values|not)"
 # can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
 styles:
   alias: "variable.other.alias.property.identifier"
@@ -64,6 +66,7 @@ styles:
   field: "variable.other.constant.field.identifier"
   property: "variable.property.key"
   method: "entity.name.function"
+  builtinMethod: "keyword.builtin"
   arrow: "keyword.operator.arrow"
   comma: "punctuation.separator.comma"
   brace_open: "punctuation.brace.open" #{
@@ -252,7 +255,7 @@ repository:
       "3":
         name: "{{.optional_chain}}"
   PathStepArrowMethodArgs:
-    begin: "(->)({{identifier}})([(])"
+    begin: "(->)(({{builtinMethod}})|{{identifier}})([(])"
     end: "([)])([?]?)"
     applyEndPatternLast: 1
     beginCaptures:
@@ -261,6 +264,8 @@ repository:
       "2":
         name: "{{.method}}"
       "3":
+        name: "{{.builtinMethod}}"
+      "4":
         name: "{{.brace_open}}"
     endCaptures:
       "1":

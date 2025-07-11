@@ -24,6 +24,13 @@ $( foo )->bar("asd")
 #             ^^^^^  repository.LitString
 
 
+$( foo )->ma("asd")    # not builtin function
+#         ^^          repository.PathStepArrowMethodArgs.beginCaptures.2
+#         ^^          - repository.PathStepArrowMethodArgs.beginCaptures.3
+$( foo )->map("asd")   # builtin function
+#         ^^^          repository.PathStepArrowMethodArgs.beginCaptures.2
+#         ^^^          repository.PathStepArrowMethodArgs.beginCaptures.3
+
 $foo
 #<-------- repository.VarPath
 $foo.bar
@@ -201,7 +208,6 @@ as\\d')
 
 @->a("y"->foo)
 #       ^^^^^ repository.LitPathTail
-
 
 @->a("y" || "foo" + $asd)
 #        ^^       ^        repository.LitOpChainCenter

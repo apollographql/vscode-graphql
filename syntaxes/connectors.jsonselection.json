@@ -262,7 +262,7 @@
       }
     },
     "PathStepArrowMethodArgs": {
-      "begin": "(->)([a-zA-Z_][0-9a-zA-Z_]*)([(])",
+      "begin": "(->)(((?:echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt))|[a-zA-Z_][0-9a-zA-Z_]*)([(])",
       "end": "([)])([?]?)",
       "applyEndPatternLast": 1,
       "beginCaptures": {
@@ -273,6 +273,9 @@
           "name": "entity.name.function"
         },
         "3": {
+          "name": "keyword.builtin"
+        },
+        "4": {
           "name": "punctuation.brace.open"
         }
       },
@@ -379,8 +382,10 @@
       ]
     },
     "LitString": {
-      "match": "(\")([^\"]*)(\")|(')([^']*)(')",
-      "captures": {
+      "begin": "((\")|('))",
+      "end": "(?<![\\\\])(?:[\\\\]{2})*(?=\\1)((\")|('))",
+      "contentName": "string.quoted.graphql",
+      "beginCaptures": {
         "1": {
           "name": "punctuation.definition.string.begin.graphql"
         },
@@ -388,16 +393,18 @@
           "name": "string.quoted.double.graphql"
         },
         "3": {
-          "name": "punctuation.definition.string.end.graphql"
-        },
-        "4": {
-          "name": "punctuation.definition.string.begin.graphql"
-        },
-        "5": {
           "name": "string.quoted.single.graphql"
-        },
-        "6": {
+        }
+      },
+      "endCaptures": {
+        "1": {
           "name": "punctuation.definition.string.end.graphql"
+        },
+        "2": {
+          "name": "string.quoted.double.graphql"
+        },
+        "3": {
+          "name": "string.quoted.single.graphql"
         }
       }
     },

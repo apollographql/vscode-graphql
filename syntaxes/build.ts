@@ -243,6 +243,8 @@ function verify(regexString: string, context: string) {
       rules: {
         // end rules might reference begin rules, so we allow orphan backreferences
         allowOrphanBackrefs: true,
+        // Follow `vscode-oniguruma` which enables this Oniguruma option by default (see https://github.com/RedCMD/TmLanguage-Syntax-Highlighter/blob/973552cf6ea41646d0f8b1c1eb2430408e36b25e/src/Providers/CodeActionsProvider.ts#L230)
+        captureGroup: true,
       },
     }).pattern;
   } catch (err) {

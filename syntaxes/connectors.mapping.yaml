@@ -44,20 +44,20 @@ patterns:
 variables:
   identifier: "[a-zA-Z_][0-9a-zA-Z_]*"
   # prettier-ignore
-  string: "(?:\"[^\"]*\"|'[^']*')"
-  key: "(?:{{identifier}}|{{string}})"
-  operator: "(?:[?][?]|[?][!]|&&|[|][|]|==|!=|<|<=|(?<!-)>|(?<!-)>=|[+]|-(?!>)|[*]|/|%)"
+  string: "\"[^\"]*\"|'[^']*'"
+  key: "{{identifier}}|{{string}}"
+  operator: "[?][?]|[?][!]|&&|[|][|]|==|!=|<|<=|(?<!-)>|(?<!-)>=|[+]|-(?!>)|[*]|/|%"
   operatorCharacter: "[?!&|=<>*/%+-]"
   alias: "{{key}}\\s*:"
   varPathMatch: "[$]"
   keyPathMatch: "({{key}})(?={{pathTailMatch}})"
-  pathStepMatch: "(?:[.]{{key}}|->{{identifier}})"
+  pathStepMatch: "[.]{{key}}|->{{identifier}}"
   pathTailMatch: "\\s*(?:[?])?(?=\\s*{{pathStepMatch}})"
   atPathMatch: "@"
   exprPathMatch: "$[(]"
   notEscaped: "(?<![\\\\])(?:[\\\\]{2})*"
-  builtinMethod: "(?:echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt)"
-  reservedMethod: "(?:typeof|matchIf|match_if|add|sub|mul|div|mod|has|get|keys|values|not)"
+  builtinMethod: "echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt"
+  reservedMethod: "typeof|matchIf|match_if|add|sub|mul|div|mod|has|get|keys|values|not"
 # can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
 styles:
   alias: "string.unquoted.alias.graphql"

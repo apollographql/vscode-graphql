@@ -68,8 +68,8 @@
     },
     "connector-connectors-mapping-argument": {
       "name": "meta.argument.connect.connectors.mapping.graphql",
-      "begin": "\\s*(selection)(?:\\s*(:))",
-      "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
+      "begin": "\\s*(selection)\\s*(:)",
+      "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|\\)))|\\s*(,)",
       "beginCaptures": {
         "1": {
           "name": "variable.parameter.graphql"
@@ -147,7 +147,7 @@
     "connector-argument-http": {
       "name": "meta.argument.connect.http.graphql",
       "begin": "\\s*(http)\\s*(:)",
-      "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
+      "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|\\)))|\\s*(,)",
       "beginCaptures": {
         "1": {
           "name": "variable.parameter.graphql"
@@ -177,7 +177,7 @@
       "patterns": [
         {
           "name": "meta.objectvalues.connect.http.graphql",
-          "begin": "\\s*({)",
+          "begin": "\\s*(\\{)",
           "end": "\\s*(})",
           "beginCaptures": {
             "1": {
@@ -281,7 +281,7 @@
     },
     "connector-array-connectors-mapping-headers": {
       "name": "meta.connect.headers",
-      "begin": "\\s*((headers))(?:\\s*(:))",
+      "begin": "\\s*((headers))\\s*(:)",
       "beginCaptures": {
         "1": {
           "name": "string.unquoted.graphql"
@@ -290,7 +290,7 @@
           "name": "variable.object.key.graphql"
         }
       },
-      "end": "(?<=\\])",
+      "end": "(?<=])",
       "applyEndPatternLast": 1,
       "patterns": [
         {
@@ -310,7 +310,7 @@
           "patterns": [
             {
               "name": "meta.objectvalues.graphql",
-              "begin": "\\s*({)",
+              "begin": "\\s*(\\{)",
               "end": "\\s*(})",
               "beginCaptures": {
                 "1": {
@@ -325,7 +325,7 @@
               "patterns": [
                 {
                   "begin": "(\\w+)\\s*(:)",
-                  "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|[\\)}]))|\\s*(,)",
+                  "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|[)}]))|\\s*(,)",
                   "beginCaptures": {
                     "1": {
                       "name": "variable.object.key.graphql"
@@ -367,8 +367,8 @@
     "connector-string-connectors-mapping-argument": {
       "name": "meta.argument.connect.string.connectors.mapping.graphql",
       "contentName": "meta.embedded.string.connectors.mapping.graphql",
-      "begin": "\\s*(GET|POST|PUT|PATCH|DELETE)(?:\\s*(:))",
-      "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|[\\)}]))|\\s*(,)",
+      "begin": "\\s*(GET|POST|PUT|PATCH|DELETE)\\s*(:)",
+      "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|[)}]))|\\s*(,)",
       "beginCaptures": {
         "1": {
           "name": "variable.parameter.graphql"
@@ -395,8 +395,8 @@
       ]
     },
     "graphql-argument": {
-      "begin": "\\s*([_A-Za-z][_0-9A-Za-z]*)(?:\\s*(:))",
-      "end": "(?=\\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\\s*(:))|\\)))|\\s*(,)",
+      "begin": "\\s*([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)",
+      "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|\\)))|\\s*(,)",
       "beginCaptures": {
         "1": {
           "name": "variable.parameter.graphql"

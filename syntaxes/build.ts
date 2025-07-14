@@ -8,7 +8,7 @@ import {
 } from "node:fs/promises";
 import yaml from "js-yaml";
 import { format, parse } from "node:path";
-import * as path from "node:path";
+import { optimize } from "oniguruma-parser/optimizer";
 
 const dir = import.meta.dirname;
 const {
@@ -143,7 +143,7 @@ async function build(filename: string) {
           }
           if (typeof value === "string") {
             if (key === "begin" || key === "end" || key === "match") {
-              const regexString = value.replace(
+              let regexString = value.replace(
                 /\{\{([\w#.]+)\}\}/g,
                 function replacer(_, reference: string) {
                   let replaced: string;
@@ -170,11 +170,11 @@ async function build(filename: string) {
                     }
                     replaced = variables[reference];
                   }
-                  return verify(
+                  return `(?:${verify(
                     replaced.replace(/\{\{(\w+)\}\}/g, replacer),
                     `reference ${styleText(colors.variable, reference)} accessed from ` +
                       pathToString(currentPath),
-                  );
+                  )})`;
                 },
               );
 
@@ -239,13 +239,17 @@ async function build(filename: string) {
 }
 function verify(regexString: string, context: string) {
   try {
-    new RegExp(regexString);
+    return optimize(regexString, {
+      rules: {
+        // end rules might reference begin rules, so we allow orphan backreferences
+        allowOrphanBackrefs: true,
+      },
+    }).pattern;
   } catch (err) {
     throw new Error(
       `Invalid regex: ${styleText(colors.regex, regexString)} in context: ${context}\n${err}`,
     );
   }
-  return regexString;
 }
 function pathToString(path: string[], colorize = true) {
   const text = path.reduce(

@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 2.5.6
+
+### Patch Changes
+
+- [#290](https://github.com/apollographql/vscode-graphql/pull/290) [`84d0503`](https://github.com/apollographql/vscode-graphql/commit/84d05030c253c0b8c3c26dc273527a33ac5e7129) Thanks [@Jephuff](https://github.com/Jephuff)! - Fix subgraph detection on windows
+
+- [#282](https://github.com/apollographql/vscode-graphql/pull/282) [`52017e3`](https://github.com/apollographql/vscode-graphql/commit/52017e3479cfe8c07d19fa52c2ebe10f65de766c) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Improve syntax highlighting for GraphQL block strings
+
+## 2.5.5
+
+### Patch Changes
+
+- [#280](https://github.com/apollographql/vscode-graphql/pull/280) [`ce6b4a8`](https://github.com/apollographql/vscode-graphql/commit/ce6b4a840d94c95efa19b645077230c422f0616e) Thanks [@pubmodmatt](https://github.com/pubmodmatt)! - Fix an issue where adding a new Apollo configuration file would not be detected
+
+- [#278](https://github.com/apollographql/vscode-graphql/pull/278) [`ff969e6`](https://github.com/apollographql/vscode-graphql/commit/ff969e6d64b6aa8ed865215d71344c41e85da19f) Thanks [@Meschreiber](https://github.com/Meschreiber)! - Update README/Marketplace page
+
+## 2.5.4
+
+### Patch Changes
+
+- [#267](https://github.com/apollographql/vscode-graphql/pull/267) [`8706670`](https://github.com/apollographql/vscode-graphql/commit/8706670810493c3574ecc66f9262e8fd025604dc) Thanks [@phryneas](https://github.com/phryneas)! - Adjustments to fix Release process
+
+## 2.5.3
+
+### Patch Changes
+
+- [#254](https://github.com/apollographql/vscode-graphql/pull/254) [`2b0dd90`](https://github.com/apollographql/vscode-graphql/commit/2b0dd9092e4e27fb00bb279a837d29ec2f730bdb) Thanks [@phryneas](https://github.com/phryneas)! - remove unused direct dependency on `lodash.merge`
+
 ## 2.5.2
 
 ### Patch Changes

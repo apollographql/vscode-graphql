@@ -26,7 +26,17 @@ jobs:
       - run: npm ci
       - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
         shell: bash
+
+      # Print rover version per OS
       - name: Install & Configure Rover (Linux)
+        run: ./node_modules/.bin/rover --version
+        if: runner.os == 'Linux'
+      - name: Install Rover (Windows)
+        run: ./node_modules/.bin/rover.cmd --version
+        if: runner.os == 'Windows'
+
+      # auth rover per OS
+      - name: Configure Rover (Linux)
         run: |
           expect <<EOF
           spawn ./node_modules/.bin/rover config auth --profile VSCode-E2E
@@ -35,9 +45,6 @@ jobs:
           expect eof
           EOF
         if: runner.os == 'Linux'
-      - name: Install Rover (Windows)
-        run: ./node_modules/.bin/rover.cmd --version
-        if: runner.os == 'Windows'
       - name: Configure Rover (Windows)
         run: |
           [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
@@ -49,6 +56,15 @@ jobs:
           [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
         if: runner.os == 'Windows'
         shell: powershell
+
+      # Print profiles per OS
+      - name: Print Rover profiles (Linux)
+        run: ./node_modules/.bin/rover config list
+        if: runner.os == 'Linux'
+      - name: Print Rover profiles (Windows)
+        run: ./node_modules/.bin/rover.cmd config list
+        if: runner.os == 'Windows'
+
       - name: Adjust configuration (Windows)
         run: |
           sed -i -e 's/\(bin:.*\)/\1.exe/' sampleWorkspace/rover/apollo.config.yaml
@@ -57,7 +73,10 @@ jobs:
           echo "module.exports = require('./jest.e2e.config')" > jest.config.ts
         shell: bash
         if: runner.os == 'Windows'
+
       - run: npm run build:production
+
+      # Run test per OS
       - name: "Run Extension E2E tests (Linux)"
         run: xvfb-run -a npm run test:extension
         env:

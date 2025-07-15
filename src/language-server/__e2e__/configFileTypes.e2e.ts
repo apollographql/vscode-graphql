@@ -21,14 +21,14 @@ test.each([
 ] as const)("%s with `type: '%s'`", async (project, moduleType) => {
   await writeFile(
     resolveRelativeToSampleWorkspace(`configFileTypes/${project}/package.json`),
-    JSON.stringify(
+    `${JSON.stringify(
       {
         name: "test",
         type: moduleType,
       },
       undefined,
       2,
-    ),
+    )}\n`,
     "utf-8",
   );
   await reloadService();

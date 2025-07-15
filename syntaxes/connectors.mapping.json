@@ -1,0 +1,532 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Apollo Connectors Mapping Syntax",
+  "scopeName": "source.apollo.connectors.mapping",
+  "patterns": [
+    {
+      "include": "#JSONSelection"
+    },
+    {
+      "include": "#Comment"
+    },
+    {
+      "include": "source.graphql#graphql-skip-newlines"
+    }
+  ],
+  "repository": {
+    "JSONSelection": {
+      "patterns": [
+        {
+          "include": "#NamedSelection"
+        },
+        {
+          "include": "#PathSelection"
+        },
+        {
+          "include": "#Comment"
+        }
+      ]
+    },
+    "SubSelection": {
+      "begin": "\\s*(\\{)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.brace.open"
+        }
+      },
+      "end": "\\s*(})",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.brace.close"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#NamedSelection"
+        },
+        {
+          "include": "#Comment"
+        }
+      ]
+    },
+    "PathSelection": {
+      "begin": "(?=\\$|([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))|@|$\\()",
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#ExprPath"
+        },
+        {
+          "include": "#VarPath"
+        },
+        {
+          "include": "#KeyPath"
+        },
+        {
+          "include": "#AtPath"
+        }
+      ]
+    },
+    "NamedSelection": {
+      "patterns": [
+        {
+          "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*(?=\\$|([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))|@|$\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.other.property.alias"
+            },
+            "2": {
+              "name": "punctuation.colon.alias"
+            }
+          },
+          "end": "(?=.)",
+          "applyEndPatternLast": 1,
+          "patterns": [
+            {
+              "include": "#PathSelection"
+            }
+          ]
+        },
+        {
+          "begin": "(\\.\\.\\.)\\s*(?=\\$|([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))|@|$\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.operator.spread"
+            }
+          },
+          "end": "(?=.)",
+          "applyEndPatternLast": 1,
+          "patterns": [
+            {
+              "include": "#PathSelection"
+            }
+          ]
+        },
+        {
+          "include": "#PathSelection"
+        },
+        {
+          "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*(?=\\s*(\\{))",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.other.property.alias"
+            },
+            "2": {
+              "name": "punctuation.colon.alias"
+            }
+          },
+          "end": "(?=.)",
+          "applyEndPatternLast": 1,
+          "patterns": [
+            {
+              "include": "#SubSelection"
+            }
+          ]
+        },
+        {
+          "include": "#NamedFieldSelection"
+        }
+      ]
+    },
+    "NamedFieldSelection": {
+      "begin": "(?:([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*)?([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.property.alias"
+        },
+        "2": {
+          "name": "punctuation.colon.alias"
+        },
+        "3": {
+          "name": "variable.graphql"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#SubSelection"
+        }
+      ]
+    },
+    "VarPath": {
+      "begin": "(\\$)([A-Z_a-z][0-9A-Z_a-z]*)?(?!\\w)",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.constant"
+        },
+        "2": {
+          "name": "variable.graphql"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathTail"
+        }
+      ]
+    },
+    "KeyPath": {
+      "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.graphql"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathTail"
+        }
+      ]
+    },
+    "AtPath": {
+      "begin": "(@)",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.constant"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathTail"
+        }
+      ]
+    },
+    "ExprPath": {
+      "begin": "(\\$)(?=\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.constant"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "begin": "(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.paren.open"
+            }
+          },
+          "end": "(\\))",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.paren.close"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#LitExpr"
+            }
+          ]
+        },
+        {
+          "include": "#PathStep"
+        }
+      ]
+    },
+    "PathTail": {
+      "begin": "(\\?)?(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*))",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.question.mark"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathStep"
+        }
+      ]
+    },
+    "PathStepDotAccess": {
+      "match": "(\\.)([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(\\??)",
+      "captures": {
+        "1": {
+          "name": "variable.dot"
+        },
+        "2": {
+          "name": "variable.graphql"
+        },
+        "3": {
+          "name": "variable.question.mark"
+        }
+      }
+    },
+    "PathStepArrowMethodArgs": {
+      "begin": "(->)((echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt)|[A-Z_a-z][0-9A-Z_a-z]*)(\\()",
+      "end": "(\\))(\\??)",
+      "applyEndPatternLast": 1,
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.operator.arrow"
+        },
+        "2": {
+          "name": "support.function"
+        },
+        "3": {
+          "name": "support.function.builtin"
+        },
+        "4": {
+          "name": "punctuation.brace.open"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.brace.close"
+        },
+        "2": {
+          "name": "variable.question.mark"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#LitExpr"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.comma"
+        }
+      ]
+    },
+    "PathStepArrowAccess": {
+      "match": "(->)([A-Z_a-z][0-9A-Z_a-z]*)(\\??)",
+      "captures": {
+        "1": {
+          "name": "keyword.operator.arrow"
+        },
+        "2": {
+          "name": "variable.graphql"
+        },
+        "3": {
+          "name": "variable.question.mark"
+        }
+      }
+    },
+    "PathStep": {
+      "patterns": [
+        {
+          "include": "#PathStepDotAccess"
+        },
+        {
+          "include": "#PathStepArrowMethodArgs"
+        },
+        {
+          "include": "#PathStepArrowAccess"
+        }
+      ]
+    },
+    "LitExpr": {
+      "patterns": [
+        {
+          "include": "#LitOpChainCenter"
+        },
+        {
+          "include": "#LitPathTail"
+        },
+        {
+          "include": "#LitPrimitive"
+        },
+        {
+          "include": "#LitObject"
+        },
+        {
+          "include": "#LitArray"
+        },
+        {
+          "include": "#PathSelection"
+        },
+        {
+          "include": "#Comment"
+        }
+      ]
+    },
+    "LitPathTail": {
+      "begin": "(?<!\\()(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))",
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#PathTail"
+        }
+      ]
+    },
+    "LitOpChainCenter": {
+      "match": "(?<![-!%\\&(*+/<-?|])(\\?\\?|\\?!|&&|\\|\\||==|!=|<=??|(?<!-)>|(?<!-)>=|\\+|-(?!>)|[%*/])(?!\\s*[-!%\\&)*+/<-?|])",
+      "captures": {
+        "1": {
+          "name": "keyword.operator"
+        }
+      }
+    },
+    "LitPrimitive": {
+      "patterns": [
+        {
+          "include": "#LitString"
+        },
+        {
+          "include": "#LitNumber"
+        },
+        {
+          "match": "\\b(true|false|null)\\b",
+          "name": "constant.language"
+        }
+      ]
+    },
+    "LitString": {
+      "begin": "((\")|('))",
+      "end": "(?<!\\\\)\\\\{2}*(?=\\1)((\")|('))",
+      "contentName": "string.quoted.graphql",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.string.begin.graphql"
+        },
+        "2": {
+          "name": "string.quoted.double.graphql"
+        },
+        "3": {
+          "name": "string.quoted.single.graphql"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.string.end.graphql"
+        },
+        "2": {
+          "name": "string.quoted.double.graphql"
+        },
+        "3": {
+          "name": "string.quoted.single.graphql"
+        }
+      }
+    },
+    "LitNumber": {
+      "name": "constant.numeric",
+      "match": "(-?)([0-9]+(\\.[0-9]*)?|\\.[0-9]+)"
+    },
+    "LitObject": {
+      "begin": "\\s*(\\{)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.brace.open"
+        }
+      },
+      "end": "\\s*(})",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.brace.close"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#LitProperty"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.comma"
+        },
+        {
+          "include": "#Comment"
+        }
+      ]
+    },
+    "LitProperty": {
+      "begin": "\\b([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)\\s*",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.property"
+        },
+        "2": {
+          "name": "punctuation.colon.alias"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#LitExpr"
+        }
+      ]
+    },
+    "LitArray": {
+      "begin": "\\s*(\\[)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.bracket.open"
+        }
+      },
+      "end": "\\s*(])",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.bracket.close"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#LitExpr"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.comma"
+        }
+      ]
+    },
+    "Comment": {
+      "match": "(\\s*)(#.*?)$",
+      "captures": {
+        "1": {
+          "name": "punctuation.whitespace.comment.leading.connectors.mapping"
+        },
+        "2": {
+          "name": "comment.line.connectors.mapping"
+        }
+      }
+    },
+    "JSONSelectionString": {
+      "contentName": "string.quoted",
+      "begin": "(\")",
+      "beginCaptures": {
+        "1": {
+          "name": "string.quoted.double.graphql punctuation.definition.string.begin.graphql"
+        }
+      },
+      "end": "(\")",
+      "endCaptures": {
+        "1": {
+          "name": "string.quoted.double.graphql punctuation.definition.string.end.graphql"
+        }
+      },
+      "patterns": [
+        {
+          "begin": "\\s*(\\{)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.section.embedded punctuation.brace.open"
+            }
+          },
+          "end": "\\s*(})",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.section.embedded punctuation.brace.close"
+            }
+          },
+          "contentName": "meta.embedded.string.connectors.mapping.selectionstring.graphql",
+          "debugName": "embedded",
+          "patterns": [
+            {
+              "include": "#PathSelection"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

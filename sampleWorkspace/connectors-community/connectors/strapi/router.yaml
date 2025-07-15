@@ -1,0 +1,19 @@
+supergraph:
+  listen: 0.0.0.0:${env.PORT:-4000}
+
+headers:
+  all:
+    request:
+      - propagate:
+          matching: .*
+connectors:
+  subgraphs:
+    strapi-users:
+      $config:
+        apiKey: ${env.STRAPI_API_KEY}
+telemetry:
+  instrumentation:
+    spans: 
+      mode: spec_compliant
+override_subgraph_url:
+  strapi-users: ${env.STRAPI_URL:-http://localhost:1337/api}

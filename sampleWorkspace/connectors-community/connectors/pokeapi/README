@@ -1,0 +1,45 @@
+# Pokeapi REST Connector
+
+This connector currently covers the Pokemon, locations, moves and games in the [PokeAPI](https://pokeapi.co/).
+
+## Additional Setup for VS Code Task runner
+
+Edit your `.vscode/settings.json` to include the following keys:
+
+```
+{
+  "terminal.integrated.profiles.osx": {
+    "graphos": {
+      "path": "zsh",
+      "args": ["-l"],
+      "env": {
+        "API_KEY": "",
+        "APOLLO_KEY": "",
+        ...
+      }
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "graphos"
+}
+```
+
+Once you've set this up, you can execute the `Tasks: Run Task` command in VS Code to run the `rover dev` task.
+Alternatively, you can open a new terminal window in VS Code with the `graphos` profile, then run `rover dev --supergraph-config supergraph.yaml --router-config router.yaml`.
+
+## Contributing
+
+
+The following schema modules can be added to this connector:
+
+- Abilities - https://pokeapi.co/docs/v2#abilities
+- Characteristics - https://pokeapi.co/docs/v2#characteristics
+- Egg Groups - https://pokeapi.co/docs/v2#egg_groups
+- Genders - https://pokeapi.co/docs/v2#genders
+- Growth Rates - https://pokeapi.co/docs/v2#growth_rates
+- Natures - https://pokeapi.co/docs/v2#natures
+- Pokeathlon Stats - https://pokeapi.co/docs/v2#pokeathlon
+
+To contribute them, make sure to:
+
+1. Add a schema designed for the module as a new `.graphql` file.
+2. Update the `supergraph.yaml` file accordingly.

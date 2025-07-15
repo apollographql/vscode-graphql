@@ -1,0 +1,6 @@
+federation_version: =2.11.0
+subgraphs:
+  strapi-users:
+    routing_url: http://apiusers
+    schema:
+      file: users.graphql

@@ -1,0 +1,18 @@
+# OData REST Connector
+
+This connector currently covers the People object in the [OData Basic Tutorial](https://www.odata.org/getting-started/basic-tutorial/) API. To use this, you'll need to add a `API_KEY` in your environment variables then running `rover` or the `router` with the config files in this folder. 
+
+## Contributing
+
+The following schema modules need to be:
+
+1. A schema designed for that portion of the rest API as a new `.graphql` file
+2. Additions to the `router.yaml` and `supergraph.yaml` files
+
+Modules:
+
+- [Photos (Entity)](https://services.odata.org/V4/TripPinServiceRW)
+- [Airlines (Entity)](https://services.odata.org/V4/TripPinServiceRW)
+- [Airports (Entity)](https://services.odata.org/V4/TripPinServiceRW)
+- [Me (Singleton)](https://services.odata.org/V4/TripPinServiceRW)
+- GetNearestAirport (FunctionImport) - http://services.odata.org/V4/TripPinService/GetNearestAirport(lat=33, lon=-118))

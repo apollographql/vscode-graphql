@@ -1,0 +1,104 @@
+# SYNTAX TEST "source.graphql"
+
+type Query {
+  post(id: ID!): Post
+    @connect(
+      source: "jsonPlaceholder"
+#             ^^^^^^^^^^^^^^^^^^       - repository.JSONSelectionString
+      http: {
+        GET:    "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        POST:   "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        PATCH:  "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        DELETE: "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        PUT:    "/posts/{ $args.id }"
+#               ^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                       ^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded
+#               ^^^^^^^^            ^  - repository.JSONSelectionString.patterns.embedded
+#                         ^^^^^^^^     repository.VarPath
+#               ^^^^^^^^^^        ^^^  - repository.VarPath
+        headers: [{ name: "Authorization", value: "Bearer {$config.apiKey}" }]
+#                         ^^^^^^^^^^^^^^^         ^^^^^^^^^^^^^^^^^^^^^^^^    repository.JSONSelectionString
+#                                                         ^^^^^^^^^^^^^^^^    repository.JSONSelectionString.patterns.embedded
+#                                                          ^^^^^^^^^^^^^^     repository.VarPath
+        headers: [
+          { name: "Authorization", value: "Bearer {$config.apiKey}" }
+#                 ^^^^^^^^^^^^^^^         ^^^^^^^^^^^^^^^^^^^^^^^^            repository.JSONSelectionString
+#                                                 ^^^^^^^^^^^^^^^^            repository.JSONSelectionString.patterns.embedded
+#                                                  ^^^^^^^^^^^^^^             repository.VarPath
+        ]
+        headers: [
+          {
+            name: "Authorization",
+#                 ^^^^^^^^^^^^^^^            repository.JSONSelectionString
+            value: "Bearer {$config.apiKey}"
+#                  ^^^^^^^^^^^^^^^^^^^^^^^^  repository.JSONSelectionString
+#                           ^^^^^^^^^^^^^^   repository.JSONSelectionString.patterns.embedded repository.VarPath
+          }
+        ]
+        body: """  
+# ^^^^^^^^^^^^^^^                      - meta.embedded.block.connectors.mapping.graphql
+#                ^^^^^^^^^^^^^^^^^^^^^ meta.embedded.block.connectors.mapping.graphql
+        listing: {
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
+#       ^^^^^^^                        repository.NamedSelection.patterns.3.beginCaptures.1
+#                ^                     repository.SubSelection
+          title: $args.input.title
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
+#<------------------------------------ repository.SubSelection
+#         ^^^^^                        repository.NamedSelection.patterns.0.beginCaptures.1
+#                ^^^^^^^^^^^^^^^^^     repository.VarPath
+        }
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
+#<--------                             repository.SubSelection
+        """
+#^^^^^^^                               meta.embedded.block.connectors.mapping.graphql
+#       ^^^^^^^^^^^^^^^^^^^^^^^^^      - meta.embedded.block.connectors.mapping.graphql
+      body: "foo: bar $.root { a }"
+#            ^^^^^^^^^^^^^^^^^^^^^     meta.embedded.line.connectors.mapping.graphql
+#^^^^^^^^^^^^                     ^    - meta.embedded.line.connectors.mapping.graphql
+#            ^^^^^^^^          ^       repository.NamedFieldSelection
+#                     ^^^^^^           repository.VarPath
+      }
+      selection: """  
+# ^^^^^^^^^^^^^^^^^^                   - meta.embedded.block.connectors.mapping.graphql
+#                   ^^^^^^^^^^^^^^^^^^ meta.embedded.block.connectors.mapping.graphql
+      foo: bar
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
+#     ^^^^^^^^                         repository.NamedFieldSelection
+      $.root {
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
+#     ^^^^^^                           repository.VarPath
+        a
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
+      }
+#<------------------------------------ meta.embedded.block.connectors.mapping.graphql
+      """
+#^^^^^                                 meta.embedded.block.connectors.mapping.graphql
+#     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - meta.embedded.block.connectors.mapping.graphql
+      selection: "foo: bar $.root { a }"
+#                 ^^^^^^^^^^^^^^^^^^^^^    meta.embedded.line.connectors.mapping.graphql
+#^^^^^^^^^^^^^^^^^                     ^ - meta.embedded.line.connectors.mapping.graphql
+#                 ^^^^^^^^          ^    repository.NamedFieldSelection
+#                          ^^^^^^        repository.VarPath
+    )
+}

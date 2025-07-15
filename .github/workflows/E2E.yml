@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  test:
+  e2e:
     name: Run E2E tests
     runs-on: "${{ matrix.os }}"
     strategy:
@@ -22,7 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: "npm"
-      - run: npm install
+          node-version: 24
+      - run: npm ci
       - run: echo 'APOLLO_KEY="service:bob-123:489fhseo4"' > ./sampleWorkspace/spotifyGraph/.env
         shell: bash
 

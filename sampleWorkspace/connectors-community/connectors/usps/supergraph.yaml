@@ -1,0 +1,6 @@
+federation_version: =2.11.0
+subgraphs:
+  tracking:
+    routing_url: http://tracking
+    schema:
+      file: tracking.graphql

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.6.0
+
+### Minor Changes
+
+- [#230](https://github.com/apollographql/vscode-graphql/pull/230) [`8626acc`](https://github.com/apollographql/vscode-graphql/commit/8626accc9cdca451a3ecc23a3351d6f138337275) Thanks [@phryneas](https://github.com/phryneas)! - Add syntax highlighting for the Apollo Connectors Mapping language
+
 ## 2.5.6
 
 ### Patch Changes

@@ -74,7 +74,7 @@
           "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*(?=\\$|([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))|@|$\\()",
           "beginCaptures": {
             "1": {
-              "name": "string.unquoted.alias.graphql"
+              "name": "variable.other.property.alias"
             },
             "2": {
               "name": "punctuation.colon.alias"
@@ -110,7 +110,7 @@
           "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*(?=\\s*(\\{))",
           "beginCaptures": {
             "1": {
-              "name": "string.unquoted.alias.graphql"
+              "name": "variable.other.property.alias"
             },
             "2": {
               "name": "punctuation.colon.alias"
@@ -133,7 +133,7 @@
       "begin": "(?:([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*)?([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))",
       "beginCaptures": {
         "1": {
-          "name": "string.unquoted.alias.graphql"
+          "name": "variable.other.property.alias"
         },
         "2": {
           "name": "punctuation.colon.alias"
@@ -154,7 +154,7 @@
       "begin": "(\\$)([A-Z_a-z][0-9A-Z_a-z]*)?(?!\\w)",
       "beginCaptures": {
         "1": {
-          "name": "variable.language.path.dollar"
+          "name": "variable.other.constant"
         },
         "2": {
           "name": "variable.graphql"
@@ -187,7 +187,7 @@
       "begin": "(@)",
       "beginCaptures": {
         "1": {
-          "name": "variable.language.path.at"
+          "name": "variable.other.constant"
         }
       },
       "end": "(?=.)",
@@ -202,7 +202,7 @@
       "begin": "(\\$)(?=\\()",
       "beginCaptures": {
         "1": {
-          "name": "variable.language.path.dollar"
+          "name": "variable.other.constant"
         }
       },
       "end": "(?=.)",
@@ -270,10 +270,10 @@
           "name": "keyword.operator.arrow"
         },
         "2": {
-          "name": "entity.name.function"
+          "name": "support.function"
         },
         "3": {
-          "name": "keyword.builtin"
+          "name": "support.function.builtin"
         },
         "4": {
           "name": "punctuation.brace.open"
@@ -442,7 +442,7 @@
       "begin": "\\b([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)\\s*",
       "beginCaptures": {
         "1": {
-          "name": "variable.property.key"
+          "name": "variable.other.property"
         },
         "2": {
           "name": "punctuation.colon.alias"

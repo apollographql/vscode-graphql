@@ -60,13 +60,13 @@ variables:
   reservedMethod: "typeof|matchIf|match_if|add|sub|mul|div|mod|has|get|keys|values|not"
 # can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
 styles:
-  alias: "string.unquoted.alias.graphql"
+  alias: "variable.other.property.alias"
   alias_colon: "{{.colon}}" # just an example - we can reference other styles here
   colon: "punctuation.colon.alias"
   field: "variable.graphql"
-  property: "variable.property.key"
-  method: "entity.name.function"
-  builtinMethod: "keyword.builtin"
+  property: "variable.other.property"
+  method: "support.function"
+  builtinMethod: "support.function.builtin"
   arrow: "keyword.operator.arrow"
   comma: "punctuation.separator.comma"
   brace_open: "punctuation.brace.open" #{
@@ -76,9 +76,9 @@ styles:
   bracket_open: "punctuation.bracket.open" #[
   bracket_close: "punctuation.bracket.close" #]
   optional_chain: "variable.question.mark"
-  expr_dollar: "variable.language.path.dollar"
-  var_dollar: "variable.language.path.dollar"
-  at: "variable.language.path.at"
+  expr_dollar: "variable.other.constant"
+  var_dollar: "variable.other.constant"
+  at: "variable.other.constant"
   spread: "keyword.operator.spread"
   dot: "variable.dot"
   operator: "keyword.operator"

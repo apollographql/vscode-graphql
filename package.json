@@ -16,7 +16,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "node ./src/build.js",
-    "build:full": "npm run typecheck && rimraf lib  && npm run build -- && npm run build:textmate",
+    "build:full": "npm run typecheck && rimraf lib && npm run build:textmate && npm run build --",
     "build:production": "npm run build:full -- --production",
     "build:textmate": "node ./syntaxes/build.ts",
     "watch": "rimraf lib; npm-run-all -p watch:*",
@@ -25,7 +25,7 @@
     "watch:textmate-yaml": "npm run build:textmate -- --debug --watch",
     "sampleWorkspace:run": "node src/__e2e__/mockServer.js",
     "changeset-version": "changeset version && npm i",
-    "changeset-publish": "npm run build -- --production && changeset publish",
+    "changeset-publish": "npm run build:production && changeset publish",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write .",

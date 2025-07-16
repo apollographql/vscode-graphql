@@ -1,12 +1,6 @@
 # CHANGELOG
 
-## 2.6.1
-
-### Patch Changes
-
-- [`a88eea8`](https://github.com/apollographql/vscode-graphql/commit/a88eea86b4a38af6b2edc8d82361b301e051e424) Thanks [@phryneas](https://github.com/phryneas)! - Adjust publish command and trigger re-publish
-
-## 2.6.0
+## 2.6.2
 
 ### Minor Changes
 

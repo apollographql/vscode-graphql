@@ -197,11 +197,12 @@ export abstract class GraphQLInternalProject
               if (operationName in filePathForOperationName) {
                 const conflictingFilePath =
                   filePathForOperationName[operationName];
-                throw new Error(
-                  `️️There are multiple definitions for the \`${definition.name.value}\` operation. Please fix all naming conflicts before continuing.\nConflicting definitions found at ${filePath} and ${conflictingFilePath}.`,
+                console.error(
+                  `There are multiple definitions for the \`${definition.name.value}\` operation. Please fix all naming conflicts before continuing.\nConflicting definitions found at ${filePath} and ${conflictingFilePath}.`,
                 );
+              } else {
+                filePathForOperationName[operationName] = filePath;
               }
-              filePathForOperationName[operationName] = filePath;
             }
           }
         }

@@ -10,7 +10,7 @@ executors:
     working_directory: ~/vscode-graphql
   node24:
     docker:
-      - image: cimg/node:24.4.0
+      - image: cimg/node:24.4.1
     working_directory: ~/vscode-graphql
 
 commands:

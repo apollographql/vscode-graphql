@@ -52,7 +52,7 @@
     "dotenv": "16.4.7",
     "fractional-indexing": "2.1.0",
     "glob": "11.0.0",
-    "graphql": "16.9.0",
+    "graphql": "16.11.0",
     "graphql-language-service": "5.2.2",
     "graphql-tag": "2.12.6",
     "jsonc-parser": "^3.3.1",

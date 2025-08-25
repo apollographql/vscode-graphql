@@ -43,9 +43,9 @@
     "vscode": "^1.90.0"
   },
   "dependencies": {
-    "@apollo/client": "3.12.3",
+    "@apollo/client": "3.14.0",
     "@apollo/client-devtools-vscode": "4.19.1",
-    "@apollo/subgraph": "2.9.3",
+    "@apollo/subgraph": "2.11.2",
     "@graphql-tools/schema": "10.0.13",
     "@wry/equality": "0.5.7",
     "cosmiconfig": "9.0.0",

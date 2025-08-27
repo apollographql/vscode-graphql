@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.6.3
+
+### Patch Changes
+
+- [#296](https://github.com/apollographql/vscode-graphql/pull/296) [`0d31ef0`](https://github.com/apollographql/vscode-graphql/commit/0d31ef0bca58c55db513b4197099073d3261dfca) Thanks [@phryneas](https://github.com/phryneas)! - bump Apollo Client Devtools to 4.20.1
+
 ## 2.6.2
 
 ### Minor Changes

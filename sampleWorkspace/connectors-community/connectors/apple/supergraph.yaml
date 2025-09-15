@@ -1,0 +1,6 @@
+federation_version: =2.11.0
+subgraphs:
+  app-store-connect:
+    routing_url: http://app-store-connect
+    schema:
+      file: app-store-connect.graphql

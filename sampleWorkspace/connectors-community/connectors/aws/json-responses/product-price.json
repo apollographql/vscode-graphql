@@ -1,0 +1,10 @@
+{
+  "default_price": 35000,
+  "is_active": true,
+  "currency": "usd",
+  "billing_schema": "per_unit",
+  "recurring": {
+    "interval": 0,
+    "interval_count": 3
+  }
+}

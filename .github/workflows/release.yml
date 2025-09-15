@@ -42,10 +42,10 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js 24.x
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 24.x
 
       - name: Install dependencies
         run: npm ci
@@ -60,6 +60,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Attach VSX to GitHub release
+        if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'
+        run: |
+          npx -y @vscode/vsce package --out "vscode-apollo-$VERSION.vsix"
+          gh release upload "v$VERSION" "vscode-apollo-$VERSION.vsix"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}
+
+      - name: Publish to Open VSX Registry
+        if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'
+        uses: HaaLeo/publish-vscode-extension@v1
+        with:
+          pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          baseContentUrl: https://raw.githubusercontent.com/apollographql/vscode-graphql
 
       - name: Publish to Visual Studio Marketplace
         if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'

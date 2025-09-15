@@ -1,0 +1,105 @@
+# HeyGen REST Connector
+
+This connector provides a GraphQL interface to HeyGen's REST API for AI video generation and avatar services. Currently implemented features include:
+
+- Photo Avatar Management
+- Avatar Management
+- More modules coming soon...
+
+## Features
+
+- 🎯 **Type Safety** - Full GraphQL schema with proper types and scalars
+- 🔄 **API Versioning** - Support for HeyGen API v2
+- 📦 **Modular** - Separate schema files for different API domains
+- 🚀 **Production Ready** - Optimized for production use
+
+## Setup
+
+### Environment Variables
+
+You'll need to set up the following environment variables:
+
+```bash
+HEYGEN_API_KEY=your_api_key_here
+```
+
+### VS Code Integration
+
+Edit your `.vscode/settings.json` to include the HeyGen specific configuration:
+
+```json
+{
+  "terminal.integrated.profiles.osx": {
+    "graphos": {
+      "path": "zsh",
+      "args": ["-l"],
+      "env": {
+        "APOLLO_KEY": "Your Key",
+        "APOLLO_GRAPH_REF": "your graph ref",
+        "APOLLO_ROVER_DEV_ROUTER_VERSION": "2.0.0-preview.3",
+        "HEYGEN_API_KEY": "Your HeyGen API Key"
+      }
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "graphos"
+}
+```
+
+## Usage
+
+You can start the development server using either:
+
+1. VS Code Task Runner:
+
+   - Execute the "Tasks: Run Task" command
+   - Select the `rover dev` task
+
+2. Terminal:
+   ```bash
+   rover dev --supergraph-config supergraph.yaml --router-config router.yaml
+   ```
+
+## Implemented Modules
+
+### Photo Avatars (`photo-avatars.graphql`)
+
+- Generate photo-based avatars
+- Create and manage avatar groups
+- Add motion and sound effects
+- Train avatar models
+- Generate different looks
+
+### Avatars (`avatars.graphql`)
+
+- List available avatars
+- Manage avatar groups
+- Query avatar details
+
+## Planned Modules
+
+The following API domains are planned for future implementation:
+
+- Video Generation
+- Video Translation
+- Voice Management
+- Template Management
+- User Management
+- Asset Management
+- Interactive Avatars
+
+## Contributing
+
+To add a new API module:
+
+1. Create a new `.graphql` file for the module
+2. Add necessary configurations to `router.yaml` and `supergraph.yaml`
+3. Follow the existing patterns for:
+   - Type safety using proper scalars
+   - Input type usage for mutations
+   - Consistent error handling
+   - Documentation and descriptions
+
+## Resources
+
+- [HeyGen API Documentation](https://docs.heygen.com/docs)
+- [HeyGen TypeScript SDK](https://heygen.teamduality.dev/)

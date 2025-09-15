@@ -1,0 +1,440 @@
+# Run `npm run watch:textmate-yaml` while working on this file.
+# roughly based on this grammar:
+# ```ebnf
+# JSONSelection        ::= PathSelection | NamedSelection*
+# SubSelection         ::= "{" NamedSelection* "}"
+# NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
+# Alias                ::= Key ":"
+# Path                 ::= VarPath | KeyPath | AtPath | ExprPath
+# PathSelection        ::= Path SubSelection?
+# VarPath              ::= "$" (NO_SPACE Identifier)? PathTail
+# KeyPath              ::= Key NonEmptyPathTail
+# AtPath               ::= "@" PathTail
+# ExprPath             ::= "$(" LitExpr ")" PathTail
+# PathTail             ::= "?"? (PathStep "?"?)*
+# NonEmptyPathTail     ::= "?"? (PathStep "?"?)+
+# PathStep             ::= "." Key | "->" Identifier MethodArgs?
+# Key                  ::= Identifier | LitString
+# Identifier           ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
+# MethodArgs           ::= "(" (LitExpr ("," LitExpr)* ","?)? ")"
+# LitExpr              ::= LitPath | LitOpChain | LitPrimitive | LitObject | LitArray | PathSelection
+# LitPath              ::= (LitPrimitive | LitObject | LitArray) NonEmptyPathTail
+# LitOpChain           ::= LitExpr LitOp LitExpr
+# LitPrimitive         ::= LitString | LitNumber | "true" | "false" | "null"
+# LitString            ::= "'" ("\\'" | [^'])* "'" | '"' ('\\"' | [^"])* '"'
+# LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
+# LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
+# LitProperty          ::= Key ":" LitExpr
+# LitArray             ::= "[" (LitExpr ("," LitExpr)* ","?)? "]"
+# LitOp                ::= "??" | "?!" | "&&" | "||" | "==" | "!=" | "<" | "<=" | ">" | ">=" | +" | "-" | "*" | "/" | "%"
+# NO_SPACE             ::= !SpacesOrComments
+# SpacesOrComments     ::= (Spaces | Comment)+
+# Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+
+# Comment              ::= "#" [^\n]*
+# ```
+$schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
+name: "Apollo Connectors Mapping Syntax"
+scopeName: "source.apollo.connectors.mapping"
+patterns:
+  - include: "#JSONSelection"
+  - include: "#Comment"
+  - include: "source.graphql#graphql-skip-newlines"
+# can be referenced from `begin`, `end` or `match` properties like `{{identifier}}` or `{{key}}`
+# within those fields, it's also possible to reference evaluated earlier patterns like `{{#PathSelection.begin}}`
+variables:
+  identifier: "[a-zA-Z_][0-9a-zA-Z_]*"
+  # prettier-ignore
+  string: "\"[^\"]*\"|'[^']*'"
+  key: "{{identifier}}|{{string}}"
+  operator: "[?][?]|[?][!]|&&|[|][|]|==|!=|<|<=|(?<!-)>|(?<!-)>=|[+]|-(?!>)|[*]|/|%"
+  operatorCharacter: "[?!&|=<>*/%+-]"
+  alias: "{{key}}\\s*:"
+  varPathMatch: "[$]"
+  keyPathMatch: "({{key}})(?={{pathTailMatch}})"
+  pathStepMatch: "[.]{{key}}|->{{identifier}}"
+  pathTailMatch: "\\s*(?:[?])?(?=\\s*{{pathStepMatch}})"
+  atPathMatch: "@"
+  exprPathMatch: "$[(]"
+  notEscaped: "(?<![\\\\])(?:[\\\\]{2})*"
+  builtinMethod: "echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt"
+  reservedMethod: "typeof|matchIf|match_if|add|sub|mul|div|mod|has|get|keys|values|not"
+# can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
+styles:
+  alias: "variable.other.property.alias"
+  alias_colon: "{{.colon}}" # just an example - we can reference other styles here
+  colon: "punctuation.colon.alias"
+  field: "variable.graphql"
+  property: "variable.other.property"
+  method: "support.function"
+  builtinMethod: "support.function.builtin"
+  arrow: "keyword.operator.arrow"
+  comma: "punctuation.separator.comma"
+  brace_open: "punctuation.brace.open" #{
+  brace_close: "punctuation.brace.close" #}
+  paren_open: "punctuation.paren.open" #(
+  paren_close: "punctuation.paren.close" #)
+  bracket_open: "punctuation.bracket.open" #[
+  bracket_close: "punctuation.bracket.close" #]
+  optional_chain: "variable.question.mark"
+  expr_dollar: "variable.other.constant"
+  var_dollar: "variable.other.constant"
+  at: "variable.other.constant"
+  spread: "keyword.operator.spread"
+  dot: "variable.dot"
+  operator: "keyword.operator"
+  fixedPrimitive: "constant.language"
+  string: "string.quoted.graphql"
+  string_single: "string.quoted.single.graphql"
+  string_double: "string.quoted.double.graphql"
+  string_open: "punctuation.definition.string.begin.graphql"
+  string_close: "punctuation.definition.string.end.graphql"
+  number: "constant.numeric"
+  comment: "comment.line.connectors.mapping"
+  comment_leading_ws: "punctuation.whitespace.comment.leading.connectors.mapping"
+
+repository:
+  # JSONSelection        ::= PathSelection | NamedSelection*
+  JSONSelection:
+    patterns:
+      - include: "#NamedSelection"
+      - include: "#PathSelection"
+      - include: "#Comment"
+  # SubSelection         ::= "{" NamedSelection* "}"
+  SubSelection:
+    begin: "\\s*({)"
+    beginCaptures:
+      "1":
+        name: "{{.brace_open}}"
+    end: "\\s*(})"
+    endCaptures:
+      "1":
+        name: "{{.brace_close}}"
+    patterns:
+      - include: "#NamedSelection"
+      - include: "#Comment"
+  # NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
+  # Alias                ::= Key ":"
+  # Path                 ::= VarPath | KeyPath | AtPath | ExprPath
+  # PathSelection        ::= Path SubSelection?
+  PathSelection:
+    begin: "(?={{varPathMatch}}|{{keyPathMatch}}|{{atPathMatch}}|{{exprPathMatch}})"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#ExprPath" # needs higher priority that `VarPath`
+      - include: "#VarPath"
+      - include: "#KeyPath"
+      - include: "#AtPath"
+  NamedSelection:
+    patterns:
+      - begin: "({{key}})\\s*(:)\\s*{{#PathSelection.begin}}"
+        beginCaptures:
+          "1":
+            name: "{{.alias}}"
+          "2":
+            name: "{{.alias_colon}}"
+        end: "(?=.)"
+        applyEndPatternLast: 1
+        patterns:
+          - include: "#PathSelection"
+      - begin: "([.][.][.])\\s*{{#PathSelection.begin}}"
+        beginCaptures:
+          "1":
+            name: "{{.spread}}"
+        end: "(?=.)"
+        applyEndPatternLast: 1
+        patterns:
+          - include: "#PathSelection"
+      - include: "#PathSelection"
+      - begin: "({{key}})\\s*(:)\\s*(?={{#SubSelection.begin}})"
+        beginCaptures:
+          "1":
+            name: "{{.alias}}"
+          "2":
+            name: "{{.alias_colon}}"
+        end: "(?=.)"
+        applyEndPatternLast: 1
+        patterns:
+          - include: "#SubSelection"
+      # added back even though it's not part of the current spec: NamedFieldSelection
+      - include: "#NamedFieldSelection"
+  # temporarily added back
+  # NamedFieldSelection  ::= Alias? Key SubSelection?
+  NamedFieldSelection:
+    begin: "(?:({{key}})\\s*(:)\\s*)?({{key}})"
+    beginCaptures:
+      "1":
+        name: "{{.alias}}"
+      "2":
+        name: "{{.alias_colon}}"
+      "3":
+        name: "{{.field}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#SubSelection"
+  # VarPath              ::= "$" (NO_SPACE Identifier)? PathTail
+  VarPath:
+    begin: "([$])({{identifier}})?(?!\\w)"
+    beginCaptures:
+      "1":
+        name: "{{.var_dollar}}"
+      "2":
+        name: "{{.field}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#PathTail"
+  # KeyPath              ::= Key NonEmptyPathTail
+  KeyPath:
+    begin: "({{key}})(?={{pathTailMatch}})"
+    beginCaptures:
+      "1":
+        name: "{{.field}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      # "nonEmpty" part already covered through `(?={{pathTailMatch}})` in `begin`
+      #- include: "#NonEmptyPathTail"
+      - include: "#PathTail"
+  # AtPath               ::= "@" PathTail
+  AtPath:
+    begin: "(@)"
+    beginCaptures:
+      "1":
+        name: "{{.at}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#PathTail"
+  # ExprPath             ::= "$(" LitExpr ")" PathTail
+  ExprPath:
+    begin: "([$])(?=[(])"
+    beginCaptures:
+      "1":
+        name: "{{.expr_dollar}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - begin: "([(])"
+        beginCaptures:
+          "1":
+            name: "{{.paren_open}}"
+        end: "([)])"
+        endCaptures:
+          "1":
+            name: "{{.paren_close}}"
+        patterns:
+          - include: "#LitExpr"
+      - include: "#PathStep"
+  # PathTail             ::= "?"? (PathStep "?"?)*
+  # optional chaining moved into `PathStep` later
+  PathTail:
+    begin: "([?])?(?=\\s*{{pathStepMatch}})"
+    beginCaptures:
+      "1":
+        name: "{{.optional_chain}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#PathStep"
+  # NonEmptyPathTail     ::= "?"? (PathStep "?"?)+
+  # PathStep             ::= "." Key | "->" Identifier MethodArgs?
+  # changed to and added optional chaining that would usually live in `PathTail`|`NonEmptyPathTail`:
+  # PathStepDotAccess    ::= "." Key "?"?
+  # PathStepArrowMethodArgs ::= "->" Identifier MethodArgs "?"?
+  # PathStepArrowAccess  ::= "->" Identifier "?"?
+  # PathStep             ::= PathStepDotAccess | PathStepArrowMethodArgs | PathStepArrowAccess
+  PathStepDotAccess:
+    match: "([.])({{key}})([?]?)"
+    captures:
+      "1":
+        name: "{{.dot}}"
+      "2":
+        name: "{{.field}}"
+      "3":
+        name: "{{.optional_chain}}"
+  PathStepArrowMethodArgs:
+    begin: "(->)(({{builtinMethod}})|{{identifier}})([(])"
+    end: "([)])([?]?)"
+    applyEndPatternLast: 1
+    beginCaptures:
+      "1":
+        name: "{{.arrow}}"
+      "2":
+        name: "{{.method}}"
+      "3":
+        name: "{{.builtinMethod}}"
+      "4":
+        name: "{{.brace_open}}"
+    endCaptures:
+      "1":
+        name: "{{.brace_close}}"
+      "2":
+        name: "{{.optional_chain}}"
+    patterns:
+      - include: "#LitExpr"
+      - match: ","
+        name: "{{.comma}}"
+  PathStepArrowAccess:
+    match: "(->)({{identifier}})([?]?)"
+    captures:
+      "1":
+        name: "{{.arrow}}"
+      "2":
+        name: "{{.field}}"
+      "3":
+        name: "{{.optional_chain}}"
+  PathStep:
+    patterns:
+      - include: "#PathStepDotAccess"
+      - include: "#PathStepArrowMethodArgs"
+      - include: "#PathStepArrowAccess"
+  # Key (in variables)                 ::= Identifier | LitString
+  # Identifier (in variables)          ::= [a-zA-Z_] NO_SPACE [0-9a-zA-Z_]*
+  # MethodArgs (inlined into PathStepArrowMethodArgs)            ::= "(" (LitExpr ("," LitExpr)* ","?)? ")"
+  # LitExpr              ::= LitPath | LitOpChain | LitPrimitive | LitObject | LitArray | PathSelection
+  LitExpr:
+    patterns:
+      # - include: "#LitOpChain"
+      - include: "#LitOpChainCenter"
+      # - include: "#LitPath"
+      - include: "#LitPathTail"
+      - include: "#LitPrimitive"
+      - include: "#LitObject"
+      - include: "#LitArray"
+      - include: "#PathSelection"
+      - include: "#Comment"
+  # LitPath              ::= (LitPrimitive | LitObject | LitArray) NonEmptyPathTail
+  # changed to
+  # LitPathTail              ::= NonEmptyPathTail
+  # but ensures that it's not the first `LitExpr` by doing a negative lookbehind for `(`, which would indicate we're the first entry in a `ExprPath`.
+  LitPathTail:
+    begin: "(?<![(])(?={{pathTailMatch}})"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      # "nonEmpty" part already covered through `(?={{pathTailMatch}})` in `begin`
+      #- include: "#NonEmptyPathTail"
+      - include: "#PathTail"
+  # LitOpChain           ::= LitExpr LitOp LitExpr
+  # changed to
+  # LitOpChainCenter          ::= LitOp
+  # as `MethodArgs` might match `LitExpr` more than once anyways.
+  # Does lookarounds to ensure that it's in the middle of an expression, i.e. not at the start or end.
+  LitOpChainCenter:
+    match: "(?<![(]|{{operatorCharacter}})({{operator}})(?!\\s*(?:{{operatorCharacter}}|[)]))"
+    captures:
+      "1":
+        name: "{{.operator}}"
+  # LitPrimitive         ::= LitString | LitNumber | "true" | "false" | "null"
+  LitPrimitive:
+    patterns:
+      - include: "#LitString"
+      - include: "#LitNumber"
+      - match: "\\b(true|false|null)\\b"
+        name: "{{.fixedPrimitive}}"
+  # LitString            ::= "'" ("\\'" | [^'])* "'" | '"' ('\\"' | [^"])* '"'
+  LitString:
+    # prettier-ignore
+    begin: "((\")|('))"
+    end: "{{notEscaped}}(?=\\1)((\")|('))"
+    contentName: "{{.string}}"
+    beginCaptures:
+      "1":
+        name: "{{.string_open}}"
+      "2":
+        name: "{{.string_double}}"
+      "3":
+        name: "{{.string_single}}"
+    endCaptures:
+      "1":
+        name: "{{.string_close}}"
+      "2":
+        name: "{{.string_double}}"
+      "3":
+        name: "{{.string_single}}"
+
+  # LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
+  LitNumber:
+    name: "{{.number}}"
+    match: "(-?)([0-9]+([.][0-9]*)?|[.][0-9]+)"
+  # LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
+  LitObject:
+    begin: "\\s*({)"
+    beginCaptures:
+      "1":
+        name: "{{.brace_open}}"
+    end: "\\s*(})"
+    endCaptures:
+      "1":
+        name: "{{.brace_close}}"
+    patterns:
+      - include: "#LitProperty"
+      - match: ","
+        name: "{{.comma}}"
+      - include: "#Comment"
+  # LitProperty          ::= Key ":" LitExpr
+  LitProperty:
+    begin: "\\b({{identifier}})\\s*(:)\\s*"
+    beginCaptures:
+      "1":
+        name: "{{.property}}"
+      "2":
+        name: "{{.colon}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#LitExpr"
+  # LitArray             ::= "[" (LitExpr ("," LitExpr)* ","?)? "]"
+  LitArray:
+    begin: "\\s*(\\[)"
+    beginCaptures:
+      "1":
+        name: "{{.bracket_open}}"
+    end: "\\s*(\\])"
+    endCaptures:
+      "1":
+        name: "{{.bracket_close}}"
+    patterns:
+      - include: "#LitExpr"
+      - match: ","
+        name: "{{.comma}}"
+  # LitOp                ::= "??" | "?!" | "&&" | "||" | "==" | "!=" | "<" | "<=" | ">" | ">=" | +" | "-" | "*" | "/" | "%"
+  # inlined into `LitOpChainCenter`
+  # NO_SPACE             ::= !SpacesOrComments
+  # SpacesOrComments     ::= (Spaces | Comment)+
+  # Spaces               ::= ("⎵" | "\t" | "\r" | "\n")+
+  # Comment              ::= "#" [^\n]*
+  Comment:
+    match: "(\\s*)(#.*?)$"
+    captures:
+      "1":
+        name: "{{.comment_leading_ws}}"
+      "2":
+        name: "{{.comment}}"
+
+  # additional rules used for strings, e.g. in `POST: "/foo/bar/{$id}"`
+  JSONSelectionString:
+    contentName: string.quoted
+    begin: '(")'
+    beginCaptures:
+      "1":
+        name: "string.quoted.double.graphql {{.string_open}}"
+    end: '(")'
+    endCaptures:
+      "1":
+        name: "string.quoted.double.graphql {{.string_close}}"
+    patterns:
+      - begin: "\\s*({)"
+        beginCaptures:
+          "1":
+            name: "punctuation.section.embedded {{.brace_open}}"
+        end: "\\s*(})"
+        endCaptures:
+          "1":
+            name: "punctuation.section.embedded {{.brace_close}}"
+        contentName: meta.embedded.string.connectors.mapping.selectionstring.graphql
+        debugName: "embedded"
+        patterns:
+          - include: "#PathSelection"

@@ -1,0 +1,6 @@
+subgraphs:
+  twilio:
+    routing_url: http://localhost:4000
+    schema:
+      file: messages.graphql
+federation_version: =2.11.0

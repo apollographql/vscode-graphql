@@ -1,0 +1,26 @@
+federation_version: =2.11.0
+subgraphs:
+  users:
+    routing_url: http://ignored
+    schema:
+      file: users.graphql
+  todos:
+    routing_url: http://ignored
+    schema:
+      file: todos.graphql
+  posts:
+    routing_url: http://ignored
+    schema:
+      file: posts.graphql
+  comments:
+    routing_url: http://ignored
+    schema:
+      file: comments.graphql
+  albums:
+    routing_url: http://ignored
+    schema:
+      file: albums.graphql
+  photos:
+    routing_url: http://ignored
+    schema:
+      file: photos.graphql

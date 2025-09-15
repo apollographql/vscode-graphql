@@ -1,0 +1,213 @@
+# SYNTAX TEST "source.apollo.connectors.mapping"
+
+
+foo
+#<---           repository.NamedFieldSelection
+foo bar
+#<---           repository.NamedFieldSelection
+#  ^            - repository.NamedFieldSelection
+#   ^^^         repository.NamedFieldSelection
+alias: field
+#<------------  repository.NamedFieldSelection
+
+$( foo )
+#<-------- repository.ExprPath
+$( foo ).bar
+#<------------ repository.ExprPath
+#       ^^^^ repository.PathStepDotAccess
+$( foo )->bar
+#<------------- repository.ExprPath
+#       ^^^^^ repository.PathStepArrowAccess
+$( foo )->bar("asd")
+#<-------------------- repository.ExprPath
+#       ^^^^^^^^^^^^ repository.PathStepArrowMethodArgs
+#             ^^^^^  repository.LitString
+
+
+$( foo )->ma("asd")    # not builtin function
+#         ^^          repository.PathStepArrowMethodArgs.beginCaptures.2
+#         ^^          - repository.PathStepArrowMethodArgs.beginCaptures.3
+$( foo )->map("asd")   # builtin function
+#         ^^^          repository.PathStepArrowMethodArgs.beginCaptures.2
+#         ^^^          repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$foo
+#<-------- repository.VarPath
+$foo.bar
+#<-------- repository.VarPath
+#   ^^^^ repository.PathStepDotAccess
+$foo->bar
+#<--------- repository.VarPath
+#   ^^^^^ repository.PathStepArrowAccess
+$foo->bar("asd")
+#<---------------- repository.VarPath
+#   ^^^^^^^^^^^^ repository.PathStepArrowMethodArgs
+#         ^^^^^  repository.LitString
+
+
+asd.bar
+#<------- repository.KeyPath
+#  ^^^^ repository.PathStepDotAccess
+asd->bar
+#<-------- repository.KeyPath
+#  ^^^^^ repository.PathStepArrowAccess
+asd->bar("asd")
+#<--------------- repository.KeyPath
+#  ^^^^^^^^^^^^ repository.PathStepArrowMethodArgs
+#        ^^^^^  repository.LitString
+
+
+"asd".bar
+#<--------- repository.KeyPath
+#    ^^^^ repository.PathStepDotAccess
+"asd"->bar
+#<---------- repository.KeyPath
+#    ^^^^^ repository.PathStepArrowAccess
+"asd"->bar("asd")
+#<----------------- repository.KeyPath
+#    ^^^^^^^^^^^^ repository.PathStepArrowMethodArgs
+#          ^^^^^  repository.LitString
+
+## AtPath
+@
+#<~ repository.AtPath
+@.bar
+#<----- repository.AtPath
+#^^^^ repository.PathStepDotAccess
+@->bar
+#<------ repository.AtPath
+#^^^^^ repository.PathStepArrowAccess
+@->bar("asd")
+#<------------- repository.AtPath
+#^^^^^^^^^^^^ repository.PathStepArrowMethodArgs
+#      ^^^^^  repository.LitString
+
+
+@->a("asd")
+#    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a("a'd")
+#    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a("asd\\")
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a("asd\"")
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a("asd\\\"")
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a("asd\\\\")
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a("as\"d
+#    ^^^^^^ repository.LitString
+#^^^^       - repository.LitString
+as\\d")
+#<----- repository.LitString
+#     ^ - repository.LitString
+@->a('asd')
+#    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a('a"d')
+#    ^^^^^  repository.LitString
+#^^^^     ^ - repository.LitString
+@->a('asd\\')
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a('asd\'')
+#    ^^^^^^^  repository.LitString
+#^^^^       ^ - repository.LitString
+@->a('asd\\\'')
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a('asd\\\\')
+#    ^^^^^^^^^  repository.LitString
+#^^^^         ^ - repository.LitString
+@->a('as\'d
+#    ^^^^^^ repository.LitString
+#^^^^       - repository.LitString
+as\\d')
+#<----- repository.LitString
+#     ^ - repository.LitString
+
+
+@->a(1)
+#    ^  repository.LitNumber
+@->a(-1)
+#    ^^  repository.LitNumber
+@->a(1.0)
+#    ^^^  repository.LitNumber
+@->a(-1.0)
+#    ^^^^  repository.LitNumber
+@->a(1.)
+#    ^^  repository.LitNumber
+@->a(-1.)
+#    ^^^  repository.LitNumber
+@->a(.0)
+#    ^^  repository.LitNumber
+@->a(-.0)
+#    ^^^  repository.LitNumber
+
+@->a(true)
+#    ^^^^  repository.LitPrimitive.patterns.2
+@->a(false)
+#    ^^^^^  repository.LitPrimitive.patterns.2
+@->a(null)
+#    ^^^^  repository.LitPrimitive.patterns.2
+
+
+@->a({ foo: 1, bar: "baz" })
+#    ^^^^^^^^^^^^^^^^^^^^^^  repository.LitObject
+#      ^^^^^^  ^^^^^^^^^^    repository.LitProperty
+#    ^^      ^^          ^^  - repository.LitProperty
+
+@->a({
+#    ^                      repository.LitObject
+  a: 1,
+#<--------------------------- repository.LitObject
+#    ^                      repository.LitNumber
+# ^^^^                      repository.LitProperty
+#     ^                     - repository.LitProperty
+  b: "asd",
+#<--------------------------- repository.LitObject
+#    ^^^^^                  repository.LitString
+# ^^^^^^^^                  repository.LitProperty
+#         ^                 - repository.LitProperty
+  c: { foo: 1, bar: "baz" }
+#<--------------------------- repository.LitObject
+})
+#<~                         repository.LitObject
+
+
+@->a([ 1, "a", { foo: 1 } ])
+#    ^^^^^^^^^^^^^^^^^^^^^^  repository.LitArray
+#      ^                     repository.LitNumber
+#         ^^^                repository.LitString
+#              ^^^^^^^^^^    repository.LitObject
+#                ^^^^^^      repository.LitProperty
+#                     ^      repository.LitNumber
+
+@->a([
+#    ^      repository.LitArray
+  1,
+#<---------   repository.LitArray
+# ^                     repository.LitNumber
+  "a",
+#<---------   repository.LitArray
+# ^^^                repository.LitString
+  {foo:1}
+#<---------   repository.LitArray
+# ^^^^^^^   repository.LitObject
+#  ^^^^^    repository.LitProperty
+#      ^    repository.LitNumber
+])
+#<~         repository.LitArray
+
+
+@->a("y"->foo)
+#       ^^^^^ repository.LitPathTail
+
+@->a("y" || "foo" + $asd)
+#        ^^       ^        repository.LitOpChainCenter

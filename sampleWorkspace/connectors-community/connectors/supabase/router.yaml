@@ -1,0 +1,5 @@
+connectors:
+  sources:
+    speakerSubmission.supabase:
+      $config:
+        anonKey: ${env.anonKey}

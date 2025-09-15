@@ -1,0 +1,26 @@
+supergraph:
+  listen: 0.0.0.0:${env.PORT:-4000}
+
+headers:
+  all:
+    request:
+      - propagate:
+          matching: .*
+connectors:
+  subgraphs:
+    stripe-checkout:
+      $config:
+        apiKey: ${env.STRIPE_API_KEY}
+    stripe-core-resources:
+      $config:
+        apiKey: ${env.STRIPE_API_KEY}
+    stripe-payment-methods:
+      $config:
+        apiKey: ${env.STRIPE_API_KEY}
+    stripe-product:
+      $config:
+        apiKey: ${env.STRIPE_API_KEY}
+telemetry:
+  instrumentation:
+    spans: 
+      mode: spec_compliant

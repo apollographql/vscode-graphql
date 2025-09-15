@@ -8,6 +8,10 @@ executors:
     docker:
       - image: cimg/node:22.12.0
     working_directory: ~/vscode-graphql
+  node24:
+    docker:
+      - image: cimg/node:24.4.0
+    working_directory: ~/vscode-graphql
 
 commands:
   npm-install:
@@ -53,12 +57,25 @@ jobs:
           name: Test
           command: npm run test --  --runInBand
 
+  textmate:
+    executor: node24
+    steps:
+      - checkout
+      - npm-install
+      - run:
+          name: Build TextMate Grammar
+          command: npm run build:textmate
+      - run:
+          name: Test TextMate Grammar
+          command: npm run test:textmate
+
 workflows:
   build-test-deploy:
     jobs:
       - lint
       - typescript
       - test
+      - textmate
   security-scans:
     jobs:
       - secops/gitleaks:

@@ -1,0 +1,20 @@
+{
+    "name": "connectors-community",
+    "version": "1.0.0",
+    "description": "A simple repository designed share connectors in the community and ensure they follow a specific standard.",
+    "type": "module",
+    "main": "file-new/index.js",
+    "author": "Apollo GraphQL",
+    "license": "MIT",
+    "scripts": {
+        "start": "node file-new/index.js"
+    },
+    "dependencies": {
+        "@faker-js/faker": "^9.0.3",
+        "dotenv": "^16.4.5",
+        "graphql": "^16.9.0",
+        "graphql-request": "^7.1.0",
+        "js-yaml": "^4.1.0",
+        "prompts": "^2.4.2"
+    }
+}

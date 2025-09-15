@@ -1,0 +1,61 @@
+[
+    {
+      "fullName": "Michael Watson",
+      "activities_count": 3334,
+      "avatar": "https://avatars.githubusercontent.com/u/8645958?u=2d97981f1bbdf44e76a47e67fdaa3d26354ddb74&v=4",
+      "bio": "Developer Advocate for Apollo Federation - Previous Solutions Architect - 5+ yrs",
+      "organization": "Apollo GraphQL",
+      "organization_domain": "http://www.apollographql.com",
+      "title": "Head of DevRel",
+      "first_seen": "2018-10-03T14:37:25.000Z",
+      "last_active": "2025-02-14T22:23:57.000Z",
+      "location": {
+        "raw": "San Francisco, California, United States",
+        "city": "San Francisco",
+        "region": "California",
+        "country": "United States"
+      },
+      "member_tags": [
+        {
+          "id": 731426,
+          "name": "team_member"
+        },
+        {
+          "id": 731431,
+          "name": "contributor"
+        }
+      ],
+      "segments": [
+        {
+          "id": 123456,
+          "name": "Segment Name"
+        }
+      ],
+      "email": [
+        {
+          "email": "watson+connectors+live@apollographql.com",
+          "sources": [
+            "ConnectorsLiveUsers"
+          ]
+        }
+      ],
+      "url": [],
+      "twitter": [],
+      "github": [
+        "michael-watson"
+      ],
+      "linkedin": [
+        "in/michael-watson-85844442"
+      ],
+      "discord": [],
+      "youtube": [],
+      "common_room_member_url": "https://app.commonroom.io/community/1337/member/1337",
+      "custom_fields": [
+        {
+          "name": "Custom Field Name",
+          "type": "string",
+          "value": ""
+        }
+      ]
+    }
+  ]

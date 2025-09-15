@@ -1,0 +1,18 @@
+federation_version: =2.11.0
+subgraphs:
+  stripe-checkout:
+    routing_url: http://stripe-checkout
+    schema:
+      file: checkout.graphql
+  stripe-core-resources:
+    routing_url: http://stripe-core-resources
+    schema:
+      file: core-resources.graphql
+  stripe-payment-methods:
+    routing_url: http://stripe-payment-methods
+    schema:
+      file: payment-methods.graphql
+  stripe-product:
+    routing_url: http://stripe-products
+    schema:
+      file: products.graphql

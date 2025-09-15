@@ -1,0 +1,36 @@
+# USPS REST Connector
+
+This connector currently covers the [Tracking object](https://developer.usps.com/trackingv3) in the [USPS REST API](https://developer.usps.com/). To use this, you'll need to add a `API_KEY` in your environment variables then running `rover` or the `router` with the config files in this folder. 
+
+## Additional Setup for VS Code Task runner
+
+Edit your `.vscode/settings.json` to include the Strapi specific keys
+
+```
+{
+  "terminal.integrated.profiles.osx": {
+    "graphos": {
+      "path": "zsh",
+      "args": ["-l"],
+      "env": { 
+        "API_KEY": "",
+        "APOLLO_KEY": "",
+        ...
+      }
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "graphos"
+}
+
+```
+
+Then you can execute the "Tasks: Run Task" command in VS code to execute the `rover dev` task or simply open a new terminal window in vscode with the `graphos` profile, then you can simply run `rover dev --supergraph-config supergraph.yaml --router-config router.yaml`.
+
+## Contributing
+
+The following schema modules need to include:
+
+1. A schema designed for that portion of the rest API as a new `.graphql` file
+2. Additions to the `router.yaml` and `supergraph.yaml` files
+
+You can view the [USPS API Catalog](https://developer.usps.com/apis) for other modules to implement.

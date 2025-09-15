@@ -1,0 +1,6 @@
+subgraphs:
+  alerts:
+    routing_url: http://localhost:4000
+    schema:
+      file: alerts.graphql
+federation_version: =2.11.0

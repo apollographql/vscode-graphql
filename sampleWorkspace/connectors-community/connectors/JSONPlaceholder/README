@@ -1,0 +1,12 @@
+# JSONPlaceholder REST Connector
+
+This connector brings [{JSON} Placeholder](https://jsonplaceholder.typicode.com/), which provides fake data for testing and prototyping to GraphQL!
+
+The GET operation has been implemented for
+
+- Users
+- ToDos
+- Posts
+- Comments
+- Albums
+- Photos

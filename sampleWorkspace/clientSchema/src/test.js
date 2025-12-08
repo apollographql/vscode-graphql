@@ -1,6 +1,15 @@
 import gql from "graphql-tag";
-gql`
-  query Test($defer: Boolean!) {
+gql`    
+  """
+  Query-Level Comment Test
+  """
+  query Test(
+    """
+    Argument-Level Comment Test
+    """
+    $defer: Boolean!
+    ) {
+
     featureFlagDefer @client(always: false) @export(as: "defer")
     droid(id: "2000") {
       name
@@ -14,5 +23,8 @@ gql`
         }
       }
     }
+  }
+  query Test2 {
+    reviews(episode: EMPIRE) { __typename }
   }
 `;

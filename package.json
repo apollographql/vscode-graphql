@@ -37,7 +37,8 @@
     "test:textmate-graphql-connectors-mapping": "npm run build:textmate -- --snapshot connectors.mapping.yaml; npx vscode-tmgrammar-test src/__tests__/fixtures/textmate/*.graphql",
     "update-connectors-community": "git subtree pull --prefix sampleWorkspace/connectors-community https://github.com/apollographql/connectors-community.git main --squash",
     "codegen": "graphql-codegen",
-    "vscode:prepublish": "npm run build:production"
+    "vscode:prepublish": "npm run build:production",
+    "postinstall": "patch-package"
   },
   "engines": {
     "vscode": "^1.90.0"

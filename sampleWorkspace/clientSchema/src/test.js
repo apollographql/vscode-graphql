@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-gql`    
+gql`
   """
   Query-Level Comment Test
   """
@@ -23,8 +23,5 @@ gql`
         }
       }
     }
-  }
-  query Test2 {
-    reviews(episode: EMPIRE) { __typename }
   }
 `;

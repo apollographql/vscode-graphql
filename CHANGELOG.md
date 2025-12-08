@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.6.4
+
+### Patch Changes
+
+- [#303](https://github.com/apollographql/vscode-graphql/pull/303) [`1be1252`](https://github.com/apollographql/vscode-graphql/commit/1be1252f9ce5135a557ce884ada3f96ca82e643c) Thanks [@phryneas](https://github.com/phryneas)! - Update `graphql` and `graphql-language-service` packages.
+
+  This allows descriptions in executable documents to be parsed correctly.
+
 ## 2.6.3
 
 ### Patch Changes

@@ -8,7 +8,7 @@ gql`
     Argument-Level Comment Test
     """
     $defer: Boolean!
-    ) {
+  ) {
 
     featureFlagDefer @client(always: false) @export(as: "defer")
     droid(id: "2000") {

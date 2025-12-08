@@ -1,0 +1,26 @@
+diff --git a/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.js b/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.js
+index d2247e0..4c61625 100644
+--- a/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.js
++++ b/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.js
+@@ -132,7 +132,7 @@ function ValuesOfCorrectTypeRule(context) {
+     EnumValue: (node) => isValidValueNode(context, node),
+     IntValue: (node) => isValidValueNode(context, node),
+     FloatValue: (node) => isValidValueNode(context, node),
+-    StringValue: (node) => isValidValueNode(context, node),
++    StringValue: (node, key) => key !== "description" && isValidValueNode(context, node),
+     BooleanValue: (node) => isValidValueNode(context, node),
+   };
+ }
+diff --git a/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.mjs b/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.mjs
+index fec0a51..55f4d56 100644
+--- a/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.mjs
++++ b/node_modules/graphql/validation/rules/ValuesOfCorrectTypeRule.mjs
+@@ -117,7 +117,7 @@ export function ValuesOfCorrectTypeRule(context) {
+     EnumValue: (node) => isValidValueNode(context, node),
+     IntValue: (node) => isValidValueNode(context, node),
+     FloatValue: (node) => isValidValueNode(context, node),
+-    StringValue: (node) => isValidValueNode(context, node),
++    StringValue: (node, key) => key !== "description" && isValidValueNode(context, node),
+     BooleanValue: (node) => isValidValueNode(context, node),
+   };
+ }

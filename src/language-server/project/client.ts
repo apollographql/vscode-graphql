@@ -422,7 +422,7 @@ export class GraphQLClientProject extends GraphQLInternalProject {
     for (const [operationName, locations] of operationNameToLocations) {
       if (locations.length > 1) {
         const textualLocations = locations.map(({ uri, range }) => {
-          return `${uri}:${range.start.line + 1},${range.start.character + 1}`;
+          return `${URI.parse(uri).fsPath}:${range.start.line + 1},${range.start.character + 1}`;
         });
 
         const message = `
@@ -434,7 +434,7 @@ Conflicting definitions found at ${intlConjunction.format(textualLocations)}.
         for (const { uri, range } of locations) {
           diagnosticSet.addDiagnostics(uri, [
             {
-              severity: DiagnosticSeverity.Warning,
+              severity: DiagnosticSeverity.Error,
               range,
               message,
               source: "GraphQL: Validation",

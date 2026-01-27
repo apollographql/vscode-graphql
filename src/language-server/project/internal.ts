@@ -9,7 +9,6 @@ import {
   isTypeSystemExtensionNode,
   DefinitionNode,
   GraphQLSchema,
-  Kind,
 } from "graphql";
 
 import {
@@ -29,7 +28,6 @@ import {
 } from "../providers/schema";
 import { ApolloEngineClient, ClientIdentity } from "../engine";
 import { GraphQLProject, DocumentUri, GraphQLProjectConfig } from "./base";
-import throttle from "lodash.throttle";
 import { FileSet } from "../fileSet";
 import { getSupportedExtensions } from "../utilities/languageIdForExtension";
 
@@ -161,7 +159,6 @@ export abstract class GraphQLInternalProject
 
   fileWasDeleted(uri: DocumentUri) {
     this.removeGraphQLDocumentsFor(uri);
-    this.checkForDuplicateOperations();
   }
 
   documentDidChange = (document: TextDocument) => {
@@ -175,41 +172,7 @@ export abstract class GraphQLInternalProject
     } else {
       this.removeGraphQLDocumentsFor(document.uri);
     }
-    this.checkForDuplicateOperations();
   };
-
-  checkForDuplicateOperations = throttle(
-    () => {
-      const filePathForOperationName: Record<string, string> = {};
-      for (const [
-        fileUri,
-        documentsForFile,
-      ] of this.documentsByFile.entries()) {
-        const filePath = URI.parse(fileUri).fsPath;
-        for (const document of documentsForFile) {
-          if (!document.ast) continue;
-          for (const definition of document.ast.definitions) {
-            if (
-              definition.kind === Kind.OPERATION_DEFINITION &&
-              definition.name
-            ) {
-              const operationName = definition.name.value;
-              if (operationName in filePathForOperationName) {
-                const conflictingFilePath =
-                  filePathForOperationName[operationName];
-                throw new Error(
-                  `️️There are multiple definitions for the \`${definition.name.value}\` operation. Please fix all naming conflicts before continuing.\nConflicting definitions found at ${filePath} and ${conflictingFilePath}.`,
-                );
-              }
-              filePathForOperationName[operationName] = filePath;
-            }
-          }
-        }
-      }
-    },
-    250,
-    { leading: true, trailing: true },
-  );
 
   private removeGraphQLDocumentsFor(uri: DocumentUri) {
     if (this.documentsByFile.has(uri)) {

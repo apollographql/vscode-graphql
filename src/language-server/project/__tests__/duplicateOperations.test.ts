@@ -245,6 +245,8 @@ describe("Duplicate operation detection", () => {
     await project.whenReady;
 
     // This should not throw
-    await expect(project.validate()).resolves.not.toThrow();
+    await expect(async () => {
+      await project.validate();
+    }).not.toThrow();
   });
 });

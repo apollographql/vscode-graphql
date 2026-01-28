@@ -230,13 +230,7 @@ describe("Duplicate operation detection", () => {
 
     // Create a mock that tracks showError calls
     const mockShowError = jest.fn();
-    class MockLoadingHandlerWithTracking implements LoadingHandler {
-      handle<T>(_message: string, value: Promise<T>): Promise<T> {
-        return value;
-      }
-      handleSync<T>(_message: string, value: () => T): T {
-        return value();
-      }
+    class MockLoadingHandlerWithTracking extends MockLoadingHandler {
       showError(message: string): void {
         mockShowError(message);
       }

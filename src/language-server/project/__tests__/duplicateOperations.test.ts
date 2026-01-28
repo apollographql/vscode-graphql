@@ -86,7 +86,11 @@ describe("Duplicate operation detection", () => {
     vol.reset();
   });
 
-  afterEach(jest.restoreAllMocks);
+  afterEach(async () => {
+    jest.restoreAllMocks();
+    // Wait for potentially throttled calls to complete
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  });
 
   it("should report error diagnostics for duplicate operations across multiple files", async () => {
     vol.fromJSON({
@@ -210,7 +214,7 @@ describe("Duplicate operation detection", () => {
     expect(ourDuplicateErrors[1].source).toBe("GraphQL: Validation");
   });
 
-  it("should not throw when loading files with duplicate operations", async () => {
+  it("should not call showError when loading files with duplicate operations", async () => {
     vol.fromJSON({
       "apollo.config.js": `module.exports = {
             client: {
@@ -224,9 +228,23 @@ describe("Duplicate operation detection", () => {
       "src/b.graphql": fileB,
     });
 
+    // Create a mock that tracks showError calls
+    const mockShowError = jest.fn();
+    class MockLoadingHandlerWithTracking implements LoadingHandler {
+      handle<T>(_message: string, value: Promise<T>): Promise<T> {
+        return value;
+      }
+      handleSync<T>(_message: string, value: () => T): T {
+        return value();
+      }
+      showError(message: string): void {
+        mockShowError(message);
+      }
+    }
+
     const project = new GraphQLClientProject({
       config: config as ClientConfig,
-      loadingHandler: new MockLoadingHandler(),
+      loadingHandler: new MockLoadingHandlerWithTracking(),
       configFolderURI: rootURI,
       clientIdentity: {
         name: "",
@@ -248,14 +266,18 @@ describe("Duplicate operation detection", () => {
       }
     });
 
-    // Loading files with duplicates should not throw
-    // (before PR #306, this would have thrown an error)
-    await expect(project.whenReady).resolves.toBeUndefined();
+    // Wait for initialization to complete
+    await project.whenReady;
 
     // Validate to trigger duplicate detection
     await project.validate();
 
-    // Verify that duplicate diagnostics were actually published
+    // Verify that duplicate diagnostics were published
     expect(duplicateErrorFound).toBe(true);
+
+    // Before PR #306, duplicate operations would throw an error during initialization,
+    // which would be caught and passed to showError. After PR #306, duplicates are
+    // reported as diagnostics instead, so showError should NOT be called.
+    expect(mockShowError).not.toHaveBeenCalled();
   });
 });

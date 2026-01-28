@@ -79,6 +79,15 @@ class MockLoadingHandler implements LoadingHandler {
   showError(_message: string): void {}
 }
 
+class TrackableLoadingHandler extends MockLoadingHandler {
+  constructor(private errorCallback: (message: string) => void) {
+    super();
+  }
+  showError(message: string): void {
+    this.errorCallback(message);
+  }
+}
+
 jest.mock("fs");
 
 describe("Duplicate operation detection", () => {
@@ -88,7 +97,8 @@ describe("Duplicate operation detection", () => {
 
   afterEach(async () => {
     jest.restoreAllMocks();
-    // Wait for potentially throttled calls to complete
+    // Wait for potentially throttled calls to complete (as suggested in code review)
+    // The 300ms timeout accounts for the setTimeout(0) used in invalidate()
     await new Promise((resolve) => setTimeout(resolve, 300));
   });
 
@@ -230,15 +240,10 @@ describe("Duplicate operation detection", () => {
 
     // Create a mock that tracks showError calls
     const mockShowError = jest.fn();
-    class MockLoadingHandlerWithTracking extends MockLoadingHandler {
-      showError(message: string): void {
-        mockShowError(message);
-      }
-    }
 
     const project = new GraphQLClientProject({
       config: config as ClientConfig,
-      loadingHandler: new MockLoadingHandlerWithTracking(),
+      loadingHandler: new TrackableLoadingHandler(mockShowError),
       configFolderURI: rootURI,
       clientIdentity: {
         name: "",

@@ -82,6 +82,10 @@ class MockLoadingHandler implements LoadingHandler {
 jest.mock("fs");
 
 describe("Duplicate operation detection", () => {
+  beforeEach(() => {
+    vol.reset();
+  });
+
   afterEach(jest.restoreAllMocks);
 
   it("should report error diagnostics for duplicate operations across multiple files", async () => {
@@ -238,8 +242,17 @@ describe("Duplicate operation detection", () => {
       },
     });
 
+    let duplicateErrorFound = false;
     project.onDiagnostics(({ diagnostics, uri }) => {
-      // Just collect diagnostics, don't do anything with them
+      // Check that diagnostics are being published correctly
+      for (const diagnostic of diagnostics) {
+        if (
+          diagnostic.severity === DiagnosticSeverity.Error &&
+          diagnostic.message.includes("multiple definitions")
+        ) {
+          duplicateErrorFound = true;
+        }
+      }
     });
 
     await project.whenReady;
@@ -248,5 +261,8 @@ describe("Duplicate operation detection", () => {
     await expect(async () => {
       await project.validate();
     }).not.toThrow();
+
+    // Verify that duplicate diagnostics were actually published
+    expect(duplicateErrorFound).toBe(true);
   });
 });

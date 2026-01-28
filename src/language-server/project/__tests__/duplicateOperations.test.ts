@@ -69,25 +69,6 @@ const config = parseApolloConfig({
   engine: {},
 });
 
-class MockLoadingHandler implements LoadingHandler {
-  handle<T>(_message: string, value: Promise<T>): Promise<T> {
-    return value;
-  }
-  handleSync<T>(_message: string, value: () => T): T {
-    return value();
-  }
-  showError(_message: string): void {}
-}
-
-class TrackableLoadingHandler extends MockLoadingHandler {
-  constructor(private errorCallback: (message: string) => void) {
-    super();
-  }
-  showError(message: string): void {
-    this.errorCallback(message);
-  }
-}
-
 jest.mock("fs");
 
 describe("Duplicate operation detection", () => {
@@ -118,7 +99,13 @@ describe("Duplicate operation detection", () => {
 
     const project = new GraphQLClientProject({
       config: config as ClientConfig,
-      loadingHandler: new MockLoadingHandler(),
+      loadingHandler: {
+        handle: async (msg, val) => val,
+        handleSync: (msg, val) => val(),
+        showError: (msg) => {
+          expect(msg).toBeUndefined();
+        },
+      },
       configFolderURI: rootURI,
       clientIdentity: {
         name: "",
@@ -143,10 +130,10 @@ describe("Duplicate operation detection", () => {
 
     // Check that both files have diagnostics with Error severity
     const aGraphqlErrors = diagnosticsByFile["a.graphql"].filter(
-      (d) => d.severity === DiagnosticSeverity.Error
+      (d) => d.severity === DiagnosticSeverity.Error,
     );
     const bGraphqlErrors = diagnosticsByFile["b.graphql"].filter(
-      (d) => d.severity === DiagnosticSeverity.Error
+      (d) => d.severity === DiagnosticSeverity.Error,
     );
 
     expect(aGraphqlErrors.length).toBeGreaterThan(0);
@@ -176,7 +163,13 @@ describe("Duplicate operation detection", () => {
 
     const project = new GraphQLClientProject({
       config: config as ClientConfig,
-      loadingHandler: new MockLoadingHandler(),
+      loadingHandler: {
+        handle: async (msg, val) => val,
+        handleSync: (msg, val) => val(),
+        showError: (msg) => {
+          expect(msg).toBeUndefined();
+        },
+      },
       configFolderURI: rootURI,
       clientIdentity: {
         name: "",
@@ -200,7 +193,7 @@ describe("Duplicate operation detection", () => {
 
     // Check that the file has diagnostics with Error severity
     const duplicatesErrors = diagnosticsByFile["duplicates.graphql"].filter(
-      (d) => d.severity === DiagnosticSeverity.Error
+      (d) => d.severity === DiagnosticSeverity.Error,
     );
 
     // Should have at least 2 error diagnostics (one for each occurrence of DuplicateOp)
@@ -208,75 +201,23 @@ describe("Duplicate operation detection", () => {
     expect(duplicatesErrors.length).toBeGreaterThanOrEqual(2);
 
     // Find diagnostics specifically from our duplicate detection (not native GraphQL validation)
-    const ourDuplicateErrors = duplicatesErrors.filter(
-      (d) => d.message.includes("multiple definitions")
+    const ourDuplicateErrors = duplicatesErrors.filter((d) =>
+      d.message.includes("multiple definitions"),
     );
 
     // We should have exactly 2 diagnostics from our duplicate detection
     expect(ourDuplicateErrors.length).toBe(2);
 
     // Check that both diagnostic messages mention duplicate operations
-    expect(ourDuplicateErrors[0].message).toMatch(/multiple definitions.*DuplicateOp/s);
-    expect(ourDuplicateErrors[1].message).toMatch(/multiple definitions.*DuplicateOp/s);
+    expect(ourDuplicateErrors[0].message).toMatch(
+      /multiple definitions.*DuplicateOp/s,
+    );
+    expect(ourDuplicateErrors[1].message).toMatch(
+      /multiple definitions.*DuplicateOp/s,
+    );
 
     // Check that the source is correct
     expect(ourDuplicateErrors[0].source).toBe("GraphQL: Validation");
     expect(ourDuplicateErrors[1].source).toBe("GraphQL: Validation");
-  });
-
-  it("should not call showError when loading files with duplicate operations", async () => {
-    vol.fromJSON({
-      "apollo.config.js": `module.exports = {
-            client: {
-                service: {
-                    localSchemaFile: './schema.graphql'
-                }
-            }
-        }`,
-      "schema.graphql": serviceSchema,
-      "src/a.graphql": fileA,
-      "src/b.graphql": fileB,
-    });
-
-    // Create a mock that tracks showError calls
-    const mockShowError = jest.fn();
-
-    const project = new GraphQLClientProject({
-      config: config as ClientConfig,
-      loadingHandler: new TrackableLoadingHandler(mockShowError),
-      configFolderURI: rootURI,
-      clientIdentity: {
-        name: "",
-        version: "",
-        referenceID: "",
-      },
-    });
-
-    let duplicateErrorFound = false;
-    project.onDiagnostics(({ diagnostics, uri }) => {
-      // Check that diagnostics are being published correctly
-      for (const diagnostic of diagnostics) {
-        if (
-          diagnostic.severity === DiagnosticSeverity.Error &&
-          diagnostic.message.includes("multiple definitions")
-        ) {
-          duplicateErrorFound = true;
-        }
-      }
-    });
-
-    // Wait for initialization to complete
-    await project.whenReady;
-
-    // Validate to trigger duplicate detection
-    await project.validate();
-
-    // Verify that duplicate diagnostics were published
-    expect(duplicateErrorFound).toBe(true);
-
-    // Before PR #306, duplicate operations would throw an error during initialization,
-    // which would be caught and passed to showError. After PR #306, duplicates are
-    // reported as diagnostics instead, so showError should NOT be called.
-    expect(mockShowError).not.toHaveBeenCalled();
   });
 });

@@ -3,7 +3,6 @@ import { basename } from "path";
 import { DiagnosticSeverity } from "vscode-languageserver/node";
 
 import { vol } from "memfs";
-import { LoadingHandler } from "../../loadingHandler";
 import { ClientConfig, parseApolloConfig } from "../../config";
 import { URI } from "vscode-uri";
 
@@ -103,6 +102,7 @@ describe("Duplicate operation detection", () => {
         handle: async (msg, val) => val,
         handleSync: (msg, val) => val(),
         showError: (msg) => {
+          // fail the test if this is ever called
           expect(msg).toBeUndefined();
         },
       },
@@ -167,6 +167,7 @@ describe("Duplicate operation detection", () => {
         handle: async (msg, val) => val,
         handleSync: (msg, val) => val(),
         showError: (msg) => {
+          // fail the test if this is ever called
           expect(msg).toBeUndefined();
         },
       },

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.6.5
+
+### Patch Changes
+
+- [#259](https://github.com/apollographql/vscode-graphql/pull/259) [`b55410d`](https://github.com/apollographql/vscode-graphql/commit/b55410d78910e9f16cddff00fd6d9b7f7cc0af39) Thanks [@Cellule](https://github.com/Cellule)! - Report project name in warning when no files are found. Allows to better pinpoint offending project when working with multiple projects.
+
+- [#306](https://github.com/apollographql/vscode-graphql/pull/306) [`9582690`](https://github.com/apollographql/vscode-graphql/commit/958269018a562f2eee880b68848407170a75af5f) Thanks [@phryneas](https://github.com/phryneas)! - report duplicate operations as diagnostic instead of throwing an error
+
 ## 2.6.4
 
 ### Patch Changes

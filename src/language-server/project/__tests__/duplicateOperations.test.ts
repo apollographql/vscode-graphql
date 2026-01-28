@@ -250,7 +250,7 @@ describe("Duplicate operation detection", () => {
 
     // Loading files with duplicates should not throw
     // (before PR #306, this would have thrown an error)
-    await expect(project.whenReady).resolves.not.toThrow();
+    await expect(project.whenReady).resolves.toBeUndefined();
 
     // Validate to trigger duplicate detection
     await project.validate();

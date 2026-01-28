@@ -139,13 +139,8 @@ describe("Duplicate operation detection", () => {
     expect(bGraphqlErrors.length).toBeGreaterThan(0);
 
     // Check that the diagnostic messages mention duplicate operations
-    const aMessage = aGraphqlErrors[0].message;
-    const bMessage = bGraphqlErrors[0].message;
-
-    expect(aMessage).toContain("multiple definitions");
-    expect(aMessage).toContain("GetUser");
-    expect(bMessage).toContain("multiple definitions");
-    expect(bMessage).toContain("GetUser");
+    expect(aGraphqlErrors[0].message).toMatch(/multiple definitions.*GetUser/s);
+    expect(bGraphqlErrors[0].message).toMatch(/multiple definitions.*GetUser/s);
 
     // Check that the source is correct
     expect(aGraphqlErrors[0].source).toBe("GraphQL: Validation");
@@ -207,17 +202,15 @@ describe("Duplicate operation detection", () => {
     expect(ourDuplicateErrors.length).toBe(2);
 
     // Check that both diagnostic messages mention duplicate operations
-    expect(ourDuplicateErrors[0].message).toContain("multiple definitions");
-    expect(ourDuplicateErrors[0].message).toContain("DuplicateOp");
-    expect(ourDuplicateErrors[1].message).toContain("multiple definitions");
-    expect(ourDuplicateErrors[1].message).toContain("DuplicateOp");
+    expect(ourDuplicateErrors[0].message).toMatch(/multiple definitions.*DuplicateOp/s);
+    expect(ourDuplicateErrors[1].message).toMatch(/multiple definitions.*DuplicateOp/s);
 
     // Check that the source is correct
     expect(ourDuplicateErrors[0].source).toBe("GraphQL: Validation");
     expect(ourDuplicateErrors[1].source).toBe("GraphQL: Validation");
   });
 
-  it("should not throw errors when duplicate operations are detected", async () => {
+  it("should not throw when loading files with duplicate operations", async () => {
     vol.fromJSON({
       "apollo.config.js": `module.exports = {
             client: {
@@ -255,12 +248,12 @@ describe("Duplicate operation detection", () => {
       }
     });
 
-    await project.whenReady;
+    // Loading files with duplicates should not throw
+    // (before PR #306, this would have thrown an error)
+    await expect(project.whenReady).resolves.not.toThrow();
 
-    // This should not throw
-    await expect(async () => {
-      await project.validate();
-    }).not.toThrow();
+    // Validate to trigger duplicate detection
+    await project.validate();
 
     // Verify that duplicate diagnostics were actually published
     expect(duplicateErrorFound).toBe(true);

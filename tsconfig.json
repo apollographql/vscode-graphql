@@ -18,7 +18,7 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2020", "esnext.asynciterable"],
+    "lib": ["es2020", "esnext.asynciterable", "ES2021.Intl"],
     "types": ["node", "jest"],
     "baseUrl": "."
   },

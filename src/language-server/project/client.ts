@@ -46,6 +46,7 @@ import {
   DiagnosticSeverity,
   CancellationToken,
   Position,
+  Range,
   Location,
   CodeLens,
   InsertTextFormat,
@@ -104,6 +105,7 @@ import type { CodeActionInfo } from "../errors/validation";
 import { GraphQLDiagnostic } from "../diagnostics";
 import { isInterfaceType } from "graphql";
 import { GraphQLInternalProject } from "./internal";
+import { intlConjunction } from "../utilities/intlConjunction";
 
 type Maybe<T> = null | undefined | T;
 
@@ -381,6 +383,11 @@ export class GraphQLClientProject extends GraphQLInternalProject {
 
     const fragments = this.fragments;
 
+    const operationNameToLocations: Map<
+      string,
+      Array<{ uri: DocumentUri; range: Range }>
+    > = new Map();
+
     for (const [uri, documentsForFile] of this.documentsByFile) {
       for (const document of documentsForFile) {
         diagnosticSet.addDiagnostics(
@@ -392,6 +399,48 @@ export class GraphQLClientProject extends GraphQLInternalProject {
             this._validationRules,
           ),
         );
+
+        // Collect operation names for duplicate detection
+        for (const definition of document.ast?.definitions || []) {
+          if (
+            definition.kind === Kind.OPERATION_DEFINITION &&
+            definition.name
+          ) {
+            const operationName = definition.name.value;
+
+            let locations = operationNameToLocations.get(operationName);
+            if (!locations) {
+              operationNameToLocations.set(operationName, (locations = []));
+            }
+            locations.push({ uri, range: rangeForASTNode(definition.name) });
+          }
+        }
+      }
+    }
+
+    // Add diagnostics for duplicate operation names
+    for (const [operationName, locations] of operationNameToLocations) {
+      if (locations.length > 1) {
+        const textualLocations = locations.map(({ uri, range }) => {
+          return `${URI.parse(uri).fsPath}:${range.start.line + 1},${range.start.character + 1}`;
+        });
+
+        const message = `
+There are multiple definitions for the \`${operationName}\` operation.
+Please fix all naming conflicts before continuing.
+Conflicting definitions found at ${intlConjunction.format(textualLocations)}.
+`.trim();
+
+        for (const { uri, range } of locations) {
+          diagnosticSet.addDiagnostics(uri, [
+            {
+              severity: DiagnosticSeverity.Error,
+              range,
+              message,
+              source: "GraphQL: Validation",
+            },
+          ]);
+        }
       }
     }
     for (const [uri, diagnostics] of diagnosticSet.entries()) {

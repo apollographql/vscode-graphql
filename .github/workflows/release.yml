@@ -34,14 +34,6 @@ jobs:
         with:
           files: ".changeset/pre.json"
 
-      - name: Append NPM token to .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Setup Node.js 24.x
         uses: actions/setup-node@v3
         with:
@@ -59,7 +51,7 @@ jobs:
           publish: npm run changeset-publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ""
 
       - name: Attach VSX to GitHub release
         if: steps.changesets.outcome == 'success' && steps.changesets.outputs.published == 'true'

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.6.6
+
+### Patch Changes
+
+- [#313](https://github.com/apollographql/vscode-graphql/pull/313) [`c304043`](https://github.com/apollographql/vscode-graphql/commit/c304043205f9fce7989e596d86ff3b35cde165d0) Thanks [@jerelmiller](https://github.com/jerelmiller)! - Replace deprecated `util.isString` with `typeof x === "string"` so the extension works on Node 24, where the runtime-deprecated `util.isString` has been removed.
+
 ## 2.6.5
 
 ### Patch Changes

@@ -16,7 +16,6 @@ import { Agent as HTTPSAgent } from "https";
 import { RemoteServiceConfig } from "../../config";
 import { GraphQLSchemaProvider, SchemaChangeUnsubscribeHandler } from "./base";
 import { Debug } from "../../utilities";
-import { isString } from "util";
 import { fetch as undiciFetch, Agent } from "undici";
 
 const skipSSLValidationFetchOptions = {
@@ -51,7 +50,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
       }),
     ).catch((e) => {
       // html response from introspection
-      if (isString(e.message) && e.message.includes("token <")) {
+      if (typeof e.message === "string" && e.message.includes("token <")) {
         throw new Error(
           "Apollo tried to introspect a running GraphQL service at " +
             url +
@@ -65,7 +64,7 @@ export class EndpointSchemaProvider implements GraphQLSchemaProvider {
       }
 
       // 404 with a non-default url
-      if (isString(e.message) && e.message.includes("ECONNREFUSED")) {
+      if (typeof e.message === "string" && e.message.includes("ECONNREFUSED")) {
         throw new Error(
           "Failed to connect to a running GraphQL endpoint at " +
             url +

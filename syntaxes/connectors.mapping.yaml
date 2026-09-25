@@ -58,6 +58,8 @@ variables:
   notEscaped: "(?<![\\\\])(?:[\\\\]{2})*"
   # Public built-in mapping methods.
   builtinMethod: "as|echo|map|eq|match|first|last|slice|size|entries|or|and|jsonParse|jsonStringify|joinNotNull|filter|find|gte|lte|ne|gt|lt|not|in|contains|get|toString|parseInt|add|sub|mul|div|mod|keysToCamelCase|keysToCamelCaseDeep|split|trim|trimStart|trimEnd|withError"
+  # Potential future methods; retained as a reference for grammar reviews, not used for highlighting.
+  reservedMethod: "typeof|matchIf|match_if|has|keys|values"
 # can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
 styles:
   alias: "variable.other.property.alias"

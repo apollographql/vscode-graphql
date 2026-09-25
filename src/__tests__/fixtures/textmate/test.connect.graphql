@@ -157,3 +157,35 @@ type Query {
   ordinary: String @other(message: "true", path: "[1, 2]")
 #                                   ^^^^ - repository.LitPrimitive
 }
+
+type NestedPaths {
+  item: String @connect(
+    http: { GET: "/items" }
+    selection: """
+      $.data {
+        id
+        $.attributes {
+#                    ^ repository.SubSelection.beginCaptures.1
+          version
+        }
+#       ^ repository.SubSelection.endCaptures.1
+        name
+#       ^^^^ repository.NamedFieldSelection
+      }
+#     ^ repository.SubSelection.endCaptures.1
+    """
+  )
+  first: String @connect(
+    http: { GET: "/items" }
+    selection: """
+      $ ->first {
+#       ^^ repository.PathStepArrowAccess.captures.1
+#         ^^^^^ repository.PathStepArrowAccess.captures.3
+#               ^ repository.SubSelection.beginCaptures.1
+        id
+        username
+      }
+#     ^ repository.SubSelection.endCaptures.1
+    """
+  )
+}

@@ -412,3 +412,29 @@ $->withError
 
 $->withError()
 #  ^^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$.data {
+  id
+  $.attributes {
+#              ^ repository.SubSelection.beginCaptures.1
+    version
+  }
+# ^ repository.SubSelection.endCaptures.1
+  name
+# ^^^^ repository.NamedFieldSelection
+}
+#< repository.SubSelection.endCaptures.1
+
+$ ->first {
+# ^^ repository.PathStepArrowAccess.captures.1
+#   ^^^^^ repository.PathStepArrowAccess.captures.3
+#         ^ repository.SubSelection.beginCaptures.1
+  id
+}
+#< repository.SubSelection.endCaptures.1
+
+$ ->first() .id ->echo("value")
+# ^^ repository.PathStepArrowMethodArgs.beginCaptures.1
+#   ^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+#           ^^^ repository.PathStepDotAccess
+#               ^^^^^^ repository.PathStepArrowMethodArgs

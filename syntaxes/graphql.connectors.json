@@ -29,11 +29,10 @@
         {
           "include": "source.graphql#graphql-skip-newlines"
         }
-      ],
-      "name": "meta.repository.connector-directive"
+      ]
     },
     "connector-arguments": {
-      "name": "meta.arguments.connect.graphql.repository.connector-arguments",
+      "name": "meta.arguments.connect.graphql",
       "begin": "\\s*(\\()",
       "end": "\\s*(\\))",
       "beginCaptures": {
@@ -71,7 +70,7 @@
       ]
     },
     "connector-connectors-mapping-argument": {
-      "name": "meta.argument.connect.connectors.mapping.graphql.repository.connector-connectors-mapping-argument",
+      "name": "meta.argument.connect.connectors.mapping.graphql",
       "begin": "\\s*(selection|isSuccess)\\s*(:)",
       "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|\\)))|\\s*(,)",
       "beginCaptures": {
@@ -112,8 +111,7 @@
             {
               "include": "source.apollo.connectors.mapping"
             }
-          ],
-          "name": "meta.repository.connector-connectors-mapping-argument.patterns.0"
+          ]
         },
         {
           "contentName": "meta.embedded.line.connectors.mapping.graphql",
@@ -139,8 +137,7 @@
             {
               "include": "source.apollo.connectors.mapping"
             }
-          ],
-          "name": "meta.repository.connector-connectors-mapping-argument.patterns.1"
+          ]
         },
         {
           "include": "source.graphql#graphql-comment"
@@ -151,7 +148,7 @@
       ]
     },
     "connector-argument-http": {
-      "name": "meta.argument.connect.http.graphql.repository.connector-argument-http",
+      "name": "meta.argument.connect.http.graphql",
       "begin": "\\s*(http)\\s*(:)",
       "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|\\)))|\\s*(,)",
       "beginCaptures": {
@@ -182,7 +179,7 @@
     "http-object-value": {
       "patterns": [
         {
-          "name": "meta.objectvalues.connect.http.graphql.repository.http-object-value.patterns.0",
+          "name": "meta.objectvalues.connect.http.graphql",
           "begin": "\\s*(\\{)",
           "end": "\\s*(})",
           "beginCaptures": {
@@ -213,13 +210,12 @@
             }
           ]
         }
-      ],
-      "name": "meta.repository.http-object-value"
+      ]
     },
     "http-object-connectors-mapping-property": {
       "patterns": [
         {
-          "name": "meta.argument.connect.body.connectors.mapping.graphql.repository.http-object-connectors-mapping-property.patterns.0",
+          "name": "meta.argument.connect.body.connectors.mapping.graphql",
           "contentName": "meta.embedded.block.connectors.mapping.graphql",
           "begin": "\\s*(body|path|queryParams)\\s*(:)\\s*((\"\"\"))",
           "end": "((\"\"\"))",
@@ -252,7 +248,7 @@
           ]
         },
         {
-          "name": "meta.argument.connect.line.connectors.mapping.graphql.repository.http-object-connectors-mapping-property.patterns.1",
+          "name": "meta.argument.connect.line.connectors.mapping.graphql",
           "contentName": "meta.embedded.line.connectors.mapping.graphql",
           "begin": "\\s*(body|path|queryParams)\\s*(:)\\s*(?<!\")((\"))(?!\")",
           "end": "(?<!\")((\"))(?!\")",
@@ -284,8 +280,7 @@
             }
           ]
         }
-      ],
-      "name": "meta.repository.http-object-connectors-mapping-property"
+      ]
     },
     "connector-argument-errors": {
       "begin": "\\s*(errors)\\s*(:)\\s*(\\{)",
@@ -348,8 +343,7 @@
                 {
                   "include": "source.apollo.connectors.mapping"
                 }
-              ],
-              "name": "meta.repository.connector-connectors-mapping-argument.patterns.0.repository.connector-argument-errors.patterns.0.patterns.0"
+              ]
             },
             {
               "contentName": "meta.embedded.line.connectors.mapping.graphql",
@@ -375,8 +369,7 @@
                 {
                   "include": "source.apollo.connectors.mapping"
                 }
-              ],
-              "name": "meta.repository.connector-connectors-mapping-argument.patterns.1.repository.connector-argument-errors.patterns.0.patterns.1"
+              ]
             },
             {
               "include": "source.graphql#graphql-comment"
@@ -384,8 +377,7 @@
             {
               "include": "source.graphql#graphql-skip-newlines"
             }
-          ],
-          "name": "meta.repository.connector-argument-errors.patterns.0"
+          ]
         },
         {
           "include": "source.graphql#graphql-comment"
@@ -393,11 +385,10 @@
         {
           "include": "source.graphql#graphql-skip-newlines"
         }
-      ],
-      "name": "meta.repository.connector-argument-errors"
+      ]
     },
     "connector-array-connectors-mapping-headers": {
-      "name": "meta.connect.headers.repository.connector-array-connectors-mapping-headers",
+      "name": "meta.connect.headers",
       "begin": "\\s*((headers))\\s*(:)",
       "beginCaptures": {
         "1": {
@@ -411,7 +402,7 @@
       "applyEndPatternLast": 1,
       "patterns": [
         {
-          "name": "meta.listvalues.graphql.repository.connector-array-connectors-mapping-headers.patterns.0",
+          "name": "meta.listvalues.graphql",
           "begin": "(\\[)",
           "end": "(])",
           "beginCaptures": {
@@ -426,7 +417,7 @@
           },
           "patterns": [
             {
-              "name": "meta.objectvalues.graphql.repository.connector-array-connectors-mapping-headers.patterns.0.patterns.0",
+              "name": "meta.objectvalues.graphql",
               "begin": "\\s*(\\{)",
               "end": "\\s*(})",
               "beginCaptures": {
@@ -461,8 +452,7 @@
                     {
                       "include": "source.graphql#graphql-skip-newlines"
                     }
-                  ],
-                  "name": "meta.repository.connector-array-connectors-mapping-headers.patterns.0.patterns.0.patterns.0"
+                  ]
                 },
                 {
                   "include": "source.graphql#graphql-comment"
@@ -483,7 +473,7 @@
       ]
     },
     "connector-string-connectors-mapping-argument": {
-      "name": "meta.argument.connect.string.connectors.mapping.graphql.repository.connector-string-connectors-mapping-argument",
+      "name": "meta.argument.connect.string.connectors.mapping.graphql",
       "contentName": "meta.embedded.string.connectors.mapping.graphql",
       "begin": "\\s*(GET|POST|PUT|PATCH|DELETE)\\s*(:)",
       "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|[)}]))|\\s*(,)",
@@ -538,8 +528,7 @@
         {
           "include": "source.graphql#graphql-skip-newlines"
         }
-      ],
-      "name": "meta.repository.graphql-argument"
+      ]
     }
   }
 }

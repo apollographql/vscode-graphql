@@ -127,6 +127,7 @@ repository:
       - include: "#VarPath"
       - include: "#KeyPath"
       - include: "#AtPath"
+      - include: "#SubSelection"
   NamedSelection:
     patterns:
       - begin: "({{key}})\\s*(:)\\s*{{#PathSelection.begin}}"
@@ -261,7 +262,7 @@ repository:
   # PathStepArrowAccess  ::= "->" Identifier "?"?
   # PathStep             ::= PathStepDotAccess | PathStepArrowMethodArgs | PathStepArrowAccess
   PathStepDotAccess:
-    match: "([.])({{key}})([?]?)"
+    match: "\\s*([.])({{key}})([?]?)"
     captures:
       "1":
         name: "{{.dot}}"
@@ -270,7 +271,7 @@ repository:
       "3":
         name: "{{.optional_chain}}"
   PathStepArrowMethodArgs:
-    begin: "(->)(({{builtinMethod}})|{{identifier}})([(])"
+    begin: "\\s*(->)(({{builtinMethod}})|{{identifier}})([(])"
     end: "([)])([?]?)"
     applyEndPatternLast: 1
     beginCaptures:
@@ -292,7 +293,7 @@ repository:
       - match: ","
         name: "{{.comma}}"
   PathStepArrowAccess:
-    match: "(->)(({{builtinMethod}})(?![0-9a-zA-Z_])|{{identifier}})([?]?)"
+    match: "\\s*(->)(({{builtinMethod}})(?![0-9a-zA-Z_])|{{identifier}})([?]?)"
     captures:
       "1":
         name: "{{.arrow}}"

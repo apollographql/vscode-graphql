@@ -20,12 +20,13 @@
           "include": "#NamedSelection"
         },
         {
-          "include": "#PathSelection"
+          "include": "#LitExpr"
         },
         {
           "include": "#Comment"
         }
-      ]
+      ],
+      "name": "meta.repository.JSONSelection"
     },
     "SubSelection": {
       "begin": "\\s*(\\{)",
@@ -45,9 +46,14 @@
           "include": "#NamedSelection"
         },
         {
+          "match": ",",
+          "name": "punctuation.separator.comma.repository.SubSelection.patterns.1"
+        },
+        {
           "include": "#Comment"
         }
-      ]
+      ],
+      "name": "meta.repository.SubSelection"
     },
     "PathSelection": {
       "begin": "(?=\\$|([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))|@|$\\()",
@@ -66,7 +72,8 @@
         {
           "include": "#AtPath"
         }
-      ]
+      ],
+      "name": "meta.repository.PathSelection"
     },
     "NamedSelection": {
       "patterns": [
@@ -86,7 +93,8 @@
             {
               "include": "#PathSelection"
             }
-          ]
+          ],
+          "name": "meta.repository.NamedSelection.patterns.0"
         },
         {
           "begin": "(\\.\\.\\.)\\s*(?=\\$|([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))|@|$\\()",
@@ -101,7 +109,8 @@
             {
               "include": "#PathSelection"
             }
-          ]
+          ],
+          "name": "meta.repository.NamedSelection.patterns.1"
         },
         {
           "include": "#PathSelection"
@@ -122,12 +131,42 @@
             {
               "include": "#SubSelection"
             }
-          ]
+          ],
+          "name": "meta.repository.NamedSelection.patterns.3"
+        },
+        {
+          "include": "#LiteralAlias"
+        },
+        {
+          "include": "#LitPrimitive"
         },
         {
           "include": "#NamedFieldSelection"
         }
-      ]
+      ],
+      "name": "meta.repository.NamedSelection"
+    },
+    "LiteralAlias": {
+      "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)(?=\\s*(?:[-\"'.0-9\\[]|\\b(?:true|false|null)\\b))",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.property.alias"
+        },
+        "2": {
+          "name": "punctuation.colon.alias"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#LitExpr"
+        },
+        {
+          "include": "#NamedFieldSelection"
+        }
+      ],
+      "name": "meta.repository.LiteralAlias"
     },
     "NamedFieldSelection": {
       "begin": "(?:([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*)?([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))",
@@ -148,7 +187,8 @@
         {
           "include": "#SubSelection"
         }
-      ]
+      ],
+      "name": "meta.repository.NamedFieldSelection"
     },
     "VarPath": {
       "begin": "(\\$)([A-Z_a-z][0-9A-Z_a-z]*)?(?!\\w)",
@@ -166,7 +206,8 @@
         {
           "include": "#PathTail"
         }
-      ]
+      ],
+      "name": "meta.repository.VarPath"
     },
     "KeyPath": {
       "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))",
@@ -181,7 +222,8 @@
         {
           "include": "#PathTail"
         }
-      ]
+      ],
+      "name": "meta.repository.KeyPath"
     },
     "AtPath": {
       "begin": "(@)",
@@ -196,7 +238,8 @@
         {
           "include": "#PathTail"
         }
-      ]
+      ],
+      "name": "meta.repository.AtPath"
     },
     "ExprPath": {
       "begin": "(\\$)(?=\\()",
@@ -225,12 +268,14 @@
             {
               "include": "#LitExpr"
             }
-          ]
+          ],
+          "name": "meta.repository.ExprPath.patterns.0"
         },
         {
           "include": "#PathStep"
         }
-      ]
+      ],
+      "name": "meta.repository.ExprPath"
     },
     "PathTail": {
       "begin": "(\\?)?(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*))",
@@ -245,7 +290,8 @@
         {
           "include": "#PathStep"
         }
-      ]
+      ],
+      "name": "meta.repository.PathTail"
     },
     "PathStepDotAccess": {
       "match": "(\\.)([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(\\??)",
@@ -259,10 +305,11 @@
         "3": {
           "name": "variable.question.mark"
         }
-      }
+      },
+      "name": "meta.repository.PathStepDotAccess"
     },
     "PathStepArrowMethodArgs": {
-      "begin": "(->)((echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt)|[A-Z_a-z][0-9A-Z_a-z]*)(\\()",
+      "begin": "(->)((as|echo|map|eq|match|first|last|slice|size|entries|or|and|jsonParse|jsonStringify|joinNotNull|filter|find|gte|lte|ne|gt|lt|not|in|contains|get|toString|parseInt|add|sub|mul|div|mod|keysToCamelCase|keysToCamelCaseDeep|split|trim|trimStart|trimEnd|withError)|[A-Z_a-z][0-9A-Z_a-z]*)(\\()",
       "end": "(\\))(\\??)",
       "applyEndPatternLast": 1,
       "beginCaptures": {
@@ -293,23 +340,28 @@
         },
         {
           "match": ",",
-          "name": "punctuation.separator.comma"
+          "name": "punctuation.separator.comma.repository.PathStepArrowMethodArgs.patterns.1"
         }
-      ]
+      ],
+      "name": "meta.repository.PathStepArrowMethodArgs"
     },
     "PathStepArrowAccess": {
-      "match": "(->)([A-Z_a-z][0-9A-Z_a-z]*)(\\??)",
+      "match": "(->)((as|echo|map|eq|match|first|last|slice|size|entries|or|and|jsonParse|jsonStringify|joinNotNull|filter|find|gte|lte|ne|gt|lt|not|in|contains|get|toString|parseInt|add|sub|mul|div|mod|keysToCamelCase|keysToCamelCaseDeep|split|trim|trimStart|trimEnd|withError)(?![0-9A-Z_a-z])|[A-Z_a-z][0-9A-Z_a-z]*)(\\??)",
       "captures": {
         "1": {
           "name": "keyword.operator.arrow"
         },
         "2": {
-          "name": "variable.graphql"
+          "name": "support.function"
         },
         "3": {
+          "name": "support.function.builtin"
+        },
+        "4": {
           "name": "variable.question.mark"
         }
-      }
+      },
+      "name": "meta.repository.PathStepArrowAccess"
     },
     "PathStep": {
       "patterns": [
@@ -322,7 +374,8 @@
         {
           "include": "#PathStepArrowAccess"
         }
-      ]
+      ],
+      "name": "meta.repository.PathStep"
     },
     "LitExpr": {
       "patterns": [
@@ -347,7 +400,8 @@
         {
           "include": "#Comment"
         }
-      ]
+      ],
+      "name": "meta.repository.LitExpr"
     },
     "LitPathTail": {
       "begin": "(?<!\\()(?=\\s*\\??(?=\\s*(?:\\.(?:[A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))|->[A-Z_a-z][0-9A-Z_a-z]*)))",
@@ -357,7 +411,8 @@
         {
           "include": "#PathTail"
         }
-      ]
+      ],
+      "name": "meta.repository.LitPathTail"
     },
     "LitOpChainCenter": {
       "match": "(?<![-!%\\&(*+/<-?|])(\\?\\?|\\?!|&&|\\|\\||==|!=|<=??|(?<!-)>|(?<!-)>=|\\+|-(?!>)|[%*/])(?!\\s*[-!%\\&)*+/<-?|])",
@@ -365,7 +420,8 @@
         "1": {
           "name": "keyword.operator"
         }
-      }
+      },
+      "name": "meta.repository.LitOpChainCenter"
     },
     "LitPrimitive": {
       "patterns": [
@@ -377,9 +433,10 @@
         },
         {
           "match": "\\b(true|false|null)\\b",
-          "name": "constant.language"
+          "name": "constant.language.repository.LitPrimitive.patterns.2"
         }
-      ]
+      ],
+      "name": "meta.repository.LitPrimitive"
     },
     "LitString": {
       "begin": "((\")|('))",
@@ -406,11 +463,12 @@
         "3": {
           "name": "string.quoted.single.graphql"
         }
-      }
+      },
+      "name": "meta.repository.LitString"
     },
     "LitNumber": {
-      "name": "constant.numeric",
-      "match": "(-?)([0-9]+(\\.[0-9]*)?|\\.[0-9]+)"
+      "name": "constant.numeric.repository.LitNumber",
+      "match": "(-?)([0-9]+(\\.(?:[0-9]+|(?![\"'A-Z_a-z])))?|\\.[0-9]+)"
     },
     "LitObject": {
       "begin": "\\s*(\\{)",
@@ -430,16 +488,20 @@
           "include": "#LitProperty"
         },
         {
+          "include": "#NamedSelection"
+        },
+        {
           "match": ",",
-          "name": "punctuation.separator.comma"
+          "name": "punctuation.separator.comma.repository.LitObject.patterns.2"
         },
         {
           "include": "#Comment"
         }
-      ]
+      ],
+      "name": "meta.repository.LitObject"
     },
     "LitProperty": {
-      "begin": "\\b([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)\\s*",
+      "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*",
       "beginCaptures": {
         "1": {
           "name": "variable.other.property"
@@ -453,8 +515,12 @@
       "patterns": [
         {
           "include": "#LitExpr"
+        },
+        {
+          "include": "#NamedFieldSelection"
         }
-      ]
+      ],
+      "name": "meta.repository.LitProperty"
     },
     "LitArray": {
       "begin": "\\s*(\\[)",
@@ -475,9 +541,10 @@
         },
         {
           "match": ",",
-          "name": "punctuation.separator.comma"
+          "name": "punctuation.separator.comma.repository.LitArray.patterns.1"
         }
-      ]
+      ],
+      "name": "meta.repository.LitArray"
     },
     "Comment": {
       "match": "(\\s*)(#.*?)$",
@@ -488,7 +555,8 @@
         "2": {
           "name": "comment.line.connectors.mapping"
         }
-      }
+      },
+      "name": "meta.repository.Comment"
     },
     "JSONSelectionString": {
       "contentName": "string.quoted",
@@ -519,14 +587,15 @@
             }
           },
           "contentName": "meta.embedded.string.connectors.mapping.selectionstring.graphql",
-          "debugName": "embedded",
           "patterns": [
             {
               "include": "#PathSelection"
             }
-          ]
+          ],
+          "name": "meta.repository.JSONSelectionString.patterns.embedded"
         }
-      ]
+      ],
+      "name": "meta.repository.JSONSelectionString"
     }
   }
 }

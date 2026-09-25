@@ -34,18 +34,19 @@ repository:
       - include: "#connector-connectors-mapping-argument"
       # this was added
       - include: "#connector-argument-http"
+      - include: "#connector-argument-errors"
       # this was added
       - include: "#connector-string-connectors-mapping-argument"
       # this is also present in the original source.graphql#graphql-arguments, but as an inlined pattern
       # moved into it's own rule here for readability
       - include: "#graphql-argument"
       - include: source.graphql#literal-quasi-embedded
-  # based to #graphql-argument, but only matching `selection` arguments
+  # Mapping-valued directive arguments, in both GraphQL string forms.
   # with a sub-pattern to match """ blocks and embed the
   # source.apollo.connectors.mapping grammar into those
   connector-connectors-mapping-argument:
     name: meta.argument.connect.connectors.mapping.graphql
-    begin: \s*(selection)(?:\s*(:))
+    begin: \s*(selection|isSuccess)(?:\s*(:))
     end: (?=\s*(?:(?:([_A-Za-z][_0-9A-Za-z]*)\s*(:))|\)))|\s*(,)
     beginCaptures:
       "1":
@@ -55,7 +56,7 @@ repository:
     endCaptures:
       "3":
         name: punctuation.comma.graphql
-    patterns:
+    patterns: &mapping-string-patterns
       - contentName: meta.embedded.block.connectors.mapping.graphql
         begin: (("""))
         end: (("""))
@@ -134,7 +135,7 @@ repository:
     patterns:
       - name: meta.argument.connect.body.connectors.mapping.graphql
         contentName: meta.embedded.block.connectors.mapping.graphql
-        begin: \s*(body)\s*(:)\s*(("""))
+        begin: \s*(body|path|queryParams)\s*(:)\s*(("""))
         end: (("""))
         beginCaptures:
           "1":
@@ -154,7 +155,7 @@ repository:
           - include: source.apollo.connectors.mapping
       - name: meta.argument.connect.line.connectors.mapping.graphql
         contentName: meta.embedded.line.connectors.mapping.graphql
-        begin: \s*(body)\s*(:)\s*(?<!")(("))(?!")
+        begin: \s*(body|path|queryParams)\s*(:)\s*(?<!")(("))(?!")
         end: (?<!")(("))(?!")
         beginCaptures:
           "1":
@@ -172,6 +173,34 @@ repository:
             name: punctuation.definition.string.end.graphql
         patterns:
           - include: source.apollo.connectors.mapping
+  # Error mappings are scoped to the errors object, not arbitrary GraphQL keys.
+  connector-argument-errors:
+    begin: \s*(errors)\s*(:)\s*({)
+    end: (})
+    beginCaptures:
+      "1":
+        name: variable.parameter.graphql
+      "2":
+        name: punctuation.colon.graphql
+      "3":
+        name: meta.brace.curly.graphql
+    endCaptures:
+      "1":
+        name: meta.brace.curly.graphql
+    patterns:
+      - begin: \s*(message|extensions)\s*(:)
+        end: (?=\s*(?:[_A-Za-z][_0-9A-Za-z]*\s*:|}))|\s*(,)
+        beginCaptures:
+          "1":
+            name: variable.parameter.graphql
+          "2":
+            name: punctuation.colon.graphql
+        endCaptures:
+          "1":
+            name: punctuation.comma.graphql
+        patterns: *mapping-string-patterns
+      - include: source.graphql#graphql-comment
+      - include: source.graphql#graphql-skip-newlines
   # handling for @connect(GET: " ... ")
   connector-array-connectors-mapping-headers:
     name: meta.connect.headers

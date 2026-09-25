@@ -1,9 +1,9 @@
 # Run `npm run watch:textmate-yaml` while working on this file.
 # roughly based on this grammar:
 # ```ebnf
-# JSONSelection        ::= PathSelection | NamedSelection*
-# SubSelection         ::= "{" NamedSelection* "}"
-# NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
+# JSONSelection        ::= LitExpr | NamedSelection*
+# SubSelection         ::= "{" NamedSelection* "}"  # whitespace or comma separated
+# NamedSelection       ::= (Alias | "...")? PathSelection | Alias LitExpr
 # Alias                ::= Key ":"
 # Path                 ::= VarPath | KeyPath | AtPath | ExprPath
 # PathSelection        ::= Path SubSelection?
@@ -56,8 +56,8 @@ variables:
   atPathMatch: "@"
   exprPathMatch: "$[(]"
   notEscaped: "(?<![\\\\])(?:[\\\\]{2})*"
-  builtinMethod: "echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt"
-  reservedMethod: "typeof|matchIf|match_if|add|sub|mul|div|mod|has|get|keys|values|not"
+  # Public built-in mapping methods.
+  builtinMethod: "as|echo|map|eq|match|first|last|slice|size|entries|or|and|jsonParse|jsonStringify|joinNotNull|filter|find|gte|lte|ne|gt|lt|not|in|contains|get|toString|parseInt|add|sub|mul|div|mod|keysToCamelCase|keysToCamelCaseDeep|split|trim|trimStart|trimEnd|withError"
 # can be referenced from `name` properties or other styles like `{{.identifier}}` or `{{.key}}`
 styles:
   alias: "variable.other.property.alias"
@@ -93,11 +93,11 @@ styles:
   comment_leading_ws: "punctuation.whitespace.comment.leading.connectors.mapping"
 
 repository:
-  # JSONSelection        ::= PathSelection | NamedSelection*
+  # Permissive union of legacy selections and v0.4 expressions.
   JSONSelection:
     patterns:
       - include: "#NamedSelection"
-      - include: "#PathSelection"
+      - include: "#LitExpr"
       - include: "#Comment"
   # SubSelection         ::= "{" NamedSelection* "}"
   SubSelection:
@@ -111,8 +111,10 @@ repository:
         name: "{{.brace_close}}"
     patterns:
       - include: "#NamedSelection"
+      - match: ","
+        name: "{{.comma}}"
       - include: "#Comment"
-  # NamedSelection       ::= (Alias | "...")? PathSelection | Alias SubSelection
+  # NamedSelection       ::= (Alias | "...")? PathSelection | Alias LitExpr
   # Alias                ::= Key ":"
   # Path                 ::= VarPath | KeyPath | AtPath | ExprPath
   # PathSelection        ::= Path SubSelection?
@@ -156,9 +158,22 @@ repository:
         applyEndPatternLast: 1
         patterns:
           - include: "#SubSelection"
-      # added back even though it's not part of the current spec: NamedFieldSelection
+      - include: "#LiteralAlias"
+      - include: "#LitPrimitive"
+      # Single-key selections retain their historical object-field meaning.
       - include: "#NamedFieldSelection"
-  # temporarily added back
+  LiteralAlias:
+    begin: "({{key}})\\s*(:)(?=\\s*(?:[-.0-9]|[\\[\"']|\\b(?:true|false|null)\\b))"
+    beginCaptures:
+      "1":
+        name: "{{.alias}}"
+      "2":
+        name: "{{.alias_colon}}"
+    end: "(?=.)"
+    applyEndPatternLast: 1
+    patterns:
+      - include: "#LitExpr"
+      - include: "#NamedFieldSelection"
   # NamedFieldSelection  ::= Alias? Key SubSelection?
   NamedFieldSelection:
     begin: "(?:({{key}})\\s*(:)\\s*)?({{key}})"
@@ -277,13 +292,15 @@ repository:
       - match: ","
         name: "{{.comma}}"
   PathStepArrowAccess:
-    match: "(->)({{identifier}})([?]?)"
+    match: "(->)(({{builtinMethod}})(?![0-9a-zA-Z_])|{{identifier}})([?]?)"
     captures:
       "1":
         name: "{{.arrow}}"
       "2":
-        name: "{{.field}}"
+        name: "{{.method}}"
       "3":
+        name: "{{.builtinMethod}}"
+      "4":
         name: "{{.optional_chain}}"
   PathStep:
     patterns:
@@ -358,7 +375,8 @@ repository:
   # LitNumber            ::= "-"? ([0-9]+ ("." [0-9]*)? | "." [0-9]+)
   LitNumber:
     name: "{{.number}}"
-    match: "(-?)([0-9]+([.][0-9]*)?|[.][0-9]+)"
+    # Do not consume the access dot in 1.foo or 1.'foo'.
+    match: '(-?)([0-9]+([.](?:[0-9]+|(?![a-zA-Z_"''])))?|[.][0-9]+)'
   # LitObject            ::= "{" (LitProperty ("," LitProperty)* ","?)? "}"
   LitObject:
     begin: "\\s*({)"
@@ -371,12 +389,13 @@ repository:
         name: "{{.brace_close}}"
     patterns:
       - include: "#LitProperty"
+      - include: "#NamedSelection"
       - match: ","
         name: "{{.comma}}"
       - include: "#Comment"
   # LitProperty          ::= Key ":" LitExpr
   LitProperty:
-    begin: "\\b({{identifier}})\\s*(:)\\s*"
+    begin: "({{key}})\\s*(:)\\s*"
     beginCaptures:
       "1":
         name: "{{.property}}"
@@ -386,6 +405,7 @@ repository:
     applyEndPatternLast: 1
     patterns:
       - include: "#LitExpr"
+      - include: "#NamedFieldSelection"
   # LitArray             ::= "[" (LitExpr ("," LitExpr)* ","?)? "]"
   LitArray:
     begin: "\\s*(\\[)"

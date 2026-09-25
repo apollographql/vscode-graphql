@@ -20,7 +20,7 @@
           "include": "#NamedSelection"
         },
         {
-          "include": "#PathSelection"
+          "include": "#LitExpr"
         },
         {
           "include": "#Comment"
@@ -45,6 +45,10 @@
           "include": "#NamedSelection"
         },
         {
+          "match": ",",
+          "name": "punctuation.separator.comma"
+        },
+        {
           "include": "#Comment"
         }
       ]
@@ -65,6 +69,9 @@
         },
         {
           "include": "#AtPath"
+        },
+        {
+          "include": "#SubSelection"
         }
       ]
     },
@@ -123,6 +130,33 @@
               "include": "#SubSelection"
             }
           ]
+        },
+        {
+          "include": "#LiteralAlias"
+        },
+        {
+          "include": "#LitPrimitive"
+        },
+        {
+          "include": "#NamedFieldSelection"
+        }
+      ]
+    },
+    "LiteralAlias": {
+      "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)(?=\\s*(?:[-\"'.0-9\\[]|\\b(?:true|false|null)\\b))",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.other.property.alias"
+        },
+        "2": {
+          "name": "punctuation.colon.alias"
+        }
+      },
+      "end": "(?=.)",
+      "applyEndPatternLast": 1,
+      "patterns": [
+        {
+          "include": "#LitExpr"
         },
         {
           "include": "#NamedFieldSelection"
@@ -248,7 +282,7 @@
       ]
     },
     "PathStepDotAccess": {
-      "match": "(\\.)([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(\\??)",
+      "match": "\\s*(\\.)([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))(\\??)",
       "captures": {
         "1": {
           "name": "variable.dot"
@@ -262,7 +296,7 @@
       }
     },
     "PathStepArrowMethodArgs": {
-      "begin": "(->)((echo|map|eq|match|first|last|slice|size|entries|or|and|jsonStringify|joinNotNull|filter|gte|lte|ne|gt|lt)|[A-Z_a-z][0-9A-Z_a-z]*)(\\()",
+      "begin": "\\s*(->)((as|echo|map|eq|match|first|last|slice|size|entries|or|and|jsonParse|jsonStringify|joinNotNull|filter|find|gte|lte|ne|gt|lt|not|in|contains|get|toString|parseInt|add|sub|mul|div|mod|keysToCamelCase|keysToCamelCaseDeep|split|trim|trimStart|trimEnd|withError)|[A-Z_a-z][0-9A-Z_a-z]*)(\\()",
       "end": "(\\))(\\??)",
       "applyEndPatternLast": 1,
       "beginCaptures": {
@@ -298,15 +332,18 @@
       ]
     },
     "PathStepArrowAccess": {
-      "match": "(->)([A-Z_a-z][0-9A-Z_a-z]*)(\\??)",
+      "match": "\\s*(->)((as|echo|map|eq|match|first|last|slice|size|entries|or|and|jsonParse|jsonStringify|joinNotNull|filter|find|gte|lte|ne|gt|lt|not|in|contains|get|toString|parseInt|add|sub|mul|div|mod|keysToCamelCase|keysToCamelCaseDeep|split|trim|trimStart|trimEnd|withError)(?![0-9A-Z_a-z])|[A-Z_a-z][0-9A-Z_a-z]*)(\\??)",
       "captures": {
         "1": {
           "name": "keyword.operator.arrow"
         },
         "2": {
-          "name": "variable.graphql"
+          "name": "support.function"
         },
         "3": {
+          "name": "support.function.builtin"
+        },
+        "4": {
           "name": "variable.question.mark"
         }
       }
@@ -410,7 +447,7 @@
     },
     "LitNumber": {
       "name": "constant.numeric",
-      "match": "(-?)([0-9]+(\\.[0-9]*)?|\\.[0-9]+)"
+      "match": "(-?)([0-9]+(\\.(?:[0-9]+|(?![\"'A-Z_a-z])))?|\\.[0-9]+)"
     },
     "LitObject": {
       "begin": "\\s*(\\{)",
@@ -430,6 +467,9 @@
           "include": "#LitProperty"
         },
         {
+          "include": "#NamedSelection"
+        },
+        {
           "match": ",",
           "name": "punctuation.separator.comma"
         },
@@ -439,7 +479,7 @@
       ]
     },
     "LitProperty": {
-      "begin": "\\b([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)\\s*",
+      "begin": "([A-Z_a-z][0-9A-Z_a-z]*|(?:\"[^\"]*\"|'[^']*'))\\s*(:)\\s*",
       "beginCaptures": {
         "1": {
           "name": "variable.other.property"
@@ -453,6 +493,9 @@
       "patterns": [
         {
           "include": "#LitExpr"
+        },
+        {
+          "include": "#NamedFieldSelection"
         }
       ]
     },

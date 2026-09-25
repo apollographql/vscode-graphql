@@ -56,6 +56,9 @@
           "include": "#connector-argument-http"
         },
         {
+          "include": "#connector-argument-errors"
+        },
+        {
           "include": "#connector-string-connectors-mapping-argument"
         },
         {
@@ -68,7 +71,7 @@
     },
     "connector-connectors-mapping-argument": {
       "name": "meta.argument.connect.connectors.mapping.graphql",
-      "begin": "\\s*(selection)\\s*(:)",
+      "begin": "\\s*(selection|isSuccess)\\s*(:)",
       "end": "(?=\\s*(?:([A-Z_a-z][0-9A-Z_a-z]*)\\s*(:)|\\)))|\\s*(,)",
       "beginCaptures": {
         "1": {
@@ -214,7 +217,7 @@
         {
           "name": "meta.argument.connect.body.connectors.mapping.graphql",
           "contentName": "meta.embedded.block.connectors.mapping.graphql",
-          "begin": "\\s*(body)\\s*(:)\\s*((\"\"\"))",
+          "begin": "\\s*(body|path|queryParams)\\s*(:)\\s*((\"\"\"))",
           "end": "((\"\"\"))",
           "beginCaptures": {
             "1": {
@@ -247,7 +250,7 @@
         {
           "name": "meta.argument.connect.line.connectors.mapping.graphql",
           "contentName": "meta.embedded.line.connectors.mapping.graphql",
-          "begin": "\\s*(body)\\s*(:)\\s*(?<!\")((\"))(?!\")",
+          "begin": "\\s*(body|path|queryParams)\\s*(:)\\s*(?<!\")((\"))(?!\")",
           "end": "(?<!\")((\"))(?!\")",
           "beginCaptures": {
             "1": {
@@ -276,6 +279,111 @@
               "include": "source.apollo.connectors.mapping"
             }
           ]
+        }
+      ]
+    },
+    "connector-argument-errors": {
+      "begin": "\\s*(errors)\\s*(:)\\s*(\\{)",
+      "end": "(})",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.parameter.graphql"
+        },
+        "2": {
+          "name": "punctuation.colon.graphql"
+        },
+        "3": {
+          "name": "meta.brace.curly.graphql"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "meta.brace.curly.graphql"
+        }
+      },
+      "patterns": [
+        {
+          "begin": "\\s*(message|extensions)\\s*(:)",
+          "end": "(?=\\s*(?:[A-Z_a-z][0-9A-Z_a-z]*\\s*:|}))|\\s*(,)",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.parameter.graphql"
+            },
+            "2": {
+              "name": "punctuation.colon.graphql"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.comma.graphql"
+            }
+          },
+          "patterns": [
+            {
+              "contentName": "meta.embedded.block.connectors.mapping.graphql",
+              "begin": "((\"\"\"))",
+              "end": "((\"\"\"))",
+              "beginCaptures": {
+                "1": {
+                  "name": "string.quoted.double.graphql"
+                },
+                "2": {
+                  "name": "punctuation.definition.string.begin.graphql"
+                }
+              },
+              "endCaptures": {
+                "1": {
+                  "name": "string.quoted.double.graphql"
+                },
+                "2": {
+                  "name": "punctuation.definition.string.end.graphql"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "source.apollo.connectors.mapping"
+                }
+              ]
+            },
+            {
+              "contentName": "meta.embedded.line.connectors.mapping.graphql",
+              "begin": "(?<!\")((\"))(?!\")",
+              "end": "(?<!\")((\"))(?!\")",
+              "beginCaptures": {
+                "1": {
+                  "name": "string.quoted.double.graphql"
+                },
+                "2": {
+                  "name": "punctuation.definition.string.begin.graphql"
+                }
+              },
+              "endCaptures": {
+                "1": {
+                  "name": "string.quoted.double.graphql"
+                },
+                "2": {
+                  "name": "punctuation.definition.string.end.graphql"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "source.apollo.connectors.mapping"
+                }
+              ]
+            },
+            {
+              "include": "source.graphql#graphql-comment"
+            },
+            {
+              "include": "source.graphql#graphql-skip-newlines"
+            }
+          ]
+        },
+        {
+          "include": "source.graphql#graphql-comment"
+        },
+        {
+          "include": "source.graphql#graphql-skip-newlines"
         }
       ]
     },

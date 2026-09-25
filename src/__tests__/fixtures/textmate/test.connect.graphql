@@ -102,3 +102,90 @@ type Query {
 #                          ^^^^^^        repository.VarPath
     )
 }
+
+extend schema
+  @source(name: "api", http: { baseURL: "https://example.com" }
+    isSuccess: "true"
+#               ^^^^ repository.LitPrimitive.patterns.2
+    errors: { message: "'failed'", extensions: "{ code: 42 }" }
+#                                                       ^^ repository.LitNumber
+  )
+type Query {
+  item: String @connect(
+    source: "api"
+    isSuccess: """
+      $status->lt(400)
+#              ^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+    """
+    errors: {
+      message: """
+        'failed'
+#        ^^^^^^ repository.LitString string.quoted.graphql
+      """
+      extensions: """
+        { code: 42 }
+#               ^^ repository.LitNumber
+      """
+    }
+    http: {
+      GET: "/items"
+      path: "[1, 2]"
+#             ^ repository.LitNumber
+      queryParams: "{ limit: 10 }"
+#                            ^^ repository.LitNumber
+      body: "{ enabled: true }"
+#                       ^^^^ repository.LitPrimitive.patterns.2
+    }
+    selection: "$->withError('failed')"
+#                  ^^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+  )
+  other: String @connect(
+    http: {
+      GET: "/items"
+      path: """
+        ['items', $args.id]
+#                 ^^^^^ repository.VarPath
+      """
+      queryParams: """
+        { limit: 10 }
+#                ^^ repository.LitNumber
+      """
+    }
+    selection: "null"
+#               ^^^^ repository.LitPrimitive.patterns.2
+  )
+  ordinary: String @other(message: "true", path: "[1, 2]")
+#                                   ^^^^ - repository.LitPrimitive
+}
+
+type NestedPaths {
+  item: String @connect(
+    http: { GET: "/items" }
+    selection: """
+      $.data {
+        id
+        $.attributes {
+#                    ^ repository.SubSelection.beginCaptures.1
+          version
+        }
+#       ^ repository.SubSelection.endCaptures.1
+        name
+#       ^^^^ repository.NamedFieldSelection
+      }
+#     ^ repository.SubSelection.endCaptures.1
+    """
+  )
+  first: String @connect(
+    http: { GET: "/items" }
+    selection: """
+      $ ->first {
+#       ^^ repository.PathStepArrowAccess.captures.1
+#         ^^^^^ repository.PathStepArrowAccess.captures.3
+#               ^ repository.SubSelection.beginCaptures.1
+        id
+        username
+      }
+#     ^ repository.SubSelection.endCaptures.1
+    """
+  )
+}

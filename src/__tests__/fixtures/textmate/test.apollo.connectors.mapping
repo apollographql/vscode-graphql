@@ -211,3 +211,230 @@ as\\d')
 
 @->a("y" || "foo" + $asd)
 #        ^^       ^        repository.LitOpChainCenter
+
+true
+#<--- repository.LitPrimitive.patterns.2
+
+nullField
+#<-------- repository.NamedFieldSelection
+
+count: 42
+#<---- repository.LiteralAlias.beginCaptures.1
+
+count: 42
+#      ^^ repository.LitNumber
+
+enabled: true
+#        ^^^^ repository.LitPrimitive.patterns.2
+
+values: [1, false, null]
+#       ^ repository.LitArray.beginCaptures.1
+
+values: [1, false, null]
+#           ^^^^^ repository.LitPrimitive.patterns.2
+
+[1, 2]
+#< repository.LitArray.beginCaptures.1
+
+[1, 2]
+#^ repository.LitNumber
+
+{ id, name }
+#< repository.LitObject.beginCaptures.1
+
+{ id, name }
+# ^^ repository.NamedFieldSelection
+
+{ id, name }
+#   ^ repository.LitObject.patterns.2
+
+$({ "a": 1 })
+#   ^^^ repository.LitProperty.beginCaptures.1
+
+$({ "a": 1 })
+#        ^ repository.LitNumber
+
+1.foo
+#< repository.LitNumber
+
+1.foo
+#^^^^ repository.PathStepDotAccess
+
+1.'foo'
+#^^^^^^ repository.PathStepDotAccess
+
+1.25
+#<--- repository.LitNumber
+
+1.
+#<- repository.LitNumber
+
+123->add(1)
+#  ^^^^^^^^ repository.PathStepArrowMethodArgs
+
+[1, 2]->size
+#     ^^^^^^ repository.PathStepArrowAccess
+
+$.count + 1
+#       ^ repository.LitOpChainCenter
+
+$->trimCustom
+#  ^^^^^^^^^^ - repository.PathStepArrowAccess.captures.3
+
+$->trimCustom()
+#  ^^^^^^^^^^ - repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->trim?
+#      ^ repository.PathStepArrowAccess.captures.4
+
+$->as
+#  ^^ repository.PathStepArrowAccess.captures.3
+
+$->as()
+#  ^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->jsonParse
+#  ^^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->jsonParse()
+#  ^^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->find
+#  ^^^^ repository.PathStepArrowAccess.captures.3
+
+$->find()
+#  ^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->not
+#  ^^^ repository.PathStepArrowAccess.captures.3
+
+$->not()
+#  ^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->in
+#  ^^ repository.PathStepArrowAccess.captures.3
+
+$->in()
+#  ^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->contains
+#  ^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->contains()
+#  ^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->get
+#  ^^^ repository.PathStepArrowAccess.captures.3
+
+$->get()
+#  ^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->toString
+#  ^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->toString()
+#  ^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->parseInt
+#  ^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->parseInt()
+#  ^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->add
+#  ^^^ repository.PathStepArrowAccess.captures.3
+
+$->add()
+#  ^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->sub
+#  ^^^ repository.PathStepArrowAccess.captures.3
+
+$->sub()
+#  ^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->mul
+#  ^^^ repository.PathStepArrowAccess.captures.3
+
+$->mul()
+#  ^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->div
+#  ^^^ repository.PathStepArrowAccess.captures.3
+
+$->div()
+#  ^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->mod
+#  ^^^ repository.PathStepArrowAccess.captures.3
+
+$->mod()
+#  ^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->keysToCamelCase
+#  ^^^^^^^^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->keysToCamelCase()
+#  ^^^^^^^^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->keysToCamelCaseDeep
+#  ^^^^^^^^^^^^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->keysToCamelCaseDeep()
+#  ^^^^^^^^^^^^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->split
+#  ^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->split()
+#  ^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->trim
+#  ^^^^ repository.PathStepArrowAccess.captures.3
+
+$->trim()
+#  ^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->trimStart
+#  ^^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->trimStart()
+#  ^^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->trimEnd
+#  ^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->trimEnd()
+#  ^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$->withError
+#  ^^^^^^^^^ repository.PathStepArrowAccess.captures.3
+
+$->withError()
+#  ^^^^^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+
+$.data {
+  id
+  $.attributes {
+#              ^ repository.SubSelection.beginCaptures.1
+    version
+  }
+# ^ repository.SubSelection.endCaptures.1
+  name
+# ^^^^ repository.NamedFieldSelection
+}
+#< repository.SubSelection.endCaptures.1
+
+$ ->first {
+# ^^ repository.PathStepArrowAccess.captures.1
+#   ^^^^^ repository.PathStepArrowAccess.captures.3
+#         ^ repository.SubSelection.beginCaptures.1
+  id
+}
+#< repository.SubSelection.endCaptures.1
+
+$ ->first() .id ->echo("value")
+# ^^ repository.PathStepArrowMethodArgs.beginCaptures.1
+#   ^^^^^ repository.PathStepArrowMethodArgs.beginCaptures.3
+#           ^^^ repository.PathStepDotAccess
+#               ^^^^^^ repository.PathStepArrowMethodArgs

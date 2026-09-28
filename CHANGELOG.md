@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.6.7
+
+### Patch Changes
+
+- [#319](https://github.com/apollographql/vscode-graphql/pull/319) [`8637cc7`](https://github.com/apollographql/vscode-graphql/commit/8637cc7ac77910f572d042d680df715f05d6efcb) Thanks [@phryneas](https://github.com/phryneas)! - Update Connectors Syntax highlighting
+
 ## 2.6.6
 
 ### Patch Changes

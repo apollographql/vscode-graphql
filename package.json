@@ -44,7 +44,7 @@
     "vscode": "^1.90.0"
   },
   "dependencies": {
-    "@apollo/client": "3.12.3",
+    "@apollo/client": "4.3.8",
     "@apollo/client-devtools-vscode": "4.20.1",
     "@apollo/subgraph": "2.9.3",
     "@graphql-tools/schema": "10.0.13",
